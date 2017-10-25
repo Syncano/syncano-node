@@ -1,0 +1,53 @@
+{
+  "name": "@syncano/validate",
+  "description": "Validating Syncanao request/responses and more",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "dependencies": {
+    "ajv": "^5.2.3",
+    "faker": "^4.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "cross-env": "^5.1.0",
+    "mocha": "^3.5.3",
+    "nyc": "^11.2.1",
+    "rimraf": "^2.6.2",
+    "standard": "^10.0.3"
+  },
+  "scripts": {
+    "clean": "rimraf ./lib",
+    "prepublish": "npm run build",
+    "prebuild": "npm run clean",
+    "build": "babel src --out-dir lib",
+    "build:watch": "npm run build -- --watch",
+    "test": "yarn && npm run test:lint && npm run test:e2e:coverage",
+    "test:e2e-single": "cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 10000",
+    "test:e2e-single:coverage": "nyc --produce-source-map=true cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 4000",
+    "test:e2e": "npm run test:e2e-single",
+    "test:e2e:coverage": "nyc --produce-source-map=true npm run test:e2e",
+    "test:lint": "standard --fix"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "7"
+          }
+        }
+      ]
+    ]
+  },
+  "standard": {
+    "ignore": [
+      "/lib/**"
+    ]
+  }
+}

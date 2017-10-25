@@ -1,0 +1,29 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules
+
+# Docs
+docs
+
+# Other
+example
+*.sublime-*
+**.DS_Store
+
+# Build
+lib
+e2e-tests
+dist
+
+# Yarn Integrity file
+.yarn-integrity
+
+#codecov
+coverage
+
+#coverage
+.nyc_output

@@ -1,0 +1,17 @@
+node_modules
+example
+coverage
+test
+.DS_Store
+.idea
+npm-debug.log
+*.sublime-*
+circle.yml
+.babelrc
+.editorconfig
+.envrc.default
+.gitattributes
+codecov.yml
+coverage.lcov
+yarn.lock
+.nyc_output

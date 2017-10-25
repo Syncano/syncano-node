@@ -1,0 +1,10 @@
+export SYNCANO_HOST=
+export SYNCANO_SOCKET_REGISTRY=
+export SYNCANO_ACCOUNT_FILE=syncano-test
+export E2E_CLI_EMAIL=
+export E2E_CLI_PASSWORD=
+export E2E_CLI_ACCOUNT_KEY=
+export E2E_CLI_TEMP_EMAIL=
+export NODE_ENV="test"
+export SYNCANO_ENV="test"
+export NPM_TOKEN="test"

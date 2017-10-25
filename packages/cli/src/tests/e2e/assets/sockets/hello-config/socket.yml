@@ -1,0 +1,11 @@
+name: hello-config
+description: Socket for cheching config functionality
+version: 0.0.1
+
+config:
+  TEST1:
+    description: Test option 1
+  TEST2:
+    description: Test option 1
+  TEST3:
+    description: Test option 1

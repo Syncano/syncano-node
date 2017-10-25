@@ -1,0 +1,70 @@
+1. Simple socket listing with all "metadata"
+  Challenges:
+    - local version can be different that remote
+    - get remote version of the socket
+      - right now quite many different calls
+
+2. Socket can contain additional metadata in form of files
+  Challenges:
+    - get icons of the installed sockets
+    - icon may not be available locally (deleted, installed from the shop?)
+    - registry can keep socket separately and provide url (for given version)
+
+3. Partial synchronization:
+  Challenges:
+    - updates can be quite often - how to make it simple an efficient?
+    -
+4. Inform user about changes between local version and remote version
+      - e.g "that endpoint was not deployed yet"
+      - e.g "your socket conf is different than deployed one"
+      - you are going to delete a column in DB!
+
+5. [Registry] Security thread of using compiled version of the socket:
+  Challenges:
+    - someone may put in the registry socket with nasty code
+    - we don't have any way to check that code can be dangerous
+    - compiling socket on client-side may not be always successful
+      - but from the other hand it should be reliable on the same level as NPM packages
+
+6. Check the sources of the socket installed from registry
+  Challenges:
+    - right now we are replacing sources with bundle:
+      e.g script/hello.js -> script/hello.bundle.js -> script/hello.js
+    - no access to sources
+    - bundles are big and actually not very useful
+
+
+Local Socket version:
+
+  socket.yml
+  scripts/hello.js <- source
+  scripts/.bundles/hello.js <- compiled
+  other/icon.svg
+
+Remote Socket version on S3:
+
+  socket.yml
+  scripts/hello.js <- source
+  (we don't need compiled version)
+  other/icon.svg
+
+Socket upload (second):
+  (ZIP content)
+  scripts/hello.js <- source
+  scripts/.bundles/hello.js <- compiled
+  (backend is using ".bundles/hello.js" instead of "hello.js" (if ".bundles/hello.js" exist))
+
+Socket upload (third):
+  (ZIP content)
+  other/icon.svg
+
+Socket Object keeps data:
+  files:
+    'socket.yml': <s3 url to file>
+    'scripts/hello.js': <s3 url to file>
+    'other/icon.svg': <s3 url to file>
+
+Installing from the registry:
+  - download (all the files from S3, but small because only sources)
+  - compile
+  - upload as a zip

@@ -1,0 +1,65 @@
+{
+  "name": "@syncano/socket",
+  "version": "1.0.1-9",
+  "description": "A library to intereact with the Syncano API on a server side.",
+  "main": "lib/index.js",
+  "author": "Syncano Inc.",
+  "license": "MIT",
+  "repository": "https://github.com/Syncano/syncano-server-js.git",
+  "scripts": {
+    "prepublish": "npm run build",
+    "prebuild": "rimraf ./lib",
+    "build": "babel src --out-dir lib",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:base": "cross-env NODE_ENV=test nyc mocha --reporter spec --require babel-register",
+    "test:unit": "npm run test:base -- test/unit/**/*.js",
+    "test:e2e": "npm run test:base -- --timeout 30000 --slow 8000 test/e2e/*.js",
+    "test:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "test:watch": "mocha --watch test/**/*.js --compilers js:babel-register",
+    "lint": "standard --fix --env mocha --parser babel-eslint",
+    "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js",
+    "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
+    "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc",
+    "release:beta": "npm version prerelease -m \"chore(package.json): bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH",
+    "release": "npm version patch -m \"chore(package.json): bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH"
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run lint",
+      "npm run format",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "form-data": "^2.3.1",
+    "lodash.get": "^4.4.2",
+    "lodash.merge": "^4.6.0",
+    "lodash.set": "^4.3.2",
+    "node-fetch": "2.0.0-alpha.9"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-strict-mode": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "codecov": "^2.3.0",
+    "cross-env": "^5.0.5",
+    "husky": "^0.14.3",
+    "isparta": "^4.0.0",
+    "lint-staged": "^4.2.3",
+    "mocha": "^3.5.3",
+    "nock": "^9.0.22",
+    "nyc": "^11.2.1",
+    "prettier": "^1.7.4",
+    "rimraf": "^2.6.2",
+    "should": "^13.1.0",
+    "standard": "^10.0.3"
+  }
+}

@@ -1,0 +1,8 @@
+name: syncano-server-test-socket
+version: 0.0.2
+
+endpoints:
+  get:
+    file: src/get.es5.js
+  messages:
+    channel: messages

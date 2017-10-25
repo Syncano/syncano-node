@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+lib
+.idea
+.nyc_output
+coverage
+test-results.xml
+e2e-tests

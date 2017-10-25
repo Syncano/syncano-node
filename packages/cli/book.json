@@ -1,0 +1,12 @@
+{
+  "gitbook": "3.2.x",
+  "root": "./docs",
+  "plugins": ["prism", "-highlight"],
+  "pluginsConfig": {
+  "prism": {
+    "css": [
+      "prismjs/themes/prism-tomorrow.css"
+    ]
+  }
+}
+}

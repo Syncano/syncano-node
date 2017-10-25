@@ -1,0 +1,17 @@
+{
+  "branches": 40,
+  "function": 40,
+  "lines": 40,
+  "statements": 40,
+  "include": ["src/**/*.js"],
+  "exclude": ["src/templates", "src/cli*.js"],
+  "require": ["babel-register"],
+  "reporter": [
+    "text",
+    "lcov"
+  ],
+  "all": true,
+  "check-coverage": false,
+  "sourceMap": false,
+  "instrument": false
+}

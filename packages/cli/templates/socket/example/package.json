@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "syncano-server": "beta"
+  }
+}

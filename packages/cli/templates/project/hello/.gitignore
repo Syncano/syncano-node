@@ -1,0 +1,5 @@
+node_modules
+syncano/.dist
+syncano/.build
+syncano/.bundles
+syncano/**/scripts/.bundles

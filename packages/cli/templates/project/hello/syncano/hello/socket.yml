@@ -1,0 +1,34 @@
+name: hello
+description: Hello World Socket
+version: 0.0.1
+
+endpoints:
+  hello:
+    description: Hello world!
+    file: hello.js
+    parameters:
+      firstname:
+        type: string
+        description: "First name of the person you want to greet"
+        example: "Tyler"
+      lastname:
+        type: string
+        description: "Last name of the person you want to greet"
+        example: "Durden"
+    response:
+      mimetype: application/json
+      examples:
+        -
+          exit_code: 200
+          description: Success
+          example: |
+            {
+            "message": "Hello Tyler Durden!"
+            }
+        -
+          exit_code: 400
+          description: Failed
+          example: |
+            {
+              "message": "You have to send "firstname" and "lastname" arguments!"
+            }

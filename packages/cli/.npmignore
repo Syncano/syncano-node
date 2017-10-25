@@ -1,0 +1,10 @@
+src/
+node_modules/
+.nyc_output
+coverage
+npm-debug.log
+.idea
+.DS_Store
+circle.yml
+codecov.yml
+yarn.lock

@@ -1,0 +1,16 @@
+node_modules
+example
+coverage
+tests
+src
+.npmignore
+.idea
+.DS_Store
+.editorconfig
+.codeclimate.yml
+codecov.yml
+circle.yml
+webpack.config.js
+npm-debug.log
+yarn.lock
+*.sublime-*
