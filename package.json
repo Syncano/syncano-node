@@ -1,5 +1,6 @@
 {
-	"devDependencies": {
-		"lerna": "^2.4.0"
-	}
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^2.4.0"
+  }
 }
