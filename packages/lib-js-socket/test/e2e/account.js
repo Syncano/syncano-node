@@ -1,14 +1,14 @@
 import {expect} from 'chai'
 import Server from '../../src'
 
-describe('Account', function() {
+describe('Account', function () {
   let account = null
 
-  before(function() {
+  before(function () {
     account = new Server().account
   })
 
-  it("can't get account with dummy key", function(done) {
+  it("can't get account with dummy key", function (done) {
     account
       .get('dummy key')
       .then(() => {
@@ -20,7 +20,7 @@ describe('Account', function() {
       })
   })
 
-  it('can get account details with valid key', function(done) {
+  it('can get account details with valid key', function (done) {
     account
       .get(process.env.E2E_ACCOUNT_KEY)
       .then(account => {

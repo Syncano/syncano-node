@@ -4,17 +4,17 @@ import {expect} from 'chai'
 import Server from '../../src'
 import {getRandomString} from '../utils'
 
-describe('Instance', function() {
+describe('Instance', function () {
   let instance = null
   const testInstanceName = getRandomString()
 
   this.timeout(5000)
 
-  before(function() {
+  before(function () {
     instance = new Server({accountKey: process.env.E2E_ACCOUNT_KEY}).instance
   })
 
-  it('can create instance', function(done) {
+  it('can create instance', function (done) {
     instance
       .create({name: testInstanceName})
       .then(instance => {
@@ -27,7 +27,7 @@ describe('Instance', function() {
       })
   })
 
-  it('can delete instance', function(done) {
+  it('can delete instance', function (done) {
     instance
       .delete(testInstanceName)
       .then(res => {

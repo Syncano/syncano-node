@@ -1,4 +1,4 @@
-export function SyncanoError(message) {
+export function SyncanoError (message) {
   this.name = 'SyncanoError'
   this.message = message || ''
   this.stack = new Error().stack
@@ -7,7 +7,7 @@ export function SyncanoError(message) {
 SyncanoError.prototype = Object.create(Error.prototype)
 SyncanoError.prototype.constructor = SyncanoError
 
-export function NotFoundError(message = 'No results for given query.') {
+export function NotFoundError (message = 'No results for given query.') {
   this.name = 'NotFoundError'
   this.message = message
   this.stack = new Error().stack

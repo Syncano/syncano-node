@@ -10,7 +10,7 @@ import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 chai.use(chaiAsPromised)
 chai.should()
 
-describe('Data', function() {
+describe('Data', function () {
   let data
   let users
   let run
@@ -19,7 +19,7 @@ describe('Data', function() {
   const testClassName = getRandomString()
   const instanceName = getRandomString()
 
-  before(function() {
+  before(function () {
     const server = new Server({
       instanceName,
       meta: {
@@ -477,7 +477,7 @@ describe('Data', function() {
   })
 })
 
-function getSchema() {
+function getSchema () {
   return [
     {
       type: 'string',

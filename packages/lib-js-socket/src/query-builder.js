@@ -2,22 +2,22 @@ import nodeFetch from 'node-fetch'
 import {checkStatus, parseJSON} from './utils'
 
 export default class QueryBuilder {
-  constructor(instance) {
+  constructor (instance) {
     this.instance = instance
     this.baseUrl = `https://${instance.host}`
   }
 
-  _getSyncanoURL() {
+  _getSyncanoURL () {
     const {apiVersion, host} = this.instance
 
     return `https://${host}/${apiVersion}`
   }
 
-  _getInstanceURL(instanceName) {
+  _getInstanceURL (instanceName) {
     return `${this._getSyncanoURL()}/instances/${instanceName}`
   }
 
-  fetch(url, options, headers = {}) {
+  fetch (url, options, headers = {}) {
     const headersToSend = Object.assign(
       {
         'content-type': 'application/json',
@@ -34,7 +34,7 @@ export default class QueryBuilder {
       .then(checkStatus)
   }
 
-  nonInstanceFetch(url, options, headers) {
+  nonInstanceFetch (url, options, headers) {
     return nodeFetch(url, {
       headers: {
         'content-type': 'application/json',
@@ -46,31 +46,31 @@ export default class QueryBuilder {
       .then(checkStatus)
   }
 
-  get query() {
+  get query () {
     return this._query || {}
   }
 
-  get relationships() {
+  get relationships () {
     return this._relationships || []
   }
 
-  get mappedFields() {
+  get mappedFields () {
     return this._mappedFields || []
   }
 
-  withQuery(query) {
+  withQuery (query) {
     this._query = Object.assign({}, this.query, query)
 
     return this
   }
 
-  withRelationships(relationships) {
+  withRelationships (relationships) {
     this._relationships = this.relationships.concat(relationships)
 
     return this
   }
 
-  withMappedFields(fields) {
+  withMappedFields (fields) {
     this._mappedFields = Object.assign({}, this.mappedFields, ...fields)
 
     return this

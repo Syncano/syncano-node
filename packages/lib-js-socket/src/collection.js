@@ -3,7 +3,7 @@
  * @link https://laravel.com/docs/5.3/collections
  */
 export default class Collection {
-  constructor(data) {
+  constructor (data) {
     this.data = data
   }
 }

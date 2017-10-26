@@ -10,7 +10,7 @@ const uniqueInstance = () => {
     'wandering', 'withered', 'wild', 'black', 'young', 'holy', 'solitary',
     'fragrant', 'aged', 'snowy', 'proud', 'floral', 'restless', 'divine',
     'polished', 'ancient', 'purple', 'lively', 'nameless'
-  ];
+  ]
 
   const nouns = [
     'waterfall', 'river', 'breeze', 'moon', 'rain', 'wind', 'sea', 'morning',
@@ -22,12 +22,12 @@ const uniqueInstance = () => {
     'violet', 'water', 'wildflower', 'wave', 'water', 'resonance', 'sun',
     'wood', 'dream', 'cherry', 'tree', 'fog', 'frost', 'voice', 'paper',
     'frog', 'smoke', 'star'
-  ];
-  const rnd = Math.floor(Math.random() * 9000) + 1000;
-  const noun = nouns[Math.floor(Math.random() * nouns.length)];
-  const adj = adjs[Math.floor(Math.random() * adjs.length)];
+  ]
+  const rnd = Math.floor(Math.random() * 9000) + 1000
+  const noun = nouns[Math.floor(Math.random() * nouns.length)]
+  const adj = adjs[Math.floor(Math.random() * adjs.length)]
 
-  return `${adj}-${noun}-${rnd}`;
-};
+  return `${adj}-${noun}-${rnd}`
+}
 
-export default uniqueInstance;
+export default uniqueInstance

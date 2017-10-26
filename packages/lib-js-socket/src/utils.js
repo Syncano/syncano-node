@@ -1,4 +1,4 @@
-export function checkStatus(response) {
+export function checkStatus (response) {
   if (response.status >= 200 && response.status < 300) {
     return response.data
   }
@@ -22,7 +22,7 @@ export function checkStatus(response) {
   throw error
 }
 
-export function parseJSON(response) {
+export function parseJSON (response) {
   const mimetype = response.headers.get('Content-Type')
 
   if (response.status === 204 || mimetype === null) {

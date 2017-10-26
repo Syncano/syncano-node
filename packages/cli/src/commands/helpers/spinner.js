@@ -1,52 +1,51 @@
-import ora from 'ora';
-
+import ora from 'ora'
 
 class GlobalSpinner {
-  constructor(spinnerLabel) {
-    this.spinnerLabel = spinnerLabel;
-    this.spinner = ora(spinnerLabel);
-    this.jobsCounter = 0;
-    this.queueSize = 0;
+  constructor (spinnerLabel) {
+    this.spinnerLabel = spinnerLabel
+    this.spinner = ora(spinnerLabel)
+    this.jobsCounter = 0
+    this.queueSize = 0
   }
 
-  label(text) {
-    this.spinner.text = text;
+  label (text) {
+    this.spinner.text = text
   }
 
-  resetLabel(text) {
-    this.spinner.text = this.spinnerLabel;
+  resetLabel (text) {
+    this.spinner.text = this.spinnerLabel
   }
 
-  stop() {
-    this.spinner.stop();
-    this.jobsCounter -= 1;
+  stop () {
+    this.spinner.stop()
+    this.jobsCounter -= 1
   }
 
-  start() {
-    this.jobsCounter += 1;
+  start () {
+    this.jobsCounter += 1
     if (this.jobsCounter === this.queueSize) {
-      this.spinner.start();
+      this.spinner.start()
     }
   }
 }
 
 class SimpleSpinner {
-  constructor(spinnerLabel) {
-    this.spinner = ora(spinnerLabel);
+  constructor (spinnerLabel) {
+    this.spinner = ora(spinnerLabel)
   }
 
-  start() {
-    this.spinner.start();
-    return this;
+  start () {
+    this.spinner.start()
+    return this
   }
 
-  stop() {
-    this.spinner.stop();
-    return this;
+  stop () {
+    this.spinner.stop()
+    return this
   }
 }
 
 export default {
   GlobalSpinner,
   SimpleSpinner
-};
+}

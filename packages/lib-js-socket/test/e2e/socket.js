@@ -1,9 +1,9 @@
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
-describe('Socket', function() {
+describe('Socket', function () {
   const instanceName = getRandomString()
 
-  before(function(done) {
+  before(function (done) {
     createTestInstance(instanceName)
       .then(instanceObj => {
         done()
@@ -17,7 +17,7 @@ describe('Socket', function() {
       })
   })
 
-  after(function(done) {
+  after(function (done) {
     deleteTestInstance(instanceName).then(() => {
       done()
     })

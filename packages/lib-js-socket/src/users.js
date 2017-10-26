@@ -6,7 +6,7 @@ import Data from './data'
  * @property {Function}
  */
 class Users extends Data {
-  url(id) {
+  url (id) {
     const {instanceName} = this.instance
     const url = `${this._getInstanceURL(instanceName)}/users/${id
       ? id + '/'

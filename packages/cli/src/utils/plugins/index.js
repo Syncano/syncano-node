@@ -1,3 +1,3 @@
-import Plugins from './plugins';
+import Plugins from './plugins'
 
-export default Plugins;
+export default Plugins

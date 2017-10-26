@@ -1,3 +1,3 @@
-import Hosting from './hosting';
+import Hosting from './hosting'
 
-export default Hosting;
+export default Hosting

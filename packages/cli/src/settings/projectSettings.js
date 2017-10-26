@@ -1,145 +1,143 @@
-import readdirp from 'readdirp';
-import YAML from 'js-yaml';
-import fs from 'fs';
+import readdirp from 'readdirp'
+import YAML from 'js-yaml'
+import fs from 'fs'
 
-import logger from '../utils/debug';
-import Settings from './settings';
+import logger from '../utils/debug'
+import Settings from './settings'
 
-
-const { debug } = logger('settings-project');
+const { debug } = logger('settings-project')
 
 export default class ProjectSettings extends Settings {
-  constructor(projectPath) {
-    super();
-    this.name = 'syncano';
-    this.baseDir = projectPath;
+  constructor (projectPath) {
+    super()
+    this.name = 'syncano'
+    this.baseDir = projectPath
     if (projectPath) {
-      this.loaded = this.load();
+      this.loaded = this.load()
     }
   }
 
-  getPlugins() {
-    return this.attributes.plugins;
+  getPlugins () {
+    return this.attributes.plugins
   }
 
-  installSocket(socket) {
-    debug('installSocket()');
-    const dependencies = this.attributes.dependencies || { sockets: {} };
-    const sockets = dependencies.sockets;
+  installSocket (socket) {
+    debug('installSocket()')
+    const dependencies = this.attributes.dependencies || { sockets: {} }
+    const sockets = dependencies.sockets
 
-    sockets[socket.name] = socket.version ? { version: socket.version } : { src: `./${socket.name}` };
-    this.attributes.dependencies = dependencies;
+    sockets[socket.name] = socket.version ? { version: socket.version } : { src: `./${socket.name}` }
+    this.attributes.dependencies = dependencies
 
-    this.save();
+    this.save()
   }
 
-  getAllSocketsYmlPath() {
+  getAllSocketsYmlPath () {
     return new Promise((resolve, reject) => {
-      const paths = [];
+      const paths = []
       readdirp({ root: this.baseDir, fileFilter: 'socket.yml' })
         .on('data', (entry) => {
-          paths.push(entry.fullPath);
+          paths.push(entry.fullPath)
         })
         .on('end', () => {
-          resolve(paths);
+          resolve(paths)
         })
         .on('error', (err) => {
-          reject(err);
-        });
-    });
+          reject(err)
+        })
+    })
   }
 
-  async getHostingsList() {
-    const socketYamls = await this.getAllSocketsYmlPath();
-    const hostingsList = {};
+  async getHostingsList () {
+    const socketYamls = await this.getAllSocketsYmlPath()
+    const hostingsList = {}
 
-    const socketsAttributes = socketYamls.map((yamlPath) => ProjectSettings.getAttributesFromYaml(yamlPath));
+    const socketsAttributes = socketYamls.map((yamlPath) => ProjectSettings.getAttributesFromYaml(yamlPath))
     socketsAttributes.forEach((socketAttributes) => {
-      hostingsList[socketAttributes.name] = socketAttributes.hosting;
-    });
+      hostingsList[socketAttributes.name] = socketAttributes.hosting
+    })
 
-    return hostingsList;
+    return hostingsList
   }
 
-  static getAttributesFromYaml(path) {
-    const socketAttributes = YAML.load(fs.readFileSync(path, 'utf8'));
+  static getAttributesFromYaml (path) {
+    const socketAttributes = YAML.load(fs.readFileSync(path, 'utf8'))
 
-    return socketAttributes;
+    return socketAttributes
   }
 
-  uninstallSocket(socketName) {
-    debug('uninstallSocket');
-    const dependencies = this.attributes.dependencies || { sockets: {} };
-    const sockets = dependencies.sockets;
+  uninstallSocket (socketName) {
+    debug('uninstallSocket')
+    const dependencies = this.attributes.dependencies || { sockets: {} }
+    const sockets = dependencies.sockets
 
-    delete sockets[socketName];
-    this.save();
+    delete sockets[socketName]
+    this.save()
   }
 
-  getSocket(socketName) {
-    return this.attributes.dependencies.sockets[socketName];
+  getSocket (socketName) {
+    return this.attributes.dependencies.sockets[socketName]
   }
 
-  getSocketTemplates() {
+  getSocketTemplates () {
     try {
-      return this.attributes.templates.sockets;
+      return this.attributes.templates.sockets
     } catch (err) {
-      return [];
+      return []
     }
   }
 
-  getDependSockets() {
+  getDependSockets () {
     try {
-      return this.attributes.dependencies.sockets;
+      return this.attributes.dependencies.sockets
     } catch (err) {
-      return {};
+      return {}
     }
   }
 
-  getDependSocket(socketName) {
+  getDependSocket (socketName) {
     try {
-      return this.attributes.dependencies.sockets[socketName];
+      return this.attributes.dependencies.sockets[socketName]
     } catch (err) {
-      return null;
+      return null
     }
   }
 
   // Hosting
-  getHosting(hostingName) {
-    debug('getHosting()');
-    return this.attributes.hosting ? this.attributes.hosting[hostingName] : null;
+  getHosting (hostingName) {
+    debug('getHosting()')
+    return this.attributes.hosting ? this.attributes.hosting[hostingName] : null
   }
 
-  addHosting(hostingName, params) {
-    if (!this.attributes.hosting) this.attributes.hosting = {};
-    this.attributes.hosting[hostingName] = params;
-    this.save();
+  addHosting (hostingName, params) {
+    if (!this.attributes.hosting) this.attributes.hosting = {}
+    this.attributes.hosting[hostingName] = params
+    this.save()
   }
 
-  deleteHosting(hostingName) {
+  deleteHosting (hostingName) {
     if (this.attributes.hosting) {
-      delete this.attributes.hosting[hostingName];
+      delete this.attributes.hosting[hostingName]
     }
 
     if (this.listHosting().length === 0) {
-      delete this.attributes.hosting;
+      delete this.attributes.hosting
     }
-    this.save();
+    this.save()
   }
 
-  listHosting() {
-    debug('list()');
-    const hostings = this.attributes.hosting;
-    const list = [];
+  listHosting () {
+    debug('list()')
+    const hostings = this.attributes.hosting
+    const list = []
     if (hostings) {
       for (const key of Object.keys(hostings)) {
         list.push({
           name: key,
           src: hostings[key].src
-        });
+        })
       }
     }
-    return list;
+    return list
   }
-
 }

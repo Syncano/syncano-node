@@ -126,7 +126,7 @@
     "e2e:tutorial": "mocha  --reporter spec --compilers js:babel-core/register --timeout 16000 --slow 8000",
     "check-coverage": "cross-env SYNCANO_ENV=test nyc yarn run unit",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
-    "test": "npm-run-all --parallel test:unit",
+    "test": "npm-run-all --parallel test:unit test:e2e",
     "test:unit": "cross-env SYNCANO_ENV=test nyc yarn run unit",
     "test:e2e": "cross-env SYNCANO_ENV=test yarn run e2e",
     "test:ci": "cross-env NODE_ENV=test SYNCANO_ENV=test nyc yarn run unit -- --reporter mocha-junit-reporter",

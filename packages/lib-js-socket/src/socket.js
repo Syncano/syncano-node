@@ -8,7 +8,7 @@ import QueryBuilder from './query-builder'
  * const createdTag = await socket.post('tags/create', { name: 'nature' })
  */
 export default class Socket extends QueryBuilder {
-  post(endpoint, body = {}, options = {}) {
+  post (endpoint, body = {}, options = {}) {
     const fetch = this.fetch.bind(this)
 
     return fetch(this._url(endpoint), {
@@ -18,29 +18,29 @@ export default class Socket extends QueryBuilder {
     })
   }
 
-  get(endpoint, data = {}, options = {}) {
+  get (endpoint, data = {}, options = {}) {
     return this.post(endpoint, {...data, _method: 'GET'}, options)
   }
 
-  delete(endpoint, data = {}, options = {}) {
+  delete (endpoint, data = {}, options = {}) {
     return this.post(endpoint, {...data, _method: 'DELETE'}, options)
   }
 
-  put(endpoint, data = {}, options = {}) {
+  put (endpoint, data = {}, options = {}) {
     return this.post(endpoint, {...data, _method: 'PUT'}, options)
   }
 
-  patch(endpoint, data = {}, options = {}) {
+  patch (endpoint, data = {}, options = {}) {
     return this.post(endpoint, {...data, _method: 'PATCH'}, options)
   }
 
-  _url(endpoint) {
+  _url (endpoint) {
     const {instanceName, spaceHost} = this.instance
 
     return `https://${instanceName}.${spaceHost}/${endpoint}/`
   }
 
-  _parseBody(body) {
+  _parseBody (body) {
     const isBodyAnObject = typeof body === 'object'
 
     return isBodyAnObject ? JSON.stringify({...body}) : body

@@ -5,7 +5,7 @@ import QueryBuilder from './query-builder'
  * @property {Function}
  */
 class Account extends QueryBuilder {
-  url() {
+  url () {
     return `${this._getSyncanoURL()}/account/`
   }
 
@@ -17,7 +17,7 @@ class Account extends QueryBuilder {
    * @example {@lang javascript}
    * const account = await account.get('0aad29dd0be2bcebb741525b9c5901e55cf43e98')
    */
-  get(authKey) {
+  get (authKey) {
     const fetch = this.nonInstanceFetch.bind(this)
     return new Promise((resolve, reject) => {
       const headers = {

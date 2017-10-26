@@ -1,14 +1,14 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
-import axios from 'axios';
-import format from 'chalk';
-import context from '../utils/context';
-import SocketSearch from './socket-search';
+import { expect } from 'chai'
+import sinon from 'sinon'
+import axios from 'axios'
+import format from 'chalk'
+import context from '../utils/context'
+import SocketSearch from './socket-search'
 
-describe('[commands] Search Sockets', function() {
-  const nameKeyword = 'Segment';
-  const lowerCasedNameKeyword = nameKeyword.toLowerCase();
-  const socketSearch = new SocketSearch(context);
+describe('[commands] Search Sockets', function () {
+  const nameKeyword = 'Segment'
+  const lowerCasedNameKeyword = nameKeyword.toLowerCase()
+  const socketSearch = new SocketSearch(context)
   const serverResponse = {
     status: 200,
     statusText: 'OK',
@@ -20,16 +20,16 @@ describe('[commands] Search Sockets', function() {
         stdout: '[{"description":"Segment Integration","author":"Syncano","tags":{"type":"relation","target":"tag","value":["analytics","segment.io"]},"version":"0.1","name":"segment"}]'
       }
     }
-  };
+  }
 
-  describe('finds', function() {
-    beforeEach(function() {
-      sinon.stub(axios, 'post').returns(Promise.resolve(serverResponse));
-    });
+  describe('finds', function () {
+    beforeEach(function () {
+      sinon.stub(axios, 'post').returns(Promise.resolve(serverResponse))
+    })
 
-    afterEach(function() {
-      axios.post.restore();
-    });
+    afterEach(function () {
+      axios.post.restore()
+    })
 
     // it('by name', async function() {
     //   const searchResult = await socketSearch.run([nameKeyword, {}]);
@@ -51,19 +51,19 @@ describe('[commands] Search Sockets', function() {
     //
     //   return expect(socketKeywords).to.include(lowerCasedNameKeyword);
     // });
-  });
+  })
 
-  describe('formated response', function() {
+  describe('formated response', function () {
     // let parsedResponse = null;
 
-    before(function() {
-      sinon.stub(context.Registry.prototype, 'searchSocketsByAll').returns(Promise.resolve(serverResponse));
+    before(function () {
+      sinon.stub(context.Registry.prototype, 'searchSocketsByAll').returns(Promise.resolve(serverResponse))
       // parsedResponse = JSON.parse(serverResponse.data.result.stdout);
-    });
+    })
 
-    after(function() {
-      context.Registry.prototype.searchSocketsByAll.restore();
-    });
+    after(function () {
+      context.Registry.prototype.searchSocketsByAll.restore()
+    })
 
     // it('is an object', async function() {
     //   const formatedResponse = await socketSearch.run([lowerCasedNameKeyword, {}]);
@@ -101,18 +101,18 @@ describe('[commands] Search Sockets', function() {
     //   expect(expectedResult).to.be.true;
     //   expect(wordWrapResponseOption).to.be.true;
     // });
-  });
+  })
 
-  describe('colors response', function() {
+  describe('colors response', function () {
     const itemInfoObject = {
       name: 'segment',
       description: 'Segment Integration',
       author: 'Syncano',
       version: '0.1',
       tag: 'analytics, segment.io'
-    };
+    }
 
-    socketSearch.keyword = 'keyword';
+    socketSearch.keyword = 'keyword'
 
     // it('when found term in name', function() {
     //   const coloredResponse = socketSearch.colorResponse(itemInfoObject.name, lowerCasedNameKeyword);
@@ -126,22 +126,22 @@ describe('[commands] Search Sockets', function() {
     //   expect(coloredResponse.toLowerCase()).to.contain(format.green(lowerCasedNameKeyword));
     // });
 
-    it('is not applied when term is not found in author', function() {
-      const coloredResponse = socketSearch.colorResponse(itemInfoObject.author, lowerCasedNameKeyword);
+    it('is not applied when term is not found in author', function () {
+      const coloredResponse = socketSearch.colorResponse(itemInfoObject.author, lowerCasedNameKeyword)
 
-      expect(coloredResponse.toLowerCase()).to.not.contain(format.green(lowerCasedNameKeyword));
-    });
+      expect(coloredResponse.toLowerCase()).to.not.contain(format.green(lowerCasedNameKeyword))
+    })
 
-    it('is not applied when term is not found in version', function() {
-      const coloredResponse = socketSearch.colorResponse(itemInfoObject.version, lowerCasedNameKeyword);
+    it('is not applied when term is not found in version', function () {
+      const coloredResponse = socketSearch.colorResponse(itemInfoObject.version, lowerCasedNameKeyword)
 
-      expect(coloredResponse).to.not.contain(format.green(lowerCasedNameKeyword));
-    });
+      expect(coloredResponse).to.not.contain(format.green(lowerCasedNameKeyword))
+    })
 
     // it('when found term in tags', function() {
     //   const coloredResponse = socketSearch.colorResponse(itemInfoObject.tag, lowerCasedNameKeyword);
     //
     //   expect(coloredResponse.toLowerCase()).to.contain(format.green(lowerCasedNameKeyword));
     // });
-  });
-});
+  })
+})

@@ -6,7 +6,7 @@ import get from 'lodash.get'
  */
 
 class Response {
-  constructor(
+  constructor (
     instance,
     content = null,
     status = 200,
@@ -62,11 +62,9 @@ export default config => {
   return response
 }
 
-function mapYamlResponsesToMethods(response, responses, config) {
+function mapYamlResponsesToMethods (response, responses, config) {
   Object.keys(responses).forEach(name => {
-    const {mimetype = 'application/json', exit_code: status = 200} = responses[
-      name
-    ]
+    const {mimetype = 'application/json', exit_code: status = 200} = responses[name]
     const isJSON = mimetype === 'application/json'
 
     response[name] = content =>

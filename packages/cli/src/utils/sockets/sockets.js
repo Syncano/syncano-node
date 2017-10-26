@@ -1,59 +1,57 @@
-import fs from 'fs-extra';
-import FindKey from 'find-key';
-import md5 from 'md5';
-import hashdirectory from 'hashdirectory';
-import unzip from 'unzip2';
-import YAML from 'js-yaml';
-import axios from 'axios';
-import readdirp from 'readdirp';
-import mkdirp from 'mkdirp';
-import path from 'path';
-import FormData from 'form-data';
-import archiver from 'archiver';
-import Promise from 'bluebird';
-import template from 'es6-template-strings';
-import _ from 'lodash';
-import SourceMap from 'source-map';
+import fs from 'fs-extra'
+import FindKey from 'find-key'
+import md5 from 'md5'
+import hashdirectory from 'hashdirectory'
+import unzip from 'unzip2'
+import YAML from 'js-yaml'
+import axios from 'axios'
+import readdirp from 'readdirp'
+import mkdirp from 'mkdirp'
+import path from 'path'
+import FormData from 'form-data'
+import archiver from 'archiver'
+import Promise from 'bluebird'
+import template from 'es6-template-strings'
+import _ from 'lodash'
+import SourceMap from 'source-map'
 
-import logger from '../debug';
-import session from '../session';
-import utils from './utils';
-import Hosting from '../hosting';
-import Registry from '../registry';
-import { compile } from '../compile';
-import { p, echo } from '../print-tools';
-import { getSocketTemplate } from '../../constants/Constants';
+import logger from '../debug'
+import session from '../session'
+import utils from './utils'
+import Hosting from '../hosting'
+import Registry from '../registry'
+import { compile } from '../compile'
+import { p, echo } from '../print-tools'
+import { getSocketTemplate } from '../../constants/Constants'
 
-
-const { debug } = logger('utils-sockets');
+const { debug } = logger('utils-sockets')
 
 class MetadataObject {
-  constructor(name, metadata, socketName) {
-    this.name = name;
-    this.metadata = metadata;
-    this.socketName = socketName;
-    this.existRemotely = null;
-    this.existLocally = null;
-    this.isProjectRegistryDependency = null;
+  constructor (name, metadata, socketName) {
+    this.name = name
+    this.metadata = metadata
+    this.socketName = socketName
+    this.existRemotely = null
+    this.existLocally = null
+    this.isProjectRegistryDependency = null
   }
-  getStatus() {
+  getStatus () {
     if (this.existLocally && this.existRemotely) {
-      return { status: 'synced', type: 'ok' };
+      return { status: 'synced', type: 'ok' }
     }
 
     if (this.existLocally && !this.existRemotely) {
-      return { status: 'not synced', type: 'warn' };
+      return { status: 'not synced', type: 'warn' }
     }
 
     if (!this.existLocally && this.existRemotely) {
-      return { status: 'no local configuration', type: 'fail' };
+      return { status: 'no local configuration', type: 'fail' }
     }
   }
 }
 
 class Endpoint extends MetadataObject {
-
-  call(params) {
+  call (params) {
     return axios.request({
       url: this.getURL(),
       method: 'POST',
@@ -61,15 +59,15 @@ class Endpoint extends MetadataObject {
       params,
       // Do not transform data automaticaly
       transformResponse: (data) => data
-    });
+    })
   }
 
-  getFullName() {
-    return `${this.socketName}/${this.name}`;
+  getFullName () {
+    return `${this.socketName}/${this.name}`
   }
 
-  getURL() {
-    return `https://${session.getSpaceHost()}/${this.socketName}/${this.name}/`;
+  getURL () {
+    return `https://${session.getSpaceHost()}/${this.socketName}/${this.name}/`
   }
 }
 
@@ -78,263 +76,262 @@ class Handler extends MetadataObject {}
 class Event extends MetadataObject {}
 
 class Socket {
-  constructor(socketName, socketPath) {
-    debug('Sockets.constructor', socketName);
-    this.name = socketName;
-    this.settings = { loaded: false };
-    this.socketPath = socketPath || utils.findLocalPath(socketName);
+  constructor (socketName, socketPath) {
+    debug('Sockets.constructor', socketName)
+    this.name = socketName
+    this.settings = { loaded: false }
+    this.socketPath = socketPath || utils.findLocalPath(socketName)
 
     if (this.socketPath) {
-      this.settings = session.settings.getSocketSettings(this.socketPath, this.name);
+      this.settings = session.settings.getSocketSettings(this.socketPath, this.name)
     }
 
-    this.existRemotely = null;
-    this.existLocally = null;
-    this.isProjectRegistryDependency = null;
-    this.dependencies = [];
-    this.dependencyOf = [];
+    this.existRemotely = null
+    this.existLocally = null
+    this.isProjectRegistryDependency = null
+    this.dependencies = []
+    this.dependencyOf = []
 
     // that looks stupid
-    this.remote = { spec: { endpoints: {}, event_handlers: {}, events: {} }, metadata: {} };
-    this.spec = { spec: { endpoints: {}, event_handlers: {}, events: {} } };
+    this.remote = { spec: { endpoints: {}, event_handlers: {}, events: {} }, metadata: {} }
+    this.spec = { spec: { endpoints: {}, event_handlers: {}, events: {} } }
 
-    this.loadLocal();
+    this.loadLocal()
 
     // SocketPath for non-local sockets
     if (this.isDependencySocket || this.isProjectRegistryDependency) {
-      this.socketPath = path.join(session.getBuildPath(), this.name);
+      this.socketPath = path.join(session.getBuildPath(), this.name)
     }
   }
 
-  static getTemplatesChoices() {
-    return utils.getTemplatesChoices();
+  static getTemplatesChoices () {
+    return utils.getTemplatesChoices()
   }
 
   // Install / Uninstall
-  static add(registrySocket) {
-    debug('add()');
-    session.settings.project.installSocket(registrySocket);
+  static add (registrySocket) {
+    debug('add()')
+    session.settings.project.installSocket(registrySocket)
   }
 
   // Install / Uninstall
-  static install(registrySocket, config) {
-    debug('install()');
+  static install (registrySocket, config) {
+    debug('install()')
 
-    const socketName = registrySocket.name;
-    session.settings.project.installSocket(registrySocket);
+    const socketName = registrySocket.name
+    session.settings.project.installSocket(registrySocket)
 
-    const socketFolder = path.join(session.getBuildPath(), socketName);
-    mkdirp.sync(socketFolder);
+    const socketFolder = path.join(session.getBuildPath(), socketName)
+    mkdirp.sync(socketFolder)
 
-    debug('Getting socket from registry');
+    debug('Getting socket from registry')
     return Registry.getSocket(registrySocket, config)
       .then((resp) => {
-        debug('Registry socket:', registrySocket);
-        const fileName = path.join(session.getBuildPath(), `${socketName}.zip`);
+        debug('Registry socket:', registrySocket)
+        const fileName = path.join(session.getBuildPath(), `${socketName}.zip`)
 
         return new Promise((resolve, reject) => {
           fs.createReadStream(fileName)
             .pipe(unzip.Extract({ path: socketFolder }))
             .on('close', () => {
-              debug('Unzip finished');
-              const newSocket = new Socket(socketName, socketFolder);
+              debug('Unzip finished')
+              const newSocket = new Socket(socketName, socketFolder)
               return Socket.updateSocketNPMDeps(socketFolder)
                 .then(() => newSocket.loadRemote())
                 .then(() => newSocket.update({ config }))
                 .then((updateStatus) => {
-                  debug('updateStatus', updateStatus);
-                  newSocket.updateStatus = updateStatus;
-                  resolve(newSocket);
+                  debug('updateStatus', updateStatus)
+                  newSocket.updateStatus = updateStatus
+                  resolve(newSocket)
                 })
                 .catch((err) => {
-                  reject(err);
-                });
-            });
-        });
-      });
+                  reject(err)
+                })
+            })
+        })
+      })
   }
 
-  static uninstall(socket = {}) {
-    debug('uninstall', socket.name);
+  static uninstall (socket = {}) {
+    debug('uninstall', socket.name)
 
     if (socket.isProjectRegistryDependency) {
-      session.settings.project.uninstallSocket(socket.name);
+      session.settings.project.uninstallSocket(socket.name)
     }
 
     if (socket.existLocally && socket.localPath) {
-      Socket.uninstallLocal(socket);
+      Socket.uninstallLocal(socket)
       if (socket.existRemotely) {
-        this.uninstallRemote(socket.name);
+        this.uninstallRemote(socket.name)
       }
-      return Promise.resolve();
+      return Promise.resolve()
     }
 
     if (socket.existRemotely) {
-      return this.uninstallRemote(socket.name);
+      return this.uninstallRemote(socket.name)
     }
 
-    return Promise.reject();
+    return Promise.reject()
   }
 
-  static uninstallLocal(socket) {
-    fs.removeSync(socket.localPath);
+  static uninstallLocal (socket) {
+    fs.removeSync(socket.localPath)
   }
 
   // TODO: check if the socket is installed (it may be not yet installed yet (before sync))
-  static uninstallRemote(socketName) {
-    debug('uninstallRemote', socketName);
+  static uninstallRemote (socketName) {
+    debug('uninstallRemote', socketName)
     return session.connection
       .Socket
       .please()
       .delete({ name: socketName })
       .then((resp) => resp)
-      .catch((err) => err);
+      .catch((err) => err)
   }
 
   // list sockets based on call to Syncano (sockets are installed on Synano)
-  static listRemote() {
-    debug('listRemote()');
-    return session.connection.Socket.please().list();
+  static listRemote () {
+    debug('listRemote()')
+    return session.connection.Socket.please().list()
   }
 
-  static listDeps() {
+  static listDeps () {
     // List project dependencies
-    return Object.keys(session.settings.project.getDependSockets());
+    return Object.keys(session.settings.project.getDependSockets())
   }
 
   // list all sockets (mix of locally definde and installed on server)
-  static async list() {
-    debug('list()');
+  static async list () {
+    debug('list()')
     // Local Socket defined in folders and in project deps
-    const localSocketsList = utils.listLocal().concat(Socket.listDeps());
-    return Promise.all(localSocketsList.map((socketName) => Socket.get(socketName)));
+    const localSocketsList = utils.listLocal().concat(Socket.listDeps())
+    return Promise.all(localSocketsList.map((socketName) => Socket.get(socketName)))
   }
 
-  static async flatList(socketName) {
-    debug('flatList()');
-    const sockets = [];
+  static async flatList (socketName) {
+    debug('flatList()')
+    const sockets = []
 
     const addToList = (socket) => {
-      const duplicated = _.find(sockets, (s) => s.name === socket.name);
+      const duplicated = _.find(sockets, (s) => s.name === socket.name)
       if (duplicated) {
         if (!_.includes(duplicated.dependencyOf, socket.name)) {
-          duplicated.dependencyOf.concat(socket.dependencyOf);
+          duplicated.dependencyOf.concat(socket.dependencyOf)
         }
       } else {
-        sockets.push(socket);
+        sockets.push(socket)
         socket.dependencies.forEach((dep) => {
-          addToList(dep);
-        });
+          addToList(dep)
+        })
       }
-    };
+    }
 
     if (socketName) {
       return Socket.get(socketName)
         .then((socket) => {
-          addToList(socket);
-          return sockets;
-        });
+          addToList(socket)
+          return sockets
+        })
     }
 
     // All Sockets
     return Socket.list()
       .then((allSockets) => {
         allSockets.forEach((socket) => {
-          addToList(socket);
-        });
-        return sockets;
-      });
+          addToList(socket)
+        })
+        return sockets
+      })
   }
-
 
   // Creating Socket simple object
-  static getLocal(socketName) {
-    return new Socket(socketName);
+  static getLocal (socketName) {
+    return new Socket(socketName)
   }
 
-  static get(socketName) {
-    debug(`Getting Socket: ${socketName}`);
-    const socket = Socket.getLocal(socketName);
+  static get (socketName) {
+    debug(`Getting Socket: ${socketName}`)
+    const socket = Socket.getLocal(socketName)
     return socket.loadRemote()
       .then((loadedSocket) => loadedSocket.getDepsRegistrySockets())
       .then(() => {
         if (!socket.existLocally) {
-          return socket.loadFromRegistry();
+          return socket.loadFromRegistry()
         }
-        return Promise.resolve();
+        return Promise.resolve()
       })
       .then(() => socket)
-      .catch(() => socket);
+      .catch(() => socket)
   }
 
-  static create(socketName, templateName) {
-    debug('create socket');
-    const newSocketPath = path.join(session.projectPath, socketName);
-    const socket = new Socket(socketName, newSocketPath);
+  static create (socketName, templateName) {
+    debug('create socket')
+    const newSocketPath = path.join(session.projectPath, socketName)
+    const socket = new Socket(socketName, newSocketPath)
     if (socket.existLocally) {
-      return Promise.reject('Socket with that name already exist!');
+      return Promise.reject('Socket with that name already exist!')
     }
-    return socket.init(templateName);
+    return socket.init(templateName)
   }
 
-  static publish(socketName, version) {
-    const registry = new Registry();
-    return registry.publishSocket(socketName, version);
+  static publish (socketName, version) {
+    const registry = new Registry()
+    return registry.publishSocket(socketName, version)
   }
 
-  init(templateName) {
+  init (templateName) {
     return new Promise((resolve, reject) => {
-      const socketPath = this.getSocketPath();
+      const socketPath = this.getSocketPath()
       if (!fs.existsSync(socketPath)) {
-        mkdirp.sync(socketPath);
+        mkdirp.sync(socketPath)
       }
 
       try {
-        const templateFolder = path.normalize(getSocketTemplate(templateName));
-        const files = fs.walkSync(templateFolder);
+        const templateFolder = path.normalize(getSocketTemplate(templateName))
+        const files = fs.walkSync(templateFolder)
         files.forEach((file) => {
-          const oldContent = fs.readFileSync(file, 'utf8');
+          const oldContent = fs.readFileSync(file, 'utf8')
           const socket = {
             socketName: this.name,
             socketDescription: `Description of ${this.name}`
-          };
+          }
 
-          const newContent = template(oldContent, socket, { partial: true });
-          const fileToSave = path.join(socketPath, file.replace(templateFolder, ''));
+          const newContent = template(oldContent, socket, { partial: true })
+          const fileToSave = path.join(socketPath, file.replace(templateFolder, ''))
 
-          mkdirp.sync(path.parse(fileToSave).dir);
-          fs.writeFileSync(path.join(socketPath, file.replace(templateFolder, '')), newContent);
-        });
-        resolve(this);
+          mkdirp.sync(path.parse(fileToSave).dir)
+          fs.writeFileSync(path.join(socketPath, file.replace(templateFolder, '')), newContent)
+        })
+        resolve(this)
       } catch (err) {
-        return reject(err);
+        return reject(err)
       }
-    });
+    })
   }
 
-  verify() {
+  verify () {
     return new Promise((resolve, reject) => {
       if (!(this.isDependencySocket || this.isProjectRegistryDependency)) {
         if (!fs.existsSync(this.getSrcFolder())) {
-          reject(new Error('No src folder!'));
+          reject(new Error('No src folder!'))
         }
       }
-      resolve();
-    });
+      resolve()
+    })
   }
 
-  getFullConfig() {
-    return this.settings.getFull();
+  getFullConfig () {
+    return this.settings.getFull()
   }
 
-  getRemote() {
+  getRemote () {
     return session.connection.Socket.please().get({ name: this.name })
     .then((socket) => socket)
-    .catch((err) => false);
+    .catch((err) => false)
   }
 
-  getRemoteSpec() {
-    debug('getRemoteSpec');
+  getRemoteSpec () {
+    debug('getRemoteSpec')
     if (this.remote.files['socket.yml']) {
       return axios.request({
         url: this.remote.files['socket.yml'].file,
@@ -342,225 +339,225 @@ class Socket {
         timeout: 3000
       })
       .then((spec) => {
-        this.remote.spec = YAML.load(spec.data);
-      });
+        this.remote.spec = YAML.load(spec.data)
+      })
     }
-    return Promise.resolve();
+    return Promise.resolve()
   }
 
-  setRemoteState(socket) {
-    this.existRemotely = true;
-    this.remote.name = socket.name;
-    this.remote.environment = socket.environment;
-    this.remote.version = socket.version;
-    this.remote.updatedAt = socket.updated_at;
-    this.remote.installed = socket.installed;
-    this.remote.files = socket.files;
-    this.remote.status = socket.status;
-    this.remote.statusInfo = socket.status_info;
-    this.remote.config = socket.config;
-    this.remote.metadata = socket.metadata;
+  setRemoteState (socket) {
+    this.existRemotely = true
+    this.remote.name = socket.name
+    this.remote.environment = socket.environment
+    this.remote.version = socket.version
+    this.remote.updatedAt = socket.updated_at
+    this.remote.installed = socket.installed
+    this.remote.files = socket.files
+    this.remote.status = socket.status
+    this.remote.statusInfo = socket.status_info
+    this.remote.config = socket.config
+    this.remote.metadata = socket.metadata
   }
 
-  loadRemote() {
-    debug('loadRemote()');
+  loadRemote () {
+    debug('loadRemote()')
     return this.getRemote()
       .then((socket) => {
         if (socket) {
-          this.setRemoteState(socket);
-          return this.getRemoteSpec();
+          this.setRemoteState(socket)
+          return this.getRemoteSpec()
         }
 
-        this.existRemotely = false;
-        return Promise.resolve(this);
+        this.existRemotely = false
+        return Promise.resolve(this)
       })
-      .then(() => this);
+      .then(() => this)
   }
 
-  async loadFromRegistry() {
-    debug(`loadFromRegistry: ${this.name}`);
-    const registry = new Registry();
-    const registrySocket = await registry.getFullSocket(this.name);
-    this.spec = registrySocket.config;
-    this.url = registrySocket.url;
+  async loadFromRegistry () {
+    debug(`loadFromRegistry: ${this.name}`)
+    const registry = new Registry()
+    const registrySocket = await registry.getFullSocket(this.name)
+    this.spec = registrySocket.config
+    this.url = registrySocket.url
   }
 
-  loadLocal() {
-    debug('loadLocal');
+  loadLocal () {
+    debug('loadLocal')
     if (this.settings.loaded) {
-      this.existLocally = true;
-      this.localPath = this.settings.baseDir;
-      this.spec = this.settings.getFull();
+      this.existLocally = true
+      this.localPath = this.settings.baseDir
+      this.spec = this.settings.getFull()
     } else if (_.includes(Socket.listDeps(), this.name)) {
-      this.isProjectRegistryDependency = true;
-      this.existLocally = false;
-      this.spec.version = session.settings.project.getDependSocket(this.name).version;
+      this.isProjectRegistryDependency = true
+      this.existLocally = false
+      this.spec.version = session.settings.project.getDependSocket(this.name).version
     }
   }
 
-  isSocketFile(fileFullPath) {
-    debug('isSocketFile', fileFullPath);
-    return fileFullPath.includes(this.localPath);
+  isSocketFile (fileFullPath) {
+    debug('isSocketFile', fileFullPath)
+    return fileFullPath.includes(this.localPath)
   }
 
-  getRawStatus() {
+  getRawStatus () {
     return {
       isProjectRegistryDependency: this.isProjectRegistryDependency,
       existRemotely: this.existRemotely,
       existLocally: this.existLocally
-    };
+    }
   }
 
-  getStatus() {
+  getStatus () {
     if (this.isProjectRegistryDependency && !this.existRemotely) {
-      return { status: 'not synced', type: 'warn' };
+      return { status: 'not synced', type: 'warn' }
     }
 
     if (this.existLocally && !this.existRemotely) {
-      return { status: 'not synced', type: 'warn' };
+      return { status: 'not synced', type: 'warn' }
     }
 
-    let msg = this.remote.statusInfo || this.remote.status;
+    let msg = this.remote.statusInfo || this.remote.status
     if (msg && msg.error) {
-      msg = msg.error;
+      msg = msg.error
     }
 
     if (this.remote.status === 'ok') {
-      return { status: msg, type: 'ok' };
+      return { status: msg, type: 'ok' }
     } else if (this.remote.status === 'processing') {
-      return { status: msg, type: 'warn' };
+      return { status: msg, type: 'warn' }
     }
-    return { status: msg, type: 'fail' };
+    return { status: msg, type: 'fail' }
   }
 
-  getType() {
+  getType () {
     if (this.isProjectRegistryDependency) {
-      return { msg: 'project dependency', type: 'ok' };
+      return { msg: 'project dependency', type: 'ok' }
     }
 
     if (this.isDependencySocket) {
-      return { msg: `dependency of ${this.dependencyOf.join(', ')}`, type: 'ok' };
+      return { msg: `dependency of ${this.dependencyOf.join(', ')}`, type: 'ok' }
     }
 
     if (this.existLocally) {
-      return { msg: 'local Socket', type: 'ok' };
+      return { msg: 'local Socket', type: 'ok' }
     }
 
-    return { msg: 'no local configuration', type: 'warn' };
+    return { msg: 'no local configuration', type: 'warn' }
   }
 
-  getVersion() {
-    return this.remote ? this.remote.version : null;
+  getVersion () {
+    return this.remote ? this.remote.version : null
   }
 
-  getScripts() {
-    return FindKey(this.spec, 'file');
+  getScripts () {
+    return FindKey(this.spec, 'file')
   }
 
-  getSrcFolder() {
-    return path.join(this.getSocketPath(), 'src', path.sep);
+  getSrcFolder () {
+    return path.join(this.getSocketPath(), 'src', path.sep)
   }
 
-  getCompiledScriptsFolder() {
-    const folder = path.join(this.getSocketPath(), '.dist', 'src', path.sep);
+  getCompiledScriptsFolder () {
+    const folder = path.join(this.getSocketPath(), '.dist', 'src', path.sep)
     if (!fs.existsSync(folder)) {
-      mkdirp.sync(folder);
+      mkdirp.sync(folder)
     }
-    return folder;
+    return folder
   }
 
-  getSocketZip() {
-    debug('getSocketZip');
-    return path.join(session.getDistPath(), `${this.name}.zip`);
+  getSocketZip () {
+    debug('getSocketZip')
+    return path.join(session.getDistPath(), `${this.name}.zip`)
   }
 
-  getSocketEnvZip() {
-    debug('getSocketEnvZip');
-    return path.join(session.getDistPath(), `${this.name}.env.zip`);
+  getSocketEnvZip () {
+    debug('getSocketEnvZip')
+    return path.join(session.getDistPath(), `${this.name}.env.zip`)
   }
 
-  getSocketNodeModulesChecksum() {
-    debug('getSocketNodeModulesChecksum');
-    return hashdirectory.sync(path.join(this.socketPath, '.dist', 'node_modules'));
+  getSocketNodeModulesChecksum () {
+    debug('getSocketNodeModulesChecksum')
+    return hashdirectory.sync(path.join(this.socketPath, '.dist', 'node_modules'))
   }
 
-  getSocketConfigFile() {
-    return path.join(session.projectPath, this.name, 'socket.yml');
+  getSocketConfigFile () {
+    return path.join(session.projectPath, this.name, 'socket.yml')
   }
 
-  composeFromSpec(objectType, ObjectClass) {
-    debug('composeFromSpec', objectType, ObjectClass);
-    const objects = Object.assign({}, this.remote.spec[objectType]);
-    Object.assign(objects, this.spec[objectType]);
+  composeFromSpec (objectType, ObjectClass) {
+    debug('composeFromSpec', objectType, ObjectClass)
+    const objects = Object.assign({}, this.remote.spec[objectType])
+    Object.assign(objects, this.spec[objectType])
 
-    debug('objects to process', objects);
+    debug('objects to process', objects)
     return Object.keys(objects).map((objectName) => {
-      debug(`checking ${objectName}`);
-      const objectMetadata = objects[objectName];
-      debug('objectMetadata', objectMetadata);
-      const object = new ObjectClass(objectName, objectMetadata, this.name);
+      debug(`checking ${objectName}`)
+      const objectMetadata = objects[objectName]
+      debug('objectMetadata', objectMetadata)
+      const object = new ObjectClass(objectName, objectMetadata, this.name)
 
-      debug('existRemotely', this.remote.spec[objectType], objectName);
+      debug('existRemotely', this.remote.spec[objectType], objectName)
       if (this.remote.spec[objectType][objectName]) {
-        debug(`existRemotely: ${true}`);
-        object.existRemotely = true;
+        debug(`existRemotely: ${true}`)
+        object.existRemotely = true
       }
 
-      debug('existLocally', this.spec[objectType], objectName);
+      debug('existLocally', this.spec[objectType], objectName)
       if (this.spec[objectType][objectName]) {
-        object.existLocally = true;
+        object.existLocally = true
       }
-      return object;
-    });
+      return object
+    })
   }
 
-  getEndpoints() {
-    debug('getEndpoints');
-    return this.composeFromSpec('endpoints', Endpoint);
+  getEndpoints () {
+    debug('getEndpoints')
+    return this.composeFromSpec('endpoints', Endpoint)
   }
 
-  getEndpoint(endpointName) {
-    debug('getEndpoints');
-    return _.find(this.getEndpoints(), { name: endpointName });
+  getEndpoint (endpointName) {
+    debug('getEndpoints')
+    return _.find(this.getEndpoints(), { name: endpointName })
   }
 
-  getEventHandlers() {
-    debug('getEventHandlers');
-    return this.composeFromSpec('event_handlers', Handler);
+  getEventHandlers () {
+    debug('getEventHandlers')
+    return this.composeFromSpec('event_handlers', Handler)
   }
 
-  getEvents() {
-    debug('getEvents');
-    return this.composeFromSpec('events', Event);
+  getEvents () {
+    debug('getEvents')
+    return this.composeFromSpec('events', Event)
   }
 
-  getEndpointTrace(endpointName, traceId) {
+  getEndpointTrace (endpointName, traceId) {
     return session.connection.EndpointTrace.please()
-      .get({ socketName: this.name, endpointName, id: traceId });
+      .get({ socketName: this.name, endpointName, id: traceId })
   }
 
-  getEndpointTraces(endpointName, lastId) {
-    debug('getEndpointTraces', endpointName, lastId);
+  getEndpointTraces (endpointName, lastId) {
+    debug('getEndpointTraces', endpointName, lastId)
     return session.connection.EndpointTrace.please()
       .list({ socketName: this.name, endpointName })
       .then((traces) => {
         if (!lastId) {
-          return traces;
+          return traces
         }
-        const filteredTraces = [];
+        const filteredTraces = []
         traces.forEach((trace) => {
           if (trace.id > lastId) {
-            filteredTraces.push(trace);
+            filteredTraces.push(trace)
           }
-        });
-        return filteredTraces;
-      });
+        })
+        return filteredTraces
+      })
   }
 
-  getTraces(lastId) {
-    const params = { room: `socket:${this.name}` };
+  getTraces (lastId) {
+    const params = { room: `socket:${this.name}` }
     if (lastId) {
-      params.last_id = lastId;
+      params.last_id = lastId
     }
 
     return axios.request({
@@ -571,10 +568,10 @@ class Socket {
       headers: {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
-    });
+    })
   }
 
-  static getEndpointTraceByUrl(url) {
+  static getEndpointTraceByUrl (url) {
     return axios.request({
       url: `https://${session.getHost()}${url}`,
       method: 'GET',
@@ -582,167 +579,167 @@ class Socket {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((resp) => resp.data);
+    .then((resp) => resp.data)
   }
 
-  createZip({ plainSources = false } = {}) {
-    debug('createZip');
+  createZip ({ plainSources = false } = {}) {
+    debug('createZip')
     return new Promise((resolve, reject) => {
-      let numberOfFiles = 0;
-      const allFilesList = [];
+      let numberOfFiles = 0
+      const allFilesList = []
 
-      const archive = archiver('zip', { zlib: { level: 9 } });
-      const output = fs.createWriteStream(this.getSocketZip(), { mode: 0o700 });
+      const archive = archiver('zip', { zlib: { level: 9 } })
+      const output = fs.createWriteStream(this.getSocketZip(), { mode: 0o700 })
 
-      archive.pipe(output);
-      archive.on('error', reject);
+      archive.pipe(output)
+      archive.on('error', reject)
 
-      function fileFilter(file) {
-        const remoteFiles = this.remote.files;
-        if (file.fullPath.match(/yarn\.lock/)) { return false; }
-        if (file.fullPath.match(/.*\.log$/)) { return false; }
-        if (file.fullPath.match(/node_modules/)) { return false; }
-        if (file.fullPath.match(/\.js\.map$/)) { return false; }
-        if (!plainSources && file.fullPath.match(/\.js$/)) { return false; }
-        if (file.fullPath.match(/\.js$/)) { return false; }
-        if (file.path.match(/^\./)) { return false; }
-        debug(`createZip: Checking file ${file.name}`);
+      function fileFilter (file) {
+        const remoteFiles = this.remote.files
+        if (file.fullPath.match(/yarn\.lock/)) { return false }
+        if (file.fullPath.match(/.*\.log$/)) { return false }
+        if (file.fullPath.match(/node_modules/)) { return false }
+        if (file.fullPath.match(/\.js\.map$/)) { return false }
+        if (!plainSources && file.fullPath.match(/\.js$/)) { return false }
+        if (file.fullPath.match(/\.js$/)) { return false }
+        if (file.path.match(/^\./)) { return false }
+        debug(`createZip: Checking file ${file.name}`)
         if (remoteFiles) {
-          const remoteFile = remoteFiles[file.path];
+          const remoteFile = remoteFiles[file.path]
           if (remoteFile) {
-            return remoteFile.checksum !== md5(fs.readFileSync(file.fullPath));
+            return remoteFile.checksum !== md5(fs.readFileSync(file.fullPath))
           }
-          return true;
+          return true
         }
-        return true;
+        return true
       }
 
-      const findFiles = readdirp({ root: this.getSrcFolder(), fileFilter: fileFilter.bind(this) });
+      const findFiles = readdirp({ root: this.getSrcFolder(), fileFilter: fileFilter.bind(this) })
 
       // Adding socket.yml if needed
-      const localYMLChecksum = md5(fs.readFileSync(this.getSocketYMLFile()));
+      const localYMLChecksum = md5(fs.readFileSync(this.getSocketYMLFile()))
       const remoteYMLChecksum = this.remote.files && this.remote.files['socket.yml']
         ? this.remote.files['socket.yml'].checksum
-        : '';
+        : ''
       if (remoteYMLChecksum !== localYMLChecksum) {
-        debug('Adding file to archive: \'socket.yml\'');
-        archive.file(this.getSocketYMLFile(), { name: 'socket.yml' });
+        debug('Adding file to archive: \'socket.yml\'')
+        archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
         allFilesList.push('socket.yml')
-        numberOfFiles += 1;
+        numberOfFiles += 1
       } else {
-        debug('Ignoring file: socket.yml');
+        debug('Ignoring file: socket.yml')
       }
 
       // Adding all files (besides those filtered out)
       findFiles.on('data', (file) => {
         // with "internal" path
-        const fileNameWithPath = file.fullPath.replace(`${this.getSrcFolder()}`, '');
-        debug(`Adding file to archive: ${fileNameWithPath}`);
-        archive.file(file.fullPath, { name: fileNameWithPath });
+        const fileNameWithPath = file.fullPath.replace(`${this.getSrcFolder()}`, '')
+        debug(`Adding file to archive: ${fileNameWithPath}`)
+        archive.file(file.fullPath, { name: fileNameWithPath })
         allFilesList.push(fileNameWithPath)
-        numberOfFiles += 1;
-      });
+        numberOfFiles += 1
+      })
 
       findFiles.on('end', () => {
         if (!plainSources) {
           return this.getScriptsInSocket()
             .then((scripts) => {
               scripts.forEach((script) => {
-                const scriptNameWithPath = script.srcFile.replace(`${this.getSrcFolder()}`, '');
-                const scriptBundlePath = script.compiledFile;
-                const remoteFile = this.remote.files ? this.remote.files[scriptNameWithPath] : null;
+                const scriptNameWithPath = script.srcFile.replace(`${this.getSrcFolder()}`, '')
+                const scriptBundlePath = script.compiledFile
+                const remoteFile = this.remote.files ? this.remote.files[scriptNameWithPath] : null
 
                 allFilesList.push(scriptNameWithPath)
 
                 if (remoteFile) {
                   if (!fs.existsSync(scriptBundlePath)) {
-                    return;
+                    return
                   }
-                  const scriptLocalChecksum = md5(fs.readFileSync(scriptBundlePath));
-                  const scriptRemoteChecksum = remoteFile.checksum;
+                  const scriptLocalChecksum = md5(fs.readFileSync(scriptBundlePath))
+                  const scriptRemoteChecksum = remoteFile.checksum
                   if (scriptLocalChecksum === scriptRemoteChecksum) {
-                    debug('Ignoring file:', scriptNameWithPath);
-                    return;
+                    debug('Ignoring file:', scriptNameWithPath)
+                    return
                   }
                 }
 
-                debug(`Adding file to archive: ${scriptNameWithPath}`);
-                archive.file(scriptBundlePath, { name: scriptNameWithPath });
-                numberOfFiles += 1;
-              });
+                debug(`Adding file to archive: ${scriptNameWithPath}`)
+                archive.file(scriptBundlePath, { name: scriptNameWithPath })
+                numberOfFiles += 1
+              })
             })
             .then(() => {
-              debug(`createZip: all files processed: ${numberOfFiles}`);
-              archive.finalize();
-            });
+              debug(`createZip: all files processed: ${numberOfFiles}`)
+              archive.finalize()
+            })
         }
-        archive.finalize();
-      });
+        archive.finalize()
+      })
 
       output.on('close', () => {
-        resolve({ numberOfFiles, allFilesList });
-      });
-    });
+        resolve({ numberOfFiles, allFilesList })
+      })
+    })
   }
 
-  createPackageZip() {
-    debug('createPackageZip');
+  createPackageZip () {
+    debug('createPackageZip')
     return new Promise((resolve, reject) => {
-      const archive = archiver('zip', { zlib: { level: 9 } });
-      const output = fs.createWriteStream(this.getSocketZip(), { mode: 0o700 });
+      const archive = archiver('zip', { zlib: { level: 9 } })
+      const output = fs.createWriteStream(this.getSocketZip(), { mode: 0o700 })
 
-      archive.pipe(output);
-      archive.on('error', reject);
+      archive.pipe(output)
+      archive.on('error', reject)
 
-      archive.file(this.getSocketYMLFile(), { name: 'socket.yml' });
-      archive.file(path.join(this.getSocketPath(), 'package.json'), { name: 'package.json' });
-      archive.directory(this.getSrcFolder(), 'src');
-      archive.finalize();
+      archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
+      archive.file(path.join(this.getSocketPath(), 'package.json'), { name: 'package.json' })
+      archive.directory(this.getSrcFolder(), 'src')
+      archive.finalize()
 
       output.on('close', () => {
-        resolve();
-      });
-    });
+        resolve()
+      })
+    })
   }
 
-  createEnvZip() {
-    debug('createEnvZip');
+  createEnvZip () {
+    debug('createEnvZip')
     return new Promise((resolve, reject) => {
-      const output = fs.createWriteStream(this.getSocketEnvZip(), { mode: 0o700 });
-      const archive = archiver('zip', { zlib: { level: 9 } });
+      const output = fs.createWriteStream(this.getSocketEnvZip(), { mode: 0o700 })
+      const archive = archiver('zip', { zlib: { level: 9 } })
 
       const envFolder = path.join(this.getSocketPath(), '.dist', 'node_modules')
 
       if (!fs.existsSync(envFolder)) {
-        mkdirp.sync(envFolder);
+        mkdirp.sync(envFolder)
       }
 
-      archive.pipe(output);
-      archive.on('error', reject);
+      archive.pipe(output)
+      archive.on('error', reject)
 
-      archive.directory(envFolder, 'node_modules');
+      archive.directory(envFolder, 'node_modules')
 
-      archive.finalize();
+      archive.finalize()
       output.on('close', () => {
-        resolve();
-      });
-    });
+        resolve()
+      })
+    })
   }
 
-  updateEnvCall(method) {
+  updateEnvCall (method) {
     return new Promise((resolve, reject) => {
-      const form = new FormData();
+      const form = new FormData()
 
-      let endpointPath = `/v2/instances/${session.project.instance}/environments/`;
+      let endpointPath = `/v2/instances/${session.project.instance}/environments/`
       if (method === 'PATCH') {
-        endpointPath = `/v2/instances/${session.project.instance}/environments/${this.name}/`;
+        endpointPath = `/v2/instances/${session.project.instance}/environments/${this.name}/`
       }
 
-      debug('endpointPath', endpointPath);
-      form.append('name', this.name);
-      form.append('metadata', JSON.stringify({ checksum: this.getSocketNodeModulesChecksum() }));
-      form.append('zip_file', fs.createReadStream(this.getSocketEnvZip()));
-      debug('upload env zip');
+      debug('endpointPath', endpointPath)
+      form.append('name', this.name)
+      form.append('metadata', JSON.stringify({ checksum: this.getSocketNodeModulesChecksum() }))
+      form.append('zip_file', fs.createReadStream(this.getSocketEnvZip()))
+      debug('upload env zip')
       form.submit({
         method,
         protocol: 'https:',
@@ -753,86 +750,86 @@ class Socket {
         path: endpointPath
 
       }, (err, res) => {
-        debug('end env upload');
+        debug('end env upload')
         if (res.statusCode === 200) {
-          resolve();
+          resolve()
         }
 
         if (res.statusCode === 413) {
-          debug('error while updating environment - environment is to big :(');
-          return reject(new Error('environment is to big'));
+          debug('error while updating environment - environment is to big :(')
+          return reject(new Error('environment is to big'))
         }
 
         if (err || res.statusCode === 404) {
-          debug(`environment ${this.name} was not found`);
-          return reject(err || res);
+          debug(`environment ${this.name} was not found`)
+          return reject(err || res)
         }
 
         res.on('data', (data) => {
-          const message = data.toString();
+          const message = data.toString()
 
           if (res.statusCode > 299) {
-            debug(`error while updating environment (${res.statusCode})`);
-            return reject(message);
+            debug(`error while updating environment (${res.statusCode})`)
+            return reject(message)
           }
 
-          debug(`environment ${this.name} was found`);
-          resolve(message);
-        });
-      });
-    });
+          debug(`environment ${this.name} was found`)
+          resolve(message)
+        })
+      })
+    })
   }
 
-  updateEnv() {
-    debug('updateEnv');
+  updateEnv () {
+    debug('updateEnv')
     return this.socketEnvShouldBeUpdated()
       .then((resp) => {
         if (resp) {
-          return this.createEnvZip().then(() => this.updateEnvCall(resp));
+          return this.createEnvZip().then(() => this.updateEnvCall(resp))
         }
-        return Promise.resolve('No need to update');
-      });
+        return Promise.resolve('No need to update')
+      })
   }
 
-  postSocketZip(config) {
-    return this.zipCallback({ config, install: true });
+  postSocketZip (config) {
+    return this.zipCallback({ config, install: true })
   }
 
-  patchSocketZip(config) {
-    return this.zipCallback({ config, install: false });
+  patchSocketZip (config) {
+    return this.zipCallback({ config, install: false })
   }
 
-  zipCallback({ config, install = false }) {
-    debug('zipCallback');
-    let endpointPath = `/v2/instances/${session.project.instance}/sockets/`;
+  zipCallback ({ config, install = false }) {
+    debug('zipCallback')
+    let endpointPath = `/v2/instances/${session.project.instance}/sockets/`
 
     if (!install) {
-      endpointPath += `${this.name}/`;
+      endpointPath += `${this.name}/`
     }
 
     return this.createZip()
       .then(({ numberOfFiles, allFilesList }) => {
         if (numberOfFiles === 0 && this.isConfigSynced) {
-          debug('config is synced and nothing to update');
-          return Promise.resolve();
+          debug('config is synced and nothing to update')
+          return Promise.resolve()
         }
 
         return new Promise((resolve, reject) => {
-          const form = new FormData();
+          const form = new FormData()
 
-          form.append('name', this.name);
-          form.append('environment', this.name);
+          form.append('name', this.name)
+          form.append('environment', this.name)
 
           if (config) {
-            form.append('config', JSON.stringify(config));
+            form.append('config', JSON.stringify(config))
           }
 
-          const metadata = Object.assign({}, this.remote.metadata, { sources: this.getSocketSrcChecksum() });
-          form.append('metadata', JSON.stringify(metadata));
+          const metadata = Object.assign({}, this.remote.metadata, { sources: this.getSocketSrcChecksum() })
+          form.append('metadata', JSON.stringify(metadata))
 
-          form.append('zip_file_list', JSON.stringify(allFilesList));
+          form.append('zip_file_list', JSON.stringify(allFilesList))
           if (numberOfFiles > 0) {
-            form.append('zip_file', fs.createReadStream(this.getSocketZip()));
+            form.append('zip_file', fs.createReadStream(this.getSocketZip()))
           }
 
           form.submit({
@@ -845,91 +842,91 @@ class Socket {
             path: endpointPath
 
           }, (err, res) => {
-            debug('end upload');
-            let responseData = '';
-            let responseCode = '';
+            debug('end upload')
+            let responseData = ''
+            let responseCode = ''
             res.on('data', (data) => {
-              responseData += data.toString();
-              responseCode = res.statusCode;
-            });
+              responseData += data.toString()
+              responseCode = res.statusCode
+            })
             res.on('end', () => {
               if (err || responseCode === 404) {
-                debug(`socket ${this.name} was not found`);
-                return reject(err || res);
+                debug(`socket ${this.name} was not found`)
+                return reject(err || res)
               }
 
               if (responseCode > 299) {
-                debug(`error while updating socket (${res.statusCode})`);
-                return reject(responseData);
+                debug(`error while updating socket (${res.statusCode})`)
+                return reject(responseData)
               }
 
-              debug(`socket ${this.name} was found`);
-              resolve(responseData);
-            });
-          });
-        });
-      });
+              debug(`socket ${this.name} was found`)
+              resolve(responseData)
+            })
+          })
+        })
+      })
   }
 
-  getSocketPath() {
+  getSocketPath () {
     if (this.isDependencySocket || this.isProjectRegistryDependency) {
-      const socketFolder = path.join(session.getBuildPath(), this.name);
-      mkdirp.sync(socketFolder);
-      return socketFolder;
+      const socketFolder = path.join(session.getBuildPath(), this.name)
+      mkdirp.sync(socketFolder)
+      return socketFolder
     }
-    return this.socketPath;
+    return this.socketPath
   }
 
-  getSocketYMLFile() {
-    return path.join(this.getSocketPath(), 'socket.yml');
+  getSocketYMLFile () {
+    return path.join(this.getSocketPath(), 'socket.yml')
   }
 
-  preCompileRegistrySocket() {
+  preCompileRegistrySocket () {
     return Registry.getSocket(this)
       .then((resp) => {
-        const fileName = path.join(session.getBuildPath(), `${this.name}.zip`);
+        const fileName = path.join(session.getBuildPath(), `${this.name}.zip`)
 
         return new Promise((resolve, reject) => {
           fs.createReadStream(fileName)
             .pipe(unzip.Extract({ path: this.getSocketPath() }))
             .on('close', () => {
-              debug('Unzip finished');
-              resolve(utils.updateSocketNPMDeps(this.getSocketPath()));
-            });
-        });
-      });
+              debug('Unzip finished')
+              resolve(utils.updateSocketNPMDeps(this.getSocketPath()))
+            })
+        })
+      })
   }
 
-  compile(params = { updateSocketNPMDeps: false }) {
-    debug(`compile: ${this.name}`);
-    debug(`compile socketPath: ${this.getSocketPath()}`);
+  compile (params = { updateSocketNPMDeps: false }) {
+    debug(`compile: ${this.name}`)
+    debug(`compile socketPath: ${this.getSocketPath()}`)
 
-    let compilation = null;
+    let compilation = null
     if (params.updateSocketNPMDeps) {
       if (this.isDependencySocket || this.isProjectRegistryDependency) {
-        compilation = this.preCompileRegistrySocket();
+        compilation = this.preCompileRegistrySocket()
       } else {
-        compilation = utils.updateSocketNPMDeps(this.getSocketPath());
+        compilation = utils.updateSocketNPMDeps(this.getSocketPath())
       }
     } else {
-      compilation = Promise.resolve();
+      compilation = Promise.resolve()
     }
 
     return compilation
       .then((updateSocketDepsStatus) => {
-        debug('updateSocketDepsStatus', updateSocketDepsStatus);
-        return compile([this], params.withSourceMaps);
-      });
+        debug('updateSocketDepsStatus', updateSocketDepsStatus)
+        return compile([this], params.withSourceMaps)
+      })
   }
 
-  isConfigSynced(config) {
-    debug('isConfigSynced');
-    return _.isEqual(config, this.remote.config);
+  isConfigSynced (config) {
+    debug('isConfigSynced')
+    return _.isEqual(config, this.remote.config)
   }
 
-  updateConfig(config) {
+  updateConfig (config) {
     if (this.isConfigSynced(config)) {
-      return Promise.resolve();
+      return Promise.resolve()
     }
     return axios.request({
       url: `https://${session.getHost()}/v2/instances/${session.project.instance}/sockets/${this.name}/`,
@@ -938,174 +935,174 @@ class Socket {
       headers: {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
-    });
+    })
   }
 
-  update(params = { config: null, updateSocketNPMDeps: false, updateEnv: false }) {
-    debug(`Socket update: ${this.name}`, params);
-    const config = Object.assign({}, this.remote.config, params.config);
+  update (params = { config: null, updateSocketNPMDeps: false, updateEnv: false }) {
+    debug(`Socket update: ${this.name}`, params)
+    const config = Object.assign({}, this.remote.config, params.config)
 
     // Get options from the env
     if (this.spec.config) {
       Object.keys(this.spec.config).forEach((optionName) => {
-        const envValue = this.getConfigOptionFromEnv(optionName);
+        const envValue = this.getConfigOptionFromEnv(optionName)
         if (envValue) {
-          debug(`setting value from env for: ${optionName}`);
-          config[optionName] = envValue;
+          debug(`setting value from env for: ${optionName}`)
+          config[optionName] = envValue
         }
-      });
+      })
     }
 
     return this.verify()
       .then(() => this.compile({ updateSocketNPMDeps: params.updateSocketNPMDeps }))
       .then(() => {
         if (params.updateEnv) {
-          return this.updateEnv();
+          return this.updateEnv()
         }
-        return Promise.resolve();
+        return Promise.resolve()
       })
       .then(() => {
         if (this.existRemotely) {
-          return this.patchSocketZip(config);
+          return this.patchSocketZip(config)
         }
-        return this.postSocketZip(config);
+        return this.postSocketZip(config)
       })
       .then((resp) => {
         if (resp && resp.status !== 'ok') {
-          return this.waitForStatusInfo();
+          return this.waitForStatusInfo()
         }
-        return Promise.resolve({ status: 'stopped' });
-      });
+        return Promise.resolve({ status: 'stopped' })
+      })
   }
 
-  waitForStatusInfo() {
-    debug('waitForStatusInfo');
+  waitForStatusInfo () {
+    debug('waitForStatusInfo')
 
     return new Promise((resolve, reject) => {
       const getStatus = () => {
         this.getRemote()
           .then((socket) => {
             if (socket.status !== 'ok' && socket.status !== 'error') {
-              setTimeout(getStatus, 200);
+              setTimeout(getStatus, 200)
             } else {
-              this.setRemoteState(socket);
-              resolve({ status: socket.status, message: socket.status_info });
+              this.setRemoteState(socket)
+              resolve({ status: socket.status, message: socket.status_info })
             }
-          });
-      };
-      getStatus();
-    });
+          })
+      }
+      getStatus()
+    })
   }
 
   // Hosting
-  addHosting(hostingName, params) {
-    this.settings.addHosting(hostingName, params);
-    this.settings.save();
+  addHosting (hostingName, params) {
+    this.settings.addHosting(hostingName, params)
+    this.settings.save()
   }
 
-  getHosting(hostingName) {
-    return Hosting.get(this, hostingName);
+  getHosting (hostingName) {
+    return Hosting.get(this, hostingName)
   }
 
-  listHostings() {
-    return Hosting.list(this);
+  listHostings () {
+    return Hosting.list(this)
   }
 
-  deleteHosting(hostingName) {
-    this.settings.deleteHosting(hostingName);
-    this.settings.save();
-    echo();
-    echo(4)(`Hosting ${hostingName} of ${this.name} has been deleted from config...`);
+  deleteHosting (hostingName) {
+    this.settings.deleteHosting(hostingName)
+    this.settings.save()
+    echo()
+    echo(4)(`Hosting ${hostingName} of ${this.name} has been deleted from config...`)
   }
 
-  getScriptObject(fileFullPath) {
-    const srcFile = fileFullPath;
-    const compiledFile = fileFullPath.replace(this.getSrcFolder(), this.getCompiledScriptsFolder());
+  getScriptObject (fileFullPath) {
+    const srcFile = fileFullPath
+    const compiledFile = fileFullPath.replace(this.getSrcFolder(), this.getCompiledScriptsFolder())
     return {
       srcFile,
       compiledFile
-    };
+    }
   }
 
-  getScriptsInSocket() {
-    debug('getScriptsInSocket');
+  getScriptsInSocket () {
+    debug('getScriptsInSocket')
 
     return new Promise((resolve, reject) => {
-      function fileFilter(file) {
-        const fileWithLocalPath = file.fullPath.replace(`${this.getSocketPath()}${path.sep}`, '');
-        if (fileWithLocalPath.match(/test/)) { return false; }
-        if (fileWithLocalPath.match(/tests/)) { return false; }
-        if (fileWithLocalPath.match(/\.bundles/)) { return false; }
-        if (fileWithLocalPath.match(/node_modules/)) { return false; }
-        if (!fileWithLocalPath.match(/\.js$/)) { return false; }
-        return true;
+      function fileFilter (file) {
+        const fileWithLocalPath = file.fullPath.replace(`${this.getSocketPath()}${path.sep}`, '')
+        if (fileWithLocalPath.match(/test/)) { return false }
+        if (fileWithLocalPath.match(/tests/)) { return false }
+        if (fileWithLocalPath.match(/\.bundles/)) { return false }
+        if (fileWithLocalPath.match(/node_modules/)) { return false }
+        if (!fileWithLocalPath.match(/\.js$/)) { return false }
+        return true
       }
 
-      const findFiles = readdirp({ root: this.getSrcFolder(), fileFilter: fileFilter.bind(this) });
-      const files = [];
+      const findFiles = readdirp({ root: this.getSrcFolder(), fileFilter: fileFilter.bind(this) })
+      const files = []
       // Adding all files (besides those filtered out)
       findFiles.on('data', (file) => {
-        files.push(this.getScriptObject(file.fullPath));
-      });
+        files.push(this.getScriptObject(file.fullPath))
+      })
 
       findFiles.on('end', () => {
-        resolve(files);
-      });
-    });
+        resolve(files)
+      })
+    })
   }
 
-  getScriptsToCompile() {
-    debug('getScriptsToCompile');
+  getScriptsToCompile () {
+    debug('getScriptsToCompile')
 
     return this.getScriptsInSocket()
       .then((files) => {
-        const filesToCompile = [];
+        const filesToCompile = []
         files.forEach((file) => {
-          const fileNameWithLocalPath = file.srcFile.replace(this.getSrcFolder(), '');
-          const localSrcChecksum = md5(fs.readFileSync(file.srcFile, 'utf8'));
+          const fileNameWithLocalPath = file.srcFile.replace(this.getSrcFolder(), '')
+          const localSrcChecksum = md5(fs.readFileSync(file.srcFile, 'utf8'))
           const remoteSrcChecksum =
-            this.remote.metadata.sources ? this.remote.metadata.sources[fileNameWithLocalPath] : '';
+            this.remote.metadata.sources ? this.remote.metadata.sources[fileNameWithLocalPath] : ''
 
-          debug(localSrcChecksum, remoteSrcChecksum, fileNameWithLocalPath);
+          debug(localSrcChecksum, remoteSrcChecksum, fileNameWithLocalPath)
           if (localSrcChecksum !== remoteSrcChecksum) {
-            filesToCompile.push(file);
+            filesToCompile.push(file)
           }
-        });
-        return filesToCompile;
-      });
+        })
+        return filesToCompile
+      })
   }
 
-  getFileForEndpoint(endpointName) {
+  getFileForEndpoint (endpointName) {
     if (endpointName.startsWith('events')) {
-      return this.spec.event_handlers[endpointName].file;
+      return this.spec.event_handlers[endpointName].file
     }
-    return this.spec.endpoints[endpointName].file;
+    return this.spec.endpoints[endpointName].file
   }
 
-  getSourceMapPath(endpointName) {
-    const filePath = this.getFileForEndpoint(endpointName);
-    const { base, dir } = path.parse(filePath);
+  getSourceMapPath (endpointName) {
+    const filePath = this.getFileForEndpoint(endpointName)
+    const { base, dir } = path.parse(filePath)
     return path.join(
       this.getSocketPath(),
       dir,
       '.bundles',
-      `${base}.map`,
-    );
+      `${base}.map`
+    )
   }
 
-  getOrigFileLine(traceData, endpointName) {
+  getOrigFileLine (traceData, endpointName) {
     const smc = new SourceMap.SourceMapConsumer(
       fs.readFileSync(this.getSourceMapPath(endpointName), { encoding: 'utf-8' })
-    );
+    )
     return smc.originalPositionFor({
       line: traceData.lineNumber,
       column: traceData.columnNumber
-    });
+    })
   }
 
-  getPrettyTrace(traceData, endpointName) {
-    const origFileLine = this.getOrigFileLine(traceData, endpointName);
-    const origFilePath = utils.getOrigFilePath(origFileLine);
+  getPrettyTrace (traceData, endpointName) {
+    const origFileLine = this.getOrigFileLine(traceData, endpointName)
+    const origFilePath = utils.getOrigFilePath(origFileLine)
 
     return {
       origFilePath,
@@ -1118,82 +1115,82 @@ class Socket {
           { encoding: 'utf-8' }).split('\n')[origFileLine.line - 1],
         p(origFileLine.column)('^')
       ]
-    };
+    }
   }
 
   // Config
-  getConfigOptions() {
-    return this.spec.config;
+  getConfigOptions () {
+    return this.spec.config
   }
 
-  getConfigOptionFromEnv(optionName) {
-    return process.env[`${this.name.toUpperCase()}_${optionName.toUpperCase()}`];
+  getConfigOptionFromEnv (optionName) {
+    return process.env[`${this.name.toUpperCase()}_${optionName.toUpperCase()}`]
   }
 
-  getConfigOptionsToAsk() {
+  getConfigOptionsToAsk () {
     // If there is not options in spec it is always no options to ask
-    if (!this.spec.config) { return {}; }
+    if (!this.spec.config) { return {} }
 
-    const options = {};
+    const options = {}
 
     if (this.isDependencySocket || this.isProjectRegistryDependency) {
       if (this.remote.status === 'ok') {
-        return options;
+        return options
       }
       Object.keys(this.spec.config).forEach((optionName) => {
-        const envValue = this.getConfigOptionFromEnv(optionName);
-        const option = this.spec.config[optionName];
+        const envValue = this.getConfigOptionFromEnv(optionName)
+        const option = this.spec.config[optionName]
         if (option.required && !envValue) {
-          options[optionName] = option;
+          options[optionName] = option
         }
-      });
-      return options;
+      })
+      return options
     }
 
     if (this.existLocally) {
       Object.keys(this.spec.config).forEach((optionName) => {
-        const envValue = this.getConfigOptionFromEnv(optionName);
-        const option = this.spec.config[optionName];
+        const envValue = this.getConfigOptionFromEnv(optionName)
+        const option = this.spec.config[optionName]
         if (option.required && !envValue) {
           if (!this.remote.config || !this.remote.config[optionName]) {
-            options[optionName] = option;
+            options[optionName] = option
           }
         }
-      });
-      return options;
+      })
+      return options
     }
   }
 
   // Registry
-  bumpVersion(bumpType) {
-    const nextVersion = this.settings.bumpVersion(bumpType);
-    this.spec.version = nextVersion;
-    return nextVersion;
+  bumpVersion (bumpType) {
+    const nextVersion = this.settings.bumpVersion(bumpType)
+    this.spec.version = nextVersion
+    return nextVersion
   }
 
-  submit() {
-    debug('submit');
-    const registry = new Registry();
-    return registry.submitSocket(this);
+  submit () {
+    debug('submit')
+    const registry = new Registry()
+    return registry.submitSocket(this)
   }
 
   // Socket dependencies
-  getDeps() {
-    return this.settings.getDependencies();
+  getDeps () {
+    return this.settings.getDependencies()
   }
 
-  getDepsRegistrySockets() {
-    debug(`getDepsRegistrySockets for: ${this.name}`);
-    const registry = new Registry();
+  getDepsRegistrySockets () {
+    debug(`getDepsRegistrySockets for: ${this.name}`)
+    const registry = new Registry()
 
     const getDeepDeps = (deps, socketToAdd) => {
-      debug('getDeepDeps', deps);
-      const sockets = [];
+      debug('getDeepDeps', deps)
+      const sockets = []
       if (socketToAdd) {
-        sockets.push(socketToAdd);
+        sockets.push(socketToAdd)
       }
       return Promise.all(sockets.concat(Object.keys(deps).map((dependencyName) => {
-        debug(`processing dependency: ${dependencyName}`);
+        debug(`processing dependency: ${dependencyName}`)
         return registry.searchSocketByName(dependencyName, deps[dependencyName].version)
           .then((socket) => {
             // To keep track of the name of the parent
@@ -1201,14 +1198,14 @@ class Socket {
             socket.dependencyOf = socketToAdd ? socketToAdd.name : this.name;
 
             if (!_.isEmpty(socket.config.dependencies)) {
-              return getDeepDeps(socket.config.dependencies, socket);
+              return getDeepDeps(socket.config.dependencies, socket)
             }
-            debug(`returning socket without dependencies ${socket.name}`);
-            return Promise.resolve(socket);
-          });
-      })));
-    };
-    debug(`Defined dependencies of "${this.name}" to follow: ${this.spec.dependencies}`);
+            debug(`returning socket without dependencies ${socket.name}`)
+            return Promise.resolve(socket)
+          })
+      })))
+    }
+    debug(`Defined dependencies of "${this.name}" to follow: ${this.spec.dependencies}`)
     if (this.spec.dependencies) {
       return getDeepDeps(this.spec.dependencies)
         .then((arr) => Promise.all(_.flatten(arr).map((socket) => Socket.get(socket.name)
@@ -1217,25 +1214,25 @@ class Socket {
                 createdSocket.isDependencySocket = true;
                 // eslint-disable-next-line
                 createdSocket.dependencyOf = [socket.dependencyOf];
-                return createdSocket;
+                return createdSocket
               }))))
         .then((depsObjects) => {
-          this.dependencies = depsObjects;
-        });
+          this.dependencies = depsObjects
+        })
     }
 
-    return Promise.resolve();
+    return Promise.resolve()
   }
 
-  addDependency(socketFromRegistry) {
-    const socketName = socketFromRegistry.name;
-    const socketVersion = socketFromRegistry.version;
-    this.settings.addDependency(socketName, socketVersion);
-    return new Promise((resolve, reject) => resolve());
+  addDependency (socketFromRegistry) {
+    const socketName = socketFromRegistry.name
+    const socketVersion = socketFromRegistry.version
+    this.settings.addDependency(socketName, socketVersion)
+    return new Promise((resolve, reject) => resolve())
   }
 
-  socketEnvShouldBeUpdated() {
-    debug('socketEnvShouldBeUpdated');
+  socketEnvShouldBeUpdated () {
+    debug('socketEnvShouldBeUpdated')
     return axios.request({
       url: `https://${session.getHost()}/v2/instances/${session.project.instance}/environments/${this.name}/`,
       method: 'GET',
@@ -1246,63 +1243,63 @@ class Socket {
     })
     .then((resp) => {
       if (resp.data.metadata.checksum === this.getSocketNodeModulesChecksum()) {
-        debug('socketEnvShouldBeUpdated', 'env is up to date');
-        return false;
+        debug('socketEnvShouldBeUpdated', 'env is up to date')
+        return false
       }
-      return 'PATCH';
+      return 'PATCH'
     })
-    .catch((err) => 'POST');
+    .catch((err) => 'POST')
   }
 
-  getSocketSrcChecksum() {
-    const files = fs.walkSync(this.getSrcFolder());
-    const checksums = {};
+  getSocketSrcChecksum () {
+    const files = fs.walkSync(this.getSrcFolder())
+    const checksums = {}
     files.forEach((file) => {
-      const fileReltivePath = file.replace(this.getSrcFolder(), '');
-      checksums[fileReltivePath] = md5(fs.readFileSync(file, 'utf8'));
-    });
-    return checksums;
+      const fileReltivePath = file.replace(this.getSrcFolder(), '')
+      checksums[fileReltivePath] = md5(fs.readFileSync(file, 'utf8'))
+    })
+    return checksums
   }
 
-  shouldBeUpdated() {
-    debug('shouldBeUpdated');
+  shouldBeUpdated () {
+    debug('shouldBeUpdated')
     if (this.existLocally && this.existRemotely) {
-      const files = this.remote.files;
+      const files = this.remote.files
       return Object.keys(files).some((file) => {
-        let filePath;
+        let filePath
 
         if (file === 'socket.yml') {
-          filePath = this.getSocketYMLFile();
+          filePath = this.getSocketYMLFile()
         } else if (file.endsWith('.js')) {
-          filePath = path.join(this.getCompiledScriptsFolder(), file);
+          filePath = path.join(this.getCompiledScriptsFolder(), file)
         } else {
-          filePath = path.join(this.getSrcFolder(), file);
+          filePath = path.join(this.getSrcFolder(), file)
         }
 
-        const remoteChecksum = files[file].checksum;
-        const localChecksum = md5(fs.readFileSync(filePath));
+        const remoteChecksum = files[file].checksum
+        const localChecksum = md5(fs.readFileSync(filePath))
 
-        debug(file);
-        debug(localChecksum);
-        debug(remoteChecksum);
-        return localChecksum !== remoteChecksum;
-      });
+        debug(file)
+        debug(localChecksum)
+        debug(remoteChecksum)
+        return localChecksum !== remoteChecksum
+      })
     } else if (!this.existRemotely) {
-      return true;
+      return true
     } else if (this.isDependencySocket || this.isProjectRegistryDependency) {
       if (this.remote.status !== 'ok') {
-        return false;
+        return false
       }
 
-      debug(`Spec version: ${this.spec.version}`);
-      debug(`Remote version: ${this.getVersion()}`);
+      debug(`Spec version: ${this.spec.version}`)
+      debug(`Remote version: ${this.getVersion()}`)
       if (this.spec.version === this.getVersion()) {
-        return false;
+        return false
       }
     }
   }
 }
 
-Socket.listLocal = utils.listLocal;
+Socket.listLocal = utils.listLocal
 
-export default Socket;
+export default Socket

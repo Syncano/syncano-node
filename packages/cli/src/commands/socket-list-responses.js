@@ -1,20 +1,20 @@
-import format from 'chalk';
-import { p, printCode } from '../utils/print-tools';
+import format from 'chalk'
+import { p, printCode } from '../utils/print-tools'
 
 const renderStatus = (object) => {
-  const { status, type } = object.getStatus();
+  const { status, type } = object.getStatus()
 
   switch (type) {
     case 'ok':
-      return format.dim.green(status);
+      return format.dim.green(status)
     case 'warn':
-      return format.dim.yellow(status);
+      return format.dim.yellow(status)
     case 'fail':
-      return format.dim.red(status);
+      return format.dim.red(status)
     default:
-      return status;
+      return status
   }
-};
+}
 
 const socketListResponses = (session) => ({
   lackSockets: 'No Socket was found on server nor in config!',
@@ -25,11 +25,11 @@ const socketListResponses = (session) => ({
   installNewOne: `Type ${format.cyan('syncano-cli add <name>')} to install new one from registry.`,
   params: `${format.white('params')}:`,
   socket: (socket) => {
-    let description = '';
+    let description = ''
     if (socket.existRemotely) {
-      description = socket.remote.spec.description || '';
+      description = socket.remote.spec.description || ''
     } else {
-      description = socket.spec.description || '';
+      description = socket.spec.description || ''
     }
 
     return {
@@ -38,10 +38,10 @@ const socketListResponses = (session) => ({
       version: `${format.dim('version')}: ${socket.spec.version || ''}`,
       type: `${format.dim('type')}: ${socket.getType().msg}`,
       status: `${format.dim('status')}: ${renderStatus(socket)}`
-    };
+    }
   },
   endpoint: (endpoint) => {
-    const metadata = endpoint.metadata;
+    const metadata = endpoint.metadata
 
     return endpoint && {
       name: `${format.white('endpoint')}: ${format.cyan(endpoint.getFullName())}`,
@@ -54,10 +54,10 @@ const socketListResponses = (session) => ({
         example: `${format.dim('example')}: ${format.cyan.dim(metadata.parameters[param].example)}`
       }),
       response: (example) => {
-        const { exit_code, description } = example || '';
-        let exampleLines = '';
+        const { exit_code, description } = example || ''
+        let exampleLines = ''
         if (example && example.example) {
-          exampleLines = example.example.split('\n').map((line) => p(12)(line)).join('\n');
+          exampleLines = example.example.split('\n').map((line) => p(12)(line)).join('\n')
         }
 
         return {
@@ -65,12 +65,12 @@ const socketListResponses = (session) => ({
           description: example && `${format.dim('description')}: ${printCode(exit_code, description)}`,
           exitCode: example && `${format.dim('exit code')}: ${printCode(exit_code)}`,
           example: exampleLines && `${format.dim('example')}:\n${exampleLines}`
-        };
+        }
       }
-    };
+    }
   },
   handler: (handler) => {
-    const metadata = handler.metadata;
+    const metadata = handler.metadata
 
     return handler && {
       name: `${format.white('event handler')}: ${format.cyan(handler.name)}`,
@@ -80,7 +80,7 @@ const socketListResponses = (session) => ({
         description: `${format.dim('description')}: ${metadata.parameters[param].description || ''}`,
         example: `${format.dim('example')}: ${format.cyan.dim(metadata.parameters[param].example)}`
       })
-    };
+    }
   },
   event: (event) => event && {
     name: `${format.white('event')}: ${format.cyan(event.name)}`,
@@ -91,6 +91,6 @@ const socketListResponses = (session) => ({
       example: `${format.dim('example')}: ${format.grey(event.metadata.parameters[param].example)}`
     })
   }
-});
+})
 
-export default socketListResponses;
+export default socketListResponses

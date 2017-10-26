@@ -11,7 +11,7 @@ import {parseJSON, checkStatus} from '../../src/utils'
 chai.use(chaiAsPromised)
 chai.should()
 
-describe.skip('Channel', function() {
+describe.skip('Channel', function () {
   const instanceName = getRandomString()
   const {channel} = new Server({
     instanceName
@@ -57,7 +57,7 @@ describe.skip('Channel', function() {
     })
   })
 
-  function uploadSocket() {
+  function uploadSocket () {
     const socket = new FormData()
 
     return new Promise((resolve, reject) => {
@@ -93,7 +93,7 @@ describe.skip('Channel', function() {
     })
   }
 
-  function uploadEnvironment() {
+  function uploadEnvironment () {
     const env = new FormData()
 
     return new Promise((resolve, reject) => {
@@ -128,7 +128,7 @@ describe.skip('Channel', function() {
     })
   }
 
-  function waitForSocket() {
+  function waitForSocket () {
     return new Promise(resolve => {
       const getStatus = () => {
         fetch(

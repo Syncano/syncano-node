@@ -1,4 +1,4 @@
-function getConfig() {
+function getConfig () {
   return {
     sourceMaps: true,
     code: true,
@@ -23,7 +23,7 @@ function getConfig() {
         }
       ]
     ]
-  };
+  }
 }
 
-export default getConfig;
+export default getConfig

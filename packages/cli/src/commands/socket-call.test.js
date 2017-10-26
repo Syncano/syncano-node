@@ -1,15 +1,15 @@
-import _ from 'lodash';
-import sinon from 'sinon';
-import format from 'chalk';
-import inquirer from 'inquirer';
-import { expect } from 'chai';
-import SocketEndpointCall from './socket-call';
-import context from '../utils/context';
-import printTools from '../utils/print-tools';
-import { getRandomString } from '../utils/test-utils';
+import _ from 'lodash'
+import sinon from 'sinon'
+import format from 'chalk'
+import inquirer from 'inquirer'
+import { expect } from 'chai'
+import SocketEndpointCall from './socket-call'
+import context from '../utils/context'
+import printTools from '../utils/print-tools'
+import { getRandomString } from '../utils/test-utils'
 
-describe('[commands] Call Socket', function() {
-  const socketEndpointCall = new SocketEndpointCall(context);
+describe('[commands] Call Socket', function () {
+  const socketEndpointCall = new SocketEndpointCall(context)
 
   const res = {
     status: 200,
@@ -23,7 +23,7 @@ describe('[commands] Call Socket', function() {
       'cache-control': 'no-cache'
     },
     data: '{"test": "test"}'
-  };
+  }
 
   const endpointObj = {
     existRemotely: true,
@@ -48,40 +48,40 @@ describe('[commands] Call Socket', function() {
       }
     },
     call: () => {}
-  };
+  }
 
-  let echo = null;
-  let interEcho = null;
-  let interEchon = null;
+  let echo = null
+  let interEcho = null
+  let interEchon = null
 
-  beforeEach(function() {
-    interEcho = sinon.stub();
-    interEchon = sinon.stub();
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho);
-    sinon.stub(printTools, 'echon', (content) => interEchon);
-  });
+  beforeEach(function () {
+    interEcho = sinon.stub()
+    interEchon = sinon.stub()
+    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+    sinon.stub(printTools, 'echon', (content) => interEchon)
+  })
 
-  afterEach(function() {
-    printTools.echo.restore();
-    printTools.echon.restore();
-    interEcho.reset();
-  });
+  afterEach(function () {
+    printTools.echo.restore()
+    printTools.echon.restore()
+    interEcho.reset()
+  })
 
-  describe('validateValue', function() {
-    it('should return true if param is present', function() {
-      const validate = SocketEndpointCall.validateValue('param');
+  describe('validateValue', function () {
+    it('should return true if param is present', function () {
+      const validate = SocketEndpointCall.validateValue('param')
 
-      expect(validate).to.be.true;
-    });
+      expect(validate).to.be.true
+    })
 
-    it('should return a string if param is not present', function() {
-      const validate = SocketEndpointCall.validateValue();
+    it('should return a string if param is not present', function () {
+      const validate = SocketEndpointCall.validateValue()
 
-      expect(validate).to.be.equal('We need this!');
-    });
-  });
+      expect(validate).to.be.equal('We need this!')
+    })
+  })
 
-  describe('promptParamQuestion', function() {
+  describe('promptParamQuestion', function () {
     const params = {
       lastname: {
         type: 'string',
@@ -93,160 +93,160 @@ describe('[commands] Call Socket', function() {
         description: 'First name of the person you want to greet',
         example: 'Tyler'
       }
-    };
+    }
 
-    it('should be called with echo', function() {
-      SocketEndpointCall.promptParamQuestion(params, 'lastname');
+    it('should be called with echo', function () {
+      SocketEndpointCall.promptParamQuestion(params, 'lastname')
 
-      sinon.assert.calledWith(echo, 4);
+      sinon.assert.calledWith(echo, 4)
       sinon.assert.calledWith(
         interEcho,
         `- lastname ${format.dim(`(${params.lastname.type})`)} ${params.lastname.description}`
-      );
-    });
+      )
+    })
 
-    it('should return question object', function() {
-      const question = SocketEndpointCall.promptParamQuestion(params, 'lastname');
+    it('should return question object', function () {
+      const question = SocketEndpointCall.promptParamQuestion(params, 'lastname')
 
-      expect(question).to.be.an.Object;
-      expect(Object.keys(question)).to.be.eql(['name', 'message', 'default', 'validate']);
-    });
-  });
+      expect(question).to.be.an.Object
+      expect(Object.keys(question)).to.be.eql(['name', 'message', 'default', 'validate'])
+    })
+  })
 
-  describe('listParams', function() {
-    it('should be called with proper arguments', sinon.test(function() {
-      const listParams = this.stub(SocketEndpointCall, 'listParams');
-      listParams(endpointObj, 'hello/hello');
+  describe('listParams', function () {
+    it('should be called with proper arguments', sinon.test(function () {
+      const listParams = this.stub(SocketEndpointCall, 'listParams')
+      listParams(endpointObj, 'hello/hello')
 
-      sinon.assert.calledWith(listParams, endpointObj);
-    }));
+      sinon.assert.calledWith(listParams, endpointObj)
+    }))
 
-    it('should be called with echo and proper message', function() {
-      SocketEndpointCall.listParams(endpointObj);
+    it('should be called with echo and proper message', function () {
+      SocketEndpointCall.listParams(endpointObj)
 
-      sinon.assert.calledWith(interEchon, `You can pass ${format.cyan(2)} `);
+      sinon.assert.calledWith(interEchon, `You can pass ${format.cyan(2)} `)
       sinon.assert.calledWith(
         echo,
         `parameter(s) to ${format.cyan(endpointObj.getFullName())} endpoint:`
-      );
-      sinon.assert.calledWith(echo, 4);
-      expect(echo.callCount).to.be.equal(6);
-    });
+      )
+      sinon.assert.calledWith(echo, 4)
+      expect(echo.callCount).to.be.equal(6)
+    })
 
-    it('should invoke promptParamQuestion method', sinon.test(function() {
-      const params = endpointObj.metadata.parameters;
-      const promptParamQuestion = this.stub(SocketEndpointCall, 'promptParamQuestion');
+    it('should invoke promptParamQuestion method', sinon.test(function () {
+      const params = endpointObj.metadata.parameters
+      const promptParamQuestion = this.stub(SocketEndpointCall, 'promptParamQuestion')
 
-      SocketEndpointCall.listParams(endpointObj);
+      SocketEndpointCall.listParams(endpointObj)
 
-      sinon.assert.calledTwice(promptParamQuestion);
-      sinon.assert.calledWith(promptParamQuestion, params);
+      sinon.assert.calledTwice(promptParamQuestion)
+      sinon.assert.calledWith(promptParamQuestion, params)
 
-      promptParamQuestion.restore();
-    }));
+      promptParamQuestion.restore()
+    }))
 
-    it('should return an array with question objects', function() {
-      const questions = SocketEndpointCall.listParams(endpointObj);
+    it('should return an array with question objects', function () {
+      const questions = SocketEndpointCall.listParams(endpointObj)
 
-      expect(questions).to.be.an.array;
+      expect(questions).to.be.an.array
       Object.keys(questions).forEach((key) => {
-        expect(questions[key]).to.be.an.object;
-        expect(Object.keys(questions[key])).to.be.eql(['name', 'message', 'default', 'validate']);
-      });
-    });
-  });
+        expect(questions[key]).to.be.an.object
+        expect(Object.keys(questions[key])).to.be.eql(['name', 'message', 'default', 'validate'])
+      })
+    })
+  })
 
-  describe('formatResponse', function() {
-    it('should echo response headers when bodyOnly is false', function() {
-      SocketEndpointCall.formatResponse(res);
+  describe('formatResponse', function () {
+    it('should echo response headers when bodyOnly is false', function () {
+      SocketEndpointCall.formatResponse(res)
 
       // I skipped the printCode(res.statusCode) below as it was hard to mock
-      sinon.assert.calledWith(interEcho, format.grey('statusCode:'));
-      sinon.assert.calledWith(interEcho, format.grey('content-type:'), res.headers['content-type']);
-      sinon.assert.calledWith(interEcho, format.grey('body:'));
-    });
+      sinon.assert.calledWith(interEcho, format.grey('statusCode:'))
+      sinon.assert.calledWith(interEcho, format.grey('content-type:'), res.headers['content-type'])
+      sinon.assert.calledWith(interEcho, format.grey('body:'))
+    })
 
-    it('should echo correct amount of times with proper padding', function() {
-      SocketEndpointCall.formatResponse(res);
+    it('should echo correct amount of times with proper padding', function () {
+      SocketEndpointCall.formatResponse(res)
 
-      sinon.assert.calledWith(echo, 4);
-      expect(echo.args[0].length).to.be.equal(0);
-      expect(echo.callCount).to.be.equal(7);
-    });
+      sinon.assert.calledWith(echo, 4)
+      expect(echo.args[0].length).to.be.equal(0)
+      expect(echo.callCount).to.be.equal(7)
+    })
 
-    it('should not echo response headers when bodyOnly is true', function() {
-      SocketEndpointCall.formatResponse(res, 'true');
+    it('should not echo response headers when bodyOnly is true', function () {
+      SocketEndpointCall.formatResponse(res, 'true')
 
-      sinon.assert.neverCalledWith(interEcho, format.grey('statusCode:'));
-      sinon.assert.neverCalledWith(interEcho, format.grey('content-type:'), res.headers['content-type']);
-      sinon.assert.neverCalledWith(interEcho, format.grey('body:'));
-    });
-  });
+      sinon.assert.neverCalledWith(interEcho, format.grey('statusCode:'))
+      sinon.assert.neverCalledWith(interEcho, format.grey('content-type:'), res.headers['content-type'])
+      sinon.assert.neverCalledWith(interEcho, format.grey('body:'))
+    })
+  })
 
-  describe('run', function() {
-    let socket = null;
-    let find = null;
+  describe('run', function () {
+    let socket = null
+    let find = null
     const question = {
       name: 'lastname',
       message: `  Type in value for "${format.green('lastname')}" parameter`,
       default: 'Durden',
       validate: 'foo'
-    };
+    }
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       sinon.stub(socketEndpointCall.Socket, 'get').returns(Promise.resolve({
         getEndpoints: (resp) => resp,
         getEndpoint: (resp) => resp,
         callEndpoint: (resp) => resp
-      }));
-      socket = await socketEndpointCall.Socket.get();
-      sinon.stub(socket, 'getEndpoints').returns([endpointObj]);
-      sinon.stub(socket, 'getEndpoint').returns(endpointObj);
-      sinon.stub(endpointObj, 'call').returns(Promise.resolve(res));
-      sinon.stub(SocketEndpointCall, 'listParams').returns([question, question]);
-      find = sinon.stub(_, 'find').returns({ name: 'hello' });
-      sinon.stub(inquirer, 'prompt').returns(Promise.resolve({ name: 'foo' }));
-    });
+      }))
+      socket = await socketEndpointCall.Socket.get()
+      sinon.stub(socket, 'getEndpoints').returns([endpointObj])
+      sinon.stub(socket, 'getEndpoint').returns(endpointObj)
+      sinon.stub(endpointObj, 'call').returns(Promise.resolve(res))
+      sinon.stub(SocketEndpointCall, 'listParams').returns([question, question])
+      find = sinon.stub(_, 'find').returns({ name: 'hello' })
+      sinon.stub(inquirer, 'prompt').returns(Promise.resolve({ name: 'foo' }))
+    })
 
-    afterEach(function() {
-      socket.getEndpoints.restore();
-      socket.getEndpoint.restore();
-      endpointObj.call.restore();
-      socketEndpointCall.Socket.get.restore();
-      SocketEndpointCall.listParams.restore();
-      _.find.restore();
-      inquirer.prompt.restore();
-    });
+    afterEach(function () {
+      socket.getEndpoints.restore()
+      socket.getEndpoint.restore()
+      endpointObj.call.restore()
+      socketEndpointCall.Socket.get.restore()
+      SocketEndpointCall.listParams.restore()
+      _.find.restore()
+      inquirer.prompt.restore()
+    })
 
-    it('should call getEndpoints method', async function() {
-      await socketEndpointCall.run(['hello/hello', {}]);
+    it('should call getEndpoints method', async function () {
+      await socketEndpointCall.run(['hello/hello', {}])
 
-      sinon.assert.calledOnce(socket.getEndpoint);
-    });
+      sinon.assert.calledOnce(socket.getEndpoint)
+    })
 
-    it('should call "call" method', async function() {
-      await socketEndpointCall.run(['hello/hello', {}]);
+    it('should call "call" method', async function () {
+      await socketEndpointCall.run(['hello/hello', {}])
 
-      sinon.assert.calledOnce(endpointObj.call);
-    });
+      sinon.assert.calledOnce(endpointObj.call)
+    })
 
-    it('should call listParams method with proper params', async function() {
-      const endpoint = 'hello/hello';
+    it('should call listParams method with proper params', async function () {
+      const endpoint = 'hello/hello'
 
-      await socketEndpointCall.run([endpoint, {}]);
+      await socketEndpointCall.run([endpoint, {}])
 
-      sinon.assert.calledOnce(SocketEndpointCall.listParams);
-      sinon.assert.calledWith(SocketEndpointCall.listParams, endpointObj);
-    });
+      sinon.assert.calledOnce(SocketEndpointCall.listParams)
+      sinon.assert.calledWith(SocketEndpointCall.listParams, endpointObj)
+    })
 
-    it('should echo "No such endpoint!" if endpoint object not present', async function() {
-      find.returns();
-      const error = sinon.stub(printTools, 'error');
-      endpointObj.existRemotely = false;
-      await socketEndpointCall.run(['hello/hello', {}]);
+    it('should echo "No such endpoint!" if endpoint object not present', async function () {
+      find.returns()
+      const error = sinon.stub(printTools, 'error')
+      endpointObj.existRemotely = false
+      await socketEndpointCall.run(['hello/hello', {}])
 
-      sinon.assert.calledWith(error, 'No such endpoint on the server! Make sure you have synced your socket.');
-      error.restore();
-    });
-  });
-});
+      sinon.assert.calledWith(error, 'No such endpoint on the server! Make sure you have synced your socket.')
+      error.restore()
+    })
+  })
+})

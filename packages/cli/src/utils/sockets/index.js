@@ -1,3 +1,3 @@
-import Sockets from './sockets';
+import Sockets from './sockets'
 
-export default Sockets;
+export default Sockets

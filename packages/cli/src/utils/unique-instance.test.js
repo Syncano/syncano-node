@@ -1,29 +1,29 @@
-import { expect } from 'chai';
-import uniqueInstance from './unique-instance';
+import { expect } from 'chai'
+import uniqueInstance from './unique-instance'
 
-function isGeneratedWithPattern(name) {
-  const splitedName = name.split('-');
-  const rnd = parseInt(splitedName[2]);
-  return typeof rnd === 'number';
+function isGeneratedWithPattern (name) {
+  const splitedName = name.split('-')
+  const rnd = parseInt(splitedName[2])
+  return typeof rnd === 'number'
 }
 
-describe('[utils] Unique instance generates', function() {
-  it('random name', function() {
-    const generatedName = uniqueInstance();
+describe('[utils] Unique instance generates', function () {
+  it('random name', function () {
+    const generatedName = uniqueInstance()
 
-    expect(generatedName).to.be.a('string');
-  });
+    expect(generatedName).to.be.a('string')
+  })
 
-  it('two different names', function() {
-    const firstGeneratedName = uniqueInstance();
-    const secondGeneratedName = uniqueInstance();
+  it('two different names', function () {
+    const firstGeneratedName = uniqueInstance()
+    const secondGeneratedName = uniqueInstance()
 
-    expect(firstGeneratedName).not.equal(secondGeneratedName);
-  });
+    expect(firstGeneratedName).not.equal(secondGeneratedName)
+  })
 
-  it('name according to pattern', function() {
-    const generatedName = uniqueInstance();
+  it('name according to pattern', function () {
+    const generatedName = uniqueInstance()
 
-    expect(generatedName).to.satisfy(isGeneratedWithPattern);
-  });
-});
+    expect(generatedName).to.satisfy(isGeneratedWithPattern)
+  })
+})

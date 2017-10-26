@@ -1,54 +1,53 @@
-import _ from 'lodash';
-import format from 'chalk';
-import Table from 'cli-table2';
-import prettyBytes from 'pretty-bytes';
-import { echo, error, warning } from '../utils/print-tools';
-import Hosting from '../utils/hosting';
-
+import _ from 'lodash'
+import format from 'chalk'
+import Table from 'cli-table2'
+import prettyBytes from 'pretty-bytes'
+import { echo, error, warning } from '../utils/print-tools'
+import Hosting from '../utils/hosting'
 
 export default class HostingFilesCmd {
-  constructor(context) {
-    this.context = context;
-    this.session = context.session;
+  constructor (context) {
+    this.context = context
+    this.session = context.session
   }
 
-  static fillTable(files, table) {
+  static fillTable (files, table) {
     files.forEach((file) => {
       table.push([
         file.path,
         { hAlign: 'right', content: prettyBytes(file.size) },
         { hAlign: 'right', content: file.isSynced ? format.green('✓') : format.red('✗') },
         { hAlign: 'right', content: file.isUpToDate ? format.green('✓') : format.red('✗') }
-      ]);
-    });
+      ])
+    })
 
-    return table;
+    return table
   }
 
-  static echoResponse(hostingName, files, filledTable, totalSize) {
+  static echoResponse (hostingName, files, filledTable, totalSize) {
     if (!files.length) {
-      return warning('There are no files in this hosting');
+      return warning('There are no files in this hosting')
     }
 
-    echo(4)(`Hosting ${format.cyan(hostingName)} has ${format.cyan(files.length)} files:`);
-    echo();
-    echo(filledTable.toString());
-    echo();
-    echo(4)(`You have ${files.length} files, ${format.cyan(prettyBytes(totalSize))} in total.`);
-    echo();
+    echo(4)(`Hosting ${format.cyan(hostingName)} has ${format.cyan(files.length)} files:`)
+    echo()
+    echo(filledTable.toString())
+    echo()
+    echo(4)(`You have ${files.length} files, ${format.cyan(prettyBytes(totalSize))} in total.`)
+    echo()
   }
 
-  async run([hostingName, cmd]) {
-    let hosting = null;
+  async run ([hostingName, cmd]) {
+    let hosting = null
     if (cmd.socket) {
       // TODO: implement Socket-based hosting
     } else {
-      hosting = await Hosting.get(hostingName);
+      hosting = await Hosting.get(hostingName)
     }
 
     if (!hosting) {
-      error(`There are no hostings configured for the "${this.attributes.name}" socket!`);
-      process.exit();
+      error(`There are no hostings configured for the "${this.attributes.name}" socket!`)
+      process.exit()
     }
 
     const table = new Table({
@@ -76,12 +75,12 @@ export default class HostingFilesCmd {
         'right-mid': '',
         middle: ' '
       }
-    });
+    })
 
-    const files = await hosting.listFiles();
-    const totalSize = _.sum(_.map(files, 'size'));
-    const filledTable = HostingFilesCmd.fillTable(files, table);
+    const files = await hosting.listFiles()
+    const totalSize = _.sum(_.map(files, 'size'))
+    const filledTable = HostingFilesCmd.fillTable(files, table)
 
-    HostingFilesCmd.echoResponse(hostingName, files, filledTable, totalSize);
+    HostingFilesCmd.echoResponse(hostingName, files, filledTable, totalSize)
   }
 }

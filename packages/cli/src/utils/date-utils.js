@@ -1,24 +1,23 @@
-function currentTime() {
-  return (new Date()).toTimeString().slice(0, 8);
+function currentTime () {
+  return (new Date()).toTimeString().slice(0, 8)
 }
 
 class Timer {
-  constructor() {
-    this.reset();
+  constructor () {
+    this.reset()
   }
-  reset() {
-    this.startTime = new Date().getTime();
+  reset () {
+    this.startTime = new Date().getTime()
   }
-  getDurationTime() {
-    return new Date().getTime() - this.startTime;
+  getDurationTime () {
+    return new Date().getTime() - this.startTime
   }
-  getDuration() {
-    return `${this.getDurationTime()} ms`;
+  getDuration () {
+    return `${this.getDurationTime()} ms`
   }
 }
-
 
 export default {
   currentTime,
   Timer
-};
+}

@@ -2,5 +2,33 @@
   "license": "MIT",
   "devDependencies": {
     "lerna": "^2.4.0"
+  },
+  "scripts": {
+    "lint": "standard --fix --env mocha",
+    "test:unit": "lerna run test:unit",
+    "test:e2e": "lerna run test:e2e",
+    "precommit": "lint-staged"
+  },
+  "engines": {
+    "node": ">= 7.x <= 8.x",
+    "npm": ">= 2.x <= 5.x",
+    "yarn": ">=1.0.0"
+  },
+  "lint-staged": {
+    "packages/**/src/**/*.js": [
+      "npm run lint"
+    ]
+  },
+  "standard": {
+    "ignore": [
+      "**/lib/",
+      "**/.dist/",
+      "**/dist/"
+    ]
+  },
+  "dependencies": {
+    "babel-eslint": "^8.0.1",
+    "chalk": "^2.3.0",
+    "standard": "^10.0.3"
   }
 }

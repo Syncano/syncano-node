@@ -2,7 +2,7 @@ import {expect} from 'chai'
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
-describe('Event', function() {
+describe('Event', function () {
   let event = null
   const testEventName = getRandomString()
   const testSocketName = getRandomString()
@@ -15,7 +15,7 @@ describe('Event', function() {
     }
   }
 
-  before(function(done) {
+  before(function (done) {
     createTestInstance(instanceName)
       .then(instanceObj => {
         ctx.meta.instance = instanceObj.name
@@ -31,7 +31,7 @@ describe('Event', function() {
       })
   })
 
-  after(function(done) {
+  after(function (done) {
     deleteTestInstance(instanceName)
       .then(() => {
         done()
@@ -41,7 +41,7 @@ describe('Event', function() {
       })
   })
 
-  it('can emit event with socket name', function(done) {
+  it('can emit event with socket name', function (done) {
     event
       .emit(`${testSocketName}.${testEventName}`, {dummyKey: 'dummy_value'})
       .then(event => {
@@ -54,7 +54,7 @@ describe('Event', function() {
       })
   })
 
-  it('can emit event without socket', function(done) {
+  it('can emit event without socket', function (done) {
     event
       .emit(testEventName, {dummyKey: 'dummy_value'})
       .then(event => {

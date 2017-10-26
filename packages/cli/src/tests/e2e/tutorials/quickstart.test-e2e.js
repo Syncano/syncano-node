@@ -1,4 +1,4 @@
-import utils from '../../../utils/test-utils';
+import utils from '../../../utils/test-utils'
 import {
   nixt,
   cleanUpAccount,
@@ -6,38 +6,37 @@ import {
   createInstance,
   setupLocation,
   shutdownLocation
-} from '../../utils';
+} from '../../utils'
 
-const { email, password, syncanoYmlPath } = utils.returnTestGlobals();
-process.env.SYNCANO_ENV = 'test';
-
+const { email, password, syncanoYmlPath } = utils.returnTestGlobals()
+process.env.SYNCANO_ENV = 'test'
 
 // Tests
-describe('Quickstart', function() {
-  let instaceName = null;
-  let tutorialLocation = null;
-  before(function() {
-    tutorialLocation = setupLocation('tutorial-quickstart');
+describe('Quickstart', function () {
+  let instaceName = null
+  let tutorialLocation = null
+  before(function () {
+    tutorialLocation = setupLocation('tutorial-quickstart')
     return createInstance()
       .then((resp) => {
-        instaceName = resp.name;
-      });
-  });
-  after(function() {
-    shutdownLocation(tutorialLocation);
-    return cleanUpAccount();
+        instaceName = resp.name
+      })
+  })
+  after(function () {
+    shutdownLocation(tutorialLocation)
+    return cleanUpAccount()
     // return deleteInstance(instaceName);
-  });
+  })
 
-  it('clone github repo', function(done) {
+  it('clone github repo', function (done) {
     nixt()
       .cwd(tutorialLocation)
       .run(`git clone https://github.com/Syncano-Community/chat-app.git ${tutorialLocation}`)
       .code(0)
-      .end(done);
-  });
+      .end(done)
+  })
 
-  it('init project', function(done) {
+  it('init project', function (done) {
     nixt()
       .cwd(tutorialLocation)
       .run(`${cliLocation} init`)
@@ -52,27 +51,27 @@ describe('Quickstart', function() {
       .stdout(/Project has been created from hello template/)
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
-      .end(done);
-  });
+      .end(done)
+  })
 
-  it('search for chat Socket', function(done) {
+  it('search for chat Socket', function (done) {
     nixt()
       .cwd(tutorialLocation)
       .run(`${cliLocation} search chat`)
       .stdout(/Realtime Chat Socket/)
       .code(0)
-      .end(done);
-  });
+      .end(done)
+  })
 
-  it('add chat Socket', function(done) {
+  it('add chat Socket', function (done) {
     nixt()
       .cwd(tutorialLocation)
       .run(`${cliLocation} add chat`)
       .code(0)
-      .end(done);
-  });
+      .end(done)
+  })
 
-  it('add hosting', function(done) {
+  it('add hosting', function (done) {
     nixt()
       .cwd(tutorialLocation)
       .run(`${cliLocation} hosting add ./web`)
@@ -81,21 +80,21 @@ describe('Quickstart', function() {
       .on(/CNAME/)
       .respond('\n')
       .code(0)
-      .end(done);
-  });
+      .end(done)
+  })
 
-  it('configure instance name', function(done) {
+  it('configure instance name', function (done) {
     nixt()
       .cwd(tutorialLocation)
       .run(`sed -i -e 's/INSTANCE_NAME/${instaceName}/g' ./web/index.html`)
       .code(0)
-      .end(done);
-  });
+      .end(done)
+  })
 
-  it('sync files', function(done) {
+  it('sync files', function (done) {
     nixt()
       .cwd(tutorialLocation)
       .run(`${cliLocation} hosting sync staging`)
-      .end(done);
-  });
-});
+      .end(done)
+  })
+})

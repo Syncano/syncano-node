@@ -1,3 +1,3 @@
-import compile from './compile';
+import compile from './compile'
 
-export default compile;
+export default compile

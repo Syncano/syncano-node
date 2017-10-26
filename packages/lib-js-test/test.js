@@ -27,7 +27,7 @@ const data = {
 }
 
 ajv.addFormat('city', function (city) {
-  console.log("XXX", city)
+  console.log('XXX', city)
   return true
 })
 var validate = ajv.compile(schema)

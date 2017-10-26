@@ -36,7 +36,7 @@ const server = (ctx = {}) => {
     response,
     logger,
     data: new Proxy(new Data(settings), {
-      get(target, className) {
+      get (target, className) {
         return new Data(getConfig(className))
       }
     })

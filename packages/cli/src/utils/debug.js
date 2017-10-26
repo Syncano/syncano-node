@@ -2,13 +2,13 @@
 // import logger from '../utils/debug';
 // const { info, debug } = logger('<my_logger_name>');
 
-import Raven from 'raven';
-import printDebug from 'debug';
+import Raven from 'raven'
+import printDebug from 'debug'
 
-const logTypes = ['debug', 'info', 'warn', 'error'];
+const logTypes = ['debug', 'info', 'warn', 'error']
 
 const logger = (name) => {
-  const functions = {};
+  const functions = {}
   logTypes.forEach((type) => {
     functions[type] = (...args) => {
       args.forEach((arg, index) => {
@@ -17,15 +17,15 @@ const logger = (name) => {
             message: arg,
             category: name,
             level: type
-          });
-          printDebug(`${name}:${type}`)(arg);
+          })
+          printDebug(`${name}:${type}`)(arg)
         } else {
-          printDebug(`${name}:${type}:verbose`)(arg);
+          printDebug(`${name}:${type}:verbose`)(arg)
         }
-      });
-    };
-  });
-  return functions;
-};
+      })
+    }
+  })
+  return functions
+}
 
-export default logger;
+export default logger
