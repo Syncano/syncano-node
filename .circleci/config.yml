@@ -13,13 +13,32 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-cli-{{ checksum "packages/cli/package.json" }}
-          - v1-dependencies-socket-{{ checksum "packages/lib-js-socket/package.json" }}
-          - v1-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
-          - v1-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
-          - v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
-          # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-cli-{{ checksum "packages/cli/package.json" }}
+          - v1-dependencies-cli-
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-socket-{{ checksum "packages/lib-js-socket/package.json" }}
+          - v1-dependencies-socket-
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
+          - v1-dependencies-client
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
+          - v1-dependencies-validate
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
+          - v1-dependencies-test
 
       - run: sudo npm install -g yarn
       - run: sudo npm install -g lerna
