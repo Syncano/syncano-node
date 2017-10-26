@@ -28,6 +28,11 @@ jobs:
       - save_cache:
           paths:
             - node_modules
+            - packages/cli/node_modules
+            - packages/lib-js-socket/node_modules
+            - packages/lib-js-client/node_modules
+            - packages/lib-js-validate/node_modules
+            - packages/lib-js-test/node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
