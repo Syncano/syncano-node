@@ -1,3 +1,4 @@
+import path from 'path'
 import fs from 'fs-extra'
 
 import utils from '../../utils/test-utils'
@@ -8,7 +9,7 @@ import {
   cliLocation
 } from '../utils'
 
-const configTestTemplate = `${process.cwd()}/src/tests/e2e/assets/sockets/hello-config`
+const configTestTemplate = path.join(__dirname, './assets/sockets/hello-config')
 const { email, password, syncanoYmlPath } = utils.returnTestGlobals()
 
 const moveTestSocket = (template) => {
