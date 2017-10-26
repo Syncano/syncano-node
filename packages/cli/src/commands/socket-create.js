@@ -36,7 +36,7 @@ class SocketCreate {
         echo(4)(`Your Socket configuration is stored at ${format.cyan(socket.getSocketPath())}`)
         echo()
       })
-      .catch((err) => error(err))
+      .catch((err) => error(err.message))
   }
 }
 

@@ -38,7 +38,7 @@ export default class Login {
   run ([cmd]) {
     return this.session.checkAuth()
       .then((user) => Login.displayWelcomeMessage(user))
-      .catch((err) => this.promptLogin())
+      .catch(() => this.promptLogin())
   }
 
   loginCallback (resp, loginType) {

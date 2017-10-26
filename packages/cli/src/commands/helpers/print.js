@@ -9,9 +9,9 @@ function printCompileError (errObj, socketName) {
       echo(7)(`${format.red('deploy error:')} ${currentTime()} ${format.cyan(socketName)} socket`)
     }
     echo()
-    error(14)(`${errObj.error.message}`)
+    error(14)(`${errObj.message}`)
     echo()
-    echo(14)(`${errObj.error.codeFrame.split('\n').join(`\n${p(14)()}`)}`)
+    echo(14)(`${errObj.codeFrame.split('\n').join(`\n${p(14)()}`)}`)
     echo()
   }
 }

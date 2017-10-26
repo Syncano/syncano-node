@@ -105,7 +105,7 @@ describe('[Class] Socket', function () {
         getSocket.returns(Promise.resolve(socket))
 
         Sockets.uninstall(socket)
-          .catch((err) => {
+          .catch(() => {
             sinon.assert.notCalled(uninstallRemote)
           })
       })

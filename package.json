@@ -4,7 +4,7 @@
     "lerna": "^2.4.0"
   },
   "scripts": {
-    "lint": "standard --fix --env mocha",
+    "lint": "lerna run lint",
     "test:unit": "lerna run test:unit",
     "test:e2e": "lerna run test:e2e",
     "precommit": "lint-staged"
@@ -17,13 +17,6 @@
   "lint-staged": {
     "packages/**/src/**/*.js": [
       "npm run lint"
-    ]
-  },
-  "standard": {
-    "ignore": [
-      "**/lib/",
-      "**/.dist/",
-      "**/dist/"
     ]
   },
   "dependencies": {

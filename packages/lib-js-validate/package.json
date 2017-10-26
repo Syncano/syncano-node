@@ -26,12 +26,12 @@
     "prebuild": "npm run clean",
     "build": "babel src --out-dir lib",
     "build:watch": "npm run build -- --watch",
-    "test": "yarn && npm run test:lint && npm run test:e2e:coverage",
+    "test": "npm run lint && npm run test:e2e:coverage",
     "test:e2e-single": "cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 10000",
     "test:e2e-single:coverage": "nyc --produce-source-map=true cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 4000",
     "test:e2e": "npm run test:e2e-single",
     "test:e2e:coverage": "nyc --produce-source-map=true npm run test:e2e",
-    "test:lint": "standard --fix"
+    "lint": "standard --fix --env mocha"
   },
   "babel": {
     "presets": [

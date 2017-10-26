@@ -137,7 +137,7 @@ export class Session {
       if (userDetails) {
         return resolve(userDetails)
       }
-      reject()
+      reject(new Error('No such user!'))
     })
   }
 
@@ -152,14 +152,14 @@ export class Session {
 
       const searchInPath = (pathToCheck) => {
         if (pathToCheck === process.env.HOME || pathToCheck === '/') {
-          return reject()
+          return reject(new Error('No more folders to check'))
         }
 
         let files = null
         try {
           files = fs.readdirSync(pathToCheck)
         } catch (err) {
-          return reject()
+          return reject(new Error(`Path ${pathToCheck} can not be read`))
         }
 
         if (_.includes(files, 'syncano.yml')) {
@@ -170,7 +170,7 @@ export class Session {
         if (nextFolder.name) {
           searchInPath(nextFolder.dir)
         } else {
-          return reject()
+          return reject(new Error('No more folders to check'))
         }
       }
 
@@ -193,7 +193,7 @@ export class Session {
         return this.createConnection()
       })
       .then(() => this)
-      .catch((err) => {
+      .catch(() => {
         this.settings = getSettings()
         return this.createConnection()
       })

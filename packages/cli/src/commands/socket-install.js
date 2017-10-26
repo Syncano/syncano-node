@@ -23,7 +23,7 @@ export default class SocketInstall {
       .then(async (socketFromRegistry) => {
         debug(`socket found: ${socketFromRegistry.name} ${socketFromRegistry.vesrion}`)
         if (!socketFromRegistry) {
-          Promise.reject(null)
+          Promise.reject(new Error('No such socket in registry!'))
         }
         this.socketFromRegistry = socketFromRegistry
 

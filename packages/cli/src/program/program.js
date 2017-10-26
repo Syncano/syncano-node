@@ -1,5 +1,6 @@
 /* eslint no-underscore-dangle: "warn" */
 /* eslint no-param-reassign: "warn" */
+/* eslint no-underscore-dangle: 0 */
 import program from 'commander'
 import format from 'chalk'
 import stripAnsi from 'strip-ansi'
@@ -26,7 +27,7 @@ program.Command.prototype.optionMissingArgument = (option, flag) => {
 }
 
 program.Command.prototype.group = function (group) {
-  this._group = group
+  this._group = group // eslint-disable-line
   return this
 }
 
@@ -37,9 +38,8 @@ program.Command.prototype.commandHelp = () => {
   // Search for plugins commands
   const plugins = Object.keys(session.getPluginsInstance().plugins)
   program.commands.forEach((cmd) => {
-    if (!plugins.indexOf(cmd._name)) {
-      // eslint-disable-next-line no-param-reassign
-      cmd._plugin = true
+    if (!plugins.indexOf(cmd._name)) { // eslint-disable-line
+      cmd._plugin = true // eslint-disable-line
     }
   })
 
@@ -54,12 +54,12 @@ program.Command.prototype.commandHelp = () => {
   }
 
   function printCmd (cmd) {
-    const args = cmd._args.map((arg) => humanReadableArgName(arg)).join(' ')
+    const args = cmd._args.map((arg) => humanReadableArgName(arg)).join(' ') // eslint-disable-line
 
     return [
       [
-        format.cyan(cmd._name),
-        (cmd._alias ? `|${cmd._alias}` : ''),
+        format.cyan(cmd._name), // eslint-disable-line
+        (cmd._alias ? `|${cmd._alias}` : ''), // eslint-disable-line
         format.grey((cmd.options.length ? ' [options]' : '')),
         ' ',
         args

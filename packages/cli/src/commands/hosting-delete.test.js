@@ -1,12 +1,17 @@
+/* global it describe afterEach beforeEach */
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import sinon from 'sinon'
 import format from 'chalk'
-import { expect } from 'chai'
 import inquirer from 'inquirer'
 
 import HostingDelete from './hosting-delete'
 import printTools, { p } from '../utils/print-tools'
 import context from '../utils/context'
 import { getRandomString } from '../utils/test-utils'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 describe('[commands] Delete Hosting', function () {
   const hostingDelete = new HostingDelete(context)
@@ -78,7 +83,7 @@ describe('[commands] Delete Hosting', function () {
     it('should call getQuestions method', function () {
       questions = HostingDelete.getQuestions(socketsExample, hostingName)
 
-      expect(questions).to.be.called
+      expect(questions).to.be.called()
     })
 
     it.skip('should call delete hosting method', async function () {
@@ -94,7 +99,7 @@ describe('[commands] Delete Hosting', function () {
     })
 
     it('should call socket update method and get rejected', async function () {
-      socket.update.returns(Promise.reject({}))
+      socket.update.returns(Promise.reject(new Error('error')))
 
       try {
         await hostingDelete.run([hostingName, {}])
@@ -150,7 +155,7 @@ describe('[commands] Delete Hosting', function () {
     })
 
     it.skip('should print error on socket update reject', async function () {
-      socket.update.returns(Promise.reject({}))
+      socket.update.returns(Promise.reject(new Error('error')))
 
       await hostingDelete.run([hostingName, {}])
 
@@ -202,7 +207,7 @@ describe('[commands] Delete Hosting', function () {
     it.skip('should return an array', async function () {
       const result = await hostingDelete.findSocketsWithHosting(hostingName)
 
-      expect(result).to.be.an.array
+      expect(result).to.be.an.array()
     })
   })
 

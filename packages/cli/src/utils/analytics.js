@@ -61,13 +61,13 @@ const track = (eventName, params = {}) => {
 const trackCommand = (options, additionalParams = {}) => {
   debug('trackCommand')
   const cmd = _.find(options, (option) => option instanceof Command.Command)
-  debug('trackCommand parent', cmd.parent._name)
-  const parent = cmd.parent._name === 'cli' ? null : cmd.parent._name.split('-').slice(-1)[0]
+  debug('trackCommand parent', cmd.parent._name) // eslint-disable-line
+  const parent = cmd.parent._name === 'cli' ? null : cmd.parent._name.split('-').slice(-1)[0] // eslint-disable-line
 
   const props = Object.assign({
     version: cmd.parent.version(),
     args: cmd.parent.rawArgs.slice(2).join(' '),
-    group: cmd._group,
+    group: cmd._group, // eslint-disable-line
     type: 'command'
   }, additionalParams)
 

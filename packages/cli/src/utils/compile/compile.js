@@ -13,6 +13,8 @@ const writeFile = Promise.promisify(fs.writeFile)
 
 const { debug } = logger('utils-compile')
 
+class CompilationError extends Error {}
+
 function compileFile (fileObj) {
   debug('file to transform', fileObj.srcFile)
   const dirname = path.dirname(fileObj.compiledFile)
@@ -40,15 +42,11 @@ function compile (sockets, buildSourceMaps) {
         debug('files to transform')
         return Promise.all(files.map((file) => compileFile(file)))
       })
-      .then(() => {
-        resolve()
-      })
-      .catch((err) => {
-        reject({
-          errorType: 'compilationError',
-          error: err
-        })
-      }))
+      .then(() => resolve())
+      .catch((err) => reject(new CompilationError(err.message))))
 }
 
-export default { compile }
+export default {
+  CompilationError,
+  compile
+}

@@ -22,11 +22,12 @@
     "semver": "^5.4.1"
   },
   "scripts": {
-    "clean": "rimraf ./lib",
-    "prebuild": "npm run clean",
-    "prepublish": "npm run build",
     "build": "babel src --out-dir lib",
-    "build:watch": "npm run build -- --watch"
+    "build:watch": "npm run build -- --watch",
+    "clean": "rimraf ./lib",
+    "prepublish": "npm run build",
+    "prebuild": "yarn && npm run clean",
+    "lint": "standard --fix --env mocha"
   },
   "babel": {
     "presets": [

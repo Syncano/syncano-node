@@ -147,7 +147,7 @@ describe('[E2E] CLI User', function () {
       .run(`${cliLocation} remove openweathermap`)
       .on(/Are you sure you want to remove/)
       .respond('y\n')
-      .stdout(/removed\!/)
+      .stdout(/removed!/)
       .end(done)
   })
 
@@ -200,7 +200,7 @@ describe('[E2E] CLI User', function () {
       .run(`${cliLocation} create ${createdSocketName}`)
       .on(/Choose template for your Socket/)
       .respond('\n')
-      .stdout(/Socket with that name already exist!/)
+      .stdout(/Socket with given name already exist!/)
       .end(done)
   })
 

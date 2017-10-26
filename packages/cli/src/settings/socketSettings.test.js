@@ -1,6 +1,11 @@
-import { expect } from 'chai'
+/* global it describe afterEach beforeEach */
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import sinon from 'sinon'
 import SocketSettings from './socketSettings'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 describe('[settings] Socket Settings', function () {
   let settings = {}
@@ -26,7 +31,7 @@ describe('[settings] Socket Settings', function () {
       settings.attributes = attributes
       const hosting = settings.getHosting(Object.keys(attributes.hosting)[0])
 
-      expect(hosting).to.be.object
+      expect(hosting).to.be.object()
     })
 
     it('Gets single hosting path', function () {
@@ -40,21 +45,21 @@ describe('[settings] Socket Settings', function () {
       settings.attributes = attributes
       const hosting = settings.getHosting('nope')
 
-      expect(hosting).to.be.undefined
+      expect(hosting).to.be.undefined()
     })
 
     it('Returns null if hosting attributes are not defined', function () {
       settings.attributes = {}
       const hosting = settings.getHosting('nope')
 
-      expect(hosting).to.be.null
+      expect(hosting).to.be.null()
     })
 
     it('Gets multiple hostings', function () {
       settings.attributes = attributes
       const hostings = settings.listHosting()
 
-      expect(hostings).to.be.array
+      expect(hostings).to.be.array()
     })
 
     it('Gets multiple hostings name', function () {
@@ -92,7 +97,7 @@ describe('[settings] Socket Settings', function () {
 
       settings.deleteHosting('production')
 
-      return expect(settings.attributes.hosting).to.be.undefined
+      return expect(settings.attributes.hosting).to.be.undefined()
     })
   })
 })

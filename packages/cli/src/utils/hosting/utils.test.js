@@ -1,14 +1,18 @@
-import { expect } from 'chai'
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import sinon from 'sinon'
 import { getFiles, asyncDir } from './utils'
 import { getRandomString } from '../test-utils'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 describe('[hosting] Sync Hosting', function () {
   describe('getFiles', function () {
     it('should be fulfilled', function () {
       const promise = getFiles()
 
-      expect(promise).to.be.fulfilled
+      expect(promise).to.be.fulfilled()
     })
 
     it('should return list of files', sinon.test(async function () {

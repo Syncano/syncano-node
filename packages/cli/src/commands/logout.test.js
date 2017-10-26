@@ -1,3 +1,4 @@
+/* global it describe before after afterEach beforeEach */
 import sinon from 'sinon'
 import format from 'chalk'
 import Logout from './logout'
@@ -14,7 +15,7 @@ describe('[commands] Logout', function () {
   .then(() => {
     account = logout.session.settings.account
   })
-  .catch((err) => {
+  .catch(() => {
     account = logout.session.settings.account
   })
 

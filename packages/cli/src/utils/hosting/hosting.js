@@ -238,7 +238,7 @@ class Hosting {
     return this.getRemote()
       .then(async (hosting) => this.setRemoteState(hosting))
       .then(() => this)
-      .catch((err) => {
+      .catch(() => {
         this.existRemotely = false
         return this
       })
@@ -307,7 +307,7 @@ class Hosting {
           echo(6)(`${format.green('✓')} File updated: ${format.dim(localHostingFilePath)}`)
           return singleFile
         })
-        .catch((err) => {
+        .catch(() => {
           echo(`Error while syncing (updating) ${localHostingFilePath}`)
         })
       )
@@ -321,7 +321,7 @@ class Hosting {
           echo(6)(`${format.green('✓')} File added:   ${format.dim(localHostingFilePath)}`)
           return singleFile
         })
-        .catch((err) => {
+        .catch(() => {
           echo(`Error while syncing (creating) ${file.path}`)
         })
       )

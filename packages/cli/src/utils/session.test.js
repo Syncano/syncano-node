@@ -1,5 +1,6 @@
 import sinon from 'sinon'
-import { expect } from 'chai'
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import format from 'chalk'
 import fs from 'fs-extra'
 import path from 'path'
@@ -13,6 +14,9 @@ import Init from './init'
 import Plugins from './plugins'
 import getSettings from '../settings'
 import AccountSettings from '../settings/accountSettings'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 describe('[utils] Session', function () {
   const instanceName = getRandomString('session_instanceName')
@@ -175,7 +179,7 @@ describe('[utils] Session', function () {
     it('should print error message if promise rejected', async function () {
       const errorMessage = getRandomString('session_createConnection_errorMessage')
       syncanoInstance.returns({
-        create: () => Promise.reject({ message: errorMessage })
+        create: () => Promise.reject(new Error(errorMessage))
       })
 
       await session.createInstance()
@@ -185,7 +189,7 @@ describe('[utils] Session', function () {
 
     it('should exit process if promise rejected', async function () {
       syncanoInstance.returns({
-        create: () => Promise.reject({})
+        create: () => Promise.reject(new Error('Error'))
       })
 
       await session.createInstance()
@@ -228,7 +232,7 @@ describe('[utils] Session', function () {
 
     it('should return false if promise reject', async function () {
       syncanoInstance.returns({
-        get: () => Promise.reject()
+        get: () => Promise.reject(new Error('Error'))
       })
 
       const instance = await session.getInstance()
@@ -338,7 +342,7 @@ describe('[utils] Session', function () {
 
       const auth = await session.checkAuth()
 
-      expect(auth).to.be.resolved
+      expect(auth).to.be.resolved // eslint-disable-line
     })
 
     it('should be rejeceted when no user datails provided', function () {
@@ -346,7 +350,7 @@ describe('[utils] Session', function () {
 
       const auth = session.checkAuth()
 
-      return expect(auth).be.rejected
+      return expect(auth).be.rejected // eslint-disable-line
     })
   })
 
@@ -424,7 +428,7 @@ describe('[utils] Session', function () {
     })
 
     it('should set settings without project path when error occurs', async function () {
-      findProjectPathStub.returns(Promise.reject())
+      findProjectPathStub.returns(Promise.reject(new Error('Error')))
 
       await session.load()
 

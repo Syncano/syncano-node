@@ -1,9 +1,14 @@
-import { expect } from 'chai'
+/* global it describe before afterEach beforeEach */
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import sinon from 'sinon'
 import fs from 'fs'
 import YAML from 'js-yaml'
 import AccountSettings from './accountSettings'
 import { getRandomString } from '../utils/test-utils'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 let account = {}
 
@@ -52,7 +57,7 @@ describe('[settings]', function () {
       this.stub(fs, 'readFileSync')
       this.stub(YAML, 'load')
 
-      expect(account.load()).to.be.true
+      expect(account.load()).to.be.true()
     }))
   })
 
@@ -91,7 +96,7 @@ describe('[settings]', function () {
       account.attributes = {}
       const isAuthenticated = account.authenticated()
 
-      expect(isAuthenticated).to.be.false
+      expect(isAuthenticated).to.be.false()
     })
   })
 
@@ -108,7 +113,7 @@ describe('[settings]', function () {
       account.attributes = {}
       const authKey = account.getAuthKey()
 
-      expect(authKey).to.be.null
+      expect(authKey).to.be.null()
     })
   })
 })

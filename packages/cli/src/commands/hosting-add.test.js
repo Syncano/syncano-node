@@ -1,4 +1,6 @@
-import { expect } from 'chai'
+/* global it describe before afterEach beforeEach */
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import sinon from 'sinon'
 import inquirer from 'inquirer'
 import format from 'chalk'
@@ -9,6 +11,9 @@ import Hosting from '../utils/hosting'
 import context from '../utils/context'
 import printTools, { p } from '../utils/print-tools'
 import { getRandomString } from '../utils/test-utils'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 describe('[commands] Add Hosting', function () {
   const hostingAdd = new HostingAdd(context)
@@ -105,11 +110,11 @@ describe('[commands] Add Hosting', function () {
     })
 
     it('should print error if promise rejected', async function () {
-      updateSocket.returns(Promise.reject('Error message'))
+      updateSocket.returns(Promise.reject(new Error('Error message')))
 
       await hostingAdd.updateSocket()
 
-      sinon.assert.calledWith(error, 'Error message')
+      sinon.assert.calledWith(error.message, 'Error message')
     })
 
     it('should print proper response and run sync Hosting process if update status is ok', async function () {

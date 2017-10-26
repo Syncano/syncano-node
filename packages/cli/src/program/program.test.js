@@ -1,3 +1,4 @@
+/* global it describe before afterEach beforeEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
 import program from '.'

@@ -1,12 +1,17 @@
+/* global it describe afterEach beforeEach */
 import _ from 'lodash'
 import sinon from 'sinon'
 import format from 'chalk'
 import inquirer from 'inquirer'
-import { expect } from 'chai'
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import SocketEndpointCall from './socket-call'
 import context from '../utils/context'
 import printTools from '../utils/print-tools'
 import { getRandomString } from '../utils/test-utils'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 describe('[commands] Call Socket', function () {
   const socketEndpointCall = new SocketEndpointCall(context)
@@ -71,7 +76,7 @@ describe('[commands] Call Socket', function () {
     it('should return true if param is present', function () {
       const validate = SocketEndpointCall.validateValue('param')
 
-      expect(validate).to.be.true
+      expect(validate).to.be.true()
     })
 
     it('should return a string if param is not present', function () {
@@ -108,7 +113,7 @@ describe('[commands] Call Socket', function () {
     it('should return question object', function () {
       const question = SocketEndpointCall.promptParamQuestion(params, 'lastname')
 
-      expect(question).to.be.an.Object
+      expect(question).to.be.an.Object()
       expect(Object.keys(question)).to.be.eql(['name', 'message', 'default', 'validate'])
     })
   })
@@ -148,9 +153,9 @@ describe('[commands] Call Socket', function () {
     it('should return an array with question objects', function () {
       const questions = SocketEndpointCall.listParams(endpointObj)
 
-      expect(questions).to.be.an.array
+      expect(questions).to.be.an.array()
       Object.keys(questions).forEach((key) => {
-        expect(questions[key]).to.be.an.object
+        expect(questions[key]).to.be.an.object()
         expect(Object.keys(questions[key])).to.be.eql(['name', 'message', 'default', 'validate'])
       })
     })

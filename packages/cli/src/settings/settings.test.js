@@ -1,8 +1,13 @@
+/* global it describe before after beforeEach */
 import mock from 'mock-fs'
 import fs from 'fs'
-import { expect } from 'chai'
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import YAML from 'js-yaml'
 import Settings from './settings'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 let settings = {}
 function Attributes () {
@@ -36,9 +41,9 @@ describe('[settings] Settings', function () {
   })
 
   it('Has correct default properties', function () {
-    expect(typeof settings.attributes).to.be.object
+    expect(typeof settings.attributes).to.be.object()
     expect(Object.keys(settings.attributes).length).to.be.equal(0)
-    expect(settings.configPath).to.be.null
+    expect(settings.configPath).to.be.null()
   })
 
   it('Loads yml file correctly', function () {
@@ -46,7 +51,7 @@ describe('[settings] Settings', function () {
     settings.name = 'syncano-test'
     const ymlLoaded = settings.load()
 
-    expect(ymlLoaded).to.be.true
+    expect(ymlLoaded).to.be.true()
     expect(settings.attributes.auth_key).to.be.equal('bb093bb55b16eaae1b3329df3bb3d8278ef02a91')
     expect(settings.attributes.test_key).to.be.equal('8x6od4eacnb89scvefrlcv7vi')
     expect(settings.attributes.projects['/Users/test'].instance).to.be.equal('divine-wood-1583')
@@ -57,7 +62,7 @@ describe('[settings] Settings', function () {
     settings.name = 'syncano-test'
 
     const ymlLoaded = settings.load()
-    expect(ymlLoaded).to.be.false
+    expect(ymlLoaded).to.be.false()
   })
 
   it('Does not load yml if configPath does not exist', function () {
@@ -65,7 +70,7 @@ describe('[settings] Settings', function () {
     settings.name = 'nope'
 
     const ymlLoaded = settings.load()
-    expect(ymlLoaded).to.be.false
+    expect(ymlLoaded).to.be.false()
   })
 
   it('Saves attributes to YAML file', function () {
@@ -94,6 +99,6 @@ describe('[settings] Settings', function () {
     settings.attributes = { ...attributes }
 
     const notThere = settings.get('imNotThere')
-    expect(notThere).to.be.null
+    expect(notThere).to.be.null()
   })
 })

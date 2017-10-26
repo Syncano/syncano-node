@@ -10,6 +10,7 @@ import { printCompileError } from './helpers/print'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
 import SocketTraceCmd from './socket-trace'
+import CompilationError from '../utils/compile'
 
 const { debug } = logger('cmd-socket-deploy')
 
@@ -135,7 +136,7 @@ export default class SocketDeployCmd {
       .catch((err) => {
         spinner.stop()
         if (typeof err === 'object') {
-          if (err.errorType === 'compilationError') {
+          if (err instanceof CompilationError) {
             printCompileError(err, socket.name)
           } else {
             const status = format.red('socket sync error:')

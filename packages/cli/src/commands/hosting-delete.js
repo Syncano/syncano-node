@@ -49,7 +49,7 @@ export default class HostingDelete {
             echo(4)(`Hosting ${format.cyan(deletedHosting.name)} has been ${format.green('successfully')} deleted!`)
             echo()
           })
-          .catch((err) => {
+          .catch(() => {
             error('Deleting hosting failed!')
           })
       })

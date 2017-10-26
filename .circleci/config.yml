@@ -76,5 +76,6 @@ jobs:
 
 
       # run tests!
+      - run: yarn run lint
       - run: yarn run test:unit
       - run: yarn run test:e2e

@@ -171,7 +171,7 @@ class Socket {
       return this.uninstallRemote(socket.name)
     }
 
-    return Promise.reject()
+    return Promise.reject(new Error('Socket with given doesn\'t exist!'))
   }
 
   static uninstallLocal (socket) {
@@ -269,7 +269,7 @@ class Socket {
     const newSocketPath = path.join(session.projectPath, socketName)
     const socket = new Socket(socketName, newSocketPath)
     if (socket.existLocally) {
-      return Promise.reject('Socket with that name already exist!')
+      return Promise.reject(new Error('Socket with given name already exist!'))
     }
     return socket.init(templateName)
   }
@@ -327,7 +327,7 @@ class Socket {
   getRemote () {
     return session.connection.Socket.please().get({ name: this.name })
     .then((socket) => socket)
-    .catch((err) => false)
+    .catch(() => false)
   }
 
   getRemoteSpec () {
@@ -1249,7 +1249,7 @@ class Socket {
       }
       return 'PATCH'
     })
-    .catch((err) => 'POST')
+    .catch(() => 'POST')
   }
 
   getSocketSrcChecksum () {

@@ -75,7 +75,7 @@ describe('[commands] Create Socket', function () {
     })
 
     it('should call error metod with proper parameters when Socket.create is rejected', async function () {
-      create.returns(Promise.reject('error'))
+      create.returns(Promise.reject(new Error('error')))
 
       await socketCreate.run([socketName])
 

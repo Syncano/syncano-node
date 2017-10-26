@@ -1,3 +1,4 @@
+/* global it describe before after afterEach beforeEach */
 import sinon from 'sinon'
 import format from 'chalk'
 import inquirer from 'inquirer'
@@ -56,7 +57,7 @@ describe('[commands] Login', function () {
     }))
 
     it('should return prompt login on error', sinon.test(async function () {
-      this.stub(session, 'checkAuth').returns(Promise.reject())
+      this.stub(session, 'checkAuth').returns(Promise.reject(new Error('error')))
 
       await login.run([{}])
 

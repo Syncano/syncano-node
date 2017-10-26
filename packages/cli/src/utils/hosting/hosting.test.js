@@ -1,4 +1,6 @@
-import { expect } from 'chai'
+/* global it describe afterEach beforeEach */
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import sinon from 'sinon'
 import Raven from 'raven'
 
@@ -7,6 +9,9 @@ import Hosting, { HostingFile } from './hosting'
 import utils from './utils'
 import { getRandomString } from '../test-utils'
 import printTools from '../print-tools'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 describe('[utils/hosting] hosting', function () {
   describe('class Hosting', function () {
@@ -58,14 +63,14 @@ describe('[utils/hosting] hosting', function () {
       it('should return null when paremeter is empty', function () {
         const hostingUrl = Hosting.getURL()
 
-        expect(hostingUrl).to.be.null
+        expect(hostingUrl).to.be.null()
       })
 
       it('should return null when not found instance in project', function () {
         session.project = {}
         const hostingUrl = Hosting.getURL('sampleHosting')
 
-        expect(hostingUrl).to.be.null
+        expect(hostingUrl).to.be.null()
       })
 
       it('should return proper syncano hosting url when hosting exists', function () {
@@ -105,7 +110,7 @@ describe('[utils/hosting] hosting', function () {
       it('should return error when parameter is empty', function () {
         const hostingPath = hosting.getLocalFilePath()
 
-        expect(hostingPath).to.be.null
+        expect(hostingPath).to.be.null()
       })
     })
 
@@ -157,7 +162,7 @@ describe('[utils/hosting] hosting', function () {
 
         const cnameUrl = hosting.getCnameURL()
 
-        expect(cnameUrl).to.be.undefined
+        expect(cnameUrl).to.be.undefined()
       })
     })
 

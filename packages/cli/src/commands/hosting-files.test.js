@@ -1,5 +1,7 @@
+/* global it describe afterEach beforeEach */
+import dirtyChai from 'dirty-chai'
+import chai from 'chai'
 import sinon from 'sinon'
-import { expect } from 'chai'
 import format from 'chalk'
 import inquirer from 'inquirer'
 import prettyBytes from 'pretty-bytes'
@@ -8,6 +10,9 @@ import HostingFilesCmd from './hosting-files'
 import printTools from '../utils/print-tools'
 import context from '../utils/context'
 import { getRandomString } from '../utils/test-utils'
+
+chai.use(dirtyChai)
+const { expect } = chai
 
 describe('[commands] Hosting Files', function () {
   let interEcho = null
@@ -156,8 +161,8 @@ describe('[commands] Hosting Files', function () {
     it('should return a filledTable', function () {
       HostingFilesCmd.fillTable(files, table)
 
-      expect(table).to.be.an.object
-      expect(table[0]).to.be.an.array
+      expect(table).to.be.an.object()
+      expect(table[0]).to.be.an.array()
       expect(table[0][0]).to.be.equal('zindex.html')
       expect(table.length).to.be.equal(2)
     })
