@@ -813,6 +813,7 @@ class Socket {
           debug('config is synced and nothing to update')
           return Promise.resolve()
         }
+        debug('preparing update')
 
         return new Promise((resolve, reject) => {
           const form = new FormData()

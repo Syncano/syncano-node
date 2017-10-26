@@ -2,13 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/node:8.0
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
 
     working_directory: ~/repo
 
@@ -29,12 +23,33 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-            - packages/cli/node_modules
-            - packages/lib-js-socket/node_modules
-            - packages/lib-js-client/node_modules
-            - packages/lib-js-validate/node_modules
-            - packages/lib-js-test/node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/cli/node_modules
+          key: v1-dependencies-cli-{{ checksum "packages/cli/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/lib-js-socket/node_modules
+          key: v1-dependencies-socket-{{ checksum "packages/lib-js-socket/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/lib-js-client/node_modules
+          key: v1-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/lib-js-validate/node_modules
+          key: v1-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/lib-js-test/node_modules
+          key: v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
+
 
       # run tests!
       - run: yarn run test:unit
