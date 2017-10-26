@@ -207,7 +207,7 @@ describe('[commands] Delete Hosting', function () {
     it.skip('should return an array', async function () {
       const result = await hostingDelete.findSocketsWithHosting(hostingName)
 
-      expect(result).to.be.an.array()
+      expect(result).to.be.an.array // eslint-disable-line
     })
   })
 
