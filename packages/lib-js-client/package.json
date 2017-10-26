@@ -23,7 +23,7 @@
     "test:e2e": "npm run test:base -- --timeout 30000 --slow 8000 test/e2e.js",
     "test:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "test:watch": "mocha --watch test/**/*.js --compilers js:babel-register",
-    "lint": "standard --fix --env mocha --parser babel-eslint",
+    "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js",
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
     "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc"
