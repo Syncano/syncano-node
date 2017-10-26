@@ -19,7 +19,8 @@
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
-    "semver": "^5.4.1"
+    "semver": "^5.4.1",
+    "standard": "^10.0.3"
   },
   "scripts": {
     "build": "babel src --out-dir lib",
