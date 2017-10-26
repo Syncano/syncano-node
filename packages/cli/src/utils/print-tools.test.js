@@ -64,7 +64,7 @@ describe('[utils] Response codes map', function () {
         error(err, ': Instance "foo-bar-4334" was not found')
         const stdout = console.resume().stdout[0]
 
-        expect(stdout).to.contain(format.red('Error: Instance "foo-bar-4334" was not found '))
+        expect(stdout).to.contain(format.red(': Instance "foo-bar-4334" was not found '))
       }
     })
   })
