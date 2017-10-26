@@ -83,7 +83,7 @@ describe('[commands] Delete Hosting', function () {
     it('should call getQuestions method', function () {
       questions = HostingDelete.getQuestions(socketsExample, hostingName)
 
-      expect(questions).to.be.called()
+      expect(questions).to.be.called // eslint-disable-line
     })
 
     it.skip('should call delete hosting method', async function () {
