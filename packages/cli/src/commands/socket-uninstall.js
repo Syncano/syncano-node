@@ -29,24 +29,24 @@ export default class SocketUnInstall {
     if (!promptResponse.confirm) process.exit()
     echo()
 
-    return this.Socket.uninstall(socket)
-      .then(() => {
-        if (socket.isProjectRegistryDependency) {
-          echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the project config file...`)
-        }
-        if (socket.existLocally) {
-          echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the project folder...`)
-        }
-        if (socket.existRemotely) {
-          echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the server...`)
-        }
+    try {
+      await this.Socket.uninstall(socket)
 
-        echo(4)(`Socket ${format.cyan(socket.name)} has been ${format.green('successfully')} removed!`)
-        echo()
-      })
-      .catch((err) => {
-        warning(err)
-        echo()
-      })
+      if (socket.isProjectRegistryDependency) {
+        echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the project config file...`)
+      }
+      if (socket.existLocally) {
+        echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the project folder...`)
+      }
+      if (socket.existRemotely) {
+        echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the server...`)
+      }
+
+      echo(4)(`Socket ${format.cyan(socket.name)} has been ${format.green('successfully')} removed!`)
+      echo()
+    } catch (err) {
+      warning(err)
+      echo()
+    }
   }
 }

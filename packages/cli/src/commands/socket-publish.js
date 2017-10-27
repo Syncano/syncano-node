@@ -8,22 +8,21 @@ export default class SocketPublishCmd {
   }
 
   async run ([socketName, cmd]) {
-    this.Socket.publish(socketName, cmd.version)
-      .then((resp) => {
+    try {
+      await this.Socket.publish(socketName, cmd.version)
+      echo()
+      echo(4)(`Socket ${format.cyan(socketName)} is now publicly available!`)
+      echo()
+    } catch (err) {
+      if (err.response && err.response.data) {
         echo()
-        echo(4)(`Socket ${format.cyan(socketName)} is now publicly available!`)
+        error(4)(err.response.data.message)
         echo()
-      })
-      .catch((err) => {
-        if (err.response && err.response.data) {
-          echo()
-          error(4)(err.response.data.message)
-          echo()
-        } else {
-          echo()
-          error(4)(err.message)
-          echo()
-        }
-      })
+      } else {
+        echo()
+        error(4)(err.message)
+        echo()
+      }
+    }
   }
 }

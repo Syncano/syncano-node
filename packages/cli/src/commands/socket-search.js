@@ -39,31 +39,30 @@ export default class SocketSearchCmd {
       }
     })
 
-    return this.registry.searchSocketsByAll(keyword)
-      .then((sockets) => {
-        sockets.forEach(this.addRecord.bind(this))
-        echo(6)(`${format.cyan(sockets.length)} socket(s) found: `)
+    try {
+      const sockets = this.registry.searchSocketsByAll(keyword)
+      sockets.forEach(this.addRecord.bind(this))
+      echo(6)(`${format.cyan(sockets.length)} socket(s) found: `)
+      echo()
+      echo(this.table.toString())
+      echo()
+      if (SocketSearchCmd.printLegend(sockets)) {
         echo()
-        echo(this.table.toString())
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        echo(4)('No sockets found 😕')
+        echon(4)(`Search takes ${format.cyan('name')}, ${format.cyan('description')} `)
+        echo(`and ${format.cyan('keywords')} into account. Try again!`)
         echo()
-        if (SocketSearchCmd.printLegend(sockets)) {
-          echo()
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 404) {
-          echo(4)('No sockets found 😕')
-          echon(4)(`Search takes ${format.cyan('name')}, ${format.cyan('description')} `)
-          echo(`and ${format.cyan('keywords')} into account. Try again!`)
-          echo()
-          process.exit()
-        } else {
-          echo()
-          error(4)(err)
-          echo()
-          process.exit(1)
-        }
-      })
+        process.exit()
+      } else {
+        echo()
+        error(4)(err)
+        echo()
+        process.exit(1)
+      }
+    }
   }
 
   addRecord (socket) {

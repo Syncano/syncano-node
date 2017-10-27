@@ -53,27 +53,24 @@ export default class SocketTrace {
     return Promise.all(sockets.map((socket) => this.startCollectingTraces(socket)))
   }
 
-  startCollectingTraces (socket) {
+  async startCollectingTraces (socket) {
     this.mainSpinner.start()
 
-    return socket.getTraces(this.lastId[socket.name])
-      .then((response) => {
-        this.mainSpinner.stop()
-        const trace = response.data
-        this.lastId[socket.name] = response.data.id
-        return this.printTrace(socket, trace)
-      })
-      .then(() => {
+    try {
+      const response = socket.getTraces(this.lastId[socket.name])
+      this.mainSpinner.stop()
+      const trace = response.data
+      this.lastId[socket.name] = response.data.id
+      await this.printTrace(socket, trace)
+      this.startCollectingTraces(socket)
+    } catch (err) {
+      this.mainSpinner.stop()
+      if (err.code === 'ECONNABORTED') {
         this.startCollectingTraces(socket)
-      })
-      .catch((err) => {
-        this.mainSpinner.stop()
-        if (err.code === 'ECONNABORTED') {
-          this.startCollectingTraces(socket)
-        } else {
-          error(4)(err.message)
-        }
-      })
+      } else {
+        error(4)(err.message)
+      }
+    }
   }
 
   // Decide about how to print trace and which

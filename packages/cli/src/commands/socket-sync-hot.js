@@ -90,13 +90,11 @@ export default class SocketDeployCmd {
     timer.reset()
     const msg = p(4)(`${format.magenta('project deploy:')} ${currentTime()}`)
     const spinner = new SimpleSpinner(msg).start()
-    return this.session.deployProject()
-      .then((deployProjectStatus) => {
-        spinner.stop()
-        const status = format.grey('project synced:')
-        const duration = timer.getDuration()
-        echo(5)(`${status} ${currentTime()} ${duration}`)
-      })
+    await this.session.deployProject()
+    spinner.stop()
+    const status = format.grey('project synced:')
+    const duration = timer.getDuration()
+    echo(5)(`${status} ${currentTime()} ${duration}`)
   }
 
   async deploySocket (socket, config) {
@@ -127,26 +125,26 @@ export default class SocketDeployCmd {
       }
     }
 
-    return socket.update({ config })
-      .then((updateStatus) => {
-        spinner.stop()
-        SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
-        updateEnds()
-      })
-      .catch((err) => {
-        spinner.stop()
-        if (typeof err === 'object') {
-          if (err instanceof CompilationError) {
-            printCompileError(err, socket.name)
-          } else {
-            const status = format.red('socket sync error:')
-            echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
-          }
+    try {
+      const updateStatus = await socket.update({ config })
+
+      spinner.stop()
+      SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
+      updateEnds()
+    } catch (err) {
+      spinner.stop()
+      if (typeof err === 'object') {
+        if (err instanceof CompilationError) {
+          printCompileError(err, socket.name)
         } else {
-          SocketDeployCmd.printUpdateFailed(socket.name, err, deployTimer)
+          const status = format.red('socket sync error:')
+          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
         }
-        updateEnds()
-      })
+      } else {
+        SocketDeployCmd.printUpdateFailed(socket.name, err, deployTimer)
+      }
+      updateEnds()
+    }
   }
 
   getSocketToUpdate (fileName) {

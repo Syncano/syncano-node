@@ -36,24 +36,23 @@ export default class SocketSubmitCmd {
     echon(4)(`Submitting Socket ${format.cyan(this.socket.name)} `)
     echon(format.dim(`(${this.socket.spec.version})... `))
 
-    this.socket.submit()
-      .then((submitStatus) => {
-        if (submitStatus.status === 200) {
-          const publishCommand = format.cyan('syncano-cli publish', this.socket.name)
-          echo(format.green('Done!'))
-          echon(4)('By default your socket is private 🔒. ')
-          echo(`Type ${publishCommand} to make it available for everyone!`)
-          echo()
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.data) {
-          error(4)(err.response.data.message)
-          echo()
-        } else {
-          error(4)(err.message)
-        }
-        process.exit(1)
-      })
+    try {
+      const submitStatus = await this.socket.submit()
+      if (submitStatus.status === 200) {
+        const publishCommand = format.cyan('syncano-cli publish', this.socket.name)
+        echo(format.green('Done!'))
+        echon(4)('By default your socket is private 🔒. ')
+        echo(`Type ${publishCommand} to make it available for everyone!`)
+        echo()
+      }
+    } catch (err) {
+      if (err.response && err.response.data) {
+        error(4)(err.response.data.message)
+        echo()
+      } else {
+        error(4)(err.message)
+      }
+      process.exit(1)
+    }
   }
 }

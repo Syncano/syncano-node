@@ -77,13 +77,11 @@ export default class SocketDeployCmd {
     timer.reset()
     const msg = p(4)(`${format.magenta('project deploy:')} ${currentTime()}`)
     const spinner = new SimpleSpinner(msg).start()
-    return this.session.deployProject()
-      .then((deployProjectStatus) => {
-        spinner.stop()
-        const status = format.grey('project synced:')
-        const duration = timer.getDuration()
-        echo(5)(`${status} ${currentTime()} ${duration}`)
-      })
+    await this.session.deployProject()
+    spinner.stop()
+    const status = format.grey('project synced:')
+    const duration = timer.getDuration()
+    echo(5)(`${status} ${currentTime()} ${duration}`)
   }
 
   async deploySocket (socket, config) {
@@ -104,27 +102,26 @@ export default class SocketDeployCmd {
     }
 
     // Let's compile and update if it is not hot mode
-    return socket.update({ config, withCompilation: true, updateSocketNPMDeps: true, updateEnv: true })
-      .then((updateStatus) => {
-        spinner.stop()
-        SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
-        if (updateStatus.status !== 0 && this.cmd.bail) {
-          SocketDeployCmd.bail()
-        }
-      })
-      .catch((err) => {
-        spinner.stop()
-        if (err.errorType === 'compilationError') {
-          printCompileError(err, socket.name)
-        } else {
-          const status = format.red('socket sync error:')
-          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
-        }
+    try {
+      const updateStatus = socket.update({ config, withCompilation: true, updateSocketNPMDeps: true, updateEnv: true })
+      spinner.stop()
+      SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
+      if (updateStatus.status !== 0 && this.cmd.bail) {
+        SocketDeployCmd.bail()
+      }
+    } catch (err) {
+      spinner.stop()
+      if (err.errorType === 'compilationError') {
+        printCompileError(err, socket.name)
+      } else {
+        const status = format.red('socket sync error:')
+        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
+      }
 
-        if (this.cmd.bail) {
-          SocketDeployCmd.bail()
-        }
-      })
+      if (this.cmd.bail) {
+        SocketDeployCmd.bail()
+      }
+    }
   }
 
   getSocketToUpdate (fileName) {

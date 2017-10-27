@@ -15,13 +15,8 @@
     "test:unit": "npm run test:base -- test/unit/**/*.js",
     "test:e2e": "npm run test:base -- --timeout 30000 --slow 8000 test/e2e/*.js",
     "test:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "test:watch": "mocha --watch test/**/*.js --compilers js:babel-register",
     "lint": "standard --fix --env mocha",
-    "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js",
-    "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
-    "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc",
-    "release:beta": "npm version prerelease -m \"chore(package.json): bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH",
-    "release": "npm version patch -m \"chore(package.json): bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH"
+    "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
   },
   "lint-staged": {
     "*.js": [
