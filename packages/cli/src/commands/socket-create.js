@@ -15,28 +15,28 @@ class SocketCreate {
       socketName = path.parse(process.cwd()).name
     }
 
-    const questions = []
-    questions.push({
+    this.questions = [{
       name: 'template',
       type: 'list',
       message: p(2)('Choose template for your Socket'),
       choices: this.Socket.getTemplatesChoices().map((choice) => p(4)(choice)),
       default: 1
-    })
+    }]
 
     echo()
-    const response = await inquirer.prompt(questions)
+    const response = await inquirer.prompt(this.questions)
     const template = response.template
       .split(' - ')[0] // find name
       .replace(/ /g, '') // strip padding
 
     echo()
-    return this.Socket.create(socketName, template)
-      .then((socket) => {
-        echo(4)(`Your Socket configuration is stored at ${format.cyan(socket.getSocketPath())}`)
-        echo()
-      })
-      .catch((err) => error(err.message))
+    try {
+      const socket = await this.Socket.create(socketName, template)
+      echo(4)(`Your Socket configuration is stored at ${format.cyan(socket.getSocketPath())}`)
+      echo()
+    } catch (err) {
+      error(err.message)
+    }
   }
 }
 

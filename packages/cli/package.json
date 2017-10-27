@@ -109,7 +109,7 @@
     "unit:watch": "yarn run unit -- -w",
     "e2e": "mkdir -p e2e-tests/ && mkdir -p e2e-tests/hosting/ && mocha 'src/tests/e2e/*.test-e2e.js' --reporter spec --require babel-register --timeout 40000 --slow 8000 && rm -rf e2e-tests/",
     "e2e:tutorial": "mocha  --reporter spec --require babel-register --timeout 16000 --slow 8000",
-    "check-coverage": "nyc yarn run unit",
+    "unit:coverage": "nyc yarn run unit",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
     "test": "npm-run-all --parallel test:unit test:e2e",
     "test:unit": "nyc yarn run unit",
