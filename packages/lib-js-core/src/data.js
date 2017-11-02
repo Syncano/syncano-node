@@ -211,21 +211,7 @@ class Data extends QueryBuilder {
           return false
         }
 
-        result = result.map(item => {
-          Object.keys(item).forEach(key => {
-            const value = item[key]
-            const isObject = value instanceof Object && !Array.isArray(value)
-            const hasType = isObject && value.type !== undefined
-            const hasTarget = isObject && value.target !== undefined
-            const hasValue = isObject && value.value !== undefined
-
-            if (isObject && (hasType || hasTarget) && hasValue) {
-              item[key] = value.value
-            }
-          })
-
-          return item
-        })
+        result = self._replaceCustomTypesWithValue(result)
 
         return true
       }
@@ -250,6 +236,36 @@ class Data extends QueryBuilder {
         }
       }
     })
+  }
+
+  _replaceCustomTypesWithValue(items) {
+    if (Array.isArray(items)) {
+      return items.map(item =>
+        Object.keys(item).reduce((all, key) => ({
+          ...all,
+          [key]: this._replaceCustomType(key, item)
+        }), {})
+      )
+    }
+
+    return Object.keys(items).reduce((all, key) => ({
+      ...all,
+      [key]: this._replaceCustomType(key, items)
+    }), {})
+  }
+
+  _replaceCustomType(key, item) {
+    const value = item[key]
+    const isObject = value instanceof Object && !Array.isArray(value)
+    const hasType = isObject && value.type !== undefined
+    const hasTarget = isObject && value.target !== undefined
+    const hasValue = isObject && value.value !== undefined
+
+    if (isObject && (hasType || hasTarget) && hasValue) {
+      return value.value
+    }
+
+    return value
   }
 
   _mapFields (items) {
@@ -627,14 +643,16 @@ class Data extends QueryBuilder {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
-      return this._batch(body, headers).then(this._mapFields.bind(this))
+      return this._batch(body, headers)
+        .then(this._replaceCustomTypesWithValue.bind(this))
+        .then(this._mapFields.bind(this))
     } else {
       fetchObject.body = JSON.stringify(body)
     }
 
-    return this.fetch(fetchObject.url, fetchObject, headers).then(
-      this._mapFields.bind(this)
-    )
+    return this.fetch(fetchObject.url, fetchObject, headers)
+      .then(this._replaceCustomTypesWithValue.bind(this))
+      .then(this._mapFields.bind(this))
   }
 
   /**
@@ -668,7 +686,9 @@ class Data extends QueryBuilder {
       return this.list().then(items => {
         const ids = items.map(item => [item.id, id])
 
-        return this._batch(ids).then(this._mapFields.bind(this))
+        return this._batch(ids)
+          .then(this._replaceCustomTypesWithValue.bind(this))
+          .then(this._mapFields.bind(this))
       })
     }
 
@@ -676,7 +696,9 @@ class Data extends QueryBuilder {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(id)) {
-      return this._batch(id).then(this._mapFields.bind(this))
+      return this._batch(id)
+        .then(this._replaceCustomTypesWithValue.bind(this))
+        .then(this._mapFields.bind(this))
     }
 
     return this.fetch(fetchObject.url, fetchObject, headers).then(

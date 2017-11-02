@@ -67,7 +67,8 @@ describe('Data', function () {
 
       return run
         .create(form)
-        .should.eventually.have.nested.property('field_file.type', 'file')
+        .should.eventually.have.nested.property('field_file')
+        .match(/^https/)
     })
 
     it('should be able to create object from FormData', () => {
@@ -385,6 +386,20 @@ describe('Data', function () {
       return run
         .update(2, record)
         .should.eventually.have.property('field_string', 'abde')
+    })
+
+    it('should be able to update object file field', () => {
+      const form = new FormData()
+
+      form.append(
+        'field_file',
+        fs.createReadStream(join(__dirname, '/assets/test.jpg'))
+      )
+
+      return run
+        .update(2, form)
+        .should.eventually.have.nested.property('field_file')
+        .match(/^https/)
     })
   })
 
