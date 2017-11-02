@@ -1,0 +1,4 @@
+- Resources
+  - [Cookbook](https://cookbook.syncano.io)
+  - [Cheatsheet](https://cheatsheet.syncano.io)
+  - [Docs](https://syncano.github.io/syncano-node-cli)

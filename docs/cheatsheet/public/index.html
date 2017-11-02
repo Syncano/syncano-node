@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Syncano Cheat Sheet - Client</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<main class="c-main">
+  <header class="c-header">
+    <div class="c-header__tab">
+      <a class="c-logo" href="https://syncano.io">
+        <svg width="100%" height="100%" viewBox="0 0 4450 692" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path fill="#5c9fd6" d="M2878.05,345.463c0,-130.238 -94.113,-237.659 -226.254,-237.659c-132.138,0 -224.354,105.525 -224.354,235.763c0,130.229 94.112,237.65 226.258,237.65c132.137,0 224.35,-105.517 224.35,-235.754m5.837,332.133l0,-73.329c-60.058,52.304 -139.904,84.371 -232.091,84.371c-124.542,0 -226.054,-57.584 -286.429,-145.117c-61.03,87.379 -162.875,145.079 -286.821,145.079c-204.388,0 -346.984,-154.983 -346.984,-343.217c0,-188.225 144.5,-345.083 348.888,-345.083c84.883,0 159.054,26.792 216.833,71.525c-24.108,31.079 -44.121,65.496 -59.275,102.587c-39.833,-41.17 -95.116,-66.687 -159.462,-66.687c-132.134,0 -224.35,105.525 -224.35,235.762c0,130.23 94.112,237.392 226.254,237.392c132.137,0 224.354,-105.775 224.354,-236.012l0.021,0c0.304,-187.959 144.7,-344.484 348.875,-344.484c204.387,0 346.987,154.95 346.987,343.184l0.13,334.029l-116.93,0l0,0Zm-2451.47,-617.817c-58.709,-37.579 -125.142,-57.712 -205.217,-57.712c-131.896,0 -226.796,77.808 -226.796,193.583c0,123.358 79.713,165.117 221.109,199.275c123.358,28.467 149.929,54.079 149.929,102.475c0,51.258 -45.554,84.475 -117.671,84.475c-64.129,0 -116.804,-18.904 -166.929,-53.138l-54.209,94.534c66.317,41.5 140.642,62.029 218.296,62.029c139.492,0 237.229,-74.008 237.229,-199.275c0,-111.029 -73.066,-161.321 -213.512,-195.479c-127.15,-30.367 -157.517,-53.146 -157.517,-105.338c0,-44.6 39.85,-79.712 108.179,-79.712c51.213,0 101.75,16.875 152.18,48.908l54.929,-94.625l0,0Zm2960.72,-58.012c-180.45,0 -295.454,104.1 -295.454,305.379l0,369.583l121.95,0l0,-364.625c0,-128.912 66.709,-198.292 175.767,-198.292c109.063,0 175.771,69.38 175.771,198.292l0,364.625l121.946,0l0,-369.583c0,-201.279 -115.005,-305.379 -295.455,-305.379l-4.525,0l0,0Zm933.746,343.616c0,130.238 -92.216,235.754 -224.35,235.754c-132.145,0 -226.258,-107.42 -226.258,-237.65c0,-130.237 92.217,-235.762 224.354,-235.762c132.142,0 226.254,107.421 226.254,237.658m122.634,-1.896c0,-188.233 -142.596,-343.183 -346.984,-343.183c-204.391,0 -348.891,156.858 -348.891,345.079c0,188.234 142.596,343.175 346.987,343.175c204.388,0 348.888,-156.85 348.888,-345.071m-3376.06,332.988l121.913,0l0,-369.475c0,-127.871 66.412,-193.275 174.45,-193.275c109.029,0 175.433,69.358 175.433,198.229l0,364.521l121.913,0l0,-369.475c0,-201.221 -114.971,-305.292 -295.367,-305.292c-181.383,0 -298.342,104.071 -298.342,311.234l0,363.533Zm36.734,-664.825l-264.2,441.254l0,224.004l-120.454,0l0,-223.145l-267.421,-444.017l136.237,1.904l191.629,331.704l190.209,-331.704l134,0Z" style="fill-rule:nonzero;"/></svg>
+      </a>
+    </div>
+    <div class="c-header__tab">
+      <a data-tab="client" href="#client" class="is-active">Client</a>
+    </div>
+    <div class="c-header__tab">
+      <a data-tab="server" href="#server">Server</a>
+    </div>
+    <div class="c-header__tab">
+      <a data-tab="cli" href="#cli">CLI</a>
+    </div>
+  </header>
+  
+  <div class="c-columns" data-tabs>
+    <!-- 
+
+    ==== Client 1
+
+    -->
+    <section data-tag="client" class="c-column">
+      <h3>Setup</h3>
+      <h4>Install</h4>
+      <pre><code class="lang-bash">npm install syncano-client --save</code></pre>
+      <p>or</p>
+      <pre><code class="lang-html">&lt;script src="https://unpkg.com/syncano-client"&gt;&lt;/script&gt;</code></pre>
+      
+      <h4>Basic connection</h4>
+      <pre><code class="lang-js">const s = new SyncanoClient(instanceName)</code></pre>
+      
+      <h4>Connect with options</h4>
+      <pre><code class="lang-js">const s = new SyncanoClient('MY_INSTANCE_NAME', {
+  token: 'USER_TOKEN'
+})</code></pre>
+      
+      <h3>Authentication</h3>
+      <h4>Set user token</h4>
+      <pre><code class="lang-js">s.setToken(token)</code></pre>
+      
+      <h4>Remove user token</h4>
+      <pre><code class="lang-js">s.setToken()</code></pre>
+    </section>
+    <!-- 
+
+    ==== Client 2
+
+    -->
+    <section data-tag="client" class="c-column">
+      <h3>Requests</h3>
+      <h4>API</h4>
+      <pre><code class="lang-js">s(endpoint, data?, options?)
+s.post(endpoint, data?, options?)
+s.get(endpoint, data?, options?)
+s.delete(endpoint, data?, options?)
+s.put(endpoint, data?, options?)
+s.patch(endpoint, data?, options?)</code></pre>
+      <h4>Call socket endpoint</h4>
+      <pre><code class="lang-js">// Send POST request
+s('countries/list', {sort_by: 'population'})
+  .then(country => {
+    console.log(country.name)
+  })
+
+// Send GET request
+s.get('countries/get', {name: 'Poland'})</code></pre>
+      <h4>Custom headers</h4>
+      <pre><code class="lang-js">s.get('countries/list', {}, {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})</code></pre>
+    </section>
+    <!-- 
+
+    ==== Client 3
+
+    -->
+    <section data-tag="client" class="c-column">
+      <h3>Realtime</h3>
+      
+      <h4>API</h4>
+      <pre><code class="lang-js">// Subscribe for continious changes
+s.subscribe(endpoint, data?, callback)
+
+// Subscribe only for first change
+s.subscribe.once(endpoint, data?, callback)</code></pre>
+      <h4>Listen for changes on public channel</h4>
+      <pre data-type="socket"><code class="lang-yaml">endpoints:
+  messages:
+    channel: messages</code></pre>
+      <pre data-type="server"><code class="lang-js">import {channel} from 'syncano-server'
+channel.publish(`messages`, message)</code></pre>
+      <pre><code class="lang-js">s.subscribe('chat/messages', res => {})</code></pre>
+      <h4>Listen for changes on channel room</h4>
+      <pre data-type="socket"><code class="lang-yaml">endpoints:
+  messages:
+    channel: messages.{room}</code></pre>
+      <pre data-type="server"><code class="lang-js">channel.publish(`messages.${room}`, message)</code></pre>
+      <pre><code class="lang-js">s.subscribe(endpoint, {room: 1}, callback)</code></pre>
+      
+      
+      <h4>Listen for changes on user private channel</h4>
+      <pre data-type="socket"><code class="lang-yaml">endpoints:
+  messages:
+    channel: messages.{user}</code></pre>
+      <pre data-type="server"><code class="lang-js">channel.publish(`messages.${username}`, message)</code></pre>
+      <pre><code class="lang-js">s.subscribe(endpoint, {user_key: ''}, callback)</code></pre>
+      
+      <h4>Unsubscribe from channel changes</h4>
+      <pre><code class="lang-js">const listener = s.subscribe(endpoint, data)
+listener.stop()      
+</code></pre>
+    </section>
+    <!-- 
+
+    ==== Server 1
+
+    -->
+    <section data-tag="server" class="c-column">
+      <!-- 
+
+      ==== Setup
+
+      -->
+      <h3>Setup</h3>
+      <h4>Install</h4>
+      <pre><code class="lang-bash">npm install syncano-server --save</code></pre>
+      
+      <h4>Usage</h4>
+      <pre><code class="lang-js">import Syncano from ‘syncano-server’
+          
+export default (ctx) => {
+  const {data} = new Syncano(ctx)
+
+  data.posts
+    .create({title: 'Lorem ipsum'})
+    .then(post => {
+      console.log(post.title)
+    })
+}</code></pre>
+      <!-- 
+
+      ==== Response
+
+      -->
+      <h3>Response</h3>
+      <p>Send response from socket.</p>
+      <h4>Import</h4>
+      <pre><code class="lang-js">const {response} = new Server(ctx)</code></pre>
+      <h4>API</h4>
+      <pre><code class="lang-js">response(content, status?, mimetype, headers?)
+response.header(key, value)
+response.json(content, status?)</code></pre>
+      <h4>Basic response</h4>
+      <pre><code class="lang-js">response('Hello world')
+response('Hello world', 200, 'text/plain', {
+  'X-RATE-LIMIT': 50
+})</code></pre>
+      <h4>Custom headers</h4>
+      <pre><code class="lang-js">response
+  .header('X-RATE-LIMIT', 50)
+  .header('X-USAGE', 35)
+  ('Check headers', 200, 'plain/text')</code></pre>
+      <h4>JSON response</h4>
+      <pre><code class="lang-js">response.json({title: "Post title"})
+response
+  .header('X-RATE-LIMIT', 50)
+  .json({title: "Post title"})</code></pre>
+      <!-- 
+
+      ==== Logger
+
+      -->
+      <h3>Logger</h3>
+      <p>console.log for your sockets.</p>
+      <h4>Import</h4>
+      <pre><code class="lang-js">const {logger} = new Server(ctx)</code></pre>
+      <h4>Usage</h4>
+      <pre><code class="lang-js">const log = logger('Socket scope')
+
+log.debug('This is debug message!')
+log.error('This is error message!')
+log.warn('This is warning message!')
+log.info('This is info message!', {hello: "world"})</code></pre>
+      <h4>Listen for events</h4>
+      <pre><code class="lang-js">logger.listen(event => {
+  // Handle event - save to db or send email 
+})</code></pre>
+      <!-- 
+
+      ==== Events
+
+      -->
+      <h3>Events</h3>
+      <p>Publish global events to which other sockets can subscribe.</p>
+      <h4>Import</h4>
+      <pre><code class="lang-js">const {event} = new Server(ctx)</code></pre>
+      <h4>Emiting event</h4>
+      <pre><code class="lang-js">event.emit('email_sent', {to: 'mail@example.com'})</code></pre>
+      <h4>Catching event</h4>
+      <pre data-type="socket"><code class="lang-yaml">event_handlers:
+  events.socket name.email_sent:
+    file: email-sent.js</code></pre>
+    </section>
+    <!-- 
+
+    ==== Serve 2
+
+    -->
+    <section data-tag="server" class="c-column">
+      <!-- 
+
+      ==== Sockets
+
+      -->
+      <h3>Sockets</h3>
+      <p>Call other socket enpoints.</p>
+      <h4>Import</h4>
+      <pre><code class="lang-js">const {socket} = new Server(ctx)</code></pre>
+      <h4>Usage</h4>
+      <pre><code class="lang-js">socket.get('tags/list', {sort: 'latest'})
+socket.post('tags/create', {name: 'nature'})
+socket.delete('tags/delete', {id: 1})</code></pre>
+      <!-- 
+
+      ==== Channels
+
+      -->
+      <h3>Channels</h3>
+      <p>Send messages to realtime channels.</p>
+      <h4>Import</h4>
+      <pre><code class="lang-js">const {channel} = new Server(ctx)</code></pre>
+      <h4>Publishing to public channel</h4>
+      <pre data-type="socket"><code class="lang-yaml">endpoints:
+  messages:
+    channel: messages</code></pre>
+      <pre><code class="lang-js">channel.publish('messages', {content: 'hello'})</code></pre>
+      <h4>Publishing to channel room</h4>
+      <pre data-type="socket"><code class="lang-yaml">endpoints:
+  messages:
+    channel: messages.{room}</code></pre>
+      <pre><code class="lang-js">channel.publish(`messages.${room}`, {content: 'hello'})</code></pre>
+      <h4>Publishing to user private channel</h4>
+      <pre data-type="socket"><code class="lang-yaml">endpoints:
+  messages:
+    channel: messages.{user}</code></pre>
+      <pre><code class="lang-js">channel.publish(`messages.${username}`, {content: 'hello'})</code></pre>
+      <!-- 
+
+      ==== Data & Users
+
+      -->
+      <h3>Data &amp; Users</h3>
+      <p>Create, update, delete, list users and class object.</p>
+      <h4>Import</h4>
+      <pre><code class="lang-js">const {data, users} = new Server(ctx)</code></pre>
+      <h4>API</h4>
+      <p>Users and Data share all methods.</p>
+      <pre><code class="lang-js">users.method()
+  .then(res => {})
+  .catch(err => {})
+
+data.&lt;class_name&gt;.method()
+  .then(res => {})
+  .catch(err => {})</code></pre>
+      <h4>Example "posts" data class</h4>
+      <pre data-type="socket"><code class="lang-yaml">classes:
+  posts:
+    - name: title
+      type: string
+    - name: status
+      type: array
+      filter_index: true
+    - name: views
+      type: integer
+      filter_index: true</code></pre>
+      <div class="c-note">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#5c9fd6" d="M272 428v28c0 10.449-6.68 19.334-16 22.629V488c0 13.255-10.745 24-24 24h-80c-13.255 0-24-10.745-24-24v-9.371c-9.32-3.295-16-12.18-16-22.629v-28c0-6.627 5.373-12 12-12h136c6.627 0 12 5.373 12 12zM128 176c0-35.29 28.71-64 64-64 8.837 0 16-7.164 16-16s-7.163-16-16-16c-52.935 0-96 43.065-96 96 0 8.836 7.164 16 16 16s16-7.164 16-16zm64-128c70.734 0 128 57.254 128 128 0 77.602-37.383 60.477-80.98 160h-94.04C101.318 236.33 64 253.869 64 176c0-70.735 57.254-128 128-128m0-48C94.805 0 16 78.803 16 176c0 101.731 51.697 91.541 90.516 192.674 3.55 9.249 12.47 15.326 22.376 15.326h126.215c9.906 0 18.826-6.078 22.376-15.326C316.303 267.541 368 277.731 368 176 368 78.803 289.195 0 192 0z"/></svg>
+        <p>Built-in fields: id, revision, created_at, updated_at</p>
+      </div>
+      <h4>Creating</h4>
+      <pre><code class="lang-js">// Create single post
+data.posts.create({title: 'Lorem ipsum'})
+
+// Create multiple posts
+data.posts.create([
+  {title: 'Lorem ipsum 1'},
+  {title: 'Lorem ipsum 2'}
+])</code></pre>
+      <h4>Updating</h4>
+      <pre><code class="lang-js">// Update all objects
+data.posts.update({title: 'Lorem ipsum 1'})
+
+// Update single object with given ID
+data.posts.update(14, {title: 'Lorem ipsum 1'})
+
+// Update multiple objects
+data.posts.update([
+  14, {title: 'Lorem ipsum 1'},
+  15, {title: 'Lorem ipsum 1'}
+])
+
+// Update all objects matching query
+data.posts
+  .where('status', 'in', ['draft', 'deleted'])
+  .update({title: 'Lorem ipsum 1'})</code></pre>
+    </section>
+    <!-- 
+
+    ==== Server 3
+
+    -->
+    <section data-tag="server" class="c-column">
+      <h4>Other Creation Methods</h4>
+      <pre><code class="lang-js">// Get first tag with name 'ship' or create it
+// Second param holds additional data assigned to object
+data.tags.firstOrCreate({name: 'ship'}, {created_by: 1})</code></pre>
+      <pre><code class="lang-js">// Get first tag with name 'ship' or create it
+// Second param holds additional data assigned to object
+data.tags.updateOrCreate({name: 'ship'}, {created_by: 1})</code></pre>
+      <h4>Deleting Class Object</h4>
+      <pre><code class="lang-js">// Delete all posts
+data.posts.delete()
+
+// Delete signle post with given ID
+data.posts.delete(55)
+
+// Delete multiple posts
+data.posts.delete([55, 56, 57])
+
+// Delee all posts where draft column is equal 1
+data.posts.where('draft', 1).delete()</code></pre>
+      
+      <h4>Retrieving Objects</h4>
+      <pre><code class="lang-js">// Get all objects from class
+data.posts.list()
+
+// Get all objects with status equal published
+data.posts.where('status', 'published').list()
+
+// Get object by ID
+data.posts.find(1)
+
+// Get first object matching query
+data.posts.where('status', 'draft').first()
+
+// Get object with given IDs
+data.posts.find([4, 5, 10])
+
+// Get object with given ID or throw error
+data.posts.findOrFail(15)
+
+// Get first object with views > 100 or throw error
+data.posts.where('views', '>', 100).firstOrFail())</code></pre>
+      <h4>Filtering</h4>
+      <pre><code class="lang-js">// Get all posts with views = 100
+data.posts.where('views', '=', 100).list()
+
+// You can ommit second param to simply check if value is equal
+data.posts.where('views', 100).list()
+
+// Get all post with views greater than 100
+// Other selectors: <, <=, >, >=, =, !=
+data.posts.where('views', '>', 200).list()
+
+// Get all posts with one of the statuses
+data.posts.where('status', 'in', ['draft', 'published']).list()
+
+// Get all posts with id not in given array
+data.posts.where('id', 'nin', [10, 20]).list()
+
+// Get all published posts with id between 100 and 200
+data.posts
+  .where([
+    ['id', 'gt', 100],
+    ['id', 'lt', 200]
+    ['status', 'published']
+  ]).list()</code></pre>
+      <h4>Ordering, Limit, & Offset</h4>
+      <pre><code class="lang-js">// Get all posts ordered descending by creation date
+data.posts.orderBy('created_at', 'DESC').list()
+
+// Get all posts ordered ascending by creation date
+data.posts.orderBy('created_at', 'ASC').list()</code></pre>
+      <pre><code class="lang-js">// Skip 5 posts and then get next 10 posts
+data.posts.skip(5).take(10).list()</code></pre>
+      <h4>Helper methods</h4>
+      <pre><code class="lang-js">// Get only selected columns
+data.posts
+  .fields('id', 'title', 'user.first_name as author')
+  .list()
+  
+// Get values of given collumn
+data.posts.pluck('title')
+  
+// Get single object key
+data.posts.where('id', 10).value('title')
+</code></pre>
+    </section>
+    <!-- 
+
+    ==== CLI 1
+
+    -->
+    <section data-tag="cli" class="c-column">
+      <h3>Basics</h3>
+      <h4>Install</h4>
+      <pre><code class="lang-bash">npm install --global yarn
+npm install -g syncano-cli</code></pre>
+      <div class="c-note">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#5c9fd6" d="M272 428v28c0 10.449-6.68 19.334-16 22.629V488c0 13.255-10.745 24-24 24h-80c-13.255 0-24-10.745-24-24v-9.371c-9.32-3.295-16-12.18-16-22.629v-28c0-6.627 5.373-12 12-12h136c6.627 0 12 5.373 12 12zM128 176c0-35.29 28.71-64 64-64 8.837 0 16-7.164 16-16s-7.163-16-16-16c-52.935 0-96 43.065-96 96 0 8.836 7.164 16 16 16s16-7.164 16-16zm64-128c70.734 0 128 57.254 128 128 0 77.602-37.383 60.477-80.98 160h-94.04C101.318 236.33 64 253.869 64 176c0-70.735 57.254-128 128-128m0-48C94.805 0 16 78.803 16 176c0 101.731 51.697 91.541 90.516 192.674 3.55 9.249 12.47 15.326 22.376 15.326h126.215c9.906 0 18.826-6.078 22.376-15.326C316.303 267.541 368 277.731 368 176 368 78.803 289.195 0 192 0z"/></svg>
+        <p>s is alias for syncano-cli</p>
+      </div>
+      <h4>Output usage information</h4>
+      <pre><code class="lang-bash">s --help</code></pre>
+      <h4>Output the version number</h4>
+      <pre><code class="lang-bash">s --version</code></pre>
+      <h4>Initiate project</h4>
+      <pre><code class="lang-bash">s init
+
+# init with given instance nam
+s init -i <new_or_existing_instance></code></pre>
+      <h4>Login to/register Syncano account</h4>
+      <pre><code class="lang-bash">s login</code></pre>
+      <h4>Logout (delete account keys from this computer)</h4>
+      <pre><code class="lang-bash">s logout</code></pre>
+      <h4>Attach project to the chosen Instance</h4>
+      <pre><code class="lang-bash">s attach --instance my_instance_name</code></pre>
+
+      <h3>Deploy</h3>
+      
+      <h4>Deploy whole project</h4>
+      <pre><code class="lang-bash">s deploy</code></pre>
+      
+      <h4>Deploy whole project</h4>
+      <pre><code class="lang-bash">s deploy &lt;socket name&gt;</code></pre>
+      
+      <h4>🔥 Hot deploy (deploy every change in the source code right away)</h4>
+      <pre><code class="lang-bash">s hot </code></pre>
+      
+      <h4>🔥 Hot deploy chooses Socket</h4>
+      <pre><code class="lang-bash">s hot &lt;socket name&gt;</code></pre>
+      
+      <h4>Call Socket endpoint:</h4>
+      <pre><code class="lang-bash">s call &lt;socket name&gt;/&lt;endpoint&gt;</code></pre>
+    </section>
+    <section data-tag="cli" class="c-column">
+      <h3>Traces</h3>
+        
+      <h4>Trace all Socket calls</h4>
+      <pre><code class="lang-bash">s trace</code></pre>
+      
+      <h4>Trace chosen Socket calls</h4>
+      <pre><code class="lang-bash">s trace &lt;socket name&gt;</code></pre>
+
+      <h3>Sockets</h3>
+      
+      <h4>List Sockets</h4>
+      <pre><code class="lang-bash">s list</code></pre>
+      
+      <h4>Socket details</h4>
+      <pre><code class="lang-bash">s list &lt;socket name&gt;</code></pre>
+      
+      <h4>Adding socket from the Sockets Registry (last version)</h4>
+      <pre><code class="lang-bash">s add &lt;socket name&gt;</code></pre>
+      
+      <h4>Remove Socket</h4>
+      <pre><code class="lang-bash">s remove &lt;socket name&gt;</code></pre>
+      
+      <h4>Create new Socket</h4>
+      <pre><code class="lang-bash">s create &lt;socket name&gt;</code></pre>
+      
+      <h4>Full configuration of given Socket</h4>
+
+      <pre data-type="socket"><code class="lang-yaml">config:
+  API_KEY:
+    description: Slack API key</code></pre>
+      <pre><code class="lang-bash">s config &lt;socket name&gt;</code></pre>
+      
+      <h4>Show configuration of given socket</h4>
+      <pre><code class="lang-bash">s config-show &lt;socket name&gt;</code></pre>
+      
+      <h4>Change single configuration option</h4>
+      <pre><code class="lang-bash">s config-set &lt;socket name&gt; &lt;option name&gt; &lt;value&gt;</code></pre>
+    </section>
+    <section data-tag="cli" class="c-column">
+      <h3>Registry</h3>
+      
+      <h4>Search for Sockets</h4>
+      <pre><code class="lang-bash">s search &lt;keyword&gt;</code></pre>
+      
+      <h4>Submit your Socket to the registry</h4>
+      <pre><code class="lang-bash">s submit  &lt;socket name&gt;
+
+# bump version of the Socket (e.g. major, minor, patch)
+s submit  &lt;socket name&gt; -b patch</code></pre>
+      
+      <h4>Make you private Socket public</h4>
+      <pre><code class="lang-bash">s publish &lt;socket name&gt;</code></pre>
+      
+      <h3>Hosting</h3>
+        
+      <h4>Add new hosting</h4>
+      <pre><code class="lang-bash">s add &lt;local path&gt;</code></pre>
+        
+      <h4>Delete hosting</h4>
+      <pre><code class="lang-bash">s delete &lt;hosting name&gt;</code></pre>
+        
+      <h4>List all hostinngs</h4>
+      <pre><code class="lang-bash">s list</code></pre>
+        
+      <h4>List files of given hosting</h4>
+      <pre><code class="lang-bash">s files &lt;hosting name&gt;</code></pre>
+        
+      <h4>Synchronize files of given hosting</h4>
+      <pre><code class="lang-bash">s sync &lt;hosting name&gt;</code></pre>
+        
+      <h4>Configure hosting options</h4>
+      <pre><code class="lang-bash">s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
+s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code></pre>
+    </section>
+  </div>
+</main>
+<script src="https://unpkg.com/prismjs@1.8.1/prism.js"></script>
+<script>
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+  analytics.load("JOORVnKvRiFQMBMqpHQA7VBw74GvxWnb");
+  analytics.identify();
+  }}();
+</script>
+<script src="./script.js?1"></script>
+</body>
+</html>
