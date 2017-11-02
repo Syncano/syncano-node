@@ -22,8 +22,8 @@ jobs:
 
       - restore_cache:
           keys:
-          - v1-dependencies-socket-{{ checksum "packages/lib-js-socket/package.json" }}
-          - v1-dependencies-socket-
+          - v1-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
+          - v1-dependencies-core-
 
       - restore_cache:
           keys:
@@ -56,8 +56,8 @@ jobs:
 
       - save_cache:
           paths:
-            - packages/lib-js-socket/node_modules
-          key: v1-dependencies-socket-{{ checksum "packages/lib-js-socket/package.json" }}
+            - packages/lib-js-core/node_modules
+          key: v1-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
 
       - save_cache:
           paths:

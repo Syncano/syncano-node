@@ -6,7 +6,6 @@ coverage
 /dist
 /example
 npm-debug.log
-docs
 *.sublime-*
 coverage.lcov
 .nyc_output
