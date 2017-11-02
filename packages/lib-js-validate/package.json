@@ -4,6 +4,9 @@
   "version": "0.4.1",
   "license": "MIT",
   "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "ajv": "^5.2.3",
     "faker": "^4.1.0"

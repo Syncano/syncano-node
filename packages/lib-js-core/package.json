@@ -6,6 +6,9 @@
   "author": "Syncano Inc.",
   "license": "MIT",
   "repository": "https://github.com/Syncano/syncano-server-js.git",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prepublish": "npm run build",
     "prebuild": "rimraf ./lib",
