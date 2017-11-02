@@ -1,5 +1,5 @@
 {
-  "name": "@syncano/socket",
+  "name": "@syncano/core",
   "version": "1.0.1-9",
   "description": "A library to intereact with the Syncano API on a server side.",
   "main": "lib/index.js",
