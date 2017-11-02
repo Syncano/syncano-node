@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Syncano - Dev Guide</title>
+  <meta name="description" content="Syncao Dev Guide">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
+  <link rel="stylesheet" href="css/prism.css">
+  <link rel="stylesheet" href="css/docs.css">
+  <link rel="stylesheet" href="css/coverpage.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+  <div id="app">Please wait...</div>
+</body>
+<script>
+  window.$docsify = {
+    repo: 'https://github.com/Syncano/syncano-node-cli/',
+    name: 'Syncano Dev Guide',
+    themeColor: '#3871D0',
+    loadSidebar: true,
+    subMaxLevel: 3,
+    homepage: './getting-started/intro.md',
+    coverpage: true,
+    loadNavbar: true
+  };
+</script>
+<script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+<script src="//unpkg.com/docsify/lib/plugins/external-script.min.js"></script>
+<script src="//unpkg.com/docsify/lib/plugins/emoji.min.js"></script>
+<script src="//unpkg.com/docsify/lib/plugins/search.js"></script>
+<script src="https://use.fontawesome.com/d15a7169a8.js"></script>
+<script>
+Prism.languages.yaml = {
+  'prolog': /(---|\.\.\.)[^\r\n]*(\r?\n|$)/g,
+  'comment': /#[^\r\n]*(\r?\n|$)/g,
+  'number': /\b-?(0x[\dA-Fa-f]+|\d*\.?\d+)\b/g,
+  'attr-name': /[a-zA-Z0-9_-]+\:/gi,
+};
+
+Prism.languages.insertBefore('yaml', 'attr-name', {
+  'important': {
+    pattern: /\s+(\||\>|-)/g,
+    inside: {
+      'important': /(\||\>|-)/,
+    },
+    rest: Prism.languages.yaml
+  },
+  'keyword': /(&#38;|&amp;|&\z|\*)[\w]+/,
+});
+</script>
+<!-- Hotjar Tracking Code for https://syncano.github.io/syncano-node-cli/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:469637,hjsv:5};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+</html>

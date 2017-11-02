@@ -1,0 +1,228 @@
+/*-------------
+ 	General
+-------------*/
+
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html{
+	font: normal 16px sans-serif;
+	color: #555;
+  background: #fff !important;
+}
+
+body {
+  background: #fff !important;
+}
+
+/*----------------
+ 	Hero Section
+----------------*/
+
+.hero {
+  position:relative;
+	display: flex;
+  flex-direction: column;
+	flex-flow: row wrap;
+  text-align: center;
+  align-items: center;
+	justify-content: center;
+	position: relative;
+	min-height: 40vh;
+	padding-bottom: 0px!important;
+
+}
+
+/* FINDER WINDOW */
+
+#window {
+    width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+    margin-bottom:40px;
+    min-width: 600px;
+    background: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* TOP BAR */
+
+#toolbar {
+    width: 100%;
+    height: 25px;
+    background: #0B0F15;
+    border-radius:5px 5px 0 0;
+}
+
+/*-----TRAFFIC LIGHTS-----*/
+#toolbar #lights {
+    float: left;
+    position: relative;
+    top: 14px;
+    left: 14px;
+}
+
+.light {
+    float:left;
+    width:14px;
+    height:14px;
+    border-radius:14px;
+    overflow: hidden;
+}
+
+/*--RED--*/
+.red {
+   background: #FF5F56;
+}
+
+/*--YELLOW--*/
+.yellow {
+    background: #FFBD2E;
+    margin:0px 10px;
+}
+
+/*--GREEN--*/
+.green {
+    background: #27C93F;
+}
+
+.landing {
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+.buttons {
+    display: flex;
+    align-content: space-between;
+    justify-content: space-around;
+    line-height: 1.5rem;
+    width: 100%;
+}
+.button {
+    box-sizing: border-box;
+    border: 1px solid #e6005c;
+    display: inline-block;
+    font-size: 0.8em;
+    letter-spacing: .1rem;
+    padding: 1em 2rem;
+    text-decoration: none;
+    -webkit-transition: all .15s ease;
+    transition: all .15s ease;
+    border-radius: 5px;
+}
+
+.mobile-on {
+    display: none;
+}
+
+.side-button {
+    background: #fff;
+    color: #e6005c;
+}
+
+.main-button {
+    background: #e6005c;
+    color: #fff;
+}
+
+/*-----TITLE-----*/
+#title {
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+    top: 14px;
+    width: 40%;
+    left: 38%;
+    font-family: "Myriad Pro", sans-serif;
+    font-size: 16px;
+    line-height: 14px;
+		color: #888888;
+}
+
+.terminal-text {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 13px;
+    float: left;
+    width: 100%;
+    min-height: 130px;
+		margin-bottom: 0px !important;
+    background: #0B0F15;
+    padding: 24px 39px;
+    line-height: 1em;
+}
+
+.terminal-text p {
+	color: #888;
+	text-align: left;
+}
+
+.terminal-text .lite {
+	color: #ccc;
+}
+
+.terminal-text .cli-output {
+	margin-left: 24px;
+}
+
+@keyframes blink
+{
+	0%   {  background:rgba(241,241,241,1);  }
+	100% {  background:rgba(99,222,0,0);  }
+}
+
+@-webkit-keyframes blink {
+	0%   {  background:rgba(241,241,241,1);  }
+	100% {  background:rgba(99,222,0,0);  }
+}
+@-moz-keyframes blink {
+	0%   {  background:rgba(241,241,241,1);  }
+	100% {  background:rgba(99,222,0,0);  }
+}
+.cursor {
+  background: #f1f1f1;
+  display:inline-block;
+  width:11px;
+  height:19px;
+  margin-bottom:-3px;
+}
+.terminal-text .cursor {
+    -webkit-animation-name: blink;
+    -webkit-animation-duration: 1.5s;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-name: blink;
+    -moz-animation-duration: 1.5s;
+    -moz-animation-iteration-count: infinite;
+}
+
+
+@media(max-width: 600px) {
+    .mobile-off {
+        display: none;
+    }
+
+    .mobile-on {
+        display: flex;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .button {
+        margin-top: 10px;
+    }
+
+    .hero {
+        margin: 0 auto;
+    }
+    .landing {
+        width: 200px
+    }
+    #window {
+        display:none;
+    }
+}
