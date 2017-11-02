@@ -1,6 +1,6 @@
 {
   "name": "@syncano/cli",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "CLI for Syncano",
   "author": "Maciej Kucharz",
   "license": "MIT",
