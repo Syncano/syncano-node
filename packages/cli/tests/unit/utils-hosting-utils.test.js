@@ -2,8 +2,9 @@
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'
-import { getFiles, asyncDir } from './utils'
-import { getRandomString } from '../test-utils'
+
+import { getFiles, asyncDir } from '../../src/utils/hosting/utils'
+import { getRandomString } from '../../src/utils/test-utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

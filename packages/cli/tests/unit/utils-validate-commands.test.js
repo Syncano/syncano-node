@@ -1,8 +1,9 @@
+/* global it describe beforeEach afterEach */
 import sinon from 'sinon'
 import format from 'chalk'
-import program from '../program'
-import printTools from '../utils/print-tools'
-import validateCommands from './validate-commands'
+import program from '../../src/program'
+import printTools from '../../src/utils/print-tools'
+import validateCommands from '../../src/utils/validate-commands'
 
 describe('[utils] Validate command', function () {
   const randomString = Math.random().toString(36).substring(7)
@@ -16,6 +17,7 @@ describe('[utils] Validate command', function () {
     outputHelp = sinon.stub(program, 'outputHelp')
     echo = sinon.stub(printTools, 'echo')
   })
+
   afterEach(function () {
     program.outputHelp.restore()
     printTools.echo.restore()

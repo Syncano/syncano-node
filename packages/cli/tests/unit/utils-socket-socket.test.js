@@ -6,11 +6,11 @@ import sinon from 'sinon'
 import fs from 'fs-extra'
 import path from 'path'
 
-import getSettings from '../../settings'
-import session from '../../utils/session'
-import { getRandomString } from '../../utils/test-utils'
-import printTools from '../print-tools'
-import Sockets from '../../utils/sockets'
+import getSettings from '../../src/settings'
+import session from '../../src/utils/session'
+import { getRandomString } from '../../src/utils/test-utils'
+import printTools from '../../src/utils/print-tools'
+import Sockets from '../../src/utils/sockets'
 
 chai.use(chaiAsPromised)
 

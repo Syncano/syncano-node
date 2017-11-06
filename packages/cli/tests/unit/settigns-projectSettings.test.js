@@ -1,10 +1,11 @@
+/* global it describe afterEach beforeEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
 import fs from 'fs'
 import YAML from 'js-yaml'
 
-import ProjectSettings from './projectSettings'
-import { getRandomString } from '../utils/test-utils'
+import ProjectSettings from '../../src/settings/projectSettings'
+import { getRandomString } from '../../src/utils/test-utils'
 
 describe('[settings] Project Settings', function () {
   let settings = {}

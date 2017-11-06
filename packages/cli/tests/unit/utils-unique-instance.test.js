@@ -1,5 +1,6 @@
+/* global it describe */
 import { expect } from 'chai'
-import uniqueInstance from './unique-instance'
+import uniqueInstance from '../../src/utils/unique-instance'
 
 function isGeneratedWithPattern (name) {
   const splitedName = name.split('-')

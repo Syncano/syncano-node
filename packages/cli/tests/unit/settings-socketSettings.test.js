@@ -2,7 +2,7 @@
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'
-import SocketSettings from './socketSettings'
+import SocketSettings from '../../src/settings/socketSettings'
 
 chai.use(dirtyChai)
 const { expect } = chai

@@ -4,10 +4,10 @@ import fs from 'fs-extra'
 import path from 'path'
 import format from 'chalk'
 
-import Init from './init'
-import { mainSocketTemplatePath } from '../../constants/Constants'
-import { getRandomString } from '../test-utils'
-import printTools from '../print-tools'
+import Init from '../../src/utils/init'
+import { mainSocketTemplatePath } from '../../src/constants/Constants'
+import { getRandomString } from '../../src/utils/test-utils'
+import printTools from '../../src/utils/print-tools'
 
 describe('[commands] init', function () {
   const init = new Init()

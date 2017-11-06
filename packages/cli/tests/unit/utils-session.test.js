@@ -8,13 +8,13 @@ import path from 'path'
 import mkdirp from 'mkdirp'
 import Promise from 'bluebird'
 
-import session from './session'
-import { getRandomString } from './test-utils'
-import printTools from './print-tools'
-import Init from './init'
-import Plugins from './plugins'
-import getSettings from '../settings'
-import AccountSettings from '../settings/accountSettings'
+import session from '../../src/utils/session'
+import { getRandomString } from '../../src/utils/test-utils'
+import printTools from '../../src/utils/print-tools'
+import Init from '../../src/utils/init'
+import Plugins from '../../src/utils/plugins'
+import getSettings from '../../src/settings'
+import AccountSettings from '../../src/settings/accountSettings'
 
 chai.use(dirtyChai)
 const { expect } = chai

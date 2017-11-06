@@ -4,7 +4,8 @@ import fs from 'fs'
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import YAML from 'js-yaml'
-import Settings from './settings'
+
+import Settings from '../../src/settings/settings'
 
 chai.use(dirtyChai)
 const { expect } = chai

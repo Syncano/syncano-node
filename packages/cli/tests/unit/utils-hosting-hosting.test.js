@@ -4,11 +4,11 @@ import chai from 'chai'
 import sinon from 'sinon'
 import Raven from 'raven'
 
-import session from '../session'
-import Hosting, { HostingFile } from './hosting'
-import utils from './utils'
-import { getRandomString } from '../test-utils'
-import printTools from '../print-tools'
+import session from '../../src/utils/session'
+import Hosting, { HostingFile } from '../../src/utils/hosting'
+import utils from '../../src/utils'
+import { getRandomString } from '../../src/utils/test-utils'
+import printTools from '../../src/utils/print-tools'
 
 chai.use(dirtyChai)
 const { expect } = chai

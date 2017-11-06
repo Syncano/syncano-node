@@ -1,10 +1,12 @@
+/* global describe it beforeEach afterEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
 import format from 'chalk'
 import createError from 'create-error'
 import Raven from 'raven'
-import printTools from './print-tools'
-import ErrorResponse from './error-response'
+
+import printTools from '../../src/utils/print-tools'
+import ErrorResponse from '../../src/utils/error-response'
 
 const RequestError = createError('RequestError')
 const SystemError = createError('SystemError')

@@ -4,8 +4,9 @@ import chai from 'chai'
 import sinon from 'sinon'
 import fs from 'fs'
 import YAML from 'js-yaml'
-import AccountSettings from './accountSettings'
-import { getRandomString } from '../utils/test-utils'
+
+import AccountSettings from '../../src/settings/accountSettings'
+import { getRandomString } from '../../src/utils/test-utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

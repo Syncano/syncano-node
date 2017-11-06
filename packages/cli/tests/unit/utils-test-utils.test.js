@@ -1,5 +1,6 @@
+/* global it describe before */
 import { expect } from 'chai'
-import utils from './test-utils'
+import utils from '../../src/utils/test-utils'
 
 describe('[test-utils]', function () {
   describe('getRandomString', function () {

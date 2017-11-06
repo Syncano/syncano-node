@@ -1,9 +1,10 @@
 /* global it describe before afterEach beforeEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
-import program from '.'
-import session from '../utils/session'
-import { getRandomString } from '../utils/test-utils'
+
+import program from '../../src/program'
+import session from '../../src/utils/session'
+import { getRandomString } from '../../src/utils/test-utils'
 
 describe('[program]', function () {
   before(function () {

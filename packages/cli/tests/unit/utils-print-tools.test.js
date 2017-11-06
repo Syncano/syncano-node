@@ -4,7 +4,8 @@ import format from 'chalk'
 import 'console.mute'
 import { expect } from 'chai'
 import _ from 'lodash'
-import { MAP, printCode, getFormatMethod, warning, error } from './print-tools'
+
+import { MAP, printCode, getFormatMethod, warning, error } from '../../src/utils/print-tools'
 
 function increaseByOne (number) {
   return number + 1
