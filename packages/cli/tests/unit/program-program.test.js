@@ -4,7 +4,7 @@ import sinon from 'sinon'
 
 import program from '../../src/program'
 import session from '../../src/utils/session'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 
 describe('[program]', function () {
   before(function () {

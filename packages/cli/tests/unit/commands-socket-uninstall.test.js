@@ -6,7 +6,7 @@ import inquirer from 'inquirer'
 import { SocketUninstall } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 
 describe('[commands] Uninstall Socket', function () {
   const socketName = getRandomString('uninstallSocket_socketName')

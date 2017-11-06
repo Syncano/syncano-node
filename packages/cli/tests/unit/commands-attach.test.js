@@ -5,7 +5,7 @@ import inquirer from 'inquirer'
 
 import {Attach} from '../../src/commands'
 import context from '../../src/utils/context'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 import printTools from '../../src/utils/print-tools'
 
 describe('[commands] Attach', function () {

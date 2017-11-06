@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import path from 'path'
 import yaml from 'js-yaml'
 
-import utils from '../../src/utils/test-utils'
+import utils from './utils'
 import uniqueInstance from '../../src/utils/unique-instance'
 import {
   nixt,

@@ -10,7 +10,7 @@ import Table from 'cli-table2'
 import { HostingFilesCmd } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

@@ -7,7 +7,7 @@ import format from 'chalk'
 import { SocketList } from '../../src/commands'
 import context from '../../src/utils/context'
 import printTools, { p, printCode } from '../../src/utils/print-tools'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 
 describe('[commands] List Sockets', function () {
   const socketList = new SocketList(context)

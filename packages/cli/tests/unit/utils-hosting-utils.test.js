@@ -4,7 +4,7 @@ import chai from 'chai'
 import sinon from 'sinon'
 
 import { getFiles, asyncDir } from '../../src/utils/hosting/utils'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

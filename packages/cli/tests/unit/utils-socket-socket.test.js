@@ -8,7 +8,7 @@ import path from 'path'
 
 import getSettings from '../../src/settings'
 import session from '../../src/utils/session'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 import printTools from '../../src/utils/print-tools'
 import Sockets from '../../src/utils/sockets'
 

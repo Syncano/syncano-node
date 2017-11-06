@@ -6,7 +6,7 @@ import format from 'chalk'
 
 import Init from '../../src/utils/init'
 import { mainSocketTemplatePath } from '../../src/constants/Constants'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 import printTools from '../../src/utils/print-tools'
 
 describe('[commands] init', function () {

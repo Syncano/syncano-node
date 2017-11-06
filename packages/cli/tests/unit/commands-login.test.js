@@ -7,7 +7,7 @@ import { Login } from '../../src/commands'
 import context from '../../src/utils/context'
 import session from '../../src/utils/session'
 import printTools from '../../src/utils/print-tools'
-import { getRandomString } from '../../src/utils/test-utils'
+import { getRandomString } from './utils'
 
 describe('[commands] Login', function () {
   const email = process.env.E2E_CLI_EMAIL
