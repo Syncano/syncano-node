@@ -27,9 +27,9 @@
       <a data-tab="cli" href="#cli">CLI</a>
     </div>
   </header>
-  
+
   <div class="c-columns" data-tabs>
-    <!-- 
+    <!--
 
     ==== Client 1
 
@@ -40,23 +40,23 @@
       <pre><code class="lang-bash">npm install syncano-client --save</code></pre>
       <p>or</p>
       <pre><code class="lang-html">&lt;script src="https://unpkg.com/syncano-client"&gt;&lt;/script&gt;</code></pre>
-      
+
       <h4>Basic connection</h4>
       <pre><code class="lang-js">const s = new SyncanoClient(instanceName)</code></pre>
-      
+
       <h4>Connect with options</h4>
       <pre><code class="lang-js">const s = new SyncanoClient('MY_INSTANCE_NAME', {
   token: 'USER_TOKEN'
 })</code></pre>
-      
+
       <h3>Authentication</h3>
       <h4>Set user token</h4>
       <pre><code class="lang-js">s.setToken(token)</code></pre>
-      
+
       <h4>Remove user token</h4>
       <pre><code class="lang-js">s.setToken()</code></pre>
     </section>
-    <!-- 
+    <!--
 
     ==== Client 2
 
@@ -86,14 +86,14 @@ s.get('countries/get', {name: 'Poland'})</code></pre>
   }
 })</code></pre>
     </section>
-    <!-- 
+    <!--
 
     ==== Client 3
 
     -->
     <section data-tag="client" class="c-column">
       <h3>Realtime</h3>
-      
+
       <h4>API</h4>
       <pre><code class="lang-js">// Subscribe for continious changes
 s.subscribe(endpoint, data?, callback)
@@ -113,27 +113,27 @@ channel.publish(`messages`, message)</code></pre>
     channel: messages.{room}</code></pre>
       <pre data-type="server"><code class="lang-js">channel.publish(`messages.${room}`, message)</code></pre>
       <pre><code class="lang-js">s.subscribe(endpoint, {room: 1}, callback)</code></pre>
-      
-      
+
+
       <h4>Listen for changes on user private channel</h4>
       <pre data-type="socket"><code class="lang-yaml">endpoints:
   messages:
     channel: messages.{user}</code></pre>
       <pre data-type="server"><code class="lang-js">channel.publish(`messages.${username}`, message)</code></pre>
       <pre><code class="lang-js">s.subscribe(endpoint, {user_key: ''}, callback)</code></pre>
-      
+
       <h4>Unsubscribe from channel changes</h4>
       <pre><code class="lang-js">const listener = s.subscribe(endpoint, data)
-listener.stop()      
+listener.stop()
 </code></pre>
     </section>
-    <!-- 
+    <!--
 
     ==== Server 1
 
     -->
     <section data-tag="server" class="c-column">
-      <!-- 
+      <!--
 
       ==== Setup
 
@@ -141,10 +141,10 @@ listener.stop()
       <h3>Setup</h3>
       <h4>Install</h4>
       <pre><code class="lang-bash">npm install syncano-server --save</code></pre>
-      
+
       <h4>Usage</h4>
       <pre><code class="lang-js">import Syncano from ‘syncano-server’
-          
+
 export default (ctx) => {
   const {data} = new Syncano(ctx)
 
@@ -154,7 +154,7 @@ export default (ctx) => {
       console.log(post.title)
     })
 }</code></pre>
-      <!-- 
+      <!--
 
       ==== Response
 
@@ -182,7 +182,7 @@ response('Hello world', 200, 'text/plain', {
 response
   .header('X-RATE-LIMIT', 50)
   .json({title: "Post title"})</code></pre>
-      <!-- 
+      <!--
 
       ==== Logger
 
@@ -200,9 +200,9 @@ log.warn('This is warning message!')
 log.info('This is info message!', {hello: "world"})</code></pre>
       <h4>Listen for events</h4>
       <pre><code class="lang-js">logger.listen(event => {
-  // Handle event - save to db or send email 
+  // Handle event - save to db or send email
 })</code></pre>
-      <!-- 
+      <!--
 
       ==== Events
 
@@ -218,13 +218,13 @@ log.info('This is info message!', {hello: "world"})</code></pre>
   events.socket name.email_sent:
     file: email-sent.js</code></pre>
     </section>
-    <!-- 
+    <!--
 
     ==== Serve 2
 
     -->
     <section data-tag="server" class="c-column">
-      <!-- 
+      <!--
 
       ==== Sockets
 
@@ -237,7 +237,7 @@ log.info('This is info message!', {hello: "world"})</code></pre>
       <pre><code class="lang-js">socket.get('tags/list', {sort: 'latest'})
 socket.post('tags/create', {name: 'nature'})
 socket.delete('tags/delete', {id: 1})</code></pre>
-      <!-- 
+      <!--
 
       ==== Channels
 
@@ -261,7 +261,7 @@ socket.delete('tags/delete', {id: 1})</code></pre>
   messages:
     channel: messages.{user}</code></pre>
       <pre><code class="lang-js">channel.publish(`messages.${username}`, {content: 'hello'})</code></pre>
-      <!-- 
+      <!--
 
       ==== Data & Users
 
@@ -287,6 +287,12 @@ data.&lt;class_name&gt;.method()
     - name: status
       type: array
       filter_index: true
+    - name: author
+      type: reference
+      target: user
+    - name: comments
+      type: relation
+      target: comment
     - name: views
       type: integer
       filter_index: true</code></pre>
@@ -321,7 +327,7 @@ data.posts
   .where('status', 'in', ['draft', 'deleted'])
   .update({title: 'Lorem ipsum 1'})</code></pre>
     </section>
-    <!-- 
+    <!--
 
     ==== Server 3
 
@@ -346,7 +352,7 @@ data.posts.delete([55, 56, 57])
 
 // Delee all posts where draft column is equal 1
 data.posts.where('draft', 1).delete()</code></pre>
-      
+
       <h4>Retrieving Objects</h4>
       <pre><code class="lang-js">// Get all objects from class
 data.posts.list()
@@ -368,6 +374,14 @@ data.posts.findOrFail(15)
 
 // Get first object with views > 100 or throw error
 data.posts.where('views', '>', 100).firstOrFail())</code></pre>
+      <h4>Retrieving Related Objects</h4>
+      <pre><code class="lang-js">// Author column is reference to user class
+// It will be replaced with given author object
+data.posts.with('author').list()
+
+// You can load many references, relations at once
+// Comments column will be replaced with list of related comments
+data.posts.with(['author', 'comments']).list()</code></pre>
       <h4>Filtering</h4>
       <pre><code class="lang-js">// Get all posts with views = 100
 data.posts.where('views', '=', 100).list()
@@ -405,15 +419,15 @@ data.posts.skip(5).take(10).list()</code></pre>
 data.posts
   .fields('id', 'title', 'user.first_name as author')
   .list()
-  
+
 // Get values of given collumn
 data.posts.pluck('title')
-  
+
 // Get single object key
 data.posts.where('id', 10).value('title')
 </code></pre>
     </section>
-    <!-- 
+    <!--
 
     ==== CLI 1
 
@@ -444,93 +458,93 @@ s init -i <new_or_existing_instance></code></pre>
       <pre><code class="lang-bash">s attach --instance my_instance_name</code></pre>
 
       <h3>Deploy</h3>
-      
+
       <h4>Deploy whole project</h4>
       <pre><code class="lang-bash">s deploy</code></pre>
-      
+
       <h4>Deploy whole project</h4>
       <pre><code class="lang-bash">s deploy &lt;socket name&gt;</code></pre>
-      
+
       <h4>🔥 Hot deploy (deploy every change in the source code right away)</h4>
       <pre><code class="lang-bash">s hot </code></pre>
-      
+
       <h4>🔥 Hot deploy chooses Socket</h4>
       <pre><code class="lang-bash">s hot &lt;socket name&gt;</code></pre>
-      
+
       <h4>Call Socket endpoint:</h4>
       <pre><code class="lang-bash">s call &lt;socket name&gt;/&lt;endpoint&gt;</code></pre>
     </section>
     <section data-tag="cli" class="c-column">
       <h3>Traces</h3>
-        
+
       <h4>Trace all Socket calls</h4>
       <pre><code class="lang-bash">s trace</code></pre>
-      
+
       <h4>Trace chosen Socket calls</h4>
       <pre><code class="lang-bash">s trace &lt;socket name&gt;</code></pre>
 
       <h3>Sockets</h3>
-      
+
       <h4>List Sockets</h4>
       <pre><code class="lang-bash">s list</code></pre>
-      
+
       <h4>Socket details</h4>
       <pre><code class="lang-bash">s list &lt;socket name&gt;</code></pre>
-      
+
       <h4>Adding socket from the Sockets Registry (last version)</h4>
       <pre><code class="lang-bash">s add &lt;socket name&gt;</code></pre>
-      
+
       <h4>Remove Socket</h4>
       <pre><code class="lang-bash">s remove &lt;socket name&gt;</code></pre>
-      
+
       <h4>Create new Socket</h4>
       <pre><code class="lang-bash">s create &lt;socket name&gt;</code></pre>
-      
+
       <h4>Full configuration of given Socket</h4>
 
       <pre data-type="socket"><code class="lang-yaml">config:
   API_KEY:
     description: Slack API key</code></pre>
       <pre><code class="lang-bash">s config &lt;socket name&gt;</code></pre>
-      
+
       <h4>Show configuration of given socket</h4>
       <pre><code class="lang-bash">s config-show &lt;socket name&gt;</code></pre>
-      
+
       <h4>Change single configuration option</h4>
       <pre><code class="lang-bash">s config-set &lt;socket name&gt; &lt;option name&gt; &lt;value&gt;</code></pre>
     </section>
     <section data-tag="cli" class="c-column">
       <h3>Registry</h3>
-      
+
       <h4>Search for Sockets</h4>
       <pre><code class="lang-bash">s search &lt;keyword&gt;</code></pre>
-      
+
       <h4>Submit your Socket to the registry</h4>
       <pre><code class="lang-bash">s submit  &lt;socket name&gt;
 
 # bump version of the Socket (e.g. major, minor, patch)
 s submit  &lt;socket name&gt; -b patch</code></pre>
-      
+
       <h4>Make you private Socket public</h4>
       <pre><code class="lang-bash">s publish &lt;socket name&gt;</code></pre>
-      
+
       <h3>Hosting</h3>
-        
+
       <h4>Add new hosting</h4>
       <pre><code class="lang-bash">s add &lt;local path&gt;</code></pre>
-        
+
       <h4>Delete hosting</h4>
       <pre><code class="lang-bash">s delete &lt;hosting name&gt;</code></pre>
-        
+
       <h4>List all hostinngs</h4>
       <pre><code class="lang-bash">s list</code></pre>
-        
+
       <h4>List files of given hosting</h4>
       <pre><code class="lang-bash">s files &lt;hosting name&gt;</code></pre>
-        
+
       <h4>Synchronize files of given hosting</h4>
       <pre><code class="lang-bash">s sync &lt;hosting name&gt;</code></pre>
-        
+
       <h4>Configure hosting options</h4>
       <pre><code class="lang-bash">s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
 s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code></pre>
