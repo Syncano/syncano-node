@@ -1,3 +1,4 @@
+/* global it describe before after beforeEach */
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'

@@ -1,4 +1,5 @@
-import utils from '../../utils/test-utils'
+/* global it describe */
+import utils from '../../src/utils/test-utils'
 import {
   nixt,
   testsLocation,

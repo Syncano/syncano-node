@@ -2,7 +2,7 @@
 import path from 'path'
 import fs from 'fs-extra'
 
-import utils from '../../utils/test-utils'
+import utils from '../../src/utils/test-utils'
 import {
   nixt,
   testsLocation,

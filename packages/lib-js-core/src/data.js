@@ -238,7 +238,7 @@ class Data extends QueryBuilder {
     })
   }
 
-  _replaceCustomTypesWithValue(items) {
+  _replaceCustomTypesWithValue (items) {
     if (Array.isArray(items)) {
       return items.map(item =>
         Object.keys(item).reduce((all, key) => ({
@@ -254,7 +254,7 @@ class Data extends QueryBuilder {
     }), {})
   }
 
-  _replaceCustomType(key, item) {
+  _replaceCustomType (key, item) {
     const value = item[key]
     const isObject = value instanceof Object && !Array.isArray(value)
     const hasType = isObject && value.type !== undefined
@@ -701,9 +701,9 @@ class Data extends QueryBuilder {
         .then(this._mapFields.bind(this))
     }
 
-    return this.fetch(fetchObject.url, fetchObject, headers).then(
-      this._mapFields.bind(this)
-    )
+    return this.fetch(fetchObject.url, fetchObject, headers)
+      .then(this._replaceCustomTypesWithValue.bind(this))
+      .then(this._mapFields.bind(this))
   }
 
   /**

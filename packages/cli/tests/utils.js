@@ -6,9 +6,9 @@ import origNixt from 'nixt'
 import Promise from 'bluebird'
 import _ from 'lodash'
 
-import utils from '../utils/test-utils'
-import { p } from '../utils/print-tools'
-import uniqueInstance from '../utils/unique-instance'
+import utils from '../src/utils/test-utils'
+import { p } from '../src/utils/print-tools'
+import uniqueInstance from '../src/utils/unique-instance'
 
 if (process.env.SYNCANO_E2E_DEBUG) {
   origNixt.prototype.expect = function (fn) {

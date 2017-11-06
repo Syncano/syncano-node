@@ -3,8 +3,8 @@ import fs from 'fs-extra'
 import path from 'path'
 import yaml from 'js-yaml'
 
-import utils from '../../utils/test-utils'
-import uniqueInstance from '../../utils/unique-instance'
+import utils from '../../src/utils/test-utils'
+import uniqueInstance from '../../src/utils/unique-instance'
 import {
   nixt,
   testsLocation,
@@ -14,7 +14,7 @@ import {
   randomKey
 } from '../utils'
 
-const configTestTemplate = path.join(__dirname, '../../../templates/project/hello/syncano')
+const configTestTemplate = path.join(__dirname, '../../templates/project/hello/syncano')
 const helloTestScript = `${testsLocation}/syncano/hello/src/hello.js`
 const helloTestYaml = `${testsLocation}/syncano/hello/socket.yml`
 const hostingName = 'tests'
