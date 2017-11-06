@@ -5,10 +5,11 @@ import format from 'chalk'
 import inquirer from 'inquirer'
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
-import SocketEndpointCall from './socket-call'
-import context from '../utils/context'
-import printTools from '../utils/print-tools'
-import { getRandomString } from '../utils/test-utils'
+
+import { SocketEndpointCall } from '../../src/commands'
+import context from '../../src/utils/context'
+import printTools from '../../src/utils/print-tools'
+import { getRandomString } from '../../src/utils/test-utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

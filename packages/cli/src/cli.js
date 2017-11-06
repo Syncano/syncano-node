@@ -92,7 +92,7 @@ Raven.context(() => {
           const optionsToRun = options
           optionsToRun[1].trace = true
           echo()
-          new commands.SocketSyncHot(context).run(optionsToRun)
+          new commands.SocketDeployHot(context).run(optionsToRun)
         })
 
       program
@@ -108,7 +108,7 @@ Raven.context(() => {
           session.hasProject()
           await session.checkConnection()
           echo()
-          new commands.SocketSync(context).run(options)
+          new commands.SocketDeploy(context).run(options)
         })
 
       program

@@ -1,3 +1,4 @@
+/* global describe it before after */
 import path from 'path'
 import fs from 'fs-extra'
 

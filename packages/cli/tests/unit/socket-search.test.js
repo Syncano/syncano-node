@@ -1,9 +1,11 @@
+/* global describe it beforeEach afterEach before after */
 import { expect } from 'chai'
 import sinon from 'sinon'
 import axios from 'axios'
 import format from 'chalk'
-import context from '../utils/context'
-import SocketSearch from './socket-search'
+
+import context from '../../src/utils/context'
+import { SocketSearch } from '../../src/commands'
 
 describe('[commands] Search Sockets', function () {
   const nameKeyword = 'Segment'

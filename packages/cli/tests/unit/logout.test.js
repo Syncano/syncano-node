@@ -1,10 +1,11 @@
 /* global it describe before after afterEach beforeEach */
 import sinon from 'sinon'
 import format from 'chalk'
-import Logout from './logout'
-import context from '../utils/context'
-import session from '../utils/session'
-import printTools from '../utils/print-tools'
+
+import { Logout } from '../../src/commands'
+import context from '../../src/utils/context'
+import session from '../../src/utils/session'
+import printTools from '../../src/utils/print-tools'
 
 describe('[commands] Logout', function () {
   const logout = new Logout(context)

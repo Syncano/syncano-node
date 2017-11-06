@@ -6,10 +6,11 @@ import format from 'chalk'
 import inquirer from 'inquirer'
 import prettyBytes from 'pretty-bytes'
 import Table from 'cli-table2'
-import HostingFilesCmd from './hosting-files'
-import printTools from '../utils/print-tools'
-import context from '../utils/context'
-import { getRandomString } from '../utils/test-utils'
+
+import { HostingFilesCmd } from '../../src/commands'
+import printTools from '../../src/utils/print-tools'
+import context from '../../src/utils/context'
+import { getRandomString } from '../../src/utils/test-utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

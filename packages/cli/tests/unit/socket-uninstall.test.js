@@ -1,11 +1,12 @@
+/* global describe it beforeEach afterEach */
 import sinon from 'sinon'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
-import SocketUninstall from './socket-uninstall'
-import printTools from '../utils/print-tools'
-import context from '../utils/context'
-import { getRandomString } from '../utils/test-utils'
+import { SocketUninstall } from '../../src/commands'
+import printTools from '../../src/utils/print-tools'
+import context from '../../src/utils/context'
+import { getRandomString } from '../../src/utils/test-utils'
 
 describe('[commands] Uninstall Socket', function () {
   const socketName = getRandomString('uninstallSocket_socketName')

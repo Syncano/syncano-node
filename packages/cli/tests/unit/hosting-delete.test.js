@@ -5,10 +5,10 @@ import sinon from 'sinon'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
-import HostingDelete from './hosting-delete'
-import printTools, { p } from '../utils/print-tools'
-import context from '../utils/context'
-import { getRandomString } from '../utils/test-utils'
+import {HostingDelete} from '../../src/commands'
+import printTools, { p } from '../../src/utils/print-tools'
+import context from '../../src/utils/context'
+import { getRandomString } from '../../src/utils/test-utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

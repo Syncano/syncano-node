@@ -1,3 +1,4 @@
+/* global it describe before */
 import sinon from 'sinon'
 import format from 'chalk'
 import 'console.mute'

@@ -2,11 +2,12 @@
 import sinon from 'sinon'
 import format from 'chalk'
 import inquirer from 'inquirer'
-import Login from './login'
-import context from '../utils/context'
-import session from '../utils/session'
-import printTools from '../utils/print-tools'
-import { getRandomString } from '../utils/test-utils'
+
+import { Login } from '../../src/commands'
+import context from '../../src/utils/context'
+import session from '../../src/utils/session'
+import printTools from '../../src/utils/print-tools'
+import { getRandomString } from '../../src/utils/test-utils'
 
 describe('[commands] Login', function () {
   const email = process.env.E2E_CLI_EMAIL

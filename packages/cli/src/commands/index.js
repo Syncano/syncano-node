@@ -9,8 +9,8 @@ import HostingFilesCmd from './hosting-files'
 import HostingSync from './hosting-sync'
 import HostingConfig from './hosting-config'
 import SocketList from './socket-list'
-import SocketSync from './socket-sync'
-import SocketSyncHot from './socket-sync-hot'
+import SocketDeploy from './socket-deploy'
+import SocketDeployHot from './socket-deploy-hot'
 import SocketConfig from './socket-config'
 import SocketConfigSet from './socket-config-set'
 import SocketConfigShow from './socket-config-show'
@@ -34,9 +34,9 @@ export default {
   HostingList,
   HostingFilesCmd,
   HostingSync,
-  SocketSyncHot,
+  SocketDeployHot,
   HostingConfig,
-  SocketSync,
+  SocketDeploy,
   SocketConfig,
   SocketConfigSet,
   SocketConfigShow,

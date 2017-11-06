@@ -10,7 +10,7 @@ export default class SocketSearchCmd {
     this.registry = new context.Registry()
   }
 
-  run ([keyword, cmd]) {
+  async run ([keyword, cmd]) {
     this.keyword = keyword
     this.table = new Table({
       head: ['', '', 'name', 'description', 'author', 'version', 'keywords'],
@@ -40,7 +40,7 @@ export default class SocketSearchCmd {
     })
 
     try {
-      const sockets = this.registry.searchSocketsByAll(keyword)
+      const sockets = await this.registry.searchSocketsByAll(keyword)
       sockets.forEach(this.addRecord.bind(this))
       echo(6)(`${format.cyan(sockets.length)} socket(s) found: `)
       echo()

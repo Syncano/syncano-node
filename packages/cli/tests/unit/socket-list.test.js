@@ -1,11 +1,13 @@
+/* global describe it beforeEach afterEach before */
 import _ from 'lodash'
 import sinon from 'sinon'
 import { expect } from 'chai'
 import format from 'chalk'
-import SocketList from './socket-list'
-import context from '../utils/context'
-import printTools, { p, printCode } from '../utils/print-tools'
-import { getRandomString } from '../utils/test-utils'
+
+import { SocketList } from '../../src/commands'
+import context from '../../src/utils/context'
+import printTools, { p, printCode } from '../../src/utils/print-tools'
+import { getRandomString } from '../../src/utils/test-utils'
 
 describe('[commands] List Sockets', function () {
   const socketList = new SocketList(context)

@@ -1,11 +1,12 @@
+/* global it describe afterEach beforeEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
 import inquirer from 'inquirer'
 
-import Attach from './attach'
-import context from '../utils/context'
-import { getRandomString } from '../utils/test-utils'
-import printTools from '../utils/print-tools'
+import {Attach} from '../../src/commands'
+import context from '../../src/utils/context'
+import { getRandomString } from '../../src/utils/test-utils'
+import printTools from '../../src/utils/print-tools'
 
 describe('[commands] Attach', function () {
   let attach = null

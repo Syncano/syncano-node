@@ -45,6 +45,7 @@
     "cli-table2": "0.2.0",
     "commander": "^2.11.0",
     "create-error": "0.3.1",
+    "cross-env": "^5.1.1",
     "debug": "^3.1.0",
     "es6-template-strings": "2.0.1",
     "find-key": "2.0.1",
@@ -90,7 +91,7 @@
     "mocha-junit-reporter": "^1.15.0",
     "mock-fs": "^4.4.2",
     "nixt": "0.5.0",
-    "nyc": "^11.2.1",
+    "nyc": "^11.3.0",
     "pre-commit": "1.2.2",
     "rimraf": "^2.6.2",
     "sinon": "1.17.6",
@@ -144,5 +145,12 @@
         }
       ]
     ]
+  },
+  "nyc": {
+    "check-coverage": true,
+    "include": [
+      "src/**/*.js"
+    ],
+    "cache": true
   }
 }

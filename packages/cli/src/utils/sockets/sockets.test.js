@@ -1,3 +1,4 @@
+/* global it describe before afterEach beforeEach */
 import Syncano from 'syncano'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'

@@ -5,12 +5,11 @@ import sinon from 'sinon'
 import inquirer from 'inquirer'
 import format from 'chalk'
 
-import HostingAdd from './hosting-add'
-import HostingSync from './hosting-sync'
-import Hosting from '../utils/hosting'
-import context from '../utils/context'
-import printTools, { p } from '../utils/print-tools'
-import { getRandomString } from '../utils/test-utils'
+import { HostingSync, HostingAdd } from '../../src/commands'
+import Hosting from '../../src/utils/hosting'
+import context from '../../src/utils/context'
+import printTools, { p } from '../../src/utils/print-tools'
+import { getRandomString } from '../../src/utils/test-utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

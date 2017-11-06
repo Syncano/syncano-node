@@ -1,10 +1,12 @@
+/* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import inquirer from 'inquirer'
 import format from 'chalk'
-import SocketCreate from './socket-create'
-import context from '../utils/context'
-import printTools from '../utils/print-tools'
-import { getRandomString } from '../utils/test-utils'
+
+import { SocketCreate } from '../../src/commands'
+import context from '../../src/utils/context'
+import printTools from '../../src/utils/print-tools'
+import { getRandomString } from '../../src/utils/test-utils'
 
 describe('[commands] Create Socket', function () {
   const socketCreate = new SocketCreate(context)

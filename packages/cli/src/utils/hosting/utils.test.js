@@ -1,3 +1,4 @@
+/* global it describe */
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'

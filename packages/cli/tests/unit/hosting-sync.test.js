@@ -1,10 +1,12 @@
+/* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import format from 'chalk'
 import inquirer from 'inquirer'
-import HostingSync from './hosting-sync'
-import printTools from '../utils/print-tools'
-import context from '../utils/context'
-import { getRandomString } from '../utils/test-utils'
+
+import { HostingSync } from '../../src/commands'
+import printTools from '../../src/utils/print-tools'
+import context from '../../src/utils/context'
+import { getRandomString } from '../../src/utils/test-utils'
 
 describe('[commands] Sync Hosting', function () {
   let hostingSync = new HostingSync(context)

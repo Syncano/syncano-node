@@ -4,7 +4,7 @@ import Promise from 'bluebird'
 import logger from '../utils/debug'
 import { echo, error } from '../utils/print-tools'
 import { currentTime } from '../utils/date-utils'
-import SocketDeployCmd from './socket-sync'
+import SocketDeployCmd from './socket-deploy'
 
 const { debug } = logger('cmd-socket-install')
 

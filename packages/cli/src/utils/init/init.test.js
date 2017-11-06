@@ -1,3 +1,4 @@
+/* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import fs from 'fs-extra'
 import path from 'path'

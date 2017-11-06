@@ -1,9 +1,11 @@
+/* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import format from 'chalk'
 import createError from 'create-error'
-import SocketDeploy from './socket-sync'
-import printTools from '../utils/print-tools'
-import { currentTime, Timer } from '../utils/date-utils'
+
+import { SocketDeploy } from '../../src/commands'
+import printTools from '../../src/utils/print-tools'
+import { currentTime, Timer } from '../../src/utils/date-utils'
 
 describe('[commands] Trace Sockets', function () {
   const interEcho = sinon.stub()

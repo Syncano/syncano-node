@@ -52,9 +52,9 @@ export default class Login {
   async run ([cmd]) {
     try {
       const user = await this.session.checkAuth()
-      Login.displayWelcomeMessage(user)
+      await Login.displayWelcomeMessage(user)
     } catch (err) {
-      this.promptLogin()
+      await this.promptLogin()
     }
   }
 
@@ -105,7 +105,7 @@ export default class Login {
     Login.displayLoginMessage()
 
     const responses = await inquirer.prompt([Login.loginQuestion, Login.passwordQuestion])
-    this.loginOrRegister(responses)
+    await this.loginOrRegister(responses)
   }
 }
 

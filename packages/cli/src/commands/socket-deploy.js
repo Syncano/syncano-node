@@ -103,7 +103,7 @@ export default class SocketDeployCmd {
 
     // Let's compile and update if it is not hot mode
     try {
-      const updateStatus = socket.update({ config, withCompilation: true, updateSocketNPMDeps: true, updateEnv: true })
+      const updateStatus = await socket.update({ config, withCompilation: true, updateSocketNPMDeps: true, updateEnv: true })
       spinner.stop()
       SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
       if (updateStatus.status !== 0 && this.cmd.bail) {

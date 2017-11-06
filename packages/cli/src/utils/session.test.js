@@ -1,3 +1,4 @@
+/* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
