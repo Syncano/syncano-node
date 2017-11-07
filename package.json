@@ -7,7 +7,10 @@
     "lint": "lerna run lint",
     "test:unit": "lerna run test:unit",
     "test:e2e": "lerna run test:e2e --concurrency 1 --stream",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "deploy": "npm run deploy:cookbook && npm run deploy:cheatsheet",
+    "deploy:cookbook": "node scripts/deploy cookbook",
+    "deploy:cheatsheet": "node scripts/deploy cheatsheet"
   },
   "engines": {
     "node": ">= 7.x <= 8.x",
@@ -22,6 +25,7 @@
   "dependencies": {
     "babel-eslint": "^8.0.1",
     "chalk": "^2.3.0",
+    "git-branch": "^1.0.0",
     "standard": "^10.0.3"
   }
 }
