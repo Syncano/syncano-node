@@ -178,18 +178,6 @@ describe('[E2E] CLI User', function () {
       .end(done)
   })
 
-  it('can call hello socket with default arguments', function (done) {
-    nixt()
-      .cwd(testsLocation)
-      .run(`${cliLocation} call hello/hello`)
-      .on(/"firstname" parameter/)
-      .respond(`\n`)
-      .on(/"lastname" parameter/)
-      .respond(`\n`)
-      .stdout(/Hello Tyler Durden!/)
-      .end(done)
-  })
-
   it('can create new socket', function (done) {
     nixt()
       .cwd(testsLocation)
