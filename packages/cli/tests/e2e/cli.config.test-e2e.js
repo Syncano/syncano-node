@@ -2,16 +2,16 @@
 import path from 'path'
 import fs from 'fs-extra'
 
-import utils from '../unit/utils'
 import {
   nixt,
   testsLocation,
   cleanUpAccount,
-  cliLocation
+  cliLocation,
+  returnTestGlobals
 } from '../utils'
 
 const configTestTemplate = path.join(__dirname, './assets/sockets/hello-config')
-const { email, password, syncanoYmlPath } = utils.returnTestGlobals()
+const { email, password, syncanoYmlPath } = returnTestGlobals()
 
 const moveTestSocket = (template) => {
   try {

@@ -118,6 +118,7 @@ const cleanUpAccount = () => connection.Instance
     .catch((error) => process.stderr.write(JSON.stringify(error.message)))
 
 export default {
+  testsLocation,
   returnTestGlobals,
   getRandomString,
   splitTestBaseEmail,

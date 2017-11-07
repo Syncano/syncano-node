@@ -1,9 +1,9 @@
 /* global it describe */
-import utils from './utils'
 import {
   nixt,
   testsLocation,
-  cliLocation
+  cliLocation,
+  getRandomString
 } from '../utils'
 
 // Tests
@@ -11,7 +11,7 @@ describe('CLI Users using registry', function () {
   it('can search for non-existing socket', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} search ${utils.getRandomString()}`)
+      .run(`${cliLocation} search ${getRandomString()}`)
       .stdout(/No sockets found/)
       .end(done)
   })

@@ -3,7 +3,6 @@ import fs from 'fs-extra'
 import path from 'path'
 import yaml from 'js-yaml'
 
-import utils from './utils'
 import uniqueInstance from '../../src/utils/unique-instance'
 import {
   nixt,
@@ -11,7 +10,10 @@ import {
   cleanUpAccount,
   cliLocation,
   createdSocketName,
-  randomKey
+  randomKey,
+  returnTestGlobals,
+  createTempEmail,
+  getRandomString
 } from '../utils'
 
 const configTestTemplate = path.join(__dirname, '../../templates/project/hello/syncano')
@@ -19,9 +21,9 @@ const helloTestScript = `${testsLocation}/syncano/hello/src/hello.js`
 const helloTestYaml = `${testsLocation}/syncano/hello/socket.yml`
 const hostingName = 'tests'
 const hostingName2 = 'tests2'
-const { email, password, syncanoYmlPath, instance } = utils.returnTestGlobals()
+const { email, password, syncanoYmlPath, instance } = returnTestGlobals()
 const tempPass = Date.now()
-const tempEmail = utils.createTempEmail(process.env.E2E_CLI_TEMP_EMAIL, tempPass)
+const tempEmail = createTempEmail(process.env.E2E_CLI_TEMP_EMAIL, tempPass)
 
 export const modifyHelloScript = () => {
   try {
@@ -102,7 +104,7 @@ describe('[E2E] CLI User', function () {
   it('can\'t list non existing Socket', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} list ${utils.getRandomString()}`)
+      .run(`${cliLocation} list ${getRandomString()}`)
       .stdout(/No Socket was found on server nor in config!/)
       .end(done)
   })
