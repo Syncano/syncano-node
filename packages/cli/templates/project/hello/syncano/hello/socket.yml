@@ -23,7 +23,7 @@ endpoints:
           description: Success
           example: |
             {
-            "message": "Hello Tyler Durden!"
+              "message": "Hello Tyler Durden!"
             }
         -
           exit_code: 400

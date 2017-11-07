@@ -1,6 +1,6 @@
 {
   "license": "MIT",
   "dependencies": {
-    "syncano-server": "beta"
+    "@syncano/core": "latest"
   }
 }

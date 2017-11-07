@@ -178,12 +178,15 @@ describe('[E2E] CLI User', function () {
       .end(done)
   })
 
-  // Looks like this test fails a lot, I'm not sure also about the idea here
-  it.skip('can call hello socket with config name set', function (done) {
+  it('can call hello socket with default arguments', function (done) {
     nixt()
       .cwd(testsLocation)
       .run(`${cliLocation} call hello/hello`)
-      .stdout(/Hello test/)
+      .on(/"firstname" parameter/)
+      .respond(`\n`)
+      .on(/"lastname" parameter/)
+      .respond(`\n`)
+      .stdout(/Hello Tyler Durden!/)
       .end(done)
   })
 
