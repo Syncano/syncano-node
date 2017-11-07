@@ -17,7 +17,7 @@ describe('Account', () => {
       instanceName
     })
     account = server.account
-    api = nock('https://api.syncano.rocks')
+    api = nock(`https://${process.env.SYNCANO_HOST || 'api.syncano.io'}`)
   })
 
   describe('#get', () => {

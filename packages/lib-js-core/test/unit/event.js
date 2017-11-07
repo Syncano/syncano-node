@@ -21,7 +21,7 @@ describe('Event', () => {
       socket: 'test_socket'
     })
     event = server.event
-    api = nock('https://api.syncano.rocks')
+    api = nock(`https://${process.env.SYNCANO_HOST || 'api.syncano.io'}`)
   })
 
   describe('#emit', () => {

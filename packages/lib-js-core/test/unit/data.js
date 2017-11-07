@@ -11,7 +11,7 @@ chai.use(chaiAsPromised)
 chai.should()
 
 describe('Data', () => {
-  const testUrl = 'https://api.syncano.rocks'
+  const testUrl = `https://${process.env.SYNCANO_HOST || 'api.syncano.io'}`
   const instanceName = 'testInstance'
   let data = null
   let api = null

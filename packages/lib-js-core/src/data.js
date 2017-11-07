@@ -678,8 +678,7 @@ class Data extends QueryBuilder {
       typeof id === 'object' && id !== null && !Array.isArray(id)
     const fetchObject = {
       url: this.url(id),
-      method: 'PATCH',
-      body: JSON.stringify(body)
+      method: 'PATCH'
     }
 
     if (isQueryUpdate) {
@@ -699,6 +698,8 @@ class Data extends QueryBuilder {
       return this._batch(id)
         .then(this._replaceCustomTypesWithValue.bind(this))
         .then(this._mapFields.bind(this))
+    } else {
+      fetchObject.body = JSON.stringify(body)
     }
 
     return this.fetch(fetchObject.url, fetchObject, headers)

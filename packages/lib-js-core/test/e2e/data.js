@@ -24,6 +24,7 @@ describe('Data', function () {
     const server = new Server({
       instanceName,
       meta: {
+        api_host: process.env.SYNCANO_HOST,
         socket: 'test-socket',
         token: process.env.E2E_ACCOUNT_KEY
       }
