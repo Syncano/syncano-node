@@ -6,9 +6,47 @@ import origNixt from 'nixt'
 import Promise from 'bluebird'
 import _ from 'lodash'
 
-import utils from '../src/utils/test-utils'
 import { p } from '../src/utils/print-tools'
 import uniqueInstance from '../src/utils/unique-instance'
+
+import homeDir from 'home-dir'
+
+const returnTestGlobals = () => {
+  return {
+    email: process.env.E2E_CLI_EMAIL,
+    password: process.env.E2E_CLI_PASSWORD,
+    accountKey: process.env.E2E_CLI_ACCOUNT_KEY,
+    syncanoYmlPath: `${homeDir()}/syncano-test.yml`,
+    instance: process.env.E2E_CLI_INSTANCE_NAME || 'wandering-pine-7032'
+  }
+}
+
+const splitTestBaseEmail = (tempEmail) => {
+  const splittedEmail = {};
+
+  [splittedEmail.emailName, splittedEmail.emailDomain] = tempEmail.split('@')
+
+  return splittedEmail
+}
+
+const createTempEmail = (tempEmail, tempPass) => {
+  const { emailName, emailDomain } = splitTestBaseEmail(tempEmail)
+
+  return `${emailName}+${tempPass}@${emailDomain}`
+}
+
+const getRandomString = (prefix = 'randomString') => {
+  return `${prefix}_${Math.random().toString(36).slice(2)}`
+}
+
+const assignTestRegistryEnv = () => {
+  const registryInstanceName = process.env.SYNCANO_SOCKET_REGISTRY
+  process.env.SYNCANO_SOCKET_REGISTRY_INSTANCE = registryInstanceName.split('.')[0]
+}
+
+const removeTestRegistryEnv = () => {
+  delete process.env.SYNCANO_SOCKET_REGISTRY_INSTANCE
+}
 
 if (process.env.SYNCANO_E2E_DEBUG) {
   origNixt.prototype.expect = function (fn) {
@@ -22,20 +60,20 @@ if (process.env.SYNCANO_E2E_DEBUG) {
     this.expectations.push(wrappedExpect)
   }
 }
-export const nixt = origNixt
+const nixt = origNixt
 
 process.env.SYNCANO_ACCOUNT_FILE = 'syncano-test'
 
 // Variables used in tests
-const { accountKey, syncanoYmlPath, instance } = utils.returnTestGlobals()
+const { accountKey, syncanoYmlPath, instance } = returnTestGlobals()
 
-export const connection = Syncano({ baseUrl: `https://${process.env.SYNCANO_HOST}`, accountKey })
-export const testsLocation = `${process.cwd()}/e2e-tests`
-export const cliLocation = 'node ../lib/cli.js'
-export const randomKey = utils.getRandomString()
-export const createdSocketName = utils.getRandomString()
+const connection = Syncano({ baseUrl: `https://${process.env.SYNCANO_HOST}`, accountKey })
+const testsLocation = `${process.cwd()}/e2e-tests`
+const cliLocation = 'node ../lib/cli.js'
+const randomKey = getRandomString()
+const createdSocketName = getRandomString()
 
-export const setupLocation = (name) => {
+const setupLocation = (name) => {
   const location = [testsLocation, name].join('-')
   if (!fs.existsSync(location)) {
     mkdirp.sync(location)
@@ -43,7 +81,7 @@ export const setupLocation = (name) => {
   return location
 }
 
-export const shutdownLocation = (location) => {
+const shutdownLocation = (location) => {
   if (fs.existsSync(location)) {
     fs.removeSync(location)
   }
@@ -51,26 +89,26 @@ export const shutdownLocation = (location) => {
 }
 
 // Helper functions used in tests
-export const createInstance = () => connection.Instance
+const createInstance = () => connection.Instance
     .please()
     .create({ name: uniqueInstance() })
     .then((response) => response)
     .catch((error) => process.stderr.write(JSON.stringify(error.message, null, '')))
 
-export const deleteInstance = (item) => connection.Instance
+const deleteInstance = (item) => connection.Instance
     .please()
     .delete({ name: item })
     .then((response) => response)
     .catch((error) => process.stderr.write(JSON.stringify(error.message, null, '')))
 
-export const deleteEachInstance = (instances) => {
+const deleteEachInstance = (instances) => {
   const list = []
 
   _.each(instances, (item) => list.push(deleteInstance(item)))
   return Promise.all(list)
 }
 
-export const cleanUpAccount = () => connection.Instance
+const cleanUpAccount = () => connection.Instance
     .please()
     .list()
     .then((res) => {
@@ -78,3 +116,20 @@ export const cleanUpAccount = () => connection.Instance
       return deleteEachInstance(instances)
     })
     .catch((error) => process.stderr.write(JSON.stringify(error.message)))
+
+export default {
+  returnTestGlobals,
+  getRandomString,
+  splitTestBaseEmail,
+  createTempEmail,
+  assignTestRegistryEnv,
+  removeTestRegistryEnv,
+  nixt,
+  cliLocation,
+  randomKey,
+  createdSocketName,
+  setupLocation,
+  shutdownLocation,
+  createInstance,
+  cleanUpAccount
+}

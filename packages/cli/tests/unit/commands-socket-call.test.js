@@ -9,7 +9,7 @@ import chai from 'chai'
 import { SocketEndpointCall } from '../../src/commands'
 import context from '../../src/utils/context'
 import printTools from '../../src/utils/print-tools'
-import { getRandomString } from './utils'
+import { getRandomString } from '../utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

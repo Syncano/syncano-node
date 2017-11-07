@@ -9,7 +9,7 @@ import { HostingSync, HostingAdd } from '../../src/commands'
 import Hosting from '../../src/utils/hosting'
 import context from '../../src/utils/context'
 import printTools, { p } from '../../src/utils/print-tools'
-import { getRandomString } from './utils'
+import { getRandomString } from '../utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

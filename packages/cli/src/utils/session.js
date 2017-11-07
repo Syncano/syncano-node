@@ -75,7 +75,7 @@ export class Session {
     return this.connection
   }
 
-  createConnection () {
+  async createConnection () {
     debug('createConnection')
     if (this.settings.account.authenticated()) {
       this.connection = new Syncano({
@@ -90,45 +90,41 @@ export class Session {
       this.connection = Syncano({ baseUrl: this.getBaseURL() })
     }
 
-    return this.connection.Account.getUserDetails()
-      .then((details) => {
-        this.userId = details.id
-        identify(details)
-      })
-      .catch(() => {})
+    try {
+      const details = await this.connection.Account.getUserDetails()
+      this.userId = details.id
+      identify(details)
+    } catch (err) {}
   }
 
-  createInstance (name = genUniqueName()) {
+  async createInstance (name = genUniqueName()) {
     debug('Creating Instance')
     echo()
     echon(4)('Creating Syncano Instance... ')
-    return this.connection.Instance
-      .please()
-      .create({ name })
-        .then((newInstance) => {
-          echo(`${format.green('Done')}`)
-          echo(4)(`Syncano Instance ${format.cyan(newInstance.name)} has been created!`)
-          echo()
-          return newInstance
-        })
-        .catch((err) => {
-          error(err.message || 'Connection error')
-          process.exit()
-        })
+
+    try {
+      const newInstance = await this.connection.Instance.please().create({ name })
+      echo(`${format.green('Done')}`)
+      echo(4)(`Syncano Instance ${format.cyan(newInstance.name)} has been created!`)
+      echo()
+      return newInstance
+    } catch (err) {
+      error(err.message || 'Connection error')
+      process.exit()
+    }
   }
 
-  getInstance (instanceName) {
-    return this.connection.Instance
-      .please()
-      .get({ name: instanceName || (this.project && this.project.instance) })
-        .then((instance) => instance)
-        .catch(() => false)
+  async getInstance (instanceName) {
+    const instanceNameToGet = instanceName || (this.project && this.project.instance)
+    try {
+      return await this.connection.Instance.please().get({ name: instanceNameToGet })
+    } catch (err) {
+      return false
+    }
   }
 
   async getInstances () {
-    const instances = await this.connection.Instance.please().list()
-
-    return instances
+    return this.connection.Instance.please().list()
   }
 
   async checkAuth () {
@@ -178,25 +174,21 @@ export class Session {
     })
   }
 
-  load () {
+  async load () {
     debug('load')
 
     // Checking all folders up
-    return Session.findProjectPath()
-      .then((projectPath) => {
-        debug('Searching for syncano.yml', projectPath)
-
-        this.projectPath = projectPath
-        this.settings = getSettings(projectPath)
-        this.project = this.settings.account.getProject(this.projectPath)
-
-        return this.createConnection()
-      })
-      .then(() => this)
-      .catch(() => {
-        this.settings = getSettings()
-        return this.createConnection()
-      })
+    try {
+      const projectPath = await Session.findProjectPath()
+      debug('Searching for syncano.yml', projectPath)
+      this.projectPath = projectPath
+      this.settings = getSettings(projectPath)
+      this.project = this.settings.account.getProject(this.projectPath)
+    } catch (err) {
+      this.settings = getSettings()
+    }
+    await this.createConnection()
+    return this
   }
 
   loadPlugins (program, context) {
@@ -282,9 +274,9 @@ export class Session {
     }
   }
 
-  deployProject () { // eslint-disable-line class-methods-use-this
-    return Hosting.list()
-      .then((hostings) => Promise.all(hostings.map((hosting) => hosting.deploy())))
+  async deployProject () { // eslint-disable-line class-methods-use-this
+    const hostings = Hosting.list()
+    return hostings.map((hostings) => Promise.all(hostings.map((hosting) => hosting.deploy())))
   }
 }
 

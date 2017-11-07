@@ -5,7 +5,7 @@ import fs from 'fs'
 import YAML from 'js-yaml'
 
 import ProjectSettings from '../../src/settings/projectSettings'
-import { getRandomString } from './utils'
+import { getRandomString } from '../utils'
 
 describe('[settings] Project Settings', function () {
   let settings = {}

@@ -7,7 +7,7 @@ import Raven from 'raven'
 import session from '../../src/utils/session'
 import Hosting, { HostingFile } from '../../src/utils/hosting'
 import utils from '../../src/utils'
-import { getRandomString } from './utils'
+import { getRandomString } from '../utils'
 import printTools from '../../src/utils/print-tools'
 
 chai.use(dirtyChai)

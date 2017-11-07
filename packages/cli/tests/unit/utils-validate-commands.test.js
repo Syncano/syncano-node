@@ -1,6 +1,7 @@
 /* global it describe beforeEach afterEach */
 import sinon from 'sinon'
 import format from 'chalk'
+
 import program from '../../src/program'
 import printTools from '../../src/utils/print-tools'
 import validateCommands from '../../src/utils/validate-commands'

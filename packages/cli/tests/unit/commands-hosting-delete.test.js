@@ -8,7 +8,7 @@ import inquirer from 'inquirer'
 import {HostingDelete} from '../../src/commands'
 import printTools, { p } from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
-import { getRandomString } from './utils'
+import { getRandomString } from '../utils'
 
 chai.use(dirtyChai)
 const { expect } = chai
