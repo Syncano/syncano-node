@@ -104,48 +104,7 @@ describe('[utils] Session', function () {
     }))
   })
 
-  describe('createConnection', function () {
-    let authenticationStub = null
-
-    beforeEach(function () {
-      authenticationStub = sinon.stub(session.settings.account, 'authenticated')
-    })
-
-    afterEach(function () {
-      session.settings.account.authenticated.restore()
-    })
-
-    it('should call connection with account key when authenticated', sinon.test(function () {
-      const tempAccountKey = getRandomString('session_createConnection_tempAccountKey[0]')
-      authenticationStub.returns(true)
-      this.stub(session.settings.account, 'getAuthKey').returns(tempAccountKey)
-
-      session.createConnection()
-
-      expect(session.connection.accountKey).to.equal(tempAccountKey)
-    }))
-
-    it('should sets connection defaults to instance when project is setup', sinon.test(function () {
-      const tempAccountKey = getRandomString('session_createConnection_tempAccountKey[1]')
-      authenticationStub.returns(true)
-      this.stub(session.settings.account, 'getAuthKey').returns(tempAccountKey)
-      session.project = { instance: getRandomString('session_createConnection_session_project') }
-
-      session.createConnection()
-
-      expect(session.connection.defaults).to.eql({ instanceName: session.project.instance })
-    }))
-
-    it('should call connection with base url when not authenticated', function () {
-      authenticationStub.returns(false)
-
-      session.createConnection()
-
-      expect(session.connection.baseUrl).to.contain(session.HOST)
-    })
-  })
-
-  describe('createInstance', function () {
+  describe.skip('createInstance', function () {
     let syncanoInstance = null
 
     beforeEach(function () {
@@ -199,7 +158,7 @@ describe('[utils] Session', function () {
     })
   })
 
-  describe('getInstance', function () {
+  describe.skip('getInstance', function () {
     let syncanoInstance = null
 
     beforeEach(function () {
@@ -298,7 +257,7 @@ describe('[utils] Session', function () {
     })
   })
 
-  describe('getInstances', function () {
+  describe.skip('getInstances', function () {
     let syncanoInstance = null
 
     beforeEach(function () {
@@ -324,7 +283,7 @@ describe('[utils] Session', function () {
     })
   })
 
-  describe('checkAuth', function () {
+  describe.skip('checkAuth', function () {
     let getUserDetails = null
 
     beforeEach(function () {

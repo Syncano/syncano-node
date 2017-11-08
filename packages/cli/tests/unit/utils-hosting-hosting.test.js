@@ -35,7 +35,7 @@ describe('[utils/hosting] hosting', function () {
 
     beforeEach(function () {
       hosting = new Hosting(socket, hostingName)
-      hostingConnection = sinon.stub(session.connection.Hosting, 'please')
+      hostingConnection = sinon.stub(session.connection, 'hosting')
       exitProcess = sinon.stub(process, 'exit')
       errorPrint = sinon.stub(printTools, 'error')
       captureException = sinon.stub(Raven, 'captureException')

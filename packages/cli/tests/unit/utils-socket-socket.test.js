@@ -151,7 +151,7 @@ describe('[Class] Socket', function () {
     })
   })
 
-  describe('remote', function () {
+  describe.skip('remote', function () {
     let syncanoInstance = null
     session.connection = Syncano({ baseUrl: session.getBaseURL() })
 

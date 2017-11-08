@@ -100,21 +100,4 @@ describe('[settings]', function () {
       expect(isAuthenticated).to.be.false()
     })
   })
-
-  describe('getAuthKey', function () {
-    it('should return auth_key if exists', function () {
-      const attributes = { auth_key: getRandomString('settings_account_attributes_auth_key[2]') }
-      account.attributes = attributes
-      const authKey = account.getAuthKey()
-
-      expect(authKey).to.be.equal(attributes.auth_key)
-    })
-
-    it('should return null when auth_key does not exists', function () {
-      account.attributes = {}
-      const authKey = account.getAuthKey()
-
-      expect(authKey).to.be.null()
-    })
-  })
 })
