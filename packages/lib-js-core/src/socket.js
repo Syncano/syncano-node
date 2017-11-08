@@ -1,48 +1,53 @@
 import QueryBuilder from './query-builder'
 
 /**
- * Connection between scokets.
+ * Connection between Sockets.
  * @property {Function}
  * @example {@lang javascript}
- * const latestTags = await socket.get('tags/list', { sort: 'latest' })
- * const createdTag = await socket.post('tags/create', { name: 'nature' })
+ * const socket = await socket.get('socketName')
  */
 export default class Socket extends QueryBuilder {
-  post (endpoint, body = {}, options = {}) {
-    const fetch = this.fetch.bind(this)
+  url (socketName) {
+    const {instanceName} = this.instance
+    if (socketName) {
+      return `${this._getSyncanoURL()}/instances/${instanceName}/sockets/${socketName}/`
+    }
+    return `${this._getSyncanoURL()}/instances/${instanceName}/sockets/`
+  }
 
-    return fetch(this._url(endpoint), {
-      method: 'POST',
-      body: this._parseBody(body),
-      ...options
+  get (socketName) {
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.instance.accountKey
+      }
+      this.fetch(this.url(socketName), {}, headers)
+        .then(resolve)
+        .catch(reject)
     })
   }
 
-  get (endpoint, data = {}, options = {}) {
-    return this.post(endpoint, {...data, _method: 'GET'}, options)
+  delete (socketName) {
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.instance.accountKey
+      }
+      const options = {
+        method: 'DELETE'
+      }
+      this.fetch(this.url(socketName), options, headers)
+        .then(resolve)
+        .catch(reject)
+    })
   }
 
-  delete (endpoint, data = {}, options = {}) {
-    return this.post(endpoint, {...data, _method: 'DELETE'}, options)
-  }
-
-  put (endpoint, data = {}, options = {}) {
-    return this.post(endpoint, {...data, _method: 'PUT'}, options)
-  }
-
-  patch (endpoint, data = {}, options = {}) {
-    return this.post(endpoint, {...data, _method: 'PATCH'}, options)
-  }
-
-  _url (endpoint) {
-    const {instanceName, spaceHost} = this.instance
-
-    return `https://${instanceName}.${spaceHost}/${endpoint}/`
-  }
-
-  _parseBody (body) {
-    const isBodyAnObject = typeof body === 'object'
-
-    return isBodyAnObject ? JSON.stringify({...body}) : body
+  list () {
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.instance.accountKey
+      }
+      this.fetch(this.url(), {}, headers)
+        .then(resolve)
+        .catch(reject)
+    })
   }
 }

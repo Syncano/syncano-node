@@ -3,7 +3,10 @@ import Users from './users'
 import Account from './account'
 import Instance from './instance'
 import Event from './event'
+import Endpoint from './endpoint'
 import Socket from './socket'
+import Trace from './trace'
+import Hosting from './hosting'
 import Response from './response'
 import Logger from './logger'
 import Channel from './channel'
@@ -18,8 +21,11 @@ const server = (ctx = {}) => {
   const _class = new Class(config)
   const users = new Users(config)
   const event = new Event(config)
+  const endpoint = new Endpoint(config)
   const channel = new Channel(config)
   const socket = new Socket(config)
+  const trace = new Trace(config)
+  const hosting = new Hosting(config)
   const response = new Response(config)
   const account = new Account(config)
   const instance = new Instance(config)
@@ -31,8 +37,11 @@ const server = (ctx = {}) => {
     account,
     instance,
     event,
+    endpoint,
     channel,
     socket,
+    trace,
+    hosting,
     response,
     logger,
     data: new Proxy(new Data(settings), {

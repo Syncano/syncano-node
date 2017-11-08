@@ -1,4 +1,4 @@
-import Syncano from 'syncano'
+import Syncano from '@syncano/core'
 import _ from 'lodash'
 import fs from 'fs-extra'
 import format from 'chalk'
@@ -69,29 +69,39 @@ export class Session {
   }
 
   getAnonymousConnection () {
-    this.connection = new Syncano({
-      baseUrl: this.getBaseURL()
+    return new Syncano({
+      meta: {
+        'api_host': this.getHost()
+      }
     })
-    return this.connection
   }
 
   async createConnection () {
     debug('createConnection')
     if (this.settings.account.authenticated()) {
+      debug('user is authenticated')
       this.connection = new Syncano({
         accountKey: this.settings.account.getAuthKey(),
-        baseUrl: this.getBaseURL()
+        meta: {
+          'api_host': this.getHost()
+        }
       })
 
       if (this.project && this.project.instance) {
-        this.connection.defaults = { instanceName: this.project.instance }
+        this.connection = new Syncano({
+          instanceName: this.project.instance,
+          accountKey: this.settings.account.getAuthKey(),
+          meta: {
+            'api_host': this.getHost()
+          }
+        })
       }
     } else {
-      this.connection = Syncano({ baseUrl: this.getBaseURL() })
+      this.connection = this.getAnonymousConnection()
     }
 
     try {
-      const details = await this.connection.Account.getUserDetails()
+      const details = await this.connection.account.get(this.settings.account.getAuthKey())
       this.userId = details.id
       identify(details)
     } catch (err) {}
@@ -103,7 +113,7 @@ export class Session {
     echon(4)('Creating Syncano Instance... ')
 
     try {
-      const newInstance = await this.connection.Instance.please().create({ name })
+      const newInstance = await this.connection.instance.create({ name })
       echo(`${format.green('Done')}`)
       echo(4)(`Syncano Instance ${format.cyan(newInstance.name)} has been created!`)
       echo()
@@ -117,8 +127,9 @@ export class Session {
   async getInstance (instanceName) {
     const instanceNameToGet = instanceName || (this.project && this.project.instance)
     try {
-      return await this.connection.Instance.please().get({ name: instanceNameToGet })
+      return await this.connection.instance.get(instanceNameToGet)
     } catch (err) {
+      console.log(err)
       return false
     }
   }

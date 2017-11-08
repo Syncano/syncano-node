@@ -35,6 +35,26 @@ class Instance extends QueryBuilder {
         .catch(reject)
     })
   }
+  /**
+   * Get Syncano instance details
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * const instance = await instance.get('instance-name')
+   */
+  get (instanceName) {
+    const fetch = this.nonInstanceFetch.bind(this)
+
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.instance.accountKey
+      }
+      fetch(this.url(instanceName), {}, headers)
+        .then(resolve)
+        .catch(reject)
+    })
+  }
 
   /**
    * Delete Syncano instance

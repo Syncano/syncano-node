@@ -179,20 +179,15 @@ class Socket {
   }
 
   // TODO: check if the socket is installed (it may be not yet installed yet (before sync))
-  static uninstallRemote (socketName) {
+  static async uninstallRemote (socketName) {
     debug('uninstallRemote', socketName)
-    return session.connection
-      .Socket
-      .please()
-      .delete({ name: socketName })
-      .then((resp) => resp)
-      .catch((err) => err)
+    return session.connection.socket.delete(socketName)
   }
 
   // list sockets based on call to Syncano (sockets are installed on Synano)
   static listRemote () {
     debug('listRemote()')
-    return session.connection.Socket.please().list()
+    return session.connection.socket.list()
   }
 
   static listDeps () {
@@ -249,19 +244,16 @@ class Socket {
     return new Socket(socketName)
   }
 
-  static get (socketName) {
+  static async get (socketName) {
     debug(`Getting Socket: ${socketName}`)
     const socket = Socket.getLocal(socketName)
-    return socket.loadRemote()
-      .then((loadedSocket) => loadedSocket.getDepsRegistrySockets())
-      .then(() => {
-        if (!socket.existLocally) {
-          return socket.loadFromRegistry()
-        }
-        return Promise.resolve()
-      })
-      .then(() => socket)
-      .catch(() => socket)
+    const loadedSocket = await socket.loadRemote()
+    await loadedSocket.getDepsRegistrySockets()
+
+    if (!socket.existLocally) {
+      await socket.loadFromRegistry()
+    }
+    return socket
   }
 
   static create (socketName, templateName) {
@@ -324,25 +316,27 @@ class Socket {
     return this.settings.getFull()
   }
 
-  getRemote () {
-    return session.connection.Socket.please().get({ name: this.name })
-    .then((socket) => socket)
-    .catch(() => false)
+  async getRemote () {
+    debug('getRemote', this.name)
+    try {
+      return await session.connection.socket.get(this.name)
+    } catch (err) {
+      return false
+    }
   }
 
-  getRemoteSpec () {
+  async getRemoteSpec () {
     debug('getRemoteSpec')
     if (this.remote.files['socket.yml']) {
-      return axios.request({
-        url: this.remote.files['socket.yml'].file,
-        method: 'GET',
-        timeout: 3000
-      })
-      .then((spec) => {
+      try {
+        const spec = await axios.request({
+          url: this.remote.files['socket.yml'].file,
+          method: 'GET',
+          timeout: 3000
+        })
         this.remote.spec = YAML.load(spec.data)
-      })
+      } catch (err) {}
     }
-    return Promise.resolve()
   }
 
   setRemoteState (socket) {
@@ -359,19 +353,16 @@ class Socket {
     this.remote.metadata = socket.metadata
   }
 
-  loadRemote () {
+  async loadRemote () {
     debug('loadRemote()')
-    return this.getRemote()
-      .then((socket) => {
-        if (socket) {
-          this.setRemoteState(socket)
-          return this.getRemoteSpec()
-        }
-
-        this.existRemotely = false
-        return Promise.resolve(this)
-      })
-      .then(() => this)
+    const socket = await this.getRemote()
+    if (socket) {
+      await this.setRemoteState(socket)
+      await this.getRemoteSpec()
+    } else {
+      this.existRemotely = false
+    }
+    return this
   }
 
   async loadFromRegistry () {
@@ -383,7 +374,7 @@ class Socket {
   }
 
   loadLocal () {
-    debug('loadLocal')
+    debug('loadLocal()')
     if (this.settings.loaded) {
       this.existLocally = true
       this.localPath = this.settings.baseDir
@@ -503,8 +494,7 @@ class Socket {
         object.existRemotely = true
       }
 
-      debug('existLocally', this.spec[objectType], objectName)
-      if (this.spec[objectType][objectName]) {
+      if (this.spec[objectType] && this.spec[objectType][objectName]) {
         object.existLocally = true
       }
       return object
@@ -532,26 +522,24 @@ class Socket {
   }
 
   getEndpointTrace (endpointName, traceId) {
-    return session.connection.EndpointTrace.please()
-      .get({ socketName: this.name, endpointName, id: traceId })
+    return session.connection.trace.get(this.name, endpointName, traceId)
   }
 
-  getEndpointTraces (endpointName, lastId) {
+  async getEndpointTraces (endpointName, lastId) {
     debug('getEndpointTraces', endpointName, lastId)
-    return session.connection.EndpointTrace.please()
-      .list({ socketName: this.name, endpointName })
-      .then((traces) => {
-        if (!lastId) {
-          return traces
+    try {
+      const traces = await session.connection.trace.get(this.name, endpointName)
+      if (!lastId) {
+        return traces
+      }
+      const filteredTraces = []
+      traces.forEach((trace) => {
+        if (trace.id > lastId) {
+          filteredTraces.push(trace)
         }
-        const filteredTraces = []
-        traces.forEach((trace) => {
-          if (trace.id > lastId) {
-            filteredTraces.push(trace)
-          }
-        })
-        return filteredTraces
       })
+      return filteredTraces
+    } catch (err) {}
   }
 
   getTraces (lastId) {
