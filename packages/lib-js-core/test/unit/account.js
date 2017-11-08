@@ -47,4 +47,54 @@ describe('Account', () => {
       })
     })
   })
+
+  describe('#login', () => {
+    it('should success', () => {
+      const params = {email: 'wrong@email', password: 'wrong_password'}
+      api
+        .post('/v2/account/auth/')
+        .reply(200, {})
+
+      return account
+        .login(params)
+        .should.be.become({})
+    })
+
+    it('should fail for invalid email and password', () => {
+      const params = {email: 'wrong@email', password: 'wrong_password'}
+      api
+        .post('/v2/account/auth/')
+        .reply(400, {
+          detail: 'Invalid user name or password.'
+        })
+
+      return account
+        .login(params)
+        .should.be.rejectedWith(Error, 'Invalid user name or password.')
+    })
+  })
+
+  describe('#register', () => {
+    it('should success', () => {
+      const params = {email: 'wrong@email', password: 'wrong_password'}
+      api
+        .post('/v2/account/register/')
+        .reply(200, {})
+
+      return account
+        .register(params)
+        .should.be.become({})
+    })
+
+    it('should reject when response != 200', () => {
+      const params = {email: 'wrong@email', password: 'wrong_password'}
+      api
+        .post('/v2/account/register/')
+        .reply(400)
+
+      return account
+        .register(params)
+        .should.be.rejectedWith(Error, 'Bad Request')
+    })
+  })
 })
