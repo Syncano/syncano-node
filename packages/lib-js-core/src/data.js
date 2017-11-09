@@ -473,8 +473,20 @@ class Data extends QueryBuilder {
     }
     operator = this._normalizeWhereOperator(operator)
 
-    const whereOperator = value ? `_${operator}` : '_eq'
-    const whereValue = value === undefined ? operator : value
+    const secondParamIsNull = operator === null && value === undefined
+    const isEqualNull = operator === '_eq' && value === null
+    const lookingForNull = secondParamIsNull || isEqualNull
+
+    let whereOperator
+    let whereValue
+
+    if (lookingForNull) {
+      whereOperator = '_exists'
+      whereValue = false
+    } else {
+      whereOperator = value !== undefined ? `_${operator}` : '_eq'
+      whereValue = value === undefined ? operator : value
+    }
 
     const currentQuery = JSON.parse(this.query.query || '{}')
 
@@ -498,11 +510,11 @@ class Data extends QueryBuilder {
 
     return this.withQuery({query: JSON.stringify(query)})
   }
-  
+
   whereNotNull(column) {
     return this.where(column, 'exists', true)
   }
-  
+
   whereIn(column, arr) {
     return this.where(column, 'in', arr)
   }
