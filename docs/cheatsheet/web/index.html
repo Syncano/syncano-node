@@ -404,6 +404,9 @@ data.posts.whereNotIn('id', [10, 20]).list()
 // Get all posts with title
 data.posts.whereNotNull('title').list()
 
+// Get all posts without title
+data.posts.whereNull('title')
+
 // Get all published posts with id between 100 and 200
 data.posts
   .where([

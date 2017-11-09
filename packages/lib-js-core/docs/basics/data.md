@@ -25,6 +25,7 @@ const {data} = new Server(ctx)
 | [find](#findid)                                    | Find a object by its primary key                                           |
 | [findOrFail](#findorfailid)                        | Find a object by its primary key or throw an exception                     |
 | [where](#wherecolumn-operator-value)               | Add a basic where clause to the query                                      |
+| [whereNull](#wherenullcolumn)                      | Filter columns with value of null                                          |
 | [whereNotNull](#wherenotnullcolumn)                | Filter objects where column value is not null                              |
 | [whereIn](#whereincolumn-arr)                      | Filter by existence in given array                                         |
 | [whereNotIn](#wherenotincolumn-arr)                | Filter out objects not existing in given array                             |
@@ -227,7 +228,22 @@ data.posts
   ]).list()
 ```
 
+## `whereNull(column)`
+
+| Type   | Name     | Default | Description                   |
+| ------ | -------- | ------- | ----------------------------- |
+| string | column   | null    | Name of column being filtered |
+
+```js
+// Get posts without title
+data.posts.whereNull('title').list()
+```
+
 ## `whereNotNull(column)`
+
+| Type   | Name     | Default | Description                   |
+| ------ | -------- | ------- | ----------------------------- |
+| string | column   | null    | Name of column being filtered |
 
 ```js
 // Get posts with title

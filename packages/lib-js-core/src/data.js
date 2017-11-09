@@ -511,6 +511,10 @@ class Data extends QueryBuilder {
     return this.where(column, 'nin', arr)
   }
 
+  whereNull(column) {
+    return this.where(column, null)
+  }
+
   _normalizeWhereOperator (operator) {
     const operators = {
       '<': 'lt',

@@ -283,6 +283,14 @@ describe('Data', function () {
     it('should throw error when trying to filter by non index column', () => {})
   })
 
+  describe('#whereNull()', () => {
+    it('should be able to filter columns with value of null', () =>
+      run
+        .whereNull('author')
+        .pluck('author')
+        .should.become([null, null, null, null, null, null, null, null, null]))
+  })
+
   describe('#whereNotNull()', () => {
     it('should be able to filter records where column value is not null', () =>
       run
@@ -307,7 +315,7 @@ describe('Data', function () {
         .should.eventually.be.an('array')
         .of.length(9))
   })
-  
+
   describe('#fields()', () => {
     it('should be able to whitelist fields', () =>
       run
