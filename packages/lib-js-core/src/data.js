@@ -527,6 +527,13 @@ class Data extends QueryBuilder {
     return this.where(column, null)
   }
 
+  whereBetween(column, min, max) {
+    return this.where([
+      [column, 'gte', min],
+      [column, 'lte', max]
+    ])
+  }
+
   _normalizeWhereOperator (operator) {
     const operators = {
       '<': 'lt',

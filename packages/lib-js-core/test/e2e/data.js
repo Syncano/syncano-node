@@ -298,7 +298,7 @@ describe('Data', function () {
         .pluck('author')
         .should.become([1]))
   })
-  
+
   describe('#whereIn()', () => {
     it('should be able to filter using `in` operator', () =>
       run
@@ -314,6 +314,14 @@ describe('Data', function () {
         .list()
         .should.eventually.be.an('array')
         .of.length(9))
+  })
+
+  describe('#whereBetween()', () => {
+    it('should be able to filter results using gte and lte', () =>
+      run
+        .whereBetween('field_integer', 200, 250)
+        .first()
+        .should.eventually.include({field_integer: 242}))
   })
 
   describe('#fields()', () => {

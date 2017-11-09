@@ -407,6 +407,9 @@ data.posts.whereNotNull('title').list()
 // Get all posts without title
 data.posts.whereNull('title')
 
+// Get all posts with views between 100 and 1000
+data.posts.whereBetween('views', 100, 1000)
+
 // Get all published posts with id between 100 and 200
 data.posts
   .where([

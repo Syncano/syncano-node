@@ -29,6 +29,7 @@ const {data} = new Server(ctx)
 | [whereNotNull](#wherenotnullcolumn)                | Filter objects where column value is not null                              |
 | [whereIn](#whereincolumn-arr)                      | Filter by existence in given array                                         |
 | [whereNotIn](#wherenotincolumn-arr)                | Filter out objects not existing in given array                             |
+| [whereBetween](#wherebetweencolumn-min-max         | Filter objects where column is between given values                        |
 | [with](#withrelations)                             | Being querying a object with eager loading                                 |
 | [orderBy](#orderbycolumn-direction)                | Add an "order by" clause to the query                                      |
 | [skip](#skipcount)                                 | Skip given number of results and return the rest                           |
@@ -258,7 +259,7 @@ data.posts.whereNotNull('title').list()
 | array  | arr      | []      | Array of filtered values      |
 
 ```js
-data.posts.whereIn('status', ['draft', 'deleted'])
+data.posts.whereIn('status', ['draft', 'deleted']).list()
 ```
 
 ## `whereNotIn(column, arr)`
@@ -270,7 +271,28 @@ data.posts.whereIn('status', ['draft', 'deleted'])
 
 ```js
 // Get all not published or draft posts
-data.posts.whereNotIn('status', ['published', 'draft'])
+data.posts.whereNotIn('status', ['published', 'draft']).list()
+```
+
+## `whereBetween(column, min, max)`
+
+| Type   | Name      | Default | Description                                        |
+| ------ | --------- | ------- | -------------------------------------------------- |
+| string | column    | null    | Name of column being filtered                      |
+| mixed  | min       |         | Minimal value                                      |
+| mixed  | max       |         | Maximal value                                      |
+
+```js
+// Get all posts with views between 100 and 1000
+data.posts.whereBetween('views', 100, 1000).list()
+
+// Get all posts created in last seven days
+data.posts
+  .whereBetween(
+    'created_at', 
+    new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    new Date().toISOString()
+  ).list()
 ```
 
 ## `with(relations)`
