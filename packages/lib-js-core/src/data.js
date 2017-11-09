@@ -499,6 +499,10 @@ class Data extends QueryBuilder {
     return this.withQuery({query: JSON.stringify(query)})
   }
   
+  whereNotNull(column) {
+    return this.where(column, 'exists', true)
+  }
+  
   whereIn(column, arr) {
     return this.where(column, 'in', arr)
   }
@@ -506,7 +510,7 @@ class Data extends QueryBuilder {
   whereNotIn(column, arr) {
     return this.where(column, 'nin', arr)
   }
-  
+
   _normalizeWhereOperator (operator) {
     const operators = {
       '<': 'lt',

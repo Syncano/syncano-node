@@ -282,6 +282,14 @@ describe('Data', function () {
 
     it('should throw error when trying to filter by non index column', () => {})
   })
+
+  describe('#whereNotNull()', () => {
+    it('should be able to filter records where column value is not null', () =>
+      run
+        .whereNotNull('author')
+        .pluck('author')
+        .should.become([1]))
+  })
   
   describe('#whereIn()', () => {
     it('should be able to filter using `in` operator', () =>

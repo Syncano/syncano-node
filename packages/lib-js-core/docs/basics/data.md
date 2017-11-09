@@ -25,6 +25,7 @@ const {data} = new Server(ctx)
 | [find](#findid)                                    | Find a object by its primary key                                           |
 | [findOrFail](#findorfailid)                        | Find a object by its primary key or throw an exception                     |
 | [where](#wherecolumn-operator-value)               | Add a basic where clause to the query                                      |
+| [whereNotNull](#wherenotnullcolumn)                | Filter objects where column value is not null                              |
 | [whereIn](#whereincolumn-arr)                      | Filter by existence in given array                                         |
 | [whereNotIn](#wherenotincolumn-arr)                | Filter out objects not existing in given array                             |
 | [with](#withrelations)                             | Being querying a object with eager loading                                 |
@@ -224,6 +225,13 @@ data.posts
     ['id', 'lt', 200]
     ['status', 'published']
   ]).list()
+```
+
+## `whereNotNull(column)`
+
+```js
+// Get posts with title
+data.posts.whereNotNull('title').list()
 ```
 
 ## `whereIn(column, arr)`

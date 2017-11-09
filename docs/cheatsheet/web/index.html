@@ -399,9 +399,10 @@ data.posts.whereIn('status', ['draft', 'published']).list()
 
 // Get all posts with id not in given array
 data.posts.where('id', 'nin', [10, 20]).list()
+data.posts.whereNotIn('id', [10, 20]).list()
 
-// Get all posts where status is not draft or deleted
-data.posts.whereNotIn('status', ['draft', 'deleted']).list()
+// Get all posts with title
+data.posts.whereNotNull('title').list()
 
 // Get all published posts with id between 100 and 200
 data.posts
