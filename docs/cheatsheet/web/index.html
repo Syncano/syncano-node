@@ -395,6 +395,7 @@ data.posts.where('views', '>', 200).list()
 
 // Get all posts with one of the statuses
 data.posts.where('status', 'in', ['draft', 'published']).list()
+data.posts.whereIn('status', ['draft', 'published']).list()
 
 // Get all posts with id not in given array
 data.posts.where('id', 'nin', [10, 20]).list()

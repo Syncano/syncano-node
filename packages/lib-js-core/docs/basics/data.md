@@ -25,6 +25,7 @@ const {data} = new Server(ctx)
 | [find](#findid)                                    | Find a object by its primary key                                           |
 | [findOrFail](#findorfailid)                        | Find a object by its primary key or throw an exception                     |
 | [where](#wherecolumn-operator-value)               | Add a basic where clause to the query                                      |
+| [whereIn](#whereincolumn-arr)                      | Filter by existence in given array                                         |
 | [with](#withrelations)                             | Being querying a object with eager loading                                 |
 | [orderBy](#orderbycolumn-direction)                | Add an "order by" clause to the query                                      |
 | [skip](#skipcount)                                 | Skip given number of results and return the rest                           |
@@ -222,6 +223,17 @@ data.posts
     ['id', 'lt', 200]
     ['status', 'published']
   ]).list()
+```
+
+## `whereIn(column, arr)`
+
+| Type   | Name     | Default | Description                   |
+| ------ | -------- | ------- | ----------------------------- |
+| string | column   | null    | Name of column being filtered |
+| array  | arr      | []      | Array of filtered values      |
+
+```js
+data.posts.whereIn('status', ['draft', 'deleted'])
 ```
 
 ## `with(relations)`

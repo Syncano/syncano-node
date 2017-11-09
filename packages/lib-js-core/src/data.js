@@ -100,7 +100,10 @@ class Data extends QueryBuilder {
           .then(replaceCustomTypesWithValue)
           .then(mapResultFields)
           .then(resolveIfFinished)
-          .catch(err => reject(err))
+          .catch(err => {
+            err.message = get(err, 'response.data.query')
+            reject(err)
+          })
       }
 
       function saveToResult (response) {
@@ -506,6 +509,10 @@ class Data extends QueryBuilder {
     const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
+  }
+
+  whereIn(column, arr) {
+    return this.where(column, 'in', arr)
   }
 
   _normalizeWhereOperator (operator) {
