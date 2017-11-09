@@ -1,9 +1,9 @@
-![](https://raw.githubusercontent.com/Syncano/art/96584ac4de2859d01fbd7f6ea84825779bd28cd5/syncano-node/repo-banner.png)
+![][Banner]
 
 ## Syncano Toolkit
 - [CLI](packages/cli/readme.md) - Manage Syncano Instances, install and deploy Syncano Sockets
-- [Client Library](packages/lib-js-client/docs/readme.md) - Interact with Syncano Sockets via JavaScript
-- [Core Library](packages/lib-js-core/docs/readme.md) - Communicate with Syncano Core Services
+- [Client Library](packages/lib-js-client/readme.md) - Interact with Syncano Sockets via JavaScript
+- [Core Library](packages/lib-js-core/readme.md) - Communicate with Syncano Core Services
 - [Test Library](packages/lib-js-test/readme.md) - Run test suites on Syncano Sockets
 - [Validate Library](packages/lib-js-validate/readme.md) - Validate requests to Syncano Sockets
 
@@ -13,6 +13,8 @@
 - [CLI](https://syncano.github.io/syncano-node-cli/#/)
 - [Client Library](packages/lib-js-client/docs/readme.md)
 - [Core Library](packages/lib-js-core/docs/readme.md)
+- [Test Library](packages/lib-js-test/docs/readme.md)
+- [Validate Library](packages/lib-js-validate/docs/readme.md)
 
 ## Issues
 
@@ -27,3 +29,5 @@ Please see our [contributing.md](contributing.md)
 ## License
 
 MIT. See [license](license.md).
+
+[Banner]: https://raw.githubusercontent.com/Syncano/art/master/syncano-node/repo-banner.png
