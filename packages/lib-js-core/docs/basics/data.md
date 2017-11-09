@@ -26,6 +26,7 @@ const {data} = new Server(ctx)
 | [findOrFail](#findorfailid)                        | Find a object by its primary key or throw an exception                     |
 | [where](#wherecolumn-operator-value)               | Add a basic where clause to the query                                      |
 | [whereIn](#whereincolumn-arr)                      | Filter by existence in given array                                         |
+| [whereNotIn](#wherenotincolumn-arr)                | Filter out objects not existing in given array                             |
 | [with](#withrelations)                             | Being querying a object with eager loading                                 |
 | [orderBy](#orderbycolumn-direction)                | Add an "order by" clause to the query                                      |
 | [skip](#skipcount)                                 | Skip given number of results and return the rest                           |
@@ -234,6 +235,18 @@ data.posts
 
 ```js
 data.posts.whereIn('status', ['draft', 'deleted'])
+```
+
+## `whereNotIn(column, arr)`
+
+| Type   | Name      | Default | Description                                        |
+| ------ | --------- | ------- | -------------------------------------------------- |
+| string | column    | null    | Name of column being filtered                      |
+| array  | arr       | []      | Array of filtered values                           |
+
+```js
+// Get all not published or draft posts
+data.posts.whereNotIn('status', ['published', 'draft'])
 ```
 
 ## `with(relations)`

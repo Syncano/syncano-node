@@ -282,7 +282,7 @@ describe('Data', function () {
 
     it('should throw error when trying to filter by non index column', () => {})
   })
-
+  
   describe('#whereIn()', () => {
     it('should be able to filter using `in` operator', () =>
       run
@@ -291,6 +291,15 @@ describe('Data', function () {
         .should.eventually.include({field_integer: 242}))
   })
 
+  describe('#whereNotIn()', () => {
+    it('should be able to filter using `nin` operator', () =>
+      run
+        .whereNotIn('field_integer', [242])
+        .list()
+        .should.eventually.be.an('array')
+        .of.length(9))
+  })
+  
   describe('#fields()', () => {
     it('should be able to whitelist fields', () =>
       run
