@@ -274,6 +274,12 @@ describe('Data', function () {
         .should.eventually.be.an('array')
         .of.length(2))
 
+    it('should handle null as second parameter', () =>
+      run
+        .where('author', null)
+        .first()
+        .should.eventually.include({author: null}))
+
     it('should throw error when trying to filter by non index column', () => {})
   })
 
