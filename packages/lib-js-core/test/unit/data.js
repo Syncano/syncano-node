@@ -408,6 +408,32 @@ describe('Data', () => {
     })
   })
 
+  describe('#orWhere()', () => {
+    it('should be a method of the model', () => {
+      should(data.users)
+        .have.property('where')
+        .which.is.Function()
+    })
+
+    it('should add new query to querries array', () => {
+      const query = data.users.where('name', 'John')
+
+      should(query)
+        .have.propertyByPath('_query', 'query')
+        .which.is.equal('{"name":{"_eq":"John"}}')
+
+      query.orWhere('name', 'Jane')
+
+      should(query)
+        .have.propertyByPath('_query', 'query')
+        .which.is.equal('{"name":{"_eq":"Jane"}}')
+
+      should(query)
+        .have.propertyByPath('_queries', 0)
+        .which.is.equal('{"name":{"_eq":"John"}}')
+    })
+  })
+
   describe('#with()', () => {
     it('should be a method of the model', () => {
       should(data.users)
@@ -509,7 +535,6 @@ describe('Data', () => {
       return data.posts
         .with('created_at')
         .list()
-        .then(console.log)
         .should.be.rejectedWith(Error)
     })
   })

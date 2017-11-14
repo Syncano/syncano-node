@@ -416,8 +416,14 @@ data.posts
     ['id', 'gt', 100],
     ['id', 'lt', 200]
     ['status', 'published']
-  ]).list()</code></pre>
-      <h4>Ordering, Limit, & Offset</h4>
+  ]).list()
+
+  // Get posts with views count lower than 100 or higher than 1000
+  data.posts
+    .where('views', '<', 100)
+    .orWhere('views', '>', 1000)
+    .list()</code></pre>
+      <h4>Ordering, Limit, &amp; Offset</h4>
       <pre><code class="lang-js">// Get all posts ordered descending by creation date
 data.posts.orderBy('created_at', 'DESC').list()
 

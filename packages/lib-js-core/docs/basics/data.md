@@ -25,6 +25,7 @@ const {data} = new Server(ctx)
 | [find](#findid)                                    | Find a object by its primary key                                           |
 | [findOrFail](#findorfailid)                        | Find a object by its primary key or throw an exception                     |
 | [where](#wherecolumn-operator-value)               | Add a basic where clause to the query                                      |
+| [orWhere](#orwherecolumn-operator-value)           | Add OR clause to the query                                                 |
 | [whereNull](#wherenullcolumn)                      | Filter columns with value of null                                          |
 | [whereNotNull](#wherenotnullcolumn)                | Filter objects where column value is not null                              |
 | [whereIn](#whereincolumn-arr)                      | Filter by existence in given array                                         |
@@ -227,6 +228,22 @@ data.posts
     ['id', 'lt', 200]
     ['status', 'published']
   ]).list()
+```
+
+## `orWhere(column, operator?, value)`
+
+| Type   | Name     | Default | Description                   |
+| ------ | -------- | ------- | ----------------------------- |
+| mixed  | column   | null    | Name of column being filtered |
+| string | operator | 'eq'    | Operator user to filter       |
+| mixed  | value    | null    | Expected value                |
+
+```js
+// Get posts with views counter lower than 100 or higher than 1000
+data.posts
+  .where('views', '<', 100)
+  .orWhere('views', '>', 1000)
+  .list()
 ```
 
 ## `whereNull(column)`

@@ -283,6 +283,16 @@ describe('Data', function () {
     it('should throw error when trying to filter by non index column', () => {})
   })
 
+  describe('#orWhere()', () => {
+    it('should be able use 2 or more filters', () =>
+      run
+        .where('author', 1)
+        .orWhere('field_integer', field_integer)
+        .list()
+        .should.eventually.be.an('array')
+        .of.length(2))
+  })
+
   describe('#whereNull()', () => {
     it('should be able to filter columns with value of null', () =>
       run
