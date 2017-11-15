@@ -83,159 +83,154 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.take(10).list()
    */
   list () {
-    let result = []
     const self = this
     const {baseUrl, relationships, instance} = this
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
+    const urls = [this.url()].concat(this.queries.map(query =>
+      (this._query.query = query) && this.url()
+    ))
+    const uniqueIds = []
 
-    return new Promise((resolve, reject) => {
-      request(this.url())
+    return Promise.all(urls.map(url => fetchQuery(url)))
+      .then(results => [].concat(...results)
+        .filter(({id}) => uniqueIds.includes(id) ? false : uniqueIds.push(id))
+      )
+      .then(res => self._replaceCustomTypesWithValue(res))
+      .then(res => self._mapFields(res))
 
-      function request (url) {
-        fetch(url)
-          .then(saveToResult)
-          .then(loadNextPage)
-          .then(resolveRelatedModels)
-          .then(replaceCustomTypesWithValue)
-          .then(mapResultFields)
-          .then(resolveIfFinished)
-          .catch(err => reject(err))
-      }
+    function fetchQuery(url) {
+      let result = []
 
-      function saveToResult (response) {
-        result = result.concat(response.objects)
+      return new Promise((resolve, reject) => {
+        request(url)
 
-        return response
-      }
-
-      function loadNextPage (response) {
-        const hasNextPageMeta = response.next
-        const hasNotEnoughResults = pageSize === 0 || pageSize > result.length
-
-        if (hasNextPageMeta && hasNotEnoughResults) {
-          request(`${baseUrl}${response.next}`)
-          return false
+        function request (url) {
+          fetch(url)
+            .then(saveToResult)
+            .then(loadNextPage)
+            .then(resolveRelatedModels)
+            .then(resolveIfFinished)
+            .catch(err => {
+              err.message = get(err, 'response.data.query')
+              reject(err)
+            })
         }
 
-        return true
-      }
+        function saveToResult (response) {
+          result = result.concat(response.objects)
 
-      function resolveRelatedModels (shouldResolve) {
-        if (shouldResolve === false) {
-          return false
+          return response
         }
 
-        return new Promise((resolve, reject) => {
-          if (relationships.length === 0) {
-            resolve(true)
+        function loadNextPage (response) {
+          const hasNextPageMeta = response.next
+          const hasNotEnoughResults = pageSize === 0 || pageSize > result.length
+
+          if (hasNextPageMeta && hasNotEnoughResults) {
+            request(`${baseUrl}${response.next}`)
+            return false
           }
 
-          const resolvers = relationships.map(reference => {
-            return new Promise((resolve, reject) => {
-              const empty = {
-                target: reference,
-                items: []
-              }
+          return true
+        }
 
-              if (result[0] === undefined) {
-                resolve(empty)
-              }
+        function resolveRelatedModels (shouldResolve) {
+          if (shouldResolve === false) {
+            return false
+          }
 
-              if (result[0][reference] === undefined) {
-                throw new Error(`Invalid reference name "${reference}"`)
-              }
-
-              // Search for rows with references
-              const references = result
-                .filter(row => row[reference])
-                .map(row => {
-                  return row[reference]
-                })
-
-              // No references so resolve with empty array
-              if (references.length === 0) {
-                resolve(empty)
-              }
-
-              const {target} = references[0]
-
-              if (target === undefined) {
-                reject(new Error(`Column "${reference}" has no target`))
-              }
-
-              const load = new Data(self.instance)
-              let ids = references.map(item => item.value)
-
-              ids = Array.isArray(ids[0]) ? ids[0] : ids
-
-              if (target === 'user') {
-                load._url = `${self._getInstanceURL(
-                  instance.instanceName
-                )}/users/`
-              }
-
-              load.instance = self.instance
-              load.instance.className = target
-
-              load
-                .where('id', 'in', ids)
-                .list()
-                .then(items => {
-                  resolve({target: reference, items})
-                })
-                .catch(reject)
-            })
-          })
-
-          Promise.all(resolvers)
-            .then(models => {
-              result = result.map(item => {
-                models.forEach(({target, items}) => {
-                  const related = self._getRelatedObjects(item[target], items)
-
-                  item[target] = related || item[target]
-                })
-
-                return item
-              })
-
+          return new Promise((resolve, reject) => {
+            if (relationships.length === 0) {
               resolve(true)
+            }
+
+            const resolvers = relationships.map(reference => {
+              return new Promise((resolve, reject) => {
+                const empty = {
+                  target: reference,
+                  items: []
+                }
+
+                if (result[0] === undefined) {
+                  resolve(empty)
+                }
+
+                if (result[0][reference] === undefined) {
+                  throw new Error(`Invalid reference name "${reference}"`)
+                }
+
+                // Search for rows with references
+                const references = result
+                  .filter(row => row[reference])
+                  .map(row => {
+                    return row[reference]
+                  })
+
+                // No references so resolve with empty array
+                if (references.length === 0) {
+                  resolve(empty)
+                }
+
+                const {target} = references[0]
+
+                if (target === undefined) {
+                  reject(new Error(`Column "${reference}" has no target`))
+                }
+
+                const load = new Data(self.instance)
+                let ids = references.map(item => item.value)
+
+                ids = Array.isArray(ids[0]) ? ids[0] : ids
+
+                if (target === 'user') {
+                  load._url = `${self._getInstanceURL(
+                    instance.instanceName
+                  )}/users/`
+                }
+
+                load.instance = self.instance
+                load.instance.className = target
+
+                load
+                  .where('id', 'in', ids)
+                  .list()
+                  .then(items => {
+                    resolve({target: reference, items})
+                  })
+                  .catch(reject)
+              })
             })
-            .catch(reject)
-        })
-      }
 
-      function replaceCustomTypesWithValue (shouldResolve) {
-        if (shouldResolve === false) {
-          return false
+            Promise.all(resolvers)
+              .then(models => {
+                result = result.map(item => {
+                  models.forEach(({target, items}) => {
+                    const related = self._getRelatedObjects(item[target], items)
+
+                    item[target] = related || item[target]
+                  })
+
+                  return item
+                })
+
+                resolve(true)
+              })
+              .catch(reject)
+          })
         }
 
-        result = self._replaceCustomTypesWithValue(result)
+        function resolveIfFinished (shouldResolve) {
+          if (shouldResolve) {
+            if (pageSize !== 0) {
+              result = result.slice(0, pageSize)
+            }
 
-        return true
-      }
-
-      function mapResultFields (shouldResolve) {
-        if (shouldResolve === false) {
-          return false
-        }
-
-        result = self._mapFields(result)
-
-        return true
-      }
-
-      function resolveIfFinished (shouldResolve) {
-        if (shouldResolve) {
-          if (pageSize !== 0) {
-            result = result.slice(0, pageSize)
+            resolve(result)
           }
-
-          resolve(result)
         }
-      }
-    })
+      })
+    }
   }
 
   _replaceCustomTypesWithValue (items) {
@@ -470,8 +465,20 @@ class Data extends QueryBuilder {
     }
     operator = this._normalizeWhereOperator(operator)
 
-    const whereOperator = value ? `_${operator}` : '_eq'
-    const whereValue = value === undefined ? operator : value
+    const secondParamIsNull = operator === null && value === undefined
+    const isEqualNull = operator === '_eq' && value === null
+    const lookingForNull = secondParamIsNull || isEqualNull
+
+    let whereOperator
+    let whereValue
+
+    if (lookingForNull) {
+      whereOperator = '_exists'
+      whereValue = false
+    } else {
+      whereOperator = value !== undefined ? `_${operator}` : '_eq'
+      whereValue = value === undefined ? operator : value
+    }
 
     const currentQuery = JSON.parse(this.query.query || '{}')
 
@@ -494,6 +501,36 @@ class Data extends QueryBuilder {
     const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
+  }
+
+  orWhere(column, operator, value) {
+    this._queries = [].concat(this.queries, this._query.query)
+    this._query.query = null
+
+    return this.where(column, operator, value)
+  }
+
+  whereNotNull(column) {
+    return this.where(column, 'exists', true)
+  }
+
+  whereIn(column, arr) {
+    return this.where(column, 'in', arr)
+  }
+
+  whereNotIn(column, arr) {
+    return this.where(column, 'nin', arr)
+  }
+
+  whereNull(column) {
+    return this.where(column, null)
+  }
+
+  whereBetween(column, min, max) {
+    return this.where([
+      [column, 'gte', min],
+      [column, 'lte', max]
+    ])
   }
 
   _normalizeWhereOperator (operator) {

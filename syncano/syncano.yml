@@ -1,0 +1,5 @@
+hosting:
+  cheatsheet:
+    src: ../docs/cheatsheet/web
+  cookbook:
+    src: ../docs/cookbook/web

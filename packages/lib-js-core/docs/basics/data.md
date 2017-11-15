@@ -25,6 +25,12 @@ const {data} = new Server(ctx)
 | [find](#findid)                                    | Find a object by its primary key                                           |
 | [findOrFail](#findorfailid)                        | Find a object by its primary key or throw an exception                     |
 | [where](#wherecolumn-operator-value)               | Add a basic where clause to the query                                      |
+| [orWhere](#orwherecolumn-operator-value)           | Add OR clause to the query                                                 |
+| [whereNull](#wherenullcolumn)                      | Filter columns with value of null                                          |
+| [whereNotNull](#wherenotnullcolumn)                | Filter objects where column value is not null                              |
+| [whereIn](#whereincolumn-arr)                      | Filter by existence in given array                                         |
+| [whereNotIn](#wherenotincolumn-arr)                | Filter out objects not existing in given array                             |
+| [whereBetween](#wherebetweencolumn-min-max         | Filter objects where column is between given values                        |
 | [with](#withrelations)                             | Being querying a object with eager loading                                 |
 | [orderBy](#orderbycolumn-direction)                | Add an "order by" clause to the query                                      |
 | [skip](#skipcount)                                 | Skip given number of results and return the rest                           |
@@ -222,6 +228,88 @@ data.posts
     ['id', 'lt', 200]
     ['status', 'published']
   ]).list()
+```
+
+## `orWhere(column, operator?, value)`
+
+| Type   | Name     | Default | Description                   |
+| ------ | -------- | ------- | ----------------------------- |
+| mixed  | column   | null    | Name of column being filtered |
+| string | operator | 'eq'    | Operator user to filter       |
+| mixed  | value    | null    | Expected value                |
+
+```js
+// Get posts with views counter lower than 100 or higher than 1000
+data.posts
+  .where('views', '<', 100)
+  .orWhere('views', '>', 1000)
+  .list()
+```
+
+## `whereNull(column)`
+
+| Type   | Name     | Default | Description                   |
+| ------ | -------- | ------- | ----------------------------- |
+| string | column   | null    | Name of column being filtered |
+
+```js
+// Get posts without title
+data.posts.whereNull('title').list()
+```
+
+## `whereNotNull(column)`
+
+| Type   | Name     | Default | Description                   |
+| ------ | -------- | ------- | ----------------------------- |
+| string | column   | null    | Name of column being filtered |
+
+```js
+// Get posts with title
+data.posts.whereNotNull('title').list()
+```
+
+## `whereIn(column, arr)`
+
+| Type   | Name     | Default | Description                   |
+| ------ | -------- | ------- | ----------------------------- |
+| string | column   | null    | Name of column being filtered |
+| array  | arr      | []      | Array of filtered values      |
+
+```js
+data.posts.whereIn('status', ['draft', 'deleted']).list()
+```
+
+## `whereNotIn(column, arr)`
+
+| Type   | Name      | Default | Description                                        |
+| ------ | --------- | ------- | -------------------------------------------------- |
+| string | column    | null    | Name of column being filtered                      |
+| array  | arr       | []      | Array of filtered values                           |
+
+```js
+// Get all not published or draft posts
+data.posts.whereNotIn('status', ['published', 'draft']).list()
+```
+
+## `whereBetween(column, min, max)`
+
+| Type   | Name      | Default | Description                                        |
+| ------ | --------- | ------- | -------------------------------------------------- |
+| string | column    | null    | Name of column being filtered                      |
+| mixed  | min       |         | Minimal value                                      |
+| mixed  | max       |         | Maximal value                                      |
+
+```js
+// Get all posts with views between 100 and 1000
+data.posts.whereBetween('views', 100, 1000).list()
+
+// Get all posts created in last seven days
+data.posts
+  .whereBetween(
+    'created_at', 
+    new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    new Date().toISOString()
+  ).list()
 ```
 
 ## `with(relations)`

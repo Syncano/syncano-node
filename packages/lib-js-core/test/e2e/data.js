@@ -274,7 +274,64 @@ describe('Data', function () {
         .should.eventually.be.an('array')
         .of.length(2))
 
+    it('should handle null as second parameter', () =>
+      run
+        .where('author', null)
+        .first()
+        .should.eventually.include({author: null}))
+
     it('should throw error when trying to filter by non index column', () => {})
+  })
+
+  describe('#orWhere()', () => {
+    it('should be able use 2 or more filters', () =>
+      run
+        .where('author', 1)
+        .orWhere('field_integer', field_integer)
+        .list()
+        .should.eventually.be.an('array')
+        .of.length(2))
+  })
+
+  describe('#whereNull()', () => {
+    it('should be able to filter columns with value of null', () =>
+      run
+        .whereNull('author')
+        .pluck('author')
+        .should.become([null, null, null, null, null, null, null, null, null]))
+  })
+
+  describe('#whereNotNull()', () => {
+    it('should be able to filter records where column value is not null', () =>
+      run
+        .whereNotNull('author')
+        .pluck('author')
+        .should.become([1]))
+  })
+
+  describe('#whereIn()', () => {
+    it('should be able to filter using `in` operator', () =>
+      run
+        .whereIn('field_integer', [242])
+        .first()
+        .should.eventually.include({field_integer: 242}))
+  })
+
+  describe('#whereNotIn()', () => {
+    it('should be able to filter using `nin` operator', () =>
+      run
+        .whereNotIn('field_integer', [242])
+        .list()
+        .should.eventually.be.an('array')
+        .of.length(9))
+  })
+
+  describe('#whereBetween()', () => {
+    it('should be able to filter results using gte and lte', () =>
+      run
+        .whereBetween('field_integer', 200, 250)
+        .first()
+        .should.eventually.include({field_integer: 242}))
   })
 
   describe('#fields()', () => {

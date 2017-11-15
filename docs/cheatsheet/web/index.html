@@ -395,9 +395,20 @@ data.posts.where('views', '>', 200).list()
 
 // Get all posts with one of the statuses
 data.posts.where('status', 'in', ['draft', 'published']).list()
+data.posts.whereIn('status', ['draft', 'published']).list()
 
 // Get all posts with id not in given array
 data.posts.where('id', 'nin', [10, 20]).list()
+data.posts.whereNotIn('id', [10, 20]).list()
+
+// Get all posts with title
+data.posts.whereNotNull('title').list()
+
+// Get all posts without title
+data.posts.whereNull('title')
+
+// Get all posts with views between 100 and 1000
+data.posts.whereBetween('views', 100, 1000)
 
 // Get all published posts with id between 100 and 200
 data.posts
@@ -405,8 +416,14 @@ data.posts
     ['id', 'gt', 100],
     ['id', 'lt', 200]
     ['status', 'published']
-  ]).list()</code></pre>
-      <h4>Ordering, Limit, & Offset</h4>
+  ]).list()
+
+  // Get posts with views count lower than 100 or higher than 1000
+  data.posts
+    .where('views', '<', 100)
+    .orWhere('views', '>', 1000)
+    .list()</code></pre>
+      <h4>Ordering, Limit, &amp; Offset</h4>
       <pre><code class="lang-js">// Get all posts ordered descending by creation date
 data.posts.orderBy('created_at', 'DESC').list()
 

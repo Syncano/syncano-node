@@ -50,6 +50,10 @@ export default class QueryBuilder {
     return this._query || {}
   }
 
+  get queries () {
+    return this._queries || []
+  }
+
   get relationships () {
     return this._relationships || []
   }

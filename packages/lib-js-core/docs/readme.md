@@ -5,31 +5,31 @@
   - [Usage in Syncano Socket](#usage-in-syncano-socket)
   - [Installation](#installation)
 - The Basics
-  - [Data](docs/basics/data.md)
-  - [Users](docs/basics/users.md)
-  - [Responses](docs/basics/responses.md)
-  - [Endpoints](docs/basics/endpoints.md)
-  - [Channels](docs/basics/channels.md)
-  - [Events](docs/basics/events.md)
-  - [Logger](docs/basics/logger.md)
+  - [Data](basics/data.md)
+  - [Users](basics/users.md)
+  - [Responses](basics/responses.md)
+  - [Endpoints](basics/endpoints.md)
+  - [Channels](basics/channels.md)
+  - [Events](basics/events.md)
+  - [Logger](basics/logger.md)
 
 - <details>
   <summary>Architecture Concepts</summary>
   
-  - [Socket](docs/architecture/socket.md)*
-  - [Socket Context](docs/architecture/socket-context.md)*
+  - [Socket](architecture/socket.md)*
+  - [Socket Context](architecture/socket-context.md)*
 </details>
 
 - <details>
   <summary>Syncano Core</summary>
 
-  - [Syncano Account](docs/core/syncano-account.md)*
-  - [Syncano Backups](docs/core/syncano-backups.md)*
-  - [Syncano Classes](docs/core/syncano-classes.md)*
-  - [Syncano Hostings](docs/core/syncano-hostings.md)*
-  - [Syncano Instances](docs/core/syncano-instances.md)*
-  - [Syncano Sockets](docs/core/syncano-sockets.md)*
-  - [Syncano Traces](docs/core/syncano-traces.md)*
+  - [Syncano Account](core/syncano-account.md)*
+  - [Syncano Backups](core/syncano-backups.md)*
+  - [Syncano Classes](core/syncano-classes.md)*
+  - [Syncano Hostings](core/syncano-hostings.md)*
+  - [Syncano Instances](core/syncano-instances.md)*
+  - [Syncano Sockets](core/syncano-sockets.md)*
+  - [Syncano Traces](core/syncano-traces.md)*
 </details>
 
 `*` - TODO
