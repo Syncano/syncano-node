@@ -32,11 +32,17 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
   }
 
   client.url = function (endpoint, data) {
+    let url = `${this.baseUrl}${endpoint}/?`
+
     if (data) {
-      return `${this.baseUrl}${endpoint}/?${querystring.stringify(data)}`
+      url += `${querystring.stringify(data)}&`
     }
 
-    return `${this.baseUrl}${endpoint}/`
+    if (client.token) {
+      url += `_user_key=${client.token}`
+    }
+
+    return url
   }
 
   client.logout = function () {
@@ -171,20 +177,11 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
 
     const transformRequest = [
       function (data) {
-        const token = client.token ? {_user_key: client.token} : {} // eslint-disable-line camelcase
-
         if (data instanceof window.FormData) {
-          if (client.token) {
-            data.append('_user_key', client.token)
-          }
-
           return data
         }
 
-        return JSON.stringify({
-          ...data,
-          ...token
-        })
+        return JSON.stringify(data)
       }
     ]
 
