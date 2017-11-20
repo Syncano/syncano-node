@@ -16,50 +16,11 @@ import {
   getRandomString
 } from '../utils'
 
-const configTestTemplate = path.join(__dirname, '../../templates/project/hello/syncano')
-const helloTestScript = `${testsLocation}/syncano/hello/src/hello.js`
-const helloTestYaml = `${testsLocation}/syncano/hello/socket.yml`
 const hostingName = 'tests'
 const hostingName2 = 'tests2'
 const { email, password, syncanoYmlPath, instance } = returnTestGlobals()
 const tempPass = Date.now()
 const tempEmail = createTempEmail(process.env.E2E_CLI_TEMP_EMAIL, tempPass)
-
-export const modifyHelloScript = () => {
-  try {
-    const helloFile = fs.readFileSync(helloTestScript)
-    const newHelloScript = helloFile
-      .toString()
-      // eslint-disable-next-line
-      .replace('${ctx.args.firstname} ${ctx.args.lastname}', '${ctx.config.name}')
-      .replace('ctx.args.firstname && ctx.args.lastname', 'ctx.config.name')
-
-    fs.writeFileSync(helloTestScript, newHelloScript)
-  } catch (err) {
-    console.error('modifyHelloScript', err)
-  }
-}
-
-export const modifySocketYaml = () => {
-  try {
-    const testYaml = yaml.safeLoad(fs.readFileSync(helloTestYaml, 'utf8'))
-    delete testYaml.endpoints.hello.parameters
-
-    fs.writeFileSync(helloTestYaml, yaml.dump(testYaml))
-  } catch (err) {
-    console.error('modifySocketYaml', err)
-  }
-}
-
-export const moveTestSocket = () => {
-  try {
-    fs.copySync(configTestTemplate, `${testsLocation}/syncano/`)
-    modifyHelloScript()
-    modifySocketYaml()
-  } catch (err) {
-    console.error('moveTestSocket', err)
-  }
-}
 
 describe('[E2E] CLI User', function () {
   before(cleanUpAccount)
@@ -162,12 +123,16 @@ describe('[E2E] CLI User', function () {
       .end(done)
   })
 
-  it('can sync copied socket', function (done) {
+  it('can call hello socket endpoint', function (done) {
     nixt()
       .cwd(testsLocation)
-      .before(moveTestSocket)
-      .run(`${cliLocation} deploy hello`)
-      .stdout(/socket synced:/)
+      .run(`${cliLocation} call hello/hello`)
+      .on(/Type in value for "firstname" parameter/)
+      .respond('TEST\n')
+      .on(/Type in value for "lastname" parameter/)
+      .respond('CLI\n')
+      .code(0)
+      .stdout(/Hello TEST CLI/)
       .end(done)
   })
 
@@ -332,19 +297,6 @@ describe('[E2E] CLI User', function () {
     .run(`${cliLocation} hosting list`)
     .stdout(/You don't have any hostings/)
     .end(done)
-  })
-
-  it.skip('can call hello socket endpoint', function (done) {
-    nixt()
-      .cwd(testsLocation)
-      .run(`${cliLocation} call hello/hello`)
-      .on(/Type in value for "firstname" parameter/)
-      .respond('TEST\n')
-      .on(/Type in value for "lastname" parameter/)
-      .respond('CLI\n')
-      .code(0)
-      .stdout(/Hello TEST CLI/)
-      .end(done)
   })
 
   it('can logout from cli', function (done) {

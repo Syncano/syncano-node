@@ -5,7 +5,6 @@ import session from './utils/session'
 import context from './utils/context'
 import validateCommands from './utils/validate-commands'
 import { echo } from './utils/print-tools'
-import { trackCommand } from './utils/analytics'
 
 context.session.load()
   .then(async () => {
@@ -16,13 +15,8 @@ context.session.load()
       .option('-c, --cname <cname>', 'CNAME')
       // .option('-s, --socket <name>', 'socket')
       .action(async (...options) => {
-        trackCommand(options)
         session.isAuthenticated()
         session.hasProject()
-        // await session.checkConnection();
-        // if (options[1].socket) {
-        //   session.hasSocket(options[1].socket);
-        // }
         echo()
         new commands.HostingAdd(context).run(options)
       })
@@ -33,7 +27,6 @@ context.session.load()
       .description('Delete a hosting')
       .option('-h, --help <topic>', 'Hosting name')
       .action(async (...options) => {
-        trackCommand(options)
         session.isAuthenticated()
         session.hasProject()
         await session.checkConnection()
@@ -47,7 +40,6 @@ context.session.load()
       .description('List hostings')
       // .option('-s, --socket <name>', 'socket')
       .action(async (...options) => {
-        trackCommand(options)
         session.isAuthenticated()
         session.hasProject()
         await session.checkConnection()
@@ -60,7 +52,6 @@ context.session.load()
       .description('List hosting files')
       // .option('-s, --socket <name>', 'socket')
       .action(async (...options) => {
-        trackCommand(options)
         session.isAuthenticated()
         session.hasProject()
         await session.checkConnection()
@@ -74,7 +65,6 @@ context.session.load()
       .description('Publish your local hosting files')
       .option('-s, --socket <name>', 'socket')
       .action(async (...options) => {
-        trackCommand(options)
         session.isAuthenticated()
         session.hasProject()
         await session.checkConnection()
@@ -89,7 +79,6 @@ context.session.load()
       .option('-c, --cname <domain_name>', 'add CNAME to hosting')
       .option('-d, --remove-cname <domain_name>', 'remove CNAME from hosting')
       .action(async (...options) => {
-        trackCommand(options)
         session.isAuthenticated()
         session.hasProject()
         await session.checkConnection()

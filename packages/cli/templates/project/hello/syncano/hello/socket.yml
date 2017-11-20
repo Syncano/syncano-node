@@ -5,30 +5,33 @@ version: 0.0.1
 endpoints:
   hello:
     description: Hello world!
-    file: hello.js
     parameters:
       firstname:
         type: string
-        description: "First name of the person you want to greet"
-        example: "Tyler"
+        description: First name of the person you want to greet
+        example: Tyler
       lastname:
         type: string
-        description: "Last name of the person you want to greet"
-        example: "Durden"
+        description: Last name of the person you want to greet
+        example: Durden
     response:
-      mimetype: application/json
-      examples:
-        -
-          exit_code: 200
-          description: Success
-          example: |
-            {
-              "message": "Hello Tyler Durden!"
-            }
-        -
-          exit_code: 400
-          description: Failed
-          example: |
-            {
-              "message": "You have to send "firstname" and "lastname" arguments!"
-            }
+      success:
+        description: Success
+        parameters:
+          message:
+            description: Hello message
+        example: |
+          {
+            "message": "Hello Tyler Durden!"
+          }
+      fail:
+        exit_code: 400
+        description: Failed
+        parameters:
+          message:
+            description: Error message
+
+        example: |
+          {
+            "message": "You have to send "firstname" and "lastname" arguments!"
+          }

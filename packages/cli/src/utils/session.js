@@ -14,7 +14,6 @@ import Socket from './sockets'
 import Init from './init'
 import Hosting from './hosting'
 import Plugins from './plugins'
-import { identify } from './analytics'
 import { echo, echon, error } from './print-tools'
 
 const { debug } = logger('utils-session')
@@ -103,7 +102,6 @@ export class Session {
     try {
       const details = await this.connection.account.get(this.settings.account.getAuthKey())
       this.userId = details.id
-      identify(details)
     } catch (err) {}
   }
 

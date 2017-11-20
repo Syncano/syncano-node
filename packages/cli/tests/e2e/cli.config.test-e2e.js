@@ -15,7 +15,7 @@ const { email, password, syncanoYmlPath } = returnTestGlobals()
 
 const moveTestSocket = (template) => {
   try {
-    fs.copySync(template, `${testsLocation}/syncano/`)
+    fs.copySync(template, `${testsLocation}/syncano/hello-config`)
   } catch (err) {
     console.error('moveTestSocket', err)
   }
@@ -101,6 +101,14 @@ describe('[E2E] CLI Config', function () {
       .respond('test2\n')
       .on(/TEST3/)
       .respond('test2\n')
+      .end(done)
+  })
+
+  it('can call hello-config socket endpoint', function (done) {
+    nixt()
+      .cwd(testsLocation)
+      .run(`${cliLocation} call "hello-config/hello" || exit 0`)
+      .stdout(/test1 test2/)
       .end(done)
   })
 

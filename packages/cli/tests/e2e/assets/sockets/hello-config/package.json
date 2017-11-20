@@ -1,5 +1,6 @@
 {
   "license": "MIT",
   "dependencies": {
+    "@syncano/core": "latest"
   }
 }

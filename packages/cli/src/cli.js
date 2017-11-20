@@ -11,7 +11,6 @@ import session from './utils/session'
 import logger from './utils/debug'
 import pjson from '../package.json'
 import { echo } from './utils/print-tools'
-import { trackCommand } from './utils/analytics'
 
 const { debug } = logger('main-cli')
 initRaven()
@@ -23,7 +22,6 @@ const commandDebug = (options) => {
 
 const trackAndDebug = (options, additionalParams) => {
   commandDebug(options)
-  trackCommand(options, additionalParams)
 }
 
 debug(pjson.version)
@@ -116,7 +114,7 @@ Raven.context(() => {
         .group('Project')
         .description("Call Socket's endpoint")
         .option('-b, --body', 'Print only body of the response')
-        .action(async(...options) => {
+        .action(async (...options) => {
           trackAndDebug(options)
           session.isAuthenticated()
           session.hasProject()
@@ -143,7 +141,7 @@ Raven.context(() => {
         .group('Sockets')
         .description('Add a Socket as a dependency of your project or local Socket')
         .option('-s, --socket <socket>', 'Name of the Socket')
-        .action(async(...options) => {
+        .action(async (...options) => {
           const [name] = options
           trackAndDebug(options, { socketName: name })
           session.isAuthenticated()
