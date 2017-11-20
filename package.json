@@ -26,6 +26,8 @@
     "babel-eslint": "^8.0.1",
     "chalk": "^2.3.0",
     "git-branch": "^1.0.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^5.0.0",
     "standard": "^10.0.3"
   }
 }
