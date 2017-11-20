@@ -1040,25 +1040,23 @@ class Socket {
     })
   }
 
-  getScriptsToCompile () {
+  async getScriptsToCompile () {
     debug('getScriptsToCompile')
 
-    return this.getScriptsInSocket()
-      .then((files) => {
-        const filesToCompile = []
-        files.forEach((file) => {
-          const fileNameWithLocalPath = file.srcFile.replace(this.getSrcFolder(), '')
-          const localSrcChecksum = md5(fs.readFileSync(file.srcFile, 'utf8'))
-          const remoteSrcChecksum =
-            this.remote.metadata.sources ? this.remote.metadata.sources[fileNameWithLocalPath] : ''
+    const files = await this.getScriptsInSocket()
+    const filesToCompile = []
+    files.forEach((file) => {
+      const fileNameWithLocalPath = file.srcFile.replace(this.getSrcFolder(), '')
+      const localSrcChecksum = md5(fs.readFileSync(file.srcFile, 'utf8'))
+      const remoteSrcChecksum =
+        this.remote.metadata.sources ? this.remote.metadata.sources[fileNameWithLocalPath] : ''
 
-          debug(localSrcChecksum, remoteSrcChecksum, fileNameWithLocalPath)
-          if (localSrcChecksum !== remoteSrcChecksum) {
-            filesToCompile.push(file)
-          }
-        })
-        return filesToCompile
-      })
+      debug(`Checksums for ${fileNameWithLocalPath}`, localSrcChecksum, remoteSrcChecksum)
+      if (localSrcChecksum !== remoteSrcChecksum) {
+        filesToCompile.push(file)
+      }
+    })
+    return filesToCompile
   }
 
   getFileForEndpoint (endpointName) {
