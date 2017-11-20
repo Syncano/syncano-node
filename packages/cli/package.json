@@ -148,7 +148,7 @@
     ]
   },
   "nyc": {
-    "check-coverage": true,
+    "check-coverage": false,
     "include": [
       "src/**/*.js"
     ],
