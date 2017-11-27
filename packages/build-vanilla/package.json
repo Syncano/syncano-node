@@ -1,0 +1,14 @@
+{
+  "name": "@syncano/build-vanilla",
+  "description": "Vanilla JS builder for Syncano Sockets",
+  "version": "0.4.1",
+  "license": "MIT",
+  "bin": {
+    "build-es6": "./bin/build-vanilla",
+    "compile-es6": "./bin/compile-vanilla",
+    "compile-env-es6": "./bin/compile-env-vanilla"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -26,6 +26,10 @@
   },
   "dependencies": {
     "@syncano/core": "0.4.1",
+    "@syncano/template-project-empty": "0.4.1",
+    "@syncano/template-project-hello": "0.4.1",
+    "@syncano/template-socket-es6": "0.4.1",
+    "@syncano/template-socket-vanilla": "0.4.1",
     "analytics-node": "^3.1.1",
     "archiver": "^2.1.0",
     "axios": "^0.17.0",
@@ -47,7 +51,7 @@
     "commander": "^2.11.0",
     "create-error": "0.3.1",
     "cross-env": "^5.1.1",
-    "debug": "^3.1.0",
+    "debug": "2.6.9",
     "es6-template-strings": "2.0.1",
     "find-key": "2.0.1",
     "form-data": "^2.3.1",
@@ -66,6 +70,7 @@
     "pretty-bytes": "4.0.2",
     "raven": "^2.2.1",
     "readdirp": "2.1.0",
+    "replace": "^0.3.0",
     "semver": "^5.4.1",
     "sinon": "1.17.6",
     "source-map": "^0.6.1",
@@ -76,7 +81,7 @@
     "watchr": "3.0.1"
   },
   "devDependencies": {
-    "syncano": "2.0.4",
+    "@syncano/test-tools": "0.4.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-plugin-add-module-exports": "0.2.1",
@@ -96,20 +101,18 @@
     "pre-commit": "1.2.2",
     "rimraf": "^2.6.2",
     "sinon": "1.17.6",
-    "standard": "^10.0.3"
+    "standard": "^10.0.3",
+    "prettier": "^1.7.4"
   },
   "scripts": {
     "prepublish": "npm run build",
-    "commit": "git cz",
     "build": "babel src -d lib/ --copy-files --ignore *.test.js,*.test-e2e.js --source-maps",
     "build:watch": "yarn run build -- -w",
     "clean": "rm -rf lib/",
     "compile": "yarn run clean && yarn run build",
-    "docs:watch": "docsify serve docs",
-    "lint": "standard --fix --env mocha",
-    "unit": "mocha 'tests/unit/*.test.js' --reporter spec --require babel-register -b",
+    "unit": "mocha 'tests/unit/*.test.js' --reporter spec --require babel-register",
     "unit:watch": "yarn run unit -- -w",
-    "e2e": "mkdir -p e2e-tests/ && mkdir -p e2e-tests/hosting/ && mocha 'tests/e2e/*.test-e2e.js' --reporter spec --require babel-register --timeout 40000 --slow 8000 && rm -rf e2e-tests/",
+    "e2e": "./scripts/e2e",
     "e2e:tutorial": "mocha  --reporter spec --require babel-register --timeout 16000 --slow 8000",
     "unit:coverage": "nyc yarn run unit",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
@@ -117,9 +120,10 @@
     "test:unit": "nyc yarn run unit",
     "test:e2e": "yarn run e2e",
     "test:ci": "nyc yarn run unit -- --reporter mocha-junit-reporter",
-    "reinstall": "rimraf node_modules && yarn install",
     "validate": "npm-run-all --parallel test:unit lint lint:tests build",
-    "pre-commit-run": "npm-run-all --parallel lint lint:tests unit"
+    "pre-commit-run": "npm-run-all --parallel lint lint:tests unit",
+    "lint": "standard --fix --env mocha",
+    "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
   },
   "pre-commit": "pre-commit-run",
   "publishConfig": {

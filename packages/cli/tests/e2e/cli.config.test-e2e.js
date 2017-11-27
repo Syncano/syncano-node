@@ -2,14 +2,16 @@
 import path from 'path'
 import fs from 'fs-extra'
 
-import {
+import tools from '@syncano/test-tools'
+
+const {
   nixt,
   testsLocation,
   cleanUpAccount,
-  cliLocation,
   returnTestGlobals
-} from '../utils'
+} = tools
 
+const cliLocation = path.join(process.cwd(), 'lib/cli.js')
 const configTestTemplate = path.join(__dirname, './assets/sockets/hello-config')
 const { email, password, syncanoYmlPath } = returnTestGlobals()
 
@@ -33,11 +35,11 @@ describe('[E2E] CLI Config', function () {
       .respond(`${email}\n`)
       .on(/Password/)
       .respond(`${password}\n`)
-      .on(/Hello World template/)
+      .on(/Hello World/)
       // Choose from dropdown default project template: hello
       .respond('\n')
       .stdout(/Creating Syncano Instance/)
-      .stdout(/Project has been created from hello template/)
+      .stdout(/Project has been created from/)
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
       .end(done)

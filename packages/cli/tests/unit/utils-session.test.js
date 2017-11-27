@@ -8,8 +8,9 @@ import path from 'path'
 import mkdirp from 'mkdirp'
 import Promise from 'bluebird'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import session from '../../src/utils/session'
-import { getRandomString } from '../utils'
 import printTools from '../../src/utils/print-tools'
 import Init from '../../src/utils/init'
 import Plugins from '../../src/utils/plugins'

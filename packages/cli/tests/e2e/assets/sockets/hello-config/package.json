@@ -2,5 +2,34 @@
   "license": "MIT",
   "dependencies": {
     "@syncano/core": "latest"
+  },
+  "scripts": {
+    "build": "yarn && mkdirp .dist && npm-run-all --parallel build:env build:compile",
+    "build:compile": "babel src --out-dir .dist/src --copy-files",
+    "build:env": "cp package.json .dist && cd .dist && yarn --production"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "chai": "^4.1.2",
+    "mkdirp": "^0.5.1",
+    "mocha": "^3.5.3",
+    "mockery": "^2.1.0",
+    "npm-run-all": "^4.1.1",
+    "nyc": "^11.2.1",
+    "sinon": "^3.3.0",
+    "standard": "^10.0.3",
+    "syncano-test": "^0.1.10"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "7"
+          }
+        }
+      ]
+    ]
   }
 }

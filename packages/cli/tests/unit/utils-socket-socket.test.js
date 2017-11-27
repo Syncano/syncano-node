@@ -6,9 +6,10 @@ import sinon from 'sinon'
 import fs from 'fs-extra'
 import path from 'path'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import getSettings from '../../src/settings'
 import session from '../../src/utils/session'
-import { getRandomString } from '../utils'
 import printTools from '../../src/utils/print-tools'
 import Sockets from '../../src/utils/sockets'
 

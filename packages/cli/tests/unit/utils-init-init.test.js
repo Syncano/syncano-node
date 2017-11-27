@@ -4,9 +4,10 @@ import fs from 'fs-extra'
 import path from 'path'
 import format from 'chalk'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import Init from '../../src/utils/init'
 import { mainSocketTemplatePath } from '../../src/constants/Constants'
-import { getRandomString } from '../utils'
 import printTools from '../../src/utils/print-tools'
 
 describe('[commands] init', function () {

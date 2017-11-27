@@ -24,12 +24,11 @@ export default class SocketConfigSetCmd {
     const config = Object.assign({}, this.socket.remote.config)
 
     config[optionName] = optionValue
-    return this.socket.updateConfig(config)
-      .then((resp) => {
-        process.exit()
-      })
-      .catch((err) => {
-        error(err.message)
-      })
+    try {
+      await this.socket.updateConfig(config)
+      process.exit()
+    } catch (err) {
+      error(err.message)
+    }
   }
 }

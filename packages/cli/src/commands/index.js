@@ -19,7 +19,6 @@ import SocketSearch from './socket-search'
 import SocketSubmit from './socket-submit'
 import SocketPublish from './socket-publish'
 import SocketTrace from './socket-trace'
-import SocketSourceMaps from './socket-sourcemaps'
 import SocketInstall from './socket-install'
 import SocketCreate from './socket-create'
 import SocketUninstall from './socket-uninstall'
@@ -46,7 +45,6 @@ export default {
   SocketPublish,
   SocketSubmit,
   SocketTrace,
-  SocketSourceMaps,
   SocketInstall,
   SocketCreate,
   SocketUninstall

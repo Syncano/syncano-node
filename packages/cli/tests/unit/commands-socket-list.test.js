@@ -4,10 +4,11 @@ import sinon from 'sinon'
 import { expect } from 'chai'
 import format from 'chalk'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import { SocketList } from '../../src/commands'
 import context from '../../src/utils/context'
 import printTools, { p, printCode } from '../../src/utils/print-tools'
-import { getRandomString } from '../utils'
 
 describe('[commands] List Sockets', function () {
   const socketList = new SocketList(context)

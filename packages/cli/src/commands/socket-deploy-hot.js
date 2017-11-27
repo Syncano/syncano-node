@@ -6,11 +6,9 @@ import Promise from 'bluebird'
 import logger from '../utils/debug'
 import { SimpleSpinner, GlobalSpinner } from './helpers/spinner'
 import { askQuestions } from './helpers/socket'
-import { printCompileError } from './helpers/print'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
 import SocketTraceCmd from './socket-trace'
-import CompilationError from '../utils/compile'
 
 const { debug } = logger('cmd-socket-deploy')
 
@@ -134,12 +132,8 @@ export default class SocketDeployCmd {
     } catch (err) {
       spinner.stop()
       if (typeof err === 'object') {
-        if (err instanceof CompilationError) {
-          printCompileError(err, socket.name)
-        } else {
-          const status = format.red('socket sync error:')
-          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
-        }
+        const status = format.red('socket sync error:')
+        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
       } else {
         SocketDeployCmd.printUpdateFailed(socket.name, err, deployTimer)
       }

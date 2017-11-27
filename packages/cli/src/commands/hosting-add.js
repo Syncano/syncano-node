@@ -45,17 +45,19 @@ class HostingAdd {
         src: path.relative(this.session.projectPath, path.join(process.cwd(), this.folder)),
         cname: this.cname || responses.CNAME || null
       }
-      Hosting.add(params)
-        .then((resp) => this.syncNewHosting())
-        .catch((err) => {
-          echo()
-          try {
-            error(4)(err.response.data.detail)
-          } catch (printErr) {
-            error(4)(printErr.message)
-          }
-          echo()
-        })
+
+      try {
+        await Hosting.add(params)
+        await this.syncNewHosting()
+      } catch (err) {
+        echo()
+        try {
+          error(4)(err.response.data.detail)
+        } catch (printErr) {
+          error(4)(printErr.message)
+        }
+        echo()
+      }
     }
   }
 

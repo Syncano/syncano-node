@@ -4,10 +4,12 @@ import chai from 'chai'
 import sinon from 'sinon'
 import Raven from 'raven'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import session from '../../src/utils/session'
 import Hosting, { HostingFile } from '../../src/utils/hosting'
 import utils from '../../src/utils'
-import { getRandomString } from '../utils'
+
 import printTools from '../../src/utils/print-tools'
 
 chai.use(dirtyChai)

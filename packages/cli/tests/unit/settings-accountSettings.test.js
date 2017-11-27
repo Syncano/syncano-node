@@ -5,8 +5,9 @@ import sinon from 'sinon'
 import fs from 'fs'
 import YAML from 'js-yaml'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import AccountSettings from '../../src/settings/accountSettings'
-import { getRandomString } from '../utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

@@ -284,8 +284,8 @@ export class Session {
   }
 
   async deployProject () { // eslint-disable-line class-methods-use-this
-    const hostings = Hosting.list()
-    return hostings.map((hostings) => Promise.all(hostings.map((hosting) => hosting.deploy())))
+    const hostings = await Hosting.list()
+    return Promise.all(hostings.map((hosting) => hosting.deploy()))
   }
 }
 

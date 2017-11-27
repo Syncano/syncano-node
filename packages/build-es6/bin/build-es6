@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+compile-es6
+compile-env-es6

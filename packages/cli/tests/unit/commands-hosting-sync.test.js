@@ -3,10 +3,11 @@ import sinon from 'sinon'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import { HostingSync } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
-import { getRandomString } from '../utils'
 
 describe('[commands] Sync Hosting', function () {
   let hostingSync = new HostingSync(context)

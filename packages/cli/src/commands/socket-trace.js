@@ -57,7 +57,7 @@ export default class SocketTrace {
     this.mainSpinner.start()
 
     try {
-      const response = socket.getTraces(this.lastId[socket.name])
+      const response = await socket.getTraces(this.lastId[socket.name])
       this.mainSpinner.stop()
       const trace = response.data
       this.lastId[socket.name] = response.data.id

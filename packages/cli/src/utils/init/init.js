@@ -5,18 +5,27 @@ import fs from 'fs-extra'
 import session from '../session'
 import logger from '../debug'
 import { echo } from '../print-tools'
-import { getInitTemplate } from '../../constants/Constants'
+import { getTemplateSpec, getTemplate, builtInProjectTemplates } from '../templates'
 
 const { debug } = logger('utils-init')
 
 class Init {
   constructor () {
     this.session = session
+  }
 
-    this.templates = [
-      { name: 'empty', description: 'Empty project' },
-      { name: 'hello', description: 'Hello World template (recommended)' }
-    ]
+  static projectTemplates () {
+    const installedTemplates = builtInProjectTemplates.map((templateName) => {
+      debug('loading template:', templateName)
+      const templateSpec = getTemplateSpec(templateName)
+
+      return { name: templateName, description: templateSpec.description }
+    })
+    return installedTemplates
+  }
+
+  static getTemplatesChoices () {
+    return Init.projectTemplates().map(template => `${template.description} ${format.grey(`- (${template.name})`)}`)
   }
 
   createFilesAndFolders (pathToCopyTo = process.cwd()) {
@@ -25,17 +34,13 @@ class Init {
     try {
       debug('Template name:', this.templateName)
       debug('Path to copy to:', pathToCopyTo)
-      fs.copySync(getInitTemplate(this.templateName), pathToCopyTo)
+      fs.copySync(getTemplate(this.templateName), pathToCopyTo)
       echo(4)(format.dim(`Project has been created from ${format.green(this.templateName)} template.`))
       echo()
     } catch (err) {
       echo(err)
       throw err
     }
-  }
-
-  getTemplatesChoices () {
-    return this.templates.map((template) => `${template.name} - ${template.description}`)
   }
 
   checkConfigFiles () {

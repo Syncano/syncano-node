@@ -1,0 +1,11 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "@syncano/core": "latest"
+  },
+  "scripts": {
+    "build": "compile-es6 && compile-env-es6",
+    "build:src": "compile-es6",
+    "build:env": "compile-env-es6"
+  }
+}

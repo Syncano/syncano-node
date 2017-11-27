@@ -2,7 +2,6 @@ import inquirer from 'inquirer'
 import format from 'chalk'
 
 import logger from '../../utils/debug'
-import { printCompileError } from './print'
 import { p, echo, echon, error, warning } from '../../utils/print-tools'
 
 const { debug } = logger('cmd-helpers-socket')
@@ -37,65 +36,59 @@ export const askQuestions = (configOptions) => {
   return inquirer.prompt(questions)
 }
 
-export const updateSocket = (socket, config) => {
+export const updateSocket = async (socket, config) => {
   debug(`updateSocket: ${socket.name}`)
   const startTime = new Date().getTime()
 
-  return socket.update({ config })
-    .then((updateStatus) => {
-      const endTime = new Date().getTime()
-      if (updateStatus.status === 'ok') {
-        echon(4)(`${format.green('✓')} ${format.cyan(socket.name)} `)
-        echo(`successfully updated ${format.dim(endTime - startTime, 'ms')}`)
-      } else if (updateStatus.status === 'stopped') {
-        echon(4)(`${format.green('✓')} ${format.cyan(socket.name)} `)
-        echo(`successfully updated ${format.dim(endTime - startTime, 'ms')}`)
+  try {
+    const updateStatus = await socket.update({ config })
+    const endTime = new Date().getTime()
+    if (updateStatus.status === 'ok') {
+      echon(4)(`${format.green('✓')} ${format.cyan(socket.name)} `)
+      echo(`successfully updated ${format.dim(endTime - startTime, 'ms')}`)
+    } else if (updateStatus.status === 'stopped') {
+      echon(4)(`${format.green('✓')} ${format.cyan(socket.name)} `)
+      echo(`successfully updated ${format.dim(endTime - startTime, 'ms')}`)
+    } else {
+      echon(4)(`${format.red('✗')} ${format.cyan(socket.name)} `)
+      echo(`update failed ${format.dim(endTime - startTime, 'ms')}`)
+      const errMsg = updateStatus.message.error
+      const lineNo = updateStatus.message.lineno
+      echon(4)(format.dim.red(errMsg))
+      if (lineNo) {
+        echo(format.dim(`line ${lineNo} of socket.yml`))
       } else {
-        echon(4)(`${format.red('✗')} ${format.cyan(socket.name)} `)
-        echo(`update failed ${format.dim(endTime - startTime, 'ms')}`)
-        const errMsg = updateStatus.message.error
-        const lineNo = updateStatus.message.lineno
-        echon(4)(format.dim.red(errMsg))
-        if (lineNo) {
-          echo(format.dim(`line ${lineNo} of socket.yml`))
-        } else {
-          echo()
-        }
         echo()
       }
-      return updateStatus
-    })
-    .catch((err) => {
-      if (typeof err === 'object' && err.errorType) {
-        printCompileError(err)
-      } else {
-        error(err)
-      }
-    })
+      echo()
+    }
+    return updateStatus
+  } catch (err) {
+    error(err)
+  }
 }
 
-export const updateConfig = (socket, config) => {
+export const updateConfig = async (socket, config) => {
   echo()
   echon(4)(`Updating Socket's ${format.cyan(socket.name)} config... `)
 
-  socket.update({ config })
-    .then((updateStatus) => {
-      if (updateStatus === 'ok') {
-        echo(format.green('Done'))
-        echo()
-      } else {
-        echo()
-        error(4)(updateStatus)
-        echo()
-      }
-    })
-    .catch((err) => {
-      if (typeof err === 'object' && err.errorType) {
-        printCompileError(err)
-      } else {
-        error(err)
-      }
-    })
+  try {
+    const updateStatus = await socket.update({ config })
+    if (updateStatus === 'ok') {
+      echo(format.green('Done'))
+      echo()
+    } else {
+      echo()
+      error(4)(updateStatus)
+      echo()
+    }
+  } catch (err) {
+    if (typeof err === 'object' && err.errorType) {
+      printCompileError(err)
+    } else {
+      error(err)
+    }
+  }
 }
 
 export const socketNotFound = () => {

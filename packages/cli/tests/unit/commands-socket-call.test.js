@@ -6,10 +6,11 @@ import inquirer from 'inquirer'
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import { SocketEndpointCall } from '../../src/commands'
 import context from '../../src/utils/context'
 import printTools from '../../src/utils/print-tools'
-import { getRandomString } from '../utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

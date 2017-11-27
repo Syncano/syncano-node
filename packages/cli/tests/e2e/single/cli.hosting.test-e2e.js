@@ -27,7 +27,7 @@ describe('CLI Commands - Hosting', function () {
       // Choose from dropdown default project template: hello
       .respond('\n')
       .stdout(/Creating Syncano Instance/)
-      .stdout(/Project has been created from hello template/)
+      .stdout(/Project has been created from/)
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
       .end(done)
@@ -50,7 +50,7 @@ describe('CLI Commands - Hosting', function () {
   it('can add hosting with folder outside of syncano folder', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} hosting add ../templates`)
+      .run(`${cliLocation} hosting add ../tests/e2e/assets/hosting_test`)
       .on(/Set hosting's name/)
       .respond(`${hostingName2}\n`)
       .on(/Set CNAME/)

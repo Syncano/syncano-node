@@ -51,7 +51,7 @@ class Hosting {
     this.loadLocal()
   }
 
-  static add (params) {
+  static async add (params) {
     const configParams = {
       src: params.src
     }
@@ -70,7 +70,7 @@ class Hosting {
       domains
     }
 
-    return axios.request({
+    const response = await axios.request({
       url: addHostingURL,
       method: 'POST',
       data: paramsToAdd,
@@ -78,14 +78,14 @@ class Hosting {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((response) => response.data)
+    return response.data
   }
 
   hasCNAME (cname) {
     return this.domains.indexOf(cname) > -1
   }
 
-  configure (params) {
+  async configure (params) {
     const domains = this.domains
     if (params.cname && this.domains.indexOf(params.cname) < 0) {
       domains.push(params.cname)
@@ -103,7 +103,7 @@ class Hosting {
       domains
     }
 
-    return axios.request({
+    const response = await axios.request({
       url: this.editHostingURL,
       method: 'PATCH',
       data: paramsToUpdate,
@@ -111,10 +111,8 @@ class Hosting {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((response) => {
-      const hosting = response.data
-      return this.setRemoteState(hosting)
-    })
+
+    return this.setRemoteState(response.data)
   }
 
   deploy () {
@@ -135,36 +133,32 @@ class Hosting {
       domains: this.domains
     }
 
-    return axios.request({
-      url: this.editHostingURL,
-      method: 'PATCH',
-      data: paramsToUpdate,
-      headers: {
-        'X-Api-Key': session.settings.account.getAuthKey()
-      }
-    })
-    .then((response) => {
-      const hosting = response.data
-      return this.setRemoteState(hosting)
-    })
-    .catch((err) => {
+    try {
+      const response = axios.request({
+        url: this.editHostingURL,
+        method: 'PATCH',
+        data: paramsToUpdate,
+        headers: {
+          'X-Api-Key': session.settings.account.getAuthKey()
+        }
+      })
+      return this.setRemoteState(response.data)
+    } catch (err) {
       console.log(err)
-    })
+    }
   }
 
-  delete () {
+  async delete () {
     if (!this.socket) {
-      return axios.request({
+      await axios.request({
         url: this.editHostingURL,
         method: 'DELETE',
         headers: {
           'X-Api-Key': session.settings.account.getAuthKey()
         }
       })
-      .then(() => {
-        session.settings.project.deleteHosting(this.name)
-        return this
-      })
+      session.settings.project.deleteHosting(this.name)
+      return this
     }
   }
 
@@ -224,10 +218,8 @@ class Hosting {
       this.description = hosting.description
       this.domains = hosting.domains
 
-      return this.areFilesUpToDate()
-        .then((status) => {
-          this.isUpToDate = status
-        })
+      const status = await this.areFilesUpToDate()
+      this.isUpToDate = status
     }
     this.existRemotely = false
     this.error = hosting
@@ -346,15 +338,14 @@ class Hosting {
       promises.push(this.getFilesToUpload(file, files))
     })
 
-    return Promise.all(promises).then((values) => {
-      uploadedFilesCount = 0
-      uploadedSize = 0
-      values.forEach((upload) => {
-        uploadedFilesCount += 1
-        uploadedSize += upload.size
-      })
-      return Promise.resolve({ uploadedFilesCount, uploadedSize })
+    const values = await Promise.all(promises)
+    uploadedFilesCount = 0
+    uploadedSize = 0
+    values.forEach(upload => {
+      uploadedFilesCount += 1
+      uploadedSize += upload.size
     })
+    return { uploadedFilesCount, uploadedSize }
   }
 
   // Run this to synchronize hosted files
@@ -368,9 +359,7 @@ class Hosting {
 
     const remoteFiles = await this.listRemoteFiles()
     const result = await this.uploadFiles(remoteFiles)
-    const output = this.generateUploadFilesResult(result)
-
-    return output
+    return this.generateUploadFilesResult(result)
   }
 
   async areFilesUpToDate () {

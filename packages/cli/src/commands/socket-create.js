@@ -25,9 +25,7 @@ class SocketCreate {
 
     echo()
     const response = await inquirer.prompt(this.questions)
-    const template = response.template
-      .split(' - ')[0] // find name
-      .replace(/ /g, '') // strip padding
+    const template = response.template.match(/\((.*)\)/)[1]
 
     echo()
     try {

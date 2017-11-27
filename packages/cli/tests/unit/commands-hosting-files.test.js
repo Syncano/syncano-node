@@ -7,10 +7,11 @@ import inquirer from 'inquirer'
 import prettyBytes from 'pretty-bytes'
 import Table from 'cli-table2'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import { HostingFilesCmd } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
-import { getRandomString } from '../utils'
 
 chai.use(dirtyChai)
 const { expect } = chai

@@ -1,4 +1,5 @@
 import fs from 'fs-extra'
+import child from 'child_process'
 import FindKey from 'find-key'
 import md5 from 'md5'
 import hashdirectory from 'hashdirectory'
@@ -20,9 +21,8 @@ import session from '../session'
 import utils from './utils'
 import Hosting from '../hosting'
 import Registry from '../registry'
-import { compile } from '../compile'
 import { p, echo } from '../print-tools'
-import { getSocketTemplate } from '../../constants/Constants'
+import { getTemplate } from '../../constants/Constants'
 
 const { debug } = logger('utils-sockets')
 
@@ -115,7 +115,7 @@ class Socket {
   }
 
   // Install / Uninstall
-  static install (registrySocket, config) {
+  static async install (registrySocket, config) {
     debug('install()')
 
     const socketName = registrySocket.name
@@ -125,31 +125,30 @@ class Socket {
     mkdirp.sync(socketFolder)
 
     debug('Getting socket from registry')
-    return Registry.getSocket(registrySocket, config)
-      .then((resp) => {
-        debug('Registry socket:', registrySocket)
-        const fileName = path.join(session.getBuildPath(), `${socketName}.zip`)
+    await Registry.getSocket(registrySocket, config)
 
-        return new Promise((resolve, reject) => {
-          fs.createReadStream(fileName)
-            .pipe(unzip.Extract({ path: socketFolder }))
-            .on('close', () => {
-              debug('Unzip finished')
-              const newSocket = new Socket(socketName, socketFolder)
-              return Socket.updateSocketNPMDeps(socketFolder)
-                .then(() => newSocket.loadRemote())
-                .then(() => newSocket.update({ config }))
-                .then((updateStatus) => {
-                  debug('updateStatus', updateStatus)
-                  newSocket.updateStatus = updateStatus
-                  resolve(newSocket)
-                })
-                .catch((err) => {
-                  reject(err)
-                })
-            })
+    debug('Registry socket:', registrySocket)
+    const fileName = path.join(session.getBuildPath(), `${socketName}.zip`)
+
+    return new Promise((resolve, reject) => {
+      fs.createReadStream(fileName)
+        .pipe(unzip.Extract({ path: socketFolder }))
+        .on('close', async () => {
+          debug('Unzip finished')
+          try {
+            const newSocket = new Socket(socketName, socketFolder)
+            await Socket.updateSocketNPMDeps(socketFolder)
+            await newSocket.loadRemote()
+
+            const updateStatus = await newSocket.update({ config })
+            debug('updateStatus', updateStatus)
+            newSocket.updateStatus = updateStatus
+            resolve(newSocket)
+          } catch (err) {
+            reject(err)
+          }
         })
-      })
+    })
   }
 
   static uninstall (socket = {}) {
@@ -222,21 +221,17 @@ class Socket {
     }
 
     if (socketName) {
-      return Socket.get(socketName)
-        .then((socket) => {
-          addToList(socket)
-          return sockets
-        })
+      const socket = await Socket.get(socketName)
+      addToList(socket)
+      return sockets
     }
 
     // All Sockets
-    return Socket.list()
-      .then((allSockets) => {
-        allSockets.forEach((socket) => {
-          addToList(socket)
-        })
-        return sockets
-      })
+    const allSockets = await Socket.list()
+    allSockets.forEach((socket) => {
+      addToList(socket)
+    })
+    return sockets
   }
 
   // Creating Socket simple object
@@ -257,7 +252,7 @@ class Socket {
   }
 
   static create (socketName, templateName) {
-    debug('create socket')
+    debug('create socket', socketName, templateName)
     const newSocketPath = path.join(session.projectPath, socketName)
     const socket = new Socket(socketName, newSocketPath)
     if (socket.existLocally) {
@@ -272,6 +267,7 @@ class Socket {
   }
 
   init (templateName) {
+    debug('init', templateName)
     return new Promise((resolve, reject) => {
       const socketPath = this.getSocketPath()
       if (!fs.existsSync(socketPath)) {
@@ -279,7 +275,7 @@ class Socket {
       }
 
       try {
-        const templateFolder = path.normalize(getSocketTemplate(templateName))
+        const templateFolder = path.normalize(getTemplate(templateName))
         const files = fs.walkSync(templateFolder)
         files.forEach((file) => {
           const oldContent = fs.readFileSync(file, 'utf8')
@@ -560,17 +556,17 @@ class Socket {
   }
 
   static getEndpointTraceByUrl (url) {
-    return axios.request({
+    const resp = axios.request({
       url: `https://${session.getHost()}${url}`,
       method: 'GET',
       headers: {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((resp) => resp.data)
+    return resp.data
   }
 
-  createZip ({ plainSources = false } = {}) {
+  async createZip ({ plainSources = false } = {}) {
     debug('createZip')
     return new Promise((resolve, reject) => {
       let numberOfFiles = 0
@@ -628,38 +624,33 @@ class Socket {
         numberOfFiles += 1
       })
 
-      findFiles.on('end', () => {
+      findFiles.on('end', async () => {
         if (!plainSources) {
-          return this.getScriptsInSocket()
-            .then((scripts) => {
-              scripts.forEach((script) => {
-                const scriptNameWithPath = script.srcFile.replace(`${this.getSrcFolder()}`, '')
-                const scriptBundlePath = script.compiledFile
-                const remoteFile = this.remote.files ? this.remote.files[scriptNameWithPath] : null
+          const scripts = await this.getScriptsInSocket()
+          scripts.forEach((script) => {
+            const scriptNameWithPath = script.srcFile.replace(`${this.getSrcFolder()}`, '')
+            const scriptBundlePath = script.compiledFile
+            const remoteFile = this.remote.files ? this.remote.files[scriptNameWithPath] : null
 
-                allFilesList.push(scriptNameWithPath)
+            allFilesList.push(scriptNameWithPath)
 
-                if (remoteFile) {
-                  if (!fs.existsSync(scriptBundlePath)) {
-                    return
-                  }
-                  const scriptLocalChecksum = md5(fs.readFileSync(scriptBundlePath))
-                  const scriptRemoteChecksum = remoteFile.checksum
-                  if (scriptLocalChecksum === scriptRemoteChecksum) {
-                    debug('Ignoring file:', scriptNameWithPath)
-                    return
-                  }
-                }
+            if (remoteFile) {
+              if (!fs.existsSync(scriptBundlePath)) {
+                return
+              }
+              const scriptLocalChecksum = md5(fs.readFileSync(scriptBundlePath))
+              const scriptRemoteChecksum = remoteFile.checksum
+              if (scriptLocalChecksum === scriptRemoteChecksum) {
+                debug('Ignoring file:', scriptNameWithPath)
+                return
+              }
+            }
 
-                debug(`Adding file to archive: ${scriptNameWithPath}`)
-                archive.file(scriptBundlePath, { name: scriptNameWithPath })
-                numberOfFiles += 1
-              })
-            })
-            .then(() => {
-              debug(`createZip: all files processed: ${numberOfFiles}`)
-              archive.finalize()
-            })
+            debug(`Adding file to archive: ${scriptNameWithPath}`)
+            archive.file(scriptBundlePath, { name: scriptNameWithPath })
+            numberOfFiles += 1
+          })
+          debug(`createZip: all files processed: ${numberOfFiles}`)
         }
         archive.finalize()
       })
@@ -768,15 +759,14 @@ class Socket {
     })
   }
 
-  updateEnv () {
+  async updateEnv () {
     debug('updateEnv')
-    return this.socketEnvShouldBeUpdated()
-      .then((resp) => {
-        if (resp) {
-          return this.createEnvZip().then(() => this.updateEnvCall(resp))
-        }
-        return Promise.resolve('No need to update')
-      })
+    const resp = await this.socketEnvShouldBeUpdated()
+    if (resp) {
+      await this.createEnvZip()
+      return this.updateEnvCall(resp)
+    }
+    return 'No need to update'
   }
 
   postSocketZip (config) {
@@ -787,7 +777,7 @@ class Socket {
     return this.zipCallback({ config, install: false })
   }
 
-  zipCallback ({ config, install = false }) {
+  async zipCallback ({ config, install = false }) {
     debug('zipCallback')
     let endpointPath = `/v2/instances/${session.project.instance}/sockets/`
 
@@ -795,66 +785,64 @@ class Socket {
       endpointPath += `${this.name}/`
     }
 
-    return this.createZip()
-      .then(({ numberOfFiles, allFilesList }) => {
-        if (numberOfFiles === 0 && this.isConfigSynced) {
-          debug('config is synced and nothing to update')
-          return Promise.resolve()
-        }
-        debug('preparing update')
+    const { numberOfFiles, allFilesList } = await this.createZip()
+    if (numberOfFiles === 0 && this.isConfigSynced) {
+      debug('config is synced and nothing to update')
+      return Promise.resolve()
+    }
+    debug('preparing update')
 
-        return new Promise((resolve, reject) => {
-          const form = new FormData()
+    return new Promise((resolve, reject) => {
+      const form = new FormData()
 
-          form.append('name', this.name)
-          form.append('environment', this.name)
+      form.append('name', this.name)
+      form.append('environment', this.name)
 
-          if (config) {
-            form.append('config', JSON.stringify(config))
+      if (config) {
+        form.append('config', JSON.stringify(config))
+      }
+
+      const metadata = Object.assign({}, this.remote.metadata, { sources: this.getSocketSrcChecksum() })
+      form.append('metadata', JSON.stringify(metadata))
+
+      form.append('zip_file_list', JSON.stringify(allFilesList))
+      if (numberOfFiles > 0) {
+        form.append('zip_file', fs.createReadStream(this.getSocketZip()))
+      }
+
+      form.submit({
+        method: install ? 'POST' : 'PATCH',
+        protocol: 'https:',
+        host: session.getHost(),
+        headers: {
+          'X-Api-Key': session.settings.account.getAuthKey()
+        },
+        path: endpointPath
+
+      }, (err, res) => {
+        debug('end upload')
+        let responseData = ''
+        let responseCode = ''
+        res.on('data', (data) => {
+          responseData += data.toString()
+          responseCode = res.statusCode
+        })
+        res.on('end', () => {
+          if (err || responseCode === 404) {
+            debug(`socket ${this.name} was not found`)
+            return reject(err || res)
           }
 
-          const metadata = Object.assign({}, this.remote.metadata, { sources: this.getSocketSrcChecksum() })
-          form.append('metadata', JSON.stringify(metadata))
-
-          form.append('zip_file_list', JSON.stringify(allFilesList))
-          if (numberOfFiles > 0) {
-            form.append('zip_file', fs.createReadStream(this.getSocketZip()))
+          if (responseCode > 299) {
+            debug(`error while updating socket (${res.statusCode})`)
+            return reject(responseData)
           }
 
-          form.submit({
-            method: install ? 'POST' : 'PATCH',
-            protocol: 'https:',
-            host: session.getHost(),
-            headers: {
-              'X-Api-Key': session.settings.account.getAuthKey()
-            },
-            path: endpointPath
-
-          }, (err, res) => {
-            debug('end upload')
-            let responseData = ''
-            let responseCode = ''
-            res.on('data', (data) => {
-              responseData += data.toString()
-              responseCode = res.statusCode
-            })
-            res.on('end', () => {
-              if (err || responseCode === 404) {
-                debug(`socket ${this.name} was not found`)
-                return reject(err || res)
-              }
-
-              if (responseCode > 299) {
-                debug(`error while updating socket (${res.statusCode})`)
-                return reject(responseData)
-              }
-
-              debug(`socket ${this.name} was found`)
-              resolve(responseData)
-            })
-          })
+          debug(`socket ${this.name} was found`)
+          resolve(responseData)
         })
       })
+    })
   }
 
   getSocketPath () {
@@ -870,42 +858,70 @@ class Socket {
     return path.join(this.getSocketPath(), 'socket.yml')
   }
 
-  preCompileRegistrySocket () {
-    return Registry.getSocket(this)
-      .then((resp) => {
-        const fileName = path.join(session.getBuildPath(), `${this.name}.zip`)
-
-        return new Promise((resolve, reject) => {
-          fs.createReadStream(fileName)
-            .pipe(unzip.Extract({ path: this.getSocketPath() }))
-            .on('close', () => {
-              debug('Unzip finished')
-              resolve(utils.updateSocketNPMDeps(this.getSocketPath()))
-            })
-        })
-      })
-  }
+  // async preCompileRegistrySocket () {
+  //   await Registry.getSocket(this)
+  //   const fileName = path.join(session.getBuildPath(), `${this.name}.zip`)
+  //
+  //   return new Promise((resolve, reject) => {
+  //     fs.createReadStream(fileName)
+  //       .pipe(unzip.Extract({ path: this.getSocketPath() }))
+  //       .on('close', () => {
+  //         debug('Unzip finished')
+  //         resolve(this.compile())
+  //       })
+  //   })
+  // }
 
   compile (params = { updateSocketNPMDeps: false }) {
     debug(`compile: ${this.name}`)
     debug(`compile socketPath: ${this.getSocketPath()}`)
 
-    let compilation = null
-    if (params.updateSocketNPMDeps) {
+    return new Promise(async (resolve, reject) => {
+      let command = null
       if (this.isDependencySocket || this.isProjectRegistryDependency) {
-        compilation = this.preCompileRegistrySocket()
-      } else {
-        compilation = utils.updateSocketNPMDeps(this.getSocketPath())
-      }
-    } else {
-      compilation = Promise.resolve()
-    }
+        await Registry.getSocket(this)
+        const fileName = path.join(session.getBuildPath(), `${this.name}.zip`)
 
-    return compilation
-      .then((updateSocketDepsStatus) => {
-        debug('updateSocketDepsStatus', updateSocketDepsStatus)
-        return compile([this], params.withSourceMaps)
+        await new Promise((resolve, reject) => {
+          fs.createReadStream(fileName)
+            .pipe(unzip.Extract({ path: this.getSocketPath() }))
+            .on('close', () => {
+              debug('Unzip finished')
+              resolve()
+            })
+        })
+      }
+      if (params.updateSocketNPMDeps) {
+        command = 'npm run build'
+      } else {
+        command = 'npm run build:src'
+      }
+
+      child.exec(command, { cwd: this.getSocketPath(), maxBuffer: 2048 * 1024 }, (err, stdout, stderr) => {
+        if (err) {
+          console.log('err', err)
+          reject(new Error('compile error'))
+        } else {
+          resolve()
+        }
       })
+    })
+    // let compilation = null
+    // if (params.updateSocketNPMDeps) {
+    //   if (this.isDependencySocket || this.isProjectRegistryDependency) {
+    //     compilation = this.preCompileRegistrySocket()
+    //   } else {
+    //     compilation = utils.updateSocketNPMDeps(this.getSocketPath())
+    //   }
+    // } else {
+    //   compilation = Promise.resolve()
+    // }
+    //
+    // return compilation
+    //   .then((updateSocketDepsStatus) => {
+    //     debug('updateSocketDepsStatus', updateSocketDepsStatus)
+    //     return compile([this], params.withSourceMaps)
+    //   })
   }
 
   isConfigSynced (config) {
@@ -927,7 +943,7 @@ class Socket {
     })
   }
 
-  update (params = { config: null, updateSocketNPMDeps: false, updateEnv: false }) {
+  async update (params = { config: null, updateSocketNPMDeps: false, updateEnv: false }) {
     debug(`Socket update: ${this.name}`, params)
     const config = Object.assign({}, this.remote.config, params.config)
 
@@ -942,42 +958,34 @@ class Socket {
       })
     }
 
-    return this.verify()
-      .then(() => this.compile({ updateSocketNPMDeps: params.updateSocketNPMDeps }))
-      .then(() => {
-        if (params.updateEnv) {
-          return this.updateEnv()
-        }
-        return Promise.resolve()
-      })
-      .then(() => {
-        if (this.existRemotely) {
-          return this.patchSocketZip(config)
-        }
-        return this.postSocketZip(config)
-      })
-      .then((resp) => {
-        if (resp && resp.status !== 'ok') {
-          return this.waitForStatusInfo()
-        }
-        return Promise.resolve({ status: 'stopped' })
-      })
+    await this.verify()
+    await this.compile({ updateSocketNPMDeps: params.updateSocketNPMDeps })
+    if (params.updateEnv) {
+      await this.updateEnv()
+    }
+
+    let resp = null
+    if (this.existRemotely) {
+      resp = await this.patchSocketZip(config)
+    }
+    resp = await this.postSocketZip(config)
+
+    if (resp && resp.status !== 'ok') return this.waitForStatusInfo()
+    return { status: 'stopped' }
   }
 
   waitForStatusInfo () {
     debug('waitForStatusInfo')
 
     return new Promise((resolve, reject) => {
-      const getStatus = () => {
-        this.getRemote()
-          .then((socket) => {
-            if (socket.status !== 'ok' && socket.status !== 'error') {
-              setTimeout(getStatus, 200)
-            } else {
-              this.setRemoteState(socket)
-              resolve({ status: socket.status, message: socket.status_info })
-            }
-          })
+      const getStatus = async () => {
+        const socket = await this.getRemote()
+        if (socket.status !== 'ok' && socket.status !== 'error') {
+          setTimeout(getStatus, 200)
+        } else {
+          this.setRemoteState(socket)
+          resolve({ status: socket.status, message: socket.status_info })
+        }
       }
       getStatus()
     })
@@ -1166,7 +1174,7 @@ class Socket {
     return this.settings.getDependencies()
   }
 
-  getDepsRegistrySockets () {
+  async getDepsRegistrySockets () {
     debug(`getDepsRegistrySockets for: ${this.name}`)
     const registry = new Registry()
 
@@ -1176,66 +1184,60 @@ class Socket {
       if (socketToAdd) {
         sockets.push(socketToAdd)
       }
-      return Promise.all(sockets.concat(Object.keys(deps).map((dependencyName) => {
+      return Promise.all(sockets.concat(Object.keys(deps).map(async (dependencyName) => {
         debug(`processing dependency: ${dependencyName}`)
-        return registry.searchSocketByName(dependencyName, deps[dependencyName].version)
-          .then((socket) => {
-            // To keep track of the name of the parent
-            // eslint-disable-next-line
-            socket.dependencyOf = socketToAdd ? socketToAdd.name : this.name;
+        const socket = await registry.searchSocketByName(dependencyName, deps[dependencyName].version)
+        socket.dependencyOf = socketToAdd ? socketToAdd.name : this.name
 
-            if (!_.isEmpty(socket.config.dependencies)) {
-              return getDeepDeps(socket.config.dependencies, socket)
-            }
-            debug(`returning socket without dependencies ${socket.name}`)
-            return Promise.resolve(socket)
-          })
+        if (!_.isEmpty(socket.config.dependencies)) {
+          return getDeepDeps(socket.config.dependencies, socket)
+        }
+        debug(`returning socket without dependencies ${socket.name}`)
+        return Promise.resolve(socket)
       })))
     }
+
     debug(`Defined dependencies of "${this.name}" to follow: ${this.spec.dependencies}`)
     if (this.spec.dependencies) {
-      return getDeepDeps(this.spec.dependencies)
-        .then((arr) => Promise.all(_.flatten(arr).map((socket) => Socket.get(socket.name)
-              .then((createdSocket) => {
-                // eslint-disable-next-line
-                createdSocket.isDependencySocket = true;
-                // eslint-disable-next-line
-                createdSocket.dependencyOf = [socket.dependencyOf];
-                return createdSocket
-              }))))
-        .then((depsObjects) => {
-          this.dependencies = depsObjects
-        })
+      const arr = await getDeepDeps(this.spec.dependencies)
+      const depsObjects = await Promise.all(_.flatten(arr).map(async socket => {
+        const createdSocket = await Socket.get(socket.name)
+        createdSocket.isDependencySocket = true
+        createdSocket.dependencyOf = [socket.dependencyOf]
+        return createdSocket
+      }))
+      this.dependencies = depsObjects
     }
 
     return Promise.resolve()
   }
 
-  addDependency (socketFromRegistry) {
+  async addDependency (socketFromRegistry) {
     const socketName = socketFromRegistry.name
     const socketVersion = socketFromRegistry.version
     this.settings.addDependency(socketName, socketVersion)
-    return new Promise((resolve, reject) => resolve())
   }
 
-  socketEnvShouldBeUpdated () {
+  async socketEnvShouldBeUpdated () {
     debug('socketEnvShouldBeUpdated')
-    return axios.request({
-      url: `https://${session.getHost()}/v2/instances/${session.project.instance}/environments/${this.name}/`,
-      method: 'GET',
-      timeout: 50000,
-      headers: {
-        'X-Api-Key': session.settings.account.getAuthKey()
-      }
-    })
-    .then((resp) => {
+    try {
+      const resp = await axios.request({
+        url: `https://${session.getHost()}/v2/instances/${session.project.instance}/environments/${this.name}/`,
+        method: 'GET',
+        timeout: 50000,
+        headers: {
+          'X-Api-Key': session.settings.account.getAuthKey()
+        }
+      })
+
       if (resp.data.metadata.checksum === this.getSocketNodeModulesChecksum()) {
         debug('socketEnvShouldBeUpdated', 'env is up to date')
         return false
       }
       return 'PATCH'
-    })
-    .catch(() => 'POST')
+    } catch (err) {
+      return 'POST'
+    }
   }
 
   getSocketSrcChecksum () {
