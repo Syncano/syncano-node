@@ -84,7 +84,6 @@ export const updateConfig = async (socket, config) => {
     }
   } catch (err) {
     if (typeof err === 'object' && err.errorType) {
-      printCompileError(err)
     } else {
       error(err)
     }

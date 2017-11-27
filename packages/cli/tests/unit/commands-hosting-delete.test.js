@@ -17,7 +17,6 @@ const { expect } = chai
 describe('[commands] Delete Hosting', function () {
   const hostingDelete = new HostingDelete(context)
   const hostingName = getRandomString('deleteHosting_hostingName')
-  const socketName = getRandomString('deleteHosting_socketName')
   let echo = null
   let interEcho = null
   let warning = null

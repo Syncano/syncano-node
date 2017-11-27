@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import _ from 'lodash'
-import Raven from 'raven'
 import Command from 'commander'
 import program from './program'
 import commands from './commands'
@@ -281,5 +280,4 @@ const setup = async () => {
   }
 }
 
-// Raven.context()
 setup()
