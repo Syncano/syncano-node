@@ -60,5 +60,19 @@
     "rimraf": "^2.6.2",
     "should": "^13.1.0",
     "standard": "^10.0.3"
+  },
+  "babel": {
+    "plugins": [
+      "transform-strict-mode",
+      "transform-export-extensions",
+      "transform-object-rest-spread",
+      "transform-class-properties",
+      "add-module-exports"
+    ],
+    "presets": [
+      [
+        "env"
+      ]
+    ]
   }
 }

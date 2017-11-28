@@ -99,7 +99,7 @@ class Data extends QueryBuilder {
       .then(res => self._replaceCustomTypesWithValue(res))
       .then(res => self._mapFields(res))
 
-    function fetchQuery(url) {
+    function fetchQuery (url) {
       let result = []
 
       return new Promise((resolve, reject) => {
@@ -503,30 +503,30 @@ class Data extends QueryBuilder {
     return this.withQuery({query: JSON.stringify(query)})
   }
 
-  orWhere(column, operator, value) {
+  orWhere (column, operator, value) {
     this._queries = [].concat(this.queries, this._query.query)
     this._query.query = null
 
     return this.where(column, operator, value)
   }
 
-  whereNotNull(column) {
+  whereNotNull (column) {
     return this.where(column, 'exists', true)
   }
 
-  whereIn(column, arr) {
+  whereIn (column, arr) {
     return this.where(column, 'in', arr)
   }
 
-  whereNotIn(column, arr) {
+  whereNotIn (column, arr) {
     return this.where(column, 'nin', arr)
   }
 
-  whereNull(column) {
+  whereNull (column) {
     return this.where(column, null)
   }
 
-  whereBetween(column, min, max) {
+  whereBetween (column, min, max) {
     return this.where([
       [column, 'gte', min],
       [column, 'lte', max]
