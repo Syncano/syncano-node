@@ -11,12 +11,6 @@
   },
   "templateShortDesc": "es6",
   "templateLongDesc": "ES6 Socket",
-  "scripts": {
-    "e2e": "mocha 'tests/e2e/*.test-e2e.js' --reporter spec --require babel-register --timeout 40000 --slow 8000",
-    "test": "npm-run-all --parallel test:unit test:e2e",
-    "test:e2e": "mkdir -p e2e-tests && yarn run e2e && yarn run test:e2e:clean",
-    "test:e2e:clean": "rm -rf e2e-tests || 0"
-  },
   "devDependencies": {
     "@syncano/cli": "0.4.1",
     "@syncano/test-tools": "0.4.1",
