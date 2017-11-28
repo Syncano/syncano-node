@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import logger from './debug'
 
-const { debug } = logger('constants')
+const { debug } = logger('template')
 
 const getTemplatePath = (templateName) => {
   return path.join(__dirname, '..', '..', 'node_modules', ...templateName.split('/'))

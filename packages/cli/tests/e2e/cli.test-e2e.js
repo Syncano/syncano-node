@@ -2,9 +2,7 @@
 import replace from 'replace'
 import path from 'path'
 
-import tools from '@syncano/test-tools'
-import uniqueInstance from '../../src/utils/unique-instance'
-const {
+import {
   nixt,
   testsLocation,
   cleanUpAccount,
@@ -13,7 +11,9 @@ const {
   returnTestGlobals,
   createTempEmail,
   getRandomString
-} = tools
+} from '@syncano/test-tools'
+
+import uniqueInstance from '../../src/utils/unique-instance'
 
 const cliLocation = path.join(process.cwd(), 'lib/cli.js')
 const registrySocketName = 'openweathermap2'

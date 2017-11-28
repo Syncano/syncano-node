@@ -2,9 +2,8 @@
 import mkdirp from 'mkdirp'
 import fs from 'fs-extra'
 import path from 'path'
-import Syncano from 'syncano'
+import Syncano from '@syncano/core'
 import origNixt from 'nixt'
-import Promise from 'bluebird'
 import _ from 'lodash'
 
 import { p } from '../../cli/src/utils/print-tools'
@@ -68,7 +67,8 @@ process.env.SYNCANO_ACCOUNT_FILE = 'syncano-test'
 // Variables used in tests
 const { accountKey, syncanoYmlPath, instance } = returnTestGlobals()
 
-const connection = Syncano({ baseUrl: `https://${process.env.SYNCANO_HOST}`, accountKey })
+// const connection = Syncano({ baseUrl: `https://${process.env.SYNCANO_HOST}`, accountKey })
+const connection = new Syncano({accountKey, meta: { 'api_host': process.env.SYNCANO_HOST }})
 const testsLocation = `${process.cwd()}/e2e-tests`
 const cliLocation = path.join(process.cwd(), '/node_modules/@syncano/cli/lib/cli.js')
 const randomKey = getRandomString()
@@ -90,16 +90,12 @@ const shutdownLocation = (location) => {
 }
 
 // Helper functions used in tests
-const createInstance = () => connection.Instance
-    .please()
+const createInstance = () => connection.instance
     .create({ name: uniqueInstance() })
-    .then((response) => response)
     .catch((error) => process.stderr.write(JSON.stringify(error.message, null, '')))
 
-const deleteInstance = (item) => connection.Instance
-    .please()
-    .delete({ name: item })
-    .then((response) => response)
+const deleteInstance = (item) => connection.instance
+    .delete(item)
     .catch((error) => process.stderr.write(JSON.stringify(error.message, null, '')))
 
 const deleteEachInstance = (instances) => {
@@ -109,10 +105,9 @@ const deleteEachInstance = (instances) => {
   return Promise.all(list)
 }
 
-const cleanUpAccount = () => connection.Instance
-    .please()
+const cleanUpAccount = () => connection.instance
     .list()
-    .then((res) => {
+    .then(res => {
       const instances = _.pull(_.map(res, 'name'), instance)
       return deleteEachInstance(instances)
     })

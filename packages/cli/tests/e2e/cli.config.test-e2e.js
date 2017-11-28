@@ -2,14 +2,12 @@
 import path from 'path'
 import fs from 'fs-extra'
 
-import tools from '@syncano/test-tools'
-
-const {
+import {
   nixt,
   testsLocation,
   cleanUpAccount,
   returnTestGlobals
-} = tools
+} from '@syncano/test-tools'
 
 const cliLocation = path.join(process.cwd(), 'lib/cli.js')
 const configTestTemplate = path.join(__dirname, './assets/sockets/hello-config')

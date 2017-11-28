@@ -1,11 +1,6 @@
 /* global describe it */
 import path from 'path'
-import tools from '@syncano/test-tools'
-
-const {
-  nixt,
-  testsLocation
-} = tools
+import { nixt, testsLocation } from '@syncano/test-tools'
 
 const cliLocation = path.join(process.cwd(), 'lib/cli.js')
 

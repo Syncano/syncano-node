@@ -22,7 +22,7 @@ import utils from './utils'
 import Hosting from '../hosting'
 import Registry from '../registry'
 import { p, echo } from '../print-tools'
-import { getTemplate } from '../../constants/Constants'
+import { getTemplate } from '../templates'
 
 const { debug } = logger('utils-sockets')
 

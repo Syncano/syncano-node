@@ -13,6 +13,7 @@
     "prepublish": "npm run build",
     "prebuild": "rimraf ./lib",
     "build": "babel src --out-dir lib",
+    "build:watch": "babel src --out-dir lib -w",
     "test": "npm run test:unit && npm run test:e2e",
     "test:base": "cross-env NODE_ENV=test nyc mocha --reporter spec --require babel-register",
     "test:unit": "npm run test:base -- test/unit/**/*.js",
