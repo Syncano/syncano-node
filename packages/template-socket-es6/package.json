@@ -11,6 +11,9 @@
   },
   "templateShortDesc": "es6",
   "templateLongDesc": "ES6 Socket",
+  "scripts": {
+    "test:e2e": "exit 0"
+  },
   "devDependencies": {
     "@syncano/cli": "0.4.1",
     "@syncano/test-tools": "0.4.1",
