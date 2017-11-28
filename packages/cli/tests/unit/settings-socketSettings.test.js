@@ -29,7 +29,8 @@ describe('[settings] Socket Settings', function () {
 
     it('Gets single hosting', function () {
       settings.attributes = attributes
-      const hosting = settings.getHosting(Object.keys(attributes.hosting)[0])
+      // const hosting = settings.getHosting(Object.keys(attributes.hosting)[0])
+      settings.getHosting(Object.keys(attributes.hosting)[0])
 
       // expect(hosting).to.be.object // eslint-disable-line
     })
