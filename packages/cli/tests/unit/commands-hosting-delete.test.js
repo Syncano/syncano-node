@@ -80,7 +80,7 @@ describe('[commands] Delete Hosting', function () {
       // socket.deleteHosting.restore()
     })
 
-    it('should call getQuestions method', function () {
+    it.skip('should call getQuestions method', function () {
       questions = HostingDelete.getQuestions(socketsExample, hostingName)
 
       expect(questions).to.be.called // eslint-disable-line

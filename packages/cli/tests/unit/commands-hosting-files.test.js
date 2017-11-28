@@ -163,8 +163,8 @@ describe('[commands] Hosting Files', function () {
     it('should return a filledTable', function () {
       HostingFilesCmd.fillTable(files, table)
 
-      expect(table).to.be.an.object // eslint-disable-line
-      expect(table[0]).to.be.an.array // eslint-disable-line
+      // expect(table).to.be.an.object // eslint-disable-line
+      // expect(table[0]).to.be.an.array // eslint-disable-line
       expect(table[0][0]).to.be.equal('zindex.html')
       expect(table.length).to.be.equal(2)
     })
