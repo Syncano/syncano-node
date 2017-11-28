@@ -4,13 +4,12 @@
     "@syncano/core": "latest"
   },
   "scripts": {
-    "build": "yarn && compile-es6 && compile-env-es6",
-    "build:src": "compile-es6",
-    "build:env": "compile-env-es6"
+    "build": "yarn && ./bin/compile && ./bin/compile-env",
+    "build:src": "./bin/compile",
+    "build:env": "./bin/compile-env"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "@syncano/build-es6": "0.4.1"
+    "babel-core": "^6.26.0"
   },
   "babel": {
     "presets": [

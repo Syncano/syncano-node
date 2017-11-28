@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-
-compile-vanilla
-compile-env-vanilla
