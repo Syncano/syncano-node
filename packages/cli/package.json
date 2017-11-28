@@ -58,7 +58,7 @@
     "fs-extra": "1.0.0",
     "hashdirectory": "^0.1.0",
     "home-dir": "1.0.0",
-    "inquirer": "^3.3.0",
+    "inquirer": "^4.0.0",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",
     "md5": "2.2.1",
@@ -86,14 +86,13 @@
     "babel-core": "^6.26.0",
     "babel-plugin-add-module-exports": "0.2.1",
     "babel-register": "^6.26.0",
-    "chai": "3.5.0",
-    "chai-as-promised": "6.0.0",
+    "chai": "4.1.2",
+    "chai-as-promised": "7.1.1",
     "codecov": "^3.0.0",
     "condition-circle": "1.5.0",
     "console.mute": "0.3.0",
     "dirty-chai": "^2.0.1",
     "mocha": "^4.0.1",
-    "mocha-junit-reporter": "^1.15.0",
     "mock-fs": "^4.4.2",
     "nixt": "0.5.0",
     "nyc": "^11.3.0",
@@ -118,20 +117,11 @@
     "test": "npm-run-all --parallel test:unit test:e2e",
     "test:unit": "nyc yarn run unit",
     "test:e2e": "yarn run e2e",
-    "test:ci": "nyc yarn run unit -- --reporter mocha-junit-reporter",
-    "validate": "npm-run-all --parallel test:unit lint lint:tests build",
-    "pre-commit-run": "npm-run-all --parallel lint lint:tests unit",
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
   },
-  "pre-commit": "pre-commit-run",
   "publishConfig": {
     "access": "public"
-  },
-  "release": {
-    "verifyConditions": {
-      "path": "./deploy/condition-circle.js"
-    }
   },
   "babel": {
     "plugins": [
