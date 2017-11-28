@@ -1,5 +1,5 @@
 /* global it describe before afterEach beforeEach */
-import chai, { expect } from 'chai'
+import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import fs from 'fs-extra'
