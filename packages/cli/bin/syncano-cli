@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+${BASEDIR}/../lib/cli.js
