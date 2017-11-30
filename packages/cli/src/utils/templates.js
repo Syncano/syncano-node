@@ -5,7 +5,7 @@ import logger from './debug'
 const { debug } = logger('template')
 
 const getTemplatePath = (templateName) => {
-  return path.join(__dirname, '..', '..', 'node_modules', ...templateName.split('/'))
+  return path.dirname(require.resolve(templateName))
 }
 
 const getTemplateSpec = (templateName) => {
