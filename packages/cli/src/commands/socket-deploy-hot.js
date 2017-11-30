@@ -9,6 +9,7 @@ import { askQuestions } from './helpers/socket'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
 import SocketTraceCmd from './socket-trace'
+import { CompileError } from '../utils/errors'
 
 const { debug } = logger('cmd-socket-deploy')
 
@@ -113,13 +114,13 @@ export default class SocketDeployCmd {
       return
     }
 
-    const updateEnds = () => {
+    const updateEnds = async () => {
       this.mainSpinner.start()
       // After update we have to understand if we should fire new one
       pendingUpdates[socket.name] -= 1
       if (pendingUpdates[socket.name] > 0) {
         pendingUpdates[socket.name] = 0
-        this.deploySocket(socket, config)
+        await this.deploySocket(socket, config)
       }
     }
 
@@ -128,16 +129,23 @@ export default class SocketDeployCmd {
 
       spinner.stop()
       SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
-      updateEnds()
+      await updateEnds()
     } catch (err) {
       spinner.stop()
-      if (typeof err === 'object') {
+      if (err instanceof CompileError) {
+        const status = format.red('    compile error:')
+        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+      } else {
         const status = format.red('socket sync error:')
         echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
-      } else {
-        SocketDeployCmd.printUpdateFailed(socket.name, err, deployTimer)
+      }
+
+      if (this.cmd.bail) {
+        SocketDeployCmd.bail()
       }
       updateEnds()
+      spinner.stop()
+
     }
   }
 

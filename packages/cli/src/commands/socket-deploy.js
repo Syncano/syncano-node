@@ -7,6 +7,7 @@ import { SimpleSpinner } from './helpers/spinner'
 import { askQuestions } from './helpers/socket'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
+import { CompileError } from '../utils/errors'
 
 const { debug } = logger('cmd-socket-deploy')
 
@@ -106,8 +107,13 @@ export default class SocketDeployCmd {
       }
     } catch (err) {
       spinner.stop()
-      const status = format.red('socket sync error:')
-      echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
+      if (err instanceof CompileError) {
+        const status = format.red('    compile error:')
+        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+      } else {
+        const status = format.red('socket sync error:')
+        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
+      }
 
       if (this.cmd.bail) {
         SocketDeployCmd.bail()

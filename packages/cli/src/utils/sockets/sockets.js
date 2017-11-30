@@ -23,6 +23,8 @@ import Hosting from '../hosting'
 import Registry from '../registry'
 import { p, echo } from '../print-tools'
 import { getTemplate } from '../templates'
+import { CompileError } from '../errors'
+
 
 const { debug } = logger('utils-sockets')
 
@@ -770,10 +772,12 @@ class Socket {
   }
 
   postSocketZip (config) {
+    debug('postSocketZip')
     return this.zipCallback({ config, install: true })
   }
 
   patchSocketZip (config) {
+    debug('patchSocketZip')
     return this.zipCallback({ config, install: false })
   }
 
@@ -877,7 +881,7 @@ class Socket {
     debug(`compile socketPath: ${this.getSocketPath()}`)
 
     return new Promise(async (resolve, reject) => {
-      let command = null
+
       if (this.isDependencySocket || this.isProjectRegistryDependency) {
         await Registry.getSocket(this)
         const fileName = path.join(session.getBuildPath(), `${this.name}.zip`)
@@ -891,20 +895,32 @@ class Socket {
             })
         })
       }
+
+      const command = 'npm'
+      let args = null
+
       if (params.updateSocketNPMDeps) {
-        command = 'npm run build'
+        args = 'run build -s'
       } else {
-        command = 'npm run build:src'
+        args = 'run build:src -s'
       }
 
-      child.exec(command, { cwd: this.getSocketPath(), maxBuffer: 2048 * 1024 }, (err, stdout, stderr) => {
-        if (err) {
-          console.log('err', err)
-          reject(new Error('compile error'))
-        } else {
-          resolve()
+      process.env.FORCE_COLOR = true
+      const out = child.spawnSync(
+        command,
+        args.split(' '),
+        {
+          cwd: this.getSocketPath(),
+          maxBuffer: 2048 * 1024,
+          stdio: [process.stdio, 'pipe', 'pipe']
         }
-      })
+      )
+
+      if (out.status !== 0) {
+        reject(new CompileError(out.stderr.toString()))
+      } else {
+        resolve()
+      }
     })
     // let compilation = null
     // if (params.updateSocketNPMDeps) {
@@ -967,8 +983,9 @@ class Socket {
     let resp = null
     if (this.existRemotely) {
       resp = await this.patchSocketZip(config)
+    } else {
+      resp = await this.postSocketZip(config)
     }
-    resp = await this.postSocketZip(config)
 
     if (resp && resp.status !== 'ok') return this.waitForStatusInfo()
     return { status: 'stopped' }
