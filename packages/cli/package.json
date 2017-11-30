@@ -1,6 +1,6 @@
 {
   "name": "@syncano/cli",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "CLI for Syncano",
   "author": "Maciej Kucharz",
   "license": "MIT",
@@ -25,11 +25,11 @@
     "url": "https://github.com/Syncano/syncano-node-cli/issues"
   },
   "dependencies": {
-    "@syncano/core": "0.4.1",
-    "@syncano/template-project-empty": "0.4.1",
-    "@syncano/template-project-hello": "0.4.1",
-    "@syncano/template-socket-es6": "0.4.1",
-    "@syncano/template-socket-vanilla": "0.4.1",
+    "@syncano/core": "^0.4.2",
+    "@syncano/template-project-empty": "^0.4.2",
+    "@syncano/template-project-hello": "^0.4.2",
+    "@syncano/template-socket-es6": "^0.4.2",
+    "@syncano/template-socket-vanilla": "^0.4.2",
     "analytics-node": "^3.1.1",
     "archiver": "^2.1.0",
     "axios": "^0.17.1",
@@ -80,7 +80,7 @@
     "watchr": "3.0.1"
   },
   "devDependencies": {
-    "@syncano/test-tools": "0.4.1",
+    "@syncano/test-tools": "^0.4.2",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-plugin-add-module-exports": "0.2.1",
@@ -92,10 +92,10 @@
     "mocha": "^4.0.1",
     "mock-fs": "^4.4.2",
     "nyc": "^11.3.0",
+    "prettier": "^1.7.4",
     "rimraf": "^2.6.2",
     "sinon": "1.17.6",
-    "standard": "^10.0.3",
-    "prettier": "^1.7.4"
+    "standard": "^10.0.3"
   },
   "scripts": {
     "prepublish": "yarn run build",

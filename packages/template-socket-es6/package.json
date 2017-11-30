@@ -1,7 +1,7 @@
 {
   "name": "@syncano/template-socket-es6",
   "description": "ES6 Syncano Socket Template",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "license": "MIT",
   "files": [
     "template"
@@ -15,8 +15,8 @@
     "test:e2e": "exit 0"
   },
   "devDependencies": {
-    "@syncano/cli": "0.4.1",
-    "@syncano/test-tools": "0.4.1",
+    "@syncano/cli": "^0.4.2",
+    "@syncano/test-tools": "^0.4.2",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
