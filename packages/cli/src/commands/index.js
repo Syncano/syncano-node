@@ -22,6 +22,8 @@ import SocketTrace from './socket-trace'
 import SocketInstall from './socket-install'
 import SocketCreate from './socket-create'
 import SocketUninstall from './socket-uninstall'
+import ComponentList from './component-list'
+import ComponentLink from './component-link'
 
 export default {
   Attach,
@@ -47,5 +49,7 @@ export default {
   SocketTrace,
   SocketInstall,
   SocketCreate,
-  SocketUninstall
+  SocketUninstall,
+  ComponentList,
+  ComponentLink
 }

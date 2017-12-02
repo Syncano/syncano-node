@@ -25,7 +25,6 @@ import { p, echo } from '../print-tools'
 import { getTemplate } from '../templates'
 import { CompileError } from '../errors'
 
-
 const { debug } = logger('utils-sockets')
 
 class MetadataObject {
@@ -77,6 +76,70 @@ class Handler extends MetadataObject {}
 
 class Event extends MetadataObject {}
 
+class Component extends MetadataObject {
+  constructor (name, metadata, socketName) {
+    super(name, metadata, socketName)
+    this.componentPath = path.join(Socket.getLocal(this.socketName).socketPath, this.metadata.path)
+    this.packageName = this.getRealName()
+  }
+  getRealName () {
+    debug('getRealComponentName')
+    return JSON.parse(fs.readFileSync(path.join(this.componentPath, 'package.json'))).name
+  }
+
+  linkWithProject (projectPath) {
+    debug('linkWithProject')
+    child.spawnSync(
+      'yarn',
+      ['link'],
+      {
+        cwd: this.componentPath,
+        maxBuffer: 2048 * 1024,
+        stdio: [process.stdio, 'pipe', 'pipe']
+      }
+    )
+    child.spawnSync(
+      'yarn',
+      ['link', this.packageName],
+      {
+        cwd: projectPath,
+        maxBuffer: 2048 * 1024,
+        stdio: [process.stdio, 'pipe', 'pipe']
+      }
+    )
+  }
+
+  isComponentFile (filePath) {
+    return filePath.includes(path.join(this.componentPath, 'src'))
+  }
+
+  build () {
+    debug(`component build: ${this.packageName}`)
+
+    return new Promise(async (resolve, reject) => {
+      const command = 'npm'
+      const args = 'run build -s'
+
+      process.env.FORCE_COLOR = true
+      const out = child.spawnSync(
+        command,
+        args.split(' '),
+        {
+          cwd: this.componentPath,
+          maxBuffer: 2048 * 1024,
+          stdio: [process.stdio, 'pipe', 'pipe']
+        }
+      )
+
+      if (out.status !== 0) {
+        reject(new CompileError(out.stderr.toString()))
+      } else {
+        resolve()
+      }
+    })
+  }
+}
+
 class Socket {
   constructor (socketName, socketPath) {
     debug('Sockets.constructor', socketName)
@@ -95,8 +158,24 @@ class Socket {
     this.dependencyOf = []
 
     // that looks stupid
-    this.remote = { spec: { endpoints: {}, event_handlers: {}, events: {} }, metadata: {} }
-    this.spec = { spec: { endpoints: {}, event_handlers: {}, events: {} } }
+    this.remote = {
+      spec: {
+        endpoints: {},
+        event_handlers: {},
+        events: {},
+        components: {}
+      },
+      metadata: {}
+    }
+
+    this.spec = {
+      spec: {
+        endpoints: {},
+        event_handlers: {},
+        events: {},
+        components: {}
+      }
+    }
 
     this.loadLocal()
 
@@ -499,6 +578,21 @@ class Socket {
     })
   }
 
+  composeComponentsFromSpec (objectType, ObjectClass) {
+    debug('composeComponentsFromSpec', objectType, ObjectClass)
+    const objects = Object.assign({}, this.spec[objectType])
+    Object.assign(objects, this.spec[objectType])
+
+    debug('objects to process', objects)
+    return Object.keys(objects).map(objectName => {
+      debug(`checking ${objectName}`)
+      const objectMetadata = objects[objectName]
+      debug('objectMetadata', objectMetadata)
+      const object = new ObjectClass(objectName, objectMetadata, this.name)
+      return object
+    })
+  }
+
   getEndpoints () {
     debug('getEndpoints')
     return this.composeFromSpec('endpoints', Endpoint)
@@ -557,8 +651,8 @@ class Socket {
     })
   }
 
-  static getEndpointTraceByUrl (url) {
-    const resp = axios.request({
+  static async getEndpointTraceByUrl (url) {
+    const resp = await axios.request({
       url: `https://${session.getHost()}${url}`,
       method: 'GET',
       headers: {
@@ -566,6 +660,12 @@ class Socket {
       }
     })
     return resp.data
+  }
+
+  async getComponents () {
+    debug('getComponents')
+    debug('getEndpoints')
+    return this.composeComponentsFromSpec('components', Component)
   }
 
   async createZip ({ plainSources = false } = {}) {
@@ -881,7 +981,6 @@ class Socket {
     debug(`compile socketPath: ${this.getSocketPath()}`)
 
     return new Promise(async (resolve, reject) => {
-
       if (this.isDependencySocket || this.isProjectRegistryDependency) {
         await Registry.getSocket(this)
         const fileName = path.join(session.getBuildPath(), `${this.name}.zip`)

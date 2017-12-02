@@ -272,6 +272,10 @@ const setup = async () => {
     .command('hosting', 'Manage your web assets and host them on Syncano')
     .on('*', (commandsArr) => validateCommands(commandsArr))
 
+  program
+    .command('component', 'Manage your Socket components')
+    .on('*', (commandsArr) => validateCommands(commandsArr))
+
   context.session.loadPlugins(program, context)
   program.parse(process.argv)
 
