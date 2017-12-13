@@ -11,7 +11,7 @@ to communicate with **Syncano Core Services**. Syncano provides various Core Ser
 - **Event Loop (events)** - service to emit events which can be caught by any Socket
 - **Realtime Channels (channels)** - implement publish/subscribe model for realtime communication
 
-[![Read Documentation][read-documentation.png]](docs/README.md)
+[![Read Documentation][read-documentation.png]](docs/readme.md)
 
 ## License
 
