@@ -84,9 +84,9 @@ class Data extends QueryBuilder {
    */
   list () {
     const self = this
-    const {baseUrl, relationships, instance} = this
+    const {baseUrl, relationships, instance, query} = this
     const fetch = this.fetch.bind(this)
-    const pageSize = this.query.page_size || 0
+    const pageSize = query.page_size || 0
     const urls = [this.url()].concat(this.queries.map(query =>
       (this._query.query = query) && this.url()
     ))
@@ -99,7 +99,7 @@ class Data extends QueryBuilder {
       .then(res => self._replaceCustomTypesWithValue(res))
       .then(res => self._mapFields(res))
 
-    function fetchQuery(url) {
+    function fetchQuery (url) {
       let result = []
 
       return new Promise((resolve, reject) => {
@@ -128,7 +128,12 @@ class Data extends QueryBuilder {
           const hasNotEnoughResults = pageSize === 0 || pageSize > result.length
 
           if (hasNextPageMeta && hasNotEnoughResults) {
-            request(`${baseUrl}${response.next}`)
+            const next = response.next.replace(/\?.*/, '')
+            const nextParams = querystring.parse(
+              response.next.replace(/.*\?/, '')
+            )
+            const q = querystring.stringify({...query, ...nextParams})
+            request(`${baseUrl}${next}?${q}`)
             return false
           }
 
@@ -503,30 +508,30 @@ class Data extends QueryBuilder {
     return this.withQuery({query: JSON.stringify(query)})
   }
 
-  orWhere(column, operator, value) {
+  orWhere (column, operator, value) {
     this._queries = [].concat(this.queries, this._query.query)
     this._query.query = null
 
     return this.where(column, operator, value)
   }
 
-  whereNotNull(column) {
+  whereNotNull (column) {
     return this.where(column, 'exists', true)
   }
 
-  whereIn(column, arr) {
+  whereIn (column, arr) {
     return this.where(column, 'in', arr)
   }
 
-  whereNotIn(column, arr) {
+  whereNotIn (column, arr) {
     return this.where(column, 'nin', arr)
   }
 
-  whereNull(column) {
+  whereNull (column) {
     return this.where(column, null)
   }
 
-  whereBetween(column, min, max) {
+  whereBetween (column, min, max) {
     return this.where([
       [column, 'gte', min],
       [column, 'lte', max]
