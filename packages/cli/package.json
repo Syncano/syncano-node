@@ -18,6 +18,7 @@
   "bin": {
     "syncano-cli": "./lib/cli.js",
     "syncano-cli-hosting": "./lib/cli-hosting.js",
+    "syncano-cli-component": "./lib/cli-component.js",
     "s": "./lib/cli.js",
     "s-hosting": "./lib/cli-hosting.js"
   },
