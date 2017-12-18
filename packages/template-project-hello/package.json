@@ -3,6 +3,7 @@
   "description": "Hello World Project",
   "version": "0.4.2",
   "license": "MIT",
+  "main": "index.js",
   "files": [
     "template"
   ],
