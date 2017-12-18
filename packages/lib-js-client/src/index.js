@@ -1,4 +1,3 @@
-/* global URLSearchParams */
 import querystring from 'querystring'
 import fetch from 'axios'
 
