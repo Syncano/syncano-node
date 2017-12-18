@@ -4,10 +4,12 @@ import chai from 'chai'
 import sinon from 'sinon'
 import Raven from 'raven'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import session from '../../src/utils/session'
 import Hosting, { HostingFile } from '../../src/utils/hosting'
 import utils from '../../src/utils'
-import { getRandomString } from '../utils'
+
 import printTools from '../../src/utils/print-tools'
 
 chai.use(dirtyChai)
@@ -35,7 +37,7 @@ describe('[utils/hosting] hosting', function () {
 
     beforeEach(function () {
       hosting = new Hosting(socket, hostingName)
-      hostingConnection = sinon.stub(session.connection.Hosting, 'please')
+      hostingConnection = sinon.stub(session.connection, 'hosting')
       exitProcess = sinon.stub(process, 'exit')
       errorPrint = sinon.stub(printTools, 'error')
       captureException = sinon.stub(Raven, 'captureException')

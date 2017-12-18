@@ -47,14 +47,13 @@ class HostingSync {
     echo(8)(`${format.dim(hosting.getURL())}`)
     echo()
 
-    return hosting.syncFiles()
-      .then((output) => {
-        echo(output)
-      })
-      .catch((err) => {
-        error(8)(err)
-        echo()
-      })
+    try {
+      const output = await hosting.syncFiles()
+      echo(output)
+    } catch (err) {
+      error(8)(err)
+      echo()
+    }
   }
 }
 

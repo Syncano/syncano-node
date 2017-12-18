@@ -26,10 +26,8 @@ export default class SocketConfigCmd {
 
     echo()
 
-    return askQuestions(this.socket.getConfigOptions())
-      .then((config) => {
-        this.socket.updateConfig(config)
-        echo()
-      })
+    const config = await askQuestions(this.socket.getConfigOptions())
+    await this.socket.updateConfig(config)
+    echo()
   }
 }

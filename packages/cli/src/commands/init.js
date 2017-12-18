@@ -32,7 +32,7 @@ class InitCmd {
         name: 'Template',
         type: 'list',
         message: p(2)('Choose template for your project'),
-        choices: this.init.getTemplatesChoices().map((choice) => p(4)(choice)),
+        choices: this.Init.getTemplatesChoices().map(choice => p(4)(choice)),
         default: 1
       }
     ]
@@ -48,31 +48,25 @@ class InitCmd {
       echo()
     }
 
-    inquirer.prompt(questions)
-      .then(async (promptResponses) => {
-        this.init.templateName = promptResponses.Template
-          .split(' - ')[0] // find name
-          .replace(/ /g, '') // strip padding
+    const promptResponses = await inquirer.prompt(questions)
+    this.init.templateName = promptResponses.Template.match(/\((.*)\)/)[1]
 
-        if (!project && instance) {
-          await this.session.checkConnection(instance)
-          this.init.addConfigFiles({ instance })
-          return this.init.createFilesAndFolders()
-        }
+    if (!project && instance) {
+      await this.session.checkConnection(instance)
+      this.init.addConfigFiles({ instance })
+      return this.init.createFilesAndFolders()
+    }
 
-        if (!project && !instance) {
-          return this.session.createInstance()
-            .then((newInstance) => {
-              this.init.addConfigFiles({ instance: newInstance.name })
-              this.init.createFilesAndFolders()
-              return this.session.load()
-            })
-        }
+    if (!project && !instance) {
+      const newInstance = await this.session.createInstance()
+      this.init.addConfigFiles({ instance: newInstance.name })
+      this.init.createFilesAndFolders()
+      return this.session.load()
+    }
 
-        if (this.init.checkConfigFiles()) {
-          return this.init.noConfigFiles()
-        }
-      })
+    if (this.init.checkConfigFiles()) {
+      return this.init.noConfigFiles()
+    }
   }
 }
 

@@ -3,9 +3,10 @@ import { expect } from 'chai'
 import sinon from 'sinon'
 import inquirer from 'inquirer'
 
-import {Attach} from '../../src/commands'
+import { getRandomString } from '@syncano/test-tools'
+
+import { Attach } from '../../src/commands'
 import context from '../../src/utils/context'
-import { getRandomString } from '../utils'
 import printTools from '../../src/utils/print-tools'
 
 describe('[commands] Attach', function () {

@@ -1,6 +1,6 @@
 {
   "name": "@syncano/core",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A library to intereact with the Syncano API on a server side.",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
@@ -13,6 +13,7 @@
     "prepublish": "npm run build",
     "prebuild": "rimraf ./lib",
     "build": "babel src --out-dir lib",
+    "build:watch": "babel src --out-dir lib -w",
     "test": "npm run test:unit && npm run test:e2e",
     "test:base": "cross-env NODE_ENV=test nyc mocha --reporter spec --require babel-register",
     "test:unit": "npm run test:base -- test/unit/**/*.js",
@@ -59,5 +60,19 @@
     "rimraf": "^2.6.2",
     "should": "^13.1.0",
     "standard": "^10.0.3"
+  },
+  "babel": {
+    "plugins": [
+      "transform-strict-mode",
+      "transform-export-extensions",
+      "transform-object-rest-spread",
+      "transform-class-properties",
+      "add-module-exports"
+    ],
+    "presets": [
+      [
+        "env"
+      ]
+    ]
   }
 }

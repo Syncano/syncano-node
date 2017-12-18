@@ -84,17 +84,20 @@ class SocketEndpointCall {
 
       if (endpointObj && endpointObj.existRemotely) {
         const askQuestions = SocketEndpointCall.listParams(endpointObj)
-        const resp = await inquirer.prompt(askQuestions) || {}
-
-        endpointObj.call(resp)
-          .then((res) => SocketEndpointCall.formatResponse(res, bodyOnly))
-          .catch((err) => {
-            if (err.response) {
-              SocketEndpointCall.formatResponse(err.response)
-            } else {
-              error(err)
-            }
-          })
+        let config = {}
+        if (askQuestions.length > 0) {
+          config = await inquirer.prompt(askQuestions) || {}
+        }
+        try {
+          const res = await endpointObj.call(config)
+          SocketEndpointCall.formatResponse(res, bodyOnly)
+        } catch (err) {
+          if (err.response) {
+            SocketEndpointCall.formatResponse(err.response)
+          } else {
+            error(err)
+          }
+        }
       } else {
         error('No such endpoint on the server! Make sure you have synced your socket.')
       }

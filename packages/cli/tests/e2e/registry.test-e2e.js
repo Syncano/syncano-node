@@ -1,10 +1,13 @@
 /* global it describe */
+import path from 'path'
+
 import {
   nixt,
   testsLocation,
-  cliLocation,
   getRandomString
-} from '../utils'
+} from '@syncano/test-tools'
+
+const cliLocation = path.join(process.cwd(), 'lib/cli.js')
 
 // Tests
 describe('CLI Users using registry', function () {

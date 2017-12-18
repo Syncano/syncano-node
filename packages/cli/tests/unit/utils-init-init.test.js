@@ -1,12 +1,11 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
-import fs from 'fs-extra'
 import path from 'path'
 import format from 'chalk'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import Init from '../../src/utils/init'
-import { mainSocketTemplatePath } from '../../src/constants/Constants'
-import { getRandomString } from '../utils'
 import printTools from '../../src/utils/print-tools'
 
 describe('[commands] init', function () {
@@ -22,18 +21,6 @@ describe('[commands] init', function () {
   afterEach(function () {
     interEcho.reset()
     printTools.echo.restore()
-  })
-
-  describe.skip('[createFilesAndFolders]', function () {
-    it('creates folder structure in project path', sinon.test(function () {
-      const copySyncStub = this.stub(fs, 'copySync')
-      const projectPath = `${process.cwd()}/syncano`
-      this.stub(process.stdout, 'write')
-
-      init.createFilesAndFolders(projectPath)
-
-      sinon.assert.calledWith(copySyncStub, mainSocketTemplatePath, `${projectPath}/../`)
-    }))
   })
 
   describe('[addConfigFiles]', function () {

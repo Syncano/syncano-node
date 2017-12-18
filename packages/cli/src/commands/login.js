@@ -74,7 +74,7 @@ export default class Login {
 
   async register ({ email, password }) {
     try {
-      const account = await this.session.getAnonymousConnection().Account.register({ email, password })
+      const account = await this.session.getAnonymousConnection().account.register({ email, password })
       Login.displayNewAccountMessage()
       return this.loginCallback(account, 'signup')
     } catch (err) {
@@ -86,7 +86,7 @@ export default class Login {
   async loginOrRegister ({ email, password }) {
     debug('Registering/Logging in', email)
     try {
-      const account = await this.session.connection.Account.login({ email, password })
+      const account = await this.session.connection.account.login({ email, password })
       this.loginCallback(account)
     } catch (err) {
       if (err.message === 'Invalid email.') {

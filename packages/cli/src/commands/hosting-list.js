@@ -7,20 +7,12 @@ class HostingListCmd {
   constructor (context) {
     this.context = context
     this.session = context.session
-    this.Socket = context.Socket
   }
 
   async run ([cmd]) {
     this.cmd = cmd
-
-    if (cmd.socket) {
-      // TODO: implement Socket-based hosting
-    } else {
-      return Hosting.list()
-        .then((hostings) => {
-          HostingListCmd.printHostings(hostings)
-        })
-    }
+    const hostings = await Hosting.list()
+    HostingListCmd.printHostings(hostings)
   }
 
   static printNoHostingsInfo () {

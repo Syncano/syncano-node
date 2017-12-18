@@ -1,64 +1,36 @@
 /* global describe it before after */
-import fs from 'fs-extra'
+import replace from 'replace'
 import path from 'path'
-import yaml from 'js-yaml'
 
-import uniqueInstance from '../../src/utils/unique-instance'
 import {
   nixt,
   testsLocation,
   cleanUpAccount,
-  cliLocation,
   createdSocketName,
   randomKey,
   returnTestGlobals,
   createTempEmail,
   getRandomString
-} from '../utils'
+} from '@syncano/test-tools'
 
-const configTestTemplate = path.join(__dirname, '../../templates/project/hello/syncano')
-const helloTestScript = `${testsLocation}/syncano/hello/src/hello.js`
-const helloTestYaml = `${testsLocation}/syncano/hello/socket.yml`
+import uniqueInstance from '../../src/utils/unique-instance'
+
+const cliLocation = path.join(process.cwd(), 'lib/cli.js')
+const registrySocketName = 'openweathermap2'
 const hostingName = 'tests'
 const hostingName2 = 'tests2'
 const { email, password, syncanoYmlPath, instance } = returnTestGlobals()
 const tempPass = Date.now()
 const tempEmail = createTempEmail(process.env.E2E_CLI_TEMP_EMAIL, tempPass)
 
-export const modifyHelloScript = () => {
-  try {
-    const helloFile = fs.readFileSync(helloTestScript)
-    const newHelloScript = helloFile
-      .toString()
-      // eslint-disable-next-line
-      .replace('${ctx.args.firstname} ${ctx.args.lastname}', '${ctx.config.name}')
-      .replace('ctx.args.firstname && ctx.args.lastname', 'ctx.config.name')
-
-    fs.writeFileSync(helloTestScript, newHelloScript)
-  } catch (err) {
-    console.error('modifyHelloScript', err)
-  }
-}
-
-export const modifySocketYaml = () => {
-  try {
-    const testYaml = yaml.safeLoad(fs.readFileSync(helloTestYaml, 'utf8'))
-    delete testYaml.endpoints.hello.parameters
-
-    fs.writeFileSync(helloTestYaml, yaml.dump(testYaml))
-  } catch (err) {
-    console.error('modifySocketYaml', err)
-  }
-}
-
-export const moveTestSocket = () => {
-  try {
-    fs.copySync(configTestTemplate, `${testsLocation}/syncano/`)
-    modifyHelloScript()
-    modifySocketYaml()
-  } catch (err) {
-    console.error('moveTestSocket', err)
-  }
+const linkSyncanoPackages = () => {
+  replace({
+    regex: '"@syncano/build-es6": "0.4.1"',
+    replacement: `"@syncano/build-es6": "${path.join(__dirname, '../../../build-es6')}"`,
+    paths: [testsLocation],
+    recursive: true,
+    silent: true
+  })
 }
 
 describe('[E2E] CLI User', function () {
@@ -80,11 +52,11 @@ describe('[E2E] CLI User', function () {
       .respond(`${email}\n`)
       .on(/Password/)
       .respond(`${password}\n`)
-      .on(/Hello World template/)
+      .on(/Hello World/)
       // Choose from dropdown default project template: hello
       .respond('\n')
       .stdout(/Creating Syncano Instance/)
-      .stdout(/Project has been created from hello template/)
+      .stdout(/Project has been created from/)
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
       .end(done)
@@ -111,63 +83,68 @@ describe('[E2E] CLI User', function () {
 
   it('can deploy hello socket', function (done) {
     nixt()
+      .before(linkSyncanoPackages)
       .cwd(testsLocation)
       .run(`${cliLocation} deploy hello`)
       .stdout(/socket synced:/)
       .end(done)
   })
 
-  it('can add openweathermap socket', function (done) {
+  it('can add registry socket', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} add openweathermap`)
+      .run(`${cliLocation} add ${registrySocketName}`)
       .on(/Type in value:/)
       .respond(`${randomKey}\n`)
       .stdout(/socket synced:/)
       .end(done)
   })
 
-  it('can show openweathermap config', function (done) {
+  it('can show registry config', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} config-show openweathermap`)
-      .stdout(/name: APP_ID \(required\)/)
+      .run(`${cliLocation} config-show ${registrySocketName}`)
+      .stdout(/name: API_KEY \(required\)/)
       .end(done)
   })
 
-  it('can change openweathermap config', function (done) {
+  it('can change registry config', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} config openweathermap`)
+      .run(`${cliLocation} config ${registrySocketName}`)
       .on(/Type in value:/)
       .respond(`${randomKey}\n`)
       .end(done)
   })
 
-  it('can remove openweathermap socket', function (done) {
+  it('can remove registry socket', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} remove openweathermap`)
+      .run(`${cliLocation} remove ${registrySocketName}`)
       .on(/Are you sure you want to remove/)
       .respond('y\n')
       .stdout(/removed!/)
       .end(done)
   })
 
-  it('can\'t remove openweathermap socket again', function (done) {
+  it('can\'t remove registry socket again', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} remove openweathermap`)
+      .run(`${cliLocation} remove ${registrySocketName}`)
       .stdout(/No Socket was found on server nor in config/)
       .end(done)
   })
 
-  it('can sync copied socket', function (done) {
+  it('can call hello socket endpoint', function (done) {
     nixt()
       .cwd(testsLocation)
-      .before(moveTestSocket)
-      .run(`${cliLocation} deploy hello`)
-      .stdout(/socket synced:/)
+      .run(`${cliLocation} call hello/hello`)
+      .on(/Type in value for "firstname" parameter/)
+      .respond('TEST\n')
+      .on(/Type in value for "lastname" parameter/)
+      .respond('CLI\n')
+      .code(0)
+      .stdout(/Hello TEST CLI/)
       .end(done)
   })
 
@@ -265,7 +242,7 @@ describe('[E2E] CLI User', function () {
   it('can add hosting with folder outside of syncano folder', function (done) {
     nixt()
       .cwd(testsLocation)
-      .run(`${cliLocation} hosting add ../templates`)
+      .run(`${cliLocation} hosting add ../tests/e2e/assets/hosting_test`)
       .on(/Set hosting's name/)
       .respond(`${hostingName2}\n`)
       .on(/Set CNAME/)
@@ -334,19 +311,6 @@ describe('[E2E] CLI User', function () {
     .end(done)
   })
 
-  it.skip('can call hello socket endpoint', function (done) {
-    nixt()
-      .cwd(testsLocation)
-      .run(`${cliLocation} call hello/hello`)
-      .on(/Type in value for "firstname" parameter/)
-      .respond('TEST\n')
-      .on(/Type in value for "lastname" parameter/)
-      .respond('CLI\n')
-      .code(0)
-      .stdout(/Hello TEST CLI/)
-      .end(done)
-  })
-
   it('can logout from cli', function (done) {
     nixt()
       .cwd(testsLocation)
@@ -367,7 +331,7 @@ describe('[E2E] CLI User', function () {
       .respond(`${password}\n`)
       .on(/Choose template for your project/)
       .respond('\n')
-      .stdout(/Project has been created from hello template/)
+      .stdout(/Project has been created from/)
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
       .unlink(syncanoYmlPath)
@@ -388,7 +352,7 @@ describe('[E2E] CLI User', function () {
       .on(/Choose template for your project/)
       .respond('\n')
       .stdout(/Creating Syncano Instance/)
-      .stdout(/Project has been created from hello template/)
+      .stdout(/Project has been created from/)
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
       .unlink(syncanoYmlPath)
@@ -407,7 +371,7 @@ describe('[E2E] CLI User', function () {
       .respond(`${tempPass}\n`)
       .on(/Choose template for your project/)
       .respond('\n')
-      .stdout(/Project has been created from hello template/)
+      .stdout(/Project has been created from/)
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
       .unlink(syncanoYmlPath)

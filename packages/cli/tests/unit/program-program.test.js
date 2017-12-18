@@ -2,9 +2,10 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import program from '../../src/program'
 import session from '../../src/utils/session'
-import { getRandomString } from '../utils'
 
 describe('[program]', function () {
   before(function () {

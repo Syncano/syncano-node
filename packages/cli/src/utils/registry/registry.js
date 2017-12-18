@@ -33,9 +33,9 @@ class Registry {
       // .then((socket) => { Registry.getSocket(socket) });
   }
 
-  searchSocketByName (name, version) {
+  async searchSocketByName (name, version) {
     debug(`searchSocketByName: ${name} (${version})`)
-    return axios.request({
+    const response = await axios.request({
       url: `https://${this.registryHost}/registry/get/`,
       method: 'POST',
       timeout: REGISTRY_TIMEOUT,
@@ -47,7 +47,7 @@ class Registry {
         'X-Syncano-Account-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((response) => response.data)
+    return response.data
   }
 
   static getSocket (socket) {
@@ -59,16 +59,16 @@ class Registry {
       https.get(socket.url, (response) => {
         response.pipe(file)
         file.on('finish', () => {
-          debug('Socket zip downlaoded')
+          debug('Socket zip downloaded')
           file.close(resolve)
         })
       })
     })
   }
 
-  publishSocket (socketName, version) {
+  async publishSocket (socketName, version) {
     debug('publishSocket', socketName)
-    return axios.request({
+    const response = await axios.request({
       url: `${this.registryHostUrl}/registry/publish/`,
       method: 'POST',
       timeout: REGISTRY_TIMEOUT,
@@ -80,11 +80,11 @@ class Registry {
         'X-Syncano-Account-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((response) => response.data)
+    return response.data
   }
 
-  searchSocketsByAll (keyword) {
-    return axios.request({
+  async searchSocketsByAll (keyword) {
+    const response = await axios.request({
       url: `${this.registryHostUrl}/registry/search/`,
       method: 'POST',
       timeout: REGISTRY_TIMEOUT,
@@ -93,61 +93,60 @@ class Registry {
         'X-Syncano-Account-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((response) => response.data)
+    return response.data
   }
 
-  submitSocket (socket) {
-    return socket.createPackageZip()
-      .then(() => axios.request({
-        url: `${this.registryHostUrl}/registry/upload/`,
-        method: 'POST',
-        timeout: REGISTRY_TIMEOUT,
-        headers: {
-          'X-Syncano-Account-Key': session.settings.account.getAuthKey()
-        }
-      })
-        .then((response) => response.data.url))
-      .then((url) => new Promise((resolve, reject) => {
-        debug('Socket compiled')
-        const form = new FormData()
-        form.append('file', fs.createReadStream(socket.getSocketZip()))
+  async submitSocket (socket) {
+    await socket.createPackageZip()
+    const response = await axios.request({
+      url: `${this.registryHostUrl}/registry/upload/`,
+      method: 'POST',
+      timeout: REGISTRY_TIMEOUT,
+      headers: {
+        'X-Syncano-Account-Key': session.settings.account.getAuthKey()
+      }
+    })
+    const url = response.data.url
+    const uploadResponse = await new Promise((resolve, reject) => {
+      debug('Socket compiled')
+      const form = new FormData()
+      form.append('file', fs.createReadStream(socket.getSocketZip()))
 
-        form.submit({
-          method: 'PATCH',
-          protocol: 'https:',
-          host: session.getHost(),
-          path: url
-        }, (err, res) => {
-          if (err) {
-            debug('Error while uploading file')
-            reject(err)
-          }
-          res.on('data', (data) => {
-            debug('Upload done')
-            resolve(data)
-          })
-        })
-      }))
-      .then((resp) => {
-        debug('File sent compiled', resp.status)
-        const fileObj = JSON.parse(resp)
-        return axios.request({
-          url: `${this.registryHostUrl}/registry/add/`,
-          method: 'POST',
-          timeout: REGISTRY_TIMEOUT,
-          data: {
-            name: socket.spec.name,
-            description: socket.spec.description,
-            version: socket.spec.version,
-            keywords: socket.spec.keywords,
-            url: fileObj.file.value,
-            config: socket.getFullConfig()
-          },
-          headers: {
-            'X-Syncano-Account-Key': session.settings.account.getAuthKey()
-          }
+      form.submit({
+        method: 'PATCH',
+        protocol: 'https:',
+        host: session.getHost(),
+        path: url
+      }, (err, res) => {
+        if (err) {
+          debug('Error while uploading file')
+          reject(err)
+        }
+        res.on('data', (data) => {
+          debug('Upload done')
+          resolve(data)
         })
       })
+    })
+
+    debug('File sent compiled', uploadResponse.status)
+    const fileObj = JSON.parse(uploadResponse)
+    return axios.request({
+      url: `${this.registryHostUrl}/registry/add/`,
+      method: 'POST',
+      timeout: REGISTRY_TIMEOUT,
+      data: {
+        name: socket.spec.name,
+        description: socket.spec.description,
+        version: socket.spec.version,
+        keywords: socket.spec.keywords,
+        url: fileObj.file.value,
+        config: socket.getFullConfig()
+      },
+      headers: {
+        'X-Syncano-Account-Key': session.settings.account.getAuthKey()
+      }
+    })
   }
 }
 

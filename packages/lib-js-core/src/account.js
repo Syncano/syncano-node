@@ -29,6 +29,33 @@ class Account extends QueryBuilder {
         .catch(err => reject(err))
     })
   }
+
+  login ({email, password}) {
+    const fetch = this.nonInstanceFetch.bind(this)
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      }
+      fetch(`${this.url()}auth/`, options)
+        .then(res => resolve(res))
+        .catch(err => reject(err))
+    })
+  }
+
+  register ({email, password}) {
+    const fetch = this.nonInstanceFetch.bind(this)
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      }
+
+      fetch(`${this.url()}register/`, options)
+        .then(res => resolve(res))
+        .catch(err => reject(err))
+    })
+  }
 }
 
 export default Account

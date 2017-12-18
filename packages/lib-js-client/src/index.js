@@ -186,13 +186,14 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     ]
 
     return fetch({
-      method: 'POST',
+      method: data._method,
       url,
-      data,
+      data: data._method !== 'POST' ? {params: data} : data,
       headers,
       transformRequest,
       ...options
-    }).then(response => response.data)
+    })
+    .then(response => response.data)
   }
 }
 

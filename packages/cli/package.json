@@ -1,6 +1,6 @@
 {
   "name": "@syncano/cli",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "CLI for Syncano",
   "author": "Maciej Kucharz",
   "license": "MIT",
@@ -16,18 +16,25 @@
     "url": "https://github.com/Syncano/syncano-node-cli.git"
   },
   "bin": {
+    "s": "./lib/cli.js",
     "syncano-cli": "./lib/cli.js",
     "syncano-cli-hosting": "./lib/cli-hosting.js",
-    "s": "./lib/cli.js",
-    "s-hosting": "./lib/cli-hosting.js"
+    "s-hosting": "./lib/cli-hosting.js",
+    "syncano-cli-component": "./lib/cli-component.js",
+    "s-component": "./lib/cli-component.js"
   },
   "bugs": {
     "url": "https://github.com/Syncano/syncano-node-cli/issues"
   },
   "dependencies": {
+    "@syncano/core": "0.4.2",
+    "@syncano/template-project-empty": "0.4.2",
+    "@syncano/template-project-hello": "0.4.2",
+    "@syncano/template-socket-es6": "0.4.2",
+    "@syncano/template-socket-vanilla": "0.4.2",
     "analytics-node": "^3.1.1",
     "archiver": "^2.1.0",
-    "axios": "^0.17.0",
+    "axios": "^0.17.1",
     "babel-plugin-dynamic-import-node": "^1.0.2",
     "babel-plugin-extensible-destructuring": "^4.1.0",
     "babel-plugin-istanbul": "^4.1.5",
@@ -43,17 +50,16 @@
     "bluebird": "^3.5.1",
     "chalk": "^2.3.0",
     "cli-table2": "0.2.0",
-    "commander": "^2.11.0",
+    "commander": "^2.12.1",
     "create-error": "0.3.1",
     "cross-env": "^5.1.1",
-    "debug": "^3.1.0",
+    "debug": "2.6.9",
     "es6-template-strings": "2.0.1",
     "find-key": "2.0.1",
     "form-data": "^2.3.1",
     "fs-extra": "1.0.0",
     "hashdirectory": "^0.1.0",
-    "home-dir": "1.0.0",
-    "inquirer": "^3.3.0",
+    "inquirer": "^4.0.0",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",
     "md5": "2.2.1",
@@ -65,69 +71,55 @@
     "pretty-bytes": "4.0.2",
     "raven": "^2.2.1",
     "readdirp": "2.1.0",
+    "replace": "^0.3.0",
     "semver": "^5.4.1",
     "sinon": "1.17.6",
     "source-map": "^0.6.1",
     "stack-trace": "0.0.10",
     "strip-ansi": "^4.0.0",
-    "syncano": "2.0.4",
     "unzip2": "0.2.5",
-    "validator": "^9.1.1",
-    "watchr": "3.0.1"
+    "validator": "^9.1.2",
+    "watchr": "3.0.1",
+    "ws": "^3.3.3"
   },
   "devDependencies": {
+    "@syncano/test-tools": "^0.4.2",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-plugin-add-module-exports": "0.2.1",
     "babel-register": "^6.26.0",
-    "chai": "3.5.0",
-    "chai-as-promised": "6.0.0",
+    "chai": "4.1.2",
+    "chai-as-promised": "7.1.1",
     "codecov": "^3.0.0",
-    "condition-circle": "1.5.0",
-    "console.mute": "0.3.0",
+    "console.mute": "^0.3.0",
     "dirty-chai": "^2.0.1",
-    "docsify-cli": "^4.1.11",
     "mocha": "^4.0.1",
-    "mocha-junit-reporter": "^1.15.0",
     "mock-fs": "^4.4.2",
-    "nixt": "0.5.0",
     "nyc": "^11.3.0",
-    "pre-commit": "1.2.2",
+    "prettier": "^1.7.4",
     "rimraf": "^2.6.2",
     "sinon": "1.17.6",
     "standard": "^10.0.3"
   },
   "scripts": {
-    "prepublish": "npm run build",
-    "commit": "git cz",
+    "prepublish": "yarn run build",
     "build": "babel src -d lib/ --copy-files --ignore *.test.js,*.test-e2e.js --source-maps",
     "build:watch": "yarn run build -- -w",
     "clean": "rm -rf lib/",
-    "compile": "yarn run clean && yarn run build",
-    "docs:watch": "docsify serve docs",
-    "lint": "standard --fix --env mocha",
-    "unit": "mocha 'tests/unit/*.test.js' --reporter spec --require babel-register -b",
+    "unit": "mocha 'tests/unit/*.test.js' --reporter spec --require babel-register",
     "unit:watch": "yarn run unit -- -w",
-    "e2e": "mkdir -p e2e-tests/ && mkdir -p e2e-tests/hosting/ && mocha 'tests/e2e/*.test-e2e.js' --reporter spec --require babel-register --timeout 40000 --slow 8000 && rm -rf e2e-tests/",
+    "e2e": "./scripts/e2e",
     "e2e:tutorial": "mocha  --reporter spec --require babel-register --timeout 16000 --slow 8000",
     "unit:coverage": "nyc yarn run unit",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
     "test": "npm-run-all --parallel test:unit test:e2e",
     "test:unit": "nyc yarn run unit",
     "test:e2e": "yarn run e2e",
-    "test:ci": "nyc yarn run unit -- --reporter mocha-junit-reporter",
-    "reinstall": "rimraf node_modules && yarn install",
-    "validate": "npm-run-all --parallel test:unit lint lint:tests build",
-    "pre-commit-run": "npm-run-all --parallel lint lint:tests unit"
+    "lint": "standard --fix --env mocha",
+    "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
   },
-  "pre-commit": "pre-commit-run",
   "publishConfig": {
     "access": "public"
-  },
-  "release": {
-    "verifyConditions": {
-      "path": "./deploy/condition-circle.js"
-    }
   },
   "babel": {
     "plugins": [
@@ -147,7 +139,7 @@
     ]
   },
   "nyc": {
-    "check-coverage": true,
+    "check-coverage": false,
     "include": [
       "src/**/*.js"
     ],

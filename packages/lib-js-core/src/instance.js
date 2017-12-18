@@ -7,7 +7,6 @@ import QueryBuilder from './query-builder'
 class Instance extends QueryBuilder {
   url (instanceName) {
     const baseUrl = `${this._getSyncanoURL()}/instances/`
-
     return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
   }
 
@@ -32,6 +31,49 @@ class Instance extends QueryBuilder {
       }
       fetch(this.url(), options, headers)
         .then(resolve)
+        .catch(reject)
+    })
+  }
+  /**
+   * Get Syncano instance details
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * const instance = await instance.get('instance-name')
+   */
+  get (instanceName) {
+    const fetch = this.nonInstanceFetch.bind(this)
+
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.instance.accountKey
+      }
+      fetch(this.url(instanceName), {}, headers)
+        .then(resolve)
+        .catch(reject)
+    })
+  }
+
+  /**
+   * List Syncano instances
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * const instance = await instance.list()
+   */
+  list () {
+    const fetch = this.nonInstanceFetch.bind(this)
+
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.instance.accountKey
+      }
+      fetch(this.url(), {}, headers)
+        .then(response => {
+          resolve(response.objects)
+        })
         .catch(reject)
     })
   }

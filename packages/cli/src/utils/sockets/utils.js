@@ -1,28 +1,31 @@
 import fs from 'fs-extra'
-import mkdirp from 'mkdirp'
-import child from 'child_process'
 import YAML from 'js-yaml'
 import path from 'path'
-import Promise from 'bluebird'
+import format from 'chalk'
 
 import logger from '../debug'
 import session from '../session'
-import { builtInTemplates } from '../../constants/Constants'
+import { getTemplateSpec, builtInSocketTemplates } from '../templates'
 
 const { debug } = logger('utils-sockets-utils')
 
 const socketTemplates = () => {
-  const installedTemplates = session.settings.project.getSocketTemplates()
-  const installedTemplatesList = Object.keys(installedTemplates)
-    .map((templateName) => {
-      const temp = { name: templateName, description: '' }
-      return temp
-    })
-  return builtInTemplates.concat(installedTemplatesList)
+  const installedTemplatesNames = session.settings.project.getSocketTemplates()
+  const allTemplatesNames = builtInSocketTemplates.concat(installedTemplatesNames)
+
+  const installedTemplates = allTemplatesNames.map((templateName) => {
+    /* eslint-disable import/no-dynamic-require */
+    /* eslint-disable global-require */
+    debug('loading template:', templateName)
+    const templateSpec = getTemplateSpec(templateName)
+
+    return { name: templateName, description: templateSpec.templateLongDesc }
+  })
+  return installedTemplates
 }
 
-const getTemplatesChoices = () => socketTemplates().map((socketTemplate) =>
-    `${socketTemplate.name} - ${socketTemplate.description}`)
+const getTemplatesChoices = () => socketTemplates().map(socketTemplate =>
+    `${socketTemplate.description} - ${format.grey(`(${socketTemplate.name})`)}`)
 
 const searchForSockets = (projectPath) => {
   const sockets = []
@@ -82,31 +85,9 @@ const getOrigFilePath = (origFileLine) => {
   return origFilePath
 }
 
-const updateSocketNPMDeps = (folder) => {
-  debug('updateSocketDeps')
-  return new Promise((resolve, reject) => {
-    const prodFolder = path.join(folder, '.dist')
-    debug('prodFolder', prodFolder)
-    if (!fs.existsSync(prodFolder)) {
-      mkdirp.sync(prodFolder)
-    }
-
-    fs.copySync(path.join(folder, 'package.json'), path.join(prodFolder, 'package.json'))
-
-    child.exec('yarn --production', { cwd: prodFolder }, (yarnErr, stdout, stderr) => {
-      // TODO: work a little bit more with results
-      if (yarnErr) {
-        return reject(yarnErr)
-      }
-      return resolve({ stdout, stderr })
-    })
-  })
-}
-
 export default {
   getTemplatesChoices,
   findLocalPath,
   listLocal,
-  getOrigFilePath,
-  updateSocketNPMDeps
+  getOrigFilePath
 }

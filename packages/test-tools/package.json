@@ -1,0 +1,45 @@
+{
+  "name": "@syncano/test-tools",
+  "description": "Testing tools for Syncano Sockets",
+  "version": "0.4.2",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@syncano/core": "^0.4.2",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "fs-extra": "^4.0.2",
+    "home-dir": "^1.0.0",
+    "lodash": "^4.17.4",
+    "mkdirp": "^0.5.1",
+    "nixt": "^0.5.0"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2",
+    "standard": "^10.0.3"
+  },
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "build:watch": "npm run build -- --watch",
+    "clean": "rm -r ./lib || exit 0",
+    "prepublish": "npm run build",
+    "prebuild": "npm run clean",
+    "lint": "standard --fix --env mocha"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "7"
+          }
+        }
+      ]
+    ]
+  }
+}

@@ -18,12 +18,17 @@ class SocketListCmd {
     this.fullPrint = cmd.full || !!socketName
 
     if (socketName) {
-      const socket = await this.Socket.get(socketName)
-      if (!socket.existLocally && !socket.existRemotely) {
+      try {
+        const socket = await this.Socket.get(socketName)
+        if (!socket.existLocally && !socket.existRemotely) {
+          socketNotFound()
+          process.exit(1)
+        }
+        this.printSocket(socket)
+      } catch (err) {
         socketNotFound()
         process.exit(1)
       }
-      this.printSocket(socket)
     } else {
       const sockets = cmd.withDeps ? await this.Socket.flatList() : await this.Socket.list()
       this.printSockets(sockets)

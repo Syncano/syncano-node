@@ -3,11 +3,12 @@ import sinon from 'sinon'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import { Login } from '../../src/commands'
 import context from '../../src/utils/context'
 import session from '../../src/utils/session'
 import printTools from '../../src/utils/print-tools'
-import { getRandomString } from '../utils'
 
 describe('[commands] Login', function () {
   const email = process.env.E2E_CLI_EMAIL
@@ -119,7 +120,7 @@ describe('[commands] Login', function () {
         account_key: getRandomString('login_register_response_account_key')
       }
 
-      this.stub(session.connection.Account, 'register').returns(Promise.resolve(response))
+      this.stub(session.connection.account, 'register').returns(Promise.resolve(response))
 
       await login.register({})
 
@@ -132,7 +133,7 @@ describe('[commands] Login', function () {
         message: getRandomString('login_register_error_message')
       }
 
-      this.stub(session.connection.Account, 'register').returns(Promise.reject(error))
+      this.stub(session.connection.account, 'register').returns(Promise.reject(error))
 
       await login.register({})
 
@@ -161,7 +162,7 @@ describe('[commands] Login', function () {
         account_key: getRandomString('login_loginOrRegister_response_account_key')
       }
 
-      this.stub(session.connection.Account, 'login').returns(Promise.resolve(response))
+      this.stub(session.connection.account, 'login').returns(Promise.resolve(response))
 
       await login.loginOrRegister({})
 
@@ -177,7 +178,7 @@ describe('[commands] Login', function () {
         message: 'Invalid email.'
       }
 
-      this.stub(session.connection.Account, 'login').returns(Promise.reject(error))
+      this.stub(session.connection.account, 'login').returns(Promise.reject(error))
 
       await login.loginOrRegister(credentials)
 
@@ -190,7 +191,7 @@ describe('[commands] Login', function () {
       }
       const errorMessages = ['Authentication error! 😢', error.message]
 
-      this.stub(session.connection.Account, 'login').returns(Promise.reject(error))
+      this.stub(session.connection.account, 'login').returns(Promise.reject(error))
 
       await login.loginOrRegister({})
 

@@ -42,7 +42,7 @@ describe('[settings] Settings', function () {
   })
 
   it('Has correct default properties', function () {
-    expect(typeof settings.attributes).to.be.object // eslint-disable-line
+    // expect(typeof settings.attributes).to.be.object // eslint-disable-line
     expect(Object.keys(settings.attributes).length).to.be.equal(0)
     expect(settings.configPath).to.be.null()
   })

@@ -1,9 +1,8 @@
 /* global describe it */
-import {
-  nixt,
-  testsLocation,
-  cliLocation
-} from '../utils'
+import path from 'path'
+import { nixt, testsLocation } from '@syncano/test-tools'
+
+const cliLocation = path.join(process.cwd(), 'lib/cli.js')
 
 // Tests
 describe('CLI Anonymous User', function () {

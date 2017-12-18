@@ -7,7 +7,7 @@ import { SimpleSpinner } from './helpers/spinner'
 import { askQuestions } from './helpers/socket'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
-import { printCompileError } from './helpers/print'
+import { CompileError } from '../utils/errors'
 
 const { debug } = logger('cmd-socket-deploy')
 
@@ -27,7 +27,6 @@ export default class SocketDeployCmd {
     this.cmd = cmd
 
     // echo(2)(`♻️ ${format.grey(' Deploying...')}`);
-    echo()
 
     if (socketName) {
       debug(`Deploying Socket: ${socketName}`)
@@ -52,25 +51,21 @@ export default class SocketDeployCmd {
 
     const configs = {}
 
-    return Promise.each(this.socketList, (socketFromList) => askQuestions(socketFromList.getConfigOptionsToAsk())
-      .then((config) => {
+    try {
+      await Promise.each(this.socketList, async (socketFromList) => {
+        const config = await askQuestions(socketFromList.getConfigOptionsToAsk())
         configs[socketFromList.name] = config
-      }))
-      .then(() => this.deployProject())
-      .then((projectUpdateStatus) =>
-        Promise.all(this.socketList.map((socket) => this.deploySocket(socket, configs[socket.name])))
-      )
-      .then(() => {
-        echo()
       })
-      .catch((err) => {
-        console.log(err)
-        if (err.response && err.response.data && err.response.data.detail) {
-          error(4)(err.response.data.detail)
-        } else {
-          error(4)(err)
-        }
-      })
+      await this.deployProject()
+      await Promise.all(this.socketList.map((socket) => this.deploySocket(socket, configs[socket.name])))
+      echo()
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.detail) {
+        error(4)(err.response.data.detail)
+      } else {
+        error(4)(err)
+      }
+    }
   }
 
   async deployProject () {
@@ -111,8 +106,9 @@ export default class SocketDeployCmd {
       }
     } catch (err) {
       spinner.stop()
-      if (err.errorType === 'compilationError') {
-        printCompileError(err, socket.name)
+      if (err instanceof CompileError) {
+        const status = format.red('    compile error:')
+        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
       } else {
         const status = format.red('socket sync error:')
         echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)

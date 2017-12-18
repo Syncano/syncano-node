@@ -1,5 +1,9 @@
+import Syncano from '@syncano/core'
+
 export default (ctx) => {
-  const example = ctx.meta.metadata.response.examples[0].example
-  const mimetype = ctx.meta.metadata.response.mimetype
-  ctx.setResponse(new ctx.HttpResponse(200, example, mimetype))
+  const {response} = new Syncano(ctx)
+
+  response.json({
+    message: `${ctx.config.TEST1} ${ctx.config.TEST2}`
+  })
 }

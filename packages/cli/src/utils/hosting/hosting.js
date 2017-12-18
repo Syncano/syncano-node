@@ -1,4 +1,5 @@
 import fs from 'fs'
+import FormData from 'form-data'
 import format from 'chalk'
 import path from 'path'
 import prettyBytes from 'pretty-bytes'
@@ -50,7 +51,7 @@ class Hosting {
     this.loadLocal()
   }
 
-  static add (params) {
+  static async add (params) {
     const configParams = {
       src: params.src
     }
@@ -69,7 +70,7 @@ class Hosting {
       domains
     }
 
-    return axios.request({
+    const response = await axios.request({
       url: addHostingURL,
       method: 'POST',
       data: paramsToAdd,
@@ -77,14 +78,14 @@ class Hosting {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((response) => response.data)
+    return response.data
   }
 
   hasCNAME (cname) {
     return this.domains.indexOf(cname) > -1
   }
 
-  configure (params) {
+  async configure (params) {
     const domains = this.domains
     if (params.cname && this.domains.indexOf(params.cname) < 0) {
       domains.push(params.cname)
@@ -102,7 +103,7 @@ class Hosting {
       domains
     }
 
-    return axios.request({
+    const response = await axios.request({
       url: this.editHostingURL,
       method: 'PATCH',
       data: paramsToUpdate,
@@ -110,10 +111,8 @@ class Hosting {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-    .then((response) => {
-      const hosting = response.data
-      return this.setRemoteState(hosting)
-    })
+
+    return this.setRemoteState(response.data)
   }
 
   deploy () {
@@ -134,36 +133,32 @@ class Hosting {
       domains: this.domains
     }
 
-    return axios.request({
-      url: this.editHostingURL,
-      method: 'PATCH',
-      data: paramsToUpdate,
-      headers: {
-        'X-Api-Key': session.settings.account.getAuthKey()
-      }
-    })
-    .then((response) => {
-      const hosting = response.data
-      return this.setRemoteState(hosting)
-    })
-    .catch((err) => {
+    try {
+      const response = axios.request({
+        url: this.editHostingURL,
+        method: 'PATCH',
+        data: paramsToUpdate,
+        headers: {
+          'X-Api-Key': session.settings.account.getAuthKey()
+        }
+      })
+      return this.setRemoteState(response.data)
+    } catch (err) {
       console.log(err)
-    })
+    }
   }
 
-  delete () {
+  async delete () {
     if (!this.socket) {
-      return axios.request({
+      await axios.request({
         url: this.editHostingURL,
         method: 'DELETE',
         headers: {
           'X-Api-Key': session.settings.account.getAuthKey()
         }
       })
-      .then(() => {
-        session.settings.project.deleteHosting(this.name)
-        return this
-      })
+      session.settings.project.deleteHosting(this.name)
+      return this
     }
   }
 
@@ -223,25 +218,23 @@ class Hosting {
       this.description = hosting.description
       this.domains = hosting.domains
 
-      return this.areFilesUpToDate()
-        .then((status) => {
-          this.isUpToDate = status
-        })
+      const status = await this.areFilesUpToDate()
+      this.isUpToDate = status
     }
     this.existRemotely = false
     this.error = hosting
     return Promise.resolve()
   }
 
-  loadRemote () {
+  async loadRemote () {
     debug('loadRemote()')
-    return this.getRemote()
-      .then(async (hosting) => this.setRemoteState(hosting))
-      .then(() => this)
-      .catch(() => {
-        this.existRemotely = false
-        return this
-      })
+    try {
+      const hosting = await this.getRemote()
+      this.setRemoteState(hosting)
+    } catch (err) {
+      this.existRemotely = false
+    }
+    return this
   }
 
   loadLocal () {
@@ -279,12 +272,15 @@ class Hosting {
   }
 
   // Verify local file if it should be created or updated
-  getFilesToUpload (file, remoteFiles) {
+  async getFilesToUpload (file, remoteFiles) {
     debug('getFilesToUpload')
     const localHostingFilePath = this.getLocalFilePath(file)
     const fileToUpdate = _.find(remoteFiles, { path: localHostingFilePath })
-    const payload = { file: session.connection.file(file.localPath), path: localHostingFilePath }
-    const uploads = []
+    const payload = new FormData()
+    payload.append('file', fs.createReadStream(file.localPath))
+    payload.append('path', localHostingFilePath)
+
+    let singleFile = null
 
     if (fileToUpdate) {
       const remoteChecksum = fileToUpdate.checksum
@@ -292,42 +288,32 @@ class Hosting {
 
       // Check if checksum of the local file is the same as remote one
       if (remoteChecksum === localChecksum) {
-        return session.connection.HostingFile.please().get({ id: fileToUpdate.id, hostingId: this.name })
-        .then((singleFile) => {
+        try {
+          singleFile = await session.connection.hosting.getFile(this.name, fileToUpdate.id)
           echo(6)(`${format.green('✓')} File skipped: ${format.dim(localHostingFilePath)}`)
-          return singleFile
-        })
-        .catch((err) => error(err))
-      }
-      uploads.push(session.connection
-        .HostingFile
-        .please()
-        .update({ id: fileToUpdate.id, hostingId: this.name }, payload)
-        .then((singleFile) => {
+        } catch (err) {
+          error(err)
+        }
+      } else {
+        try {
+          singleFile = await session.connection.hosting.updateFile(this.name, fileToUpdate.id, payload)
           echo(6)(`${format.green('✓')} File updated: ${format.dim(localHostingFilePath)}`)
-          return singleFile
-        })
-        .catch(() => {
+        } catch (err) {
+          console.log(err)
           echo(`Error while syncing (updating) ${localHostingFilePath}`)
-        })
-      )
+        }
+      }
     } else {
       // Adding (first upload) file
-      uploads.push(session.connection
-        .HostingFile
-        .please()
-        .upload({ hostingId: this.name }, payload)
-        .then((singleFile) => {
-          echo(6)(`${format.green('✓')} File added:   ${format.dim(localHostingFilePath)}`)
-          return singleFile
-        })
-        .catch(() => {
-          echo(`Error while syncing (creating) ${file.path}`)
-        })
-      )
+      try {
+        singleFile = await session.connection.hosting.uploadFile(this.name, payload)
+        echo(6)(`${format.green('✓')} File added:   ${format.dim(localHostingFilePath)}`)
+      } catch (err) {
+        echo(`Error while syncing (creating) ${file.path}`)
+      }
     }
 
-    return uploads
+    return singleFile
   }
 
   // Files upload report
@@ -348,19 +334,18 @@ class Hosting {
 
     const localFiles = await this.listLocalFiles()
 
-    localFiles.map((file) => promises.push(
-      this.getFilesToUpload(file, files)
-    ))
-
-    return Promise.all(_.flattenDeep(promises)).then((values) => {
-      uploadedFilesCount = 0
-      uploadedSize = 0
-      values.forEach((upload) => {
-        uploadedFilesCount += 1
-        uploadedSize += upload.size
-      })
-      return Promise.resolve({ uploadedFilesCount, uploadedSize })
+    await localFiles.forEach(file => {
+      promises.push(this.getFilesToUpload(file, files))
     })
+
+    const values = await Promise.all(promises)
+    uploadedFilesCount = 0
+    uploadedSize = 0
+    values.forEach(upload => {
+      uploadedFilesCount += 1
+      uploadedSize += upload.size
+    })
+    return { uploadedFilesCount, uploadedSize }
   }
 
   // Run this to synchronize hosted files
@@ -374,9 +359,7 @@ class Hosting {
 
     const remoteFiles = await this.listRemoteFiles()
     const result = await this.uploadFiles(remoteFiles)
-    const output = this.generateUploadFilesResult(result)
-
-    return output
+    return this.generateUploadFilesResult(result)
   }
 
   async areFilesUpToDate () {
@@ -403,10 +386,8 @@ class Hosting {
   // Get list of the hostings first, then get the files list for given one
   async listRemoteFiles () {
     debug('listRemoteFiles()')
-    const files = session.connection.HostingFile.please().all({ hostingId: this.name })
-    return new Promise((resolve, reject) => {
-      files.on('stop', (fetchedFiles) => resolve(fetchedFiles.map((file) => new HostingFile().loadRemote(file))))
-    })
+    const files = await session.connection.hosting.listFiles(this.name)
+    return files.map((file) => new HostingFile().loadRemote(file))
   }
 
   // Get info about hostings first, then get the files list for given one
@@ -447,20 +428,13 @@ class Hosting {
   // TODO: filtering hostings (wating for core)
   static async listRemote (socket) {
     debug('listRemote')
-    const hostings = await session.connection
-      .Hosting
-      .please()
-      .list()
+    const hostings = await session.connection.hosting.list()
     return hostings.map((hosting) => new Hosting(hosting.name, socket))
   }
 
   getRemote () {
     debug('getRemote()', this)
-    return session.connection
-      .Hosting
-      .please()
-      .get({ id: this.name })
-      .then((res) => res)
+    return session.connection.hosting.get(this.name)
   }
 }
 

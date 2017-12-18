@@ -1,14 +1,14 @@
 /* global it describe before afterEach beforeEach */
-import Syncano from 'syncano'
-import chai, { expect } from 'chai'
+import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import fs from 'fs-extra'
 import path from 'path'
 
+import { getRandomString } from '@syncano/test-tools'
+
 import getSettings from '../../src/settings'
 import session from '../../src/utils/session'
-import { getRandomString } from '../utils'
 import printTools from '../../src/utils/print-tools'
 import Sockets from '../../src/utils/sockets'
 
@@ -148,28 +148,6 @@ describe('[Class] Socket', function () {
       Sockets.uninstallLocal(socket)
 
       sinon.assert.calledWith(removeDirectory, socket.localPath)
-    })
-  })
-
-  describe('remote', function () {
-    let syncanoInstance = null
-    session.connection = Syncano({ baseUrl: session.getBaseURL() })
-
-    beforeEach(function () {
-      syncanoInstance = sinon.stub(session.connection.Socket, 'please')
-    })
-
-    afterEach(function () {
-      session.connection.Socket.please.restore()
-    })
-
-    it('should return error response', async function () {
-      const errorMessage = getRandomString()
-      syncanoInstance.returns({
-        delete: () => Promise.reject(errorMessage)
-      })
-      const errorResponse = await Sockets.uninstallRemote(socketName)
-      expect(errorResponse).to.be.equal(errorMessage)
     })
   })
 })

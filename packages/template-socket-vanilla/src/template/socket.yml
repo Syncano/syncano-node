@@ -1,0 +1,38 @@
+name: ${socketName}
+description: ${socketDescription}
+version: 0.0.1
+runtime: nodejs_v8
+
+endpoints:
+  hello:
+    description: Hello world!
+    parameters:
+      firstname:
+        type: string
+        description: First name of the person you want to greet
+        example: Tyler
+      lastname:
+        type: string
+        description: Last name of the person you want to greet
+        example: Durden
+    response:
+      success:
+        description: Success
+        parameters:
+          message:
+            description: Hello message
+        example: |
+          {
+            "message": "Hello Tyler Durden!"
+          }
+      fail:
+        exit_code: 400
+        description: Failed
+        parameters:
+          message:
+            description: Error message
+
+        example: |
+          {
+            "message": "You have to send "firstname" and "lastname" arguments!"
+          }
