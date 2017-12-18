@@ -1,7 +1,6 @@
 import format from 'chalk'
 import _ from 'lodash'
 import stackTrace from 'stack-trace'
-import WebSocket from 'ws'
 
 import { GlobalSpinner, SimpleSpinner } from './helpers/spinner'
 import logger from '../utils/debug'
