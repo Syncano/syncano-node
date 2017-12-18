@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "files": [
+    "index.js",
     "template"
   ],
   "publishConfig": {
