@@ -27,7 +27,6 @@ export default class SocketDeployCmd {
     this.cmd = cmd
 
     // echo(2)(`♻️ ${format.grey(' Deploying...')}`);
-    echo()
 
     if (socketName) {
       debug(`Deploying Socket: ${socketName}`)
