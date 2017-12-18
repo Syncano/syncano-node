@@ -61,7 +61,7 @@ describe('Syncano client units', () => {
     it('resolves with valid output', () => {
       const expected = {hello: 'world'}
 
-      axiosMock.onPost(url('users')).reply(200, expected)
+      axiosMock.onGet(url('users')).reply(200, expected)
 
       return client.get('users').then(response => {
         assert.deepEqual(response, expected)
@@ -125,7 +125,7 @@ describe('Syncano client units', () => {
     it('resolves with valid output', () => {
       const expected = {hello: 'world'}
 
-      axiosMock.onPost(url('users')).reply(200, expected)
+      axiosMock.onGet(url('users')).reply(200, expected)
 
       return client.get('users').then(response => {
         assert.deepEqual(response, expected)
@@ -149,7 +149,7 @@ describe('Syncano client units', () => {
     it('resolves with valid output', () => {
       const expected = {hello: 'world'}
 
-      axiosMock.onPost(url('users')).reply(200, expected)
+      axiosMock.onGet(url('users')).reply(200, expected)
 
       return client.get('users').then(response => {
         assert.deepEqual(response, expected)
@@ -173,9 +173,9 @@ describe('Syncano client units', () => {
     it('resolves with valid output', () => {
       const expected = {hello: 'world'}
 
-      axiosMock.onPost(url('users')).reply(200, expected)
+      axiosMock.onDelete(url('users')).reply(200, expected)
 
-      return client.get('users').then(response => {
+      return client.delete('users').then(response => {
         assert.deepEqual(response, expected)
       })
     })
@@ -197,9 +197,9 @@ describe('Syncano client units', () => {
     it('resolves with valid output', () => {
       const expected = {hello: 'world'}
 
-      axiosMock.onPost(url('tags')).reply(200, expected)
+      axiosMock.onPut(url('tags')).reply(200, expected)
 
-      return client.get('tags').then(response => {
+      return client.put('tags').then(response => {
         assert.deepEqual(response, expected)
       })
     })
@@ -221,9 +221,9 @@ describe('Syncano client units', () => {
     it('resolves with valid output', () => {
       const expected = {hello: 'world'}
 
-      axiosMock.onPost(url('users')).reply(200, expected)
+      axiosMock.onPatch(url('users')).reply(200, expected)
 
-      return client.get('users').then(response => {
+      return client.patch('users').then(response => {
         assert.deepEqual(response, expected)
       })
     })
