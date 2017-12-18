@@ -1,3 +1,4 @@
+/* global URLSearchParams */
 import upperFirst from 'lodash.upperfirst'
 import camelCase from 'lodash.camelcase'
 import querystring from 'querystring'
@@ -249,14 +250,28 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
       }
     ]
 
-    return fetch({
-      method: 'POST',
-      url,
-      data,
-      headers,
-      transformRequest,
-      ...options
-    }).then(response => response.data)
+    if (data._method === 'GET') {
+      const urlParams = new URLSearchParams(Object.entries(data))
+      return fetch({
+        method: 'GET',
+        url: url + '?' + urlParams,
+        qs: data,
+        // headers,
+        transformRequest,
+        ...options
+      })
+      .then(response => response.data)
+    } else {
+      return fetch({
+        method: 'POST',
+        url,
+        data,
+        headers,
+        transformRequest,
+        ...options
+      })
+      .then(response => response.data)
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 import format from 'chalk'
 import _ from 'lodash'
 import stackTrace from 'stack-trace'
+import WebSocket from 'ws'
 
 import { GlobalSpinner, SimpleSpinner } from './helpers/spinner'
 import logger from '../utils/debug'
@@ -54,23 +55,29 @@ export default class SocketTrace {
   }
 
   async startCollectingTraces (socket) {
+    debug('startCollectingTraces')
     this.mainSpinner.start()
 
-    try {
-      const response = await socket.getTraces(this.lastId[socket.name])
+    const ws = socket.getTraces()
+    ws.on('error', (err) => {
+      debug('ws error', err)
       this.mainSpinner.stop()
-      const trace = response.data
-      this.lastId[socket.name] = response.data.id
-      await this.printTrace(socket, trace)
+      ws.terminate()
+      error(err.message)
       this.startCollectingTraces(socket)
-    } catch (err) {
+    })
+
+    ws.on('close', () => {
+      debug('ws closed, starting again')
+      this.startCollectingTraces(socket)
+    })
+
+    ws.on('message', async (data) => {
+      debug('ws message')
       this.mainSpinner.stop()
-      if (err.code === 'ECONNABORTED') {
-        this.startCollectingTraces(socket)
-      } else {
-        error(4)(err.message)
-      }
-    }
+      await this.printTrace(socket, JSON.parse(data))
+      this.mainSpinner.start()
+    })
   }
 
   // Decide about how to print trace and which

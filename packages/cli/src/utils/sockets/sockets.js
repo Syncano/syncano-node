@@ -15,6 +15,7 @@ import Promise from 'bluebird'
 import template from 'es6-template-strings'
 import _ from 'lodash'
 import SourceMap from 'source-map'
+import WebSocket from 'ws'
 
 import logger from '../debug'
 import session from '../session'
@@ -635,20 +636,14 @@ class Socket {
   }
 
   getTraces (lastId) {
-    const params = { room: `socket:${this.name}` }
-    if (lastId) {
-      params.last_id = lastId
-    }
+    const url = [
+      `https://${session.getHost()}/v2/instances/${session.project.instance}/channels/eventlog/poll/`,
+      '?transport=websocket',
+      `&api_key=${session.settings.account.getAuthKey()}`,
+      `&room=${`socket:${this.name}`}`
+    ].join('')
 
-    return axios.request({
-      url: `https://${session.getHost()}/v2/instances/${session.project.instance}/channels/eventlog/poll/`,
-      method: 'GET',
-      timeout: 50000,
-      params,
-      headers: {
-        'X-Api-Key': session.settings.account.getAuthKey()
-      }
-    })
+    return new WebSocket(url)
   }
 
   static async getEndpointTraceByUrl (url) {
