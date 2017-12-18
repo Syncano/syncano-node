@@ -1,6 +1,6 @@
 {
   "name": "@syncano/template-project-empty",
-  "description": "Empty Project",
+  "description": "Empty Project Template",
   "version": "0.4.2",
   "main": "src/index.js",
   "license": "MIT",
