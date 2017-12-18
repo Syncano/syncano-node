@@ -3,6 +3,14 @@
   "packages": [
     "packages/*"
   ],
+  "command": {
+    "init": {
+      "exact": true
+    },
+    "publish": {
+      "exact": true
+    }
+  },
   "version": "0.4.2",
   "npmClient": "yarn",
   "npmClientArgs": ["--production", "--no-optional"]
