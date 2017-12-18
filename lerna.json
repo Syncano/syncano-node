@@ -4,5 +4,6 @@
     "packages/*"
   ],
   "version": "0.4.2",
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "npmClientArgs": ["--production", "--no-optional"]
 }
