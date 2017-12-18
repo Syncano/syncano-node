@@ -9,7 +9,7 @@
     "build:env": "./bin/compile-env"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0"
+    "babel-cli": "^6.26.0"
   },
   "babel": {
     "presets": [
