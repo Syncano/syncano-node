@@ -6,7 +6,19 @@ export function checkStatus (response) {
   let error
 
   try {
-    error = new Error(response.data.detail)
+    if (typeof response.data === 'object' && response.data !== null) {
+      if (response.data.detail) {
+        error = new Error(response.data.detail)
+      } else if (response.data.query) {
+        error = new Error(response.data.query)
+      } else {
+        const key = Object.keys(response.data)[0]
+
+        error = new Error(`${key}: ${response.data[key]}`)
+      }
+    } else {
+      error = new Error(response.data.detail)
+    }
   } catch (err) {
     error = new Error(response.statusText)
   }

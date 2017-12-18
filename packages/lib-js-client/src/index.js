@@ -1,10 +1,6 @@
 /* global URLSearchParams */
-import upperFirst from 'lodash.upperfirst'
-import camelCase from 'lodash.camelcase'
 import querystring from 'querystring'
-import React from 'react'
 import fetch from 'axios'
-import ReactPromisedComponent from './react-promised-component'
 
 function SyncanoClient (instanceName = required('instanceName'), options = {}) {
   const host = options.host || 'syncano.space'
@@ -37,11 +33,17 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
   }
 
   client.url = function (endpoint, data) {
+    let url = `${this.baseUrl}${endpoint}/?`
+
     if (data) {
-      return `${this.baseUrl}${endpoint}/?${querystring.stringify(data)}`
+      url += `${querystring.stringify(data)}&`
     }
 
-    return `${this.baseUrl}${endpoint}/`
+    if (client.token) {
+      url += `_user_key=${client.token}`
+    }
+
+    return url
   }
 
   client.logout = function () {
@@ -168,64 +170,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     )
   }
 
-  client.import = function (args) {
-    const imports = parseImports(args)
-
-    return imports.reduce((all, current) => {
-      const {name, params, componentName} = getParts(current)
-      const url = this.url(name, params)
-
-      return {
-        ...all,
-        [componentName]: _props =>
-          React.createElement(ReactPromisedComponent, {
-            _props,
-            _promise: {name, url}
-          })
-      }
-    }, {})
-  }
-
   return client
-
-  function getParts (item) {
-    const isArray = Array.isArray(item)
-    const name = isArray ? item[0] : item
-    const params = isArray ? item[1] : {}
-    const [, endpoint] = name.split('/')
-    const type = ['react', 'angular', 'vue']
-      .map(type => (new RegExp(`-${type}$`).test(endpoint) ? type : null))
-      .filter(Boolean)[0]
-    const componentName = upperFirst(
-      camelCase(endpoint.replace(new RegExp(`-${type}$`), ''))
-    )
-
-    return {name, params, componentName}
-  }
-
-  function parseImports (imports) {
-    if (typeof imports === 'string') {
-      return [imports]
-    }
-
-    if (
-      Array.isArray(imports) &&
-      (typeof imports[0] === 'string' &&
-        typeof imports[1] === 'object' &&
-        imports[1] !== null)
-    ) {
-      return [imports]
-    }
-
-    if (
-      Array.isArray(imports) &&
-      (typeof imports[0] === 'string' || Array.isArray(imports[0]))
-    ) {
-      return imports
-    }
-
-    throw new Error('Invalid argument passed to syncano.import()')
-  }
 
   function client (endpoint = required('endpoint'), data = {}, options = {}) {
     const url = this.url(endpoint)
@@ -233,20 +178,11 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
 
     const transformRequest = [
       function (data) {
-        const token = client.token ? {_user_key: client.token} : {} // eslint-disable-line camelcase
-
         if (data instanceof window.FormData) {
-          if (client.token) {
-            data.append('_user_key', client.token)
-          }
-
           return data
         }
 
-        return JSON.stringify({
-          ...data,
-          ...token
-        })
+        return JSON.stringify(data)
       }
     ]
 

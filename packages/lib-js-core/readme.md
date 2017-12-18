@@ -9,9 +9,9 @@ to communicate with **Syncano Core Services**. Syncano provides various Core Ser
 - **Database (data)** - NoSQL database to store your application data
 - **Users Management (users)** - service to store and manage users and groups of your application
 - **Event Loop (events)** - service to emit events which can be caught by any Socket
-- **Realtime Channels (channels)** - implement publish/subscribe model for realtime communication
+- **Realtime Channels (channels)** - implements publish/subscribe model for real-time communication
 
-[![Read Documentation][read-documentation.png]](docs/README.md)
+[![Read Documentation][read-documentation.png]](docs/readme.md)
 
 ## License
 

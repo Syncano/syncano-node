@@ -19,7 +19,6 @@ const server = (ctx = {}) => {
   const config = getConfig()
 
   const _class = new Class(config)
-  const users = new Users(config)
   const event = new Event(config)
   const endpoint = new Endpoint(config)
   const channel = new Channel(config)
@@ -33,7 +32,14 @@ const server = (ctx = {}) => {
 
   return {
     _class,
-    users,
+    users: new Proxy(
+      {},
+      {
+        get(target, prop) {
+          return new Users(config)[prop];
+        }
+      }
+    ),
     account,
     instance,
     event,

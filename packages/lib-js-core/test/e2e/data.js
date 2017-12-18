@@ -106,7 +106,7 @@ describe('Data', function () {
 
     it('should throw error when object was not found', () =>
       run
-        .where('asd', '000111ddd')
+        .where('field_string', '000111ddd')
         .firstOrFail()
         .should.be.rejectedWith(NotFoundError))
   })
@@ -187,7 +187,7 @@ describe('Data', function () {
 
     it('should throw error when object was not found', () =>
       run
-        .where('asd', 'asdasd')
+        .where('field_string', 'asdasd')
         .findOrFail(1001)
         .should.be.rejectedWith(NotFoundError))
   })
@@ -460,6 +460,11 @@ describe('Data', function () {
         .should.eventually.have.nested.property('field_file')
         .match(/^https/)
     })
+
+    it('should be able to update object reference field', () =>
+      run
+        .update(2, {author: 1})
+        .should.eventually.have.nested.property('author', 1))
   })
 
   describe('#list()', () => {
