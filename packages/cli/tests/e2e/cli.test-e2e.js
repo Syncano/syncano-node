@@ -377,24 +377,4 @@ describe('[E2E] CLI User', function () {
       .unlink(syncanoYmlPath)
       .end(done)
   })
-
-  it('can logout from cli', function (done) {
-    nixt()
-      .cwd(testsLocation)
-      .run(`${cliLocation} logout`)
-      .stdout(/You have been logged out/)
-      .unlink(syncanoYmlPath)
-      .end(done)
-  })
-
-  it('can log in', function (done) {
-    nixt()
-      .cwd(testsLocation)
-      .run(`${cliLocation} login`)
-      .on(/Your e-mail/)
-      .respond(`${tempEmail}\n`)
-      .on(/Password/)
-      .respond(`${tempPass}\n`)
-      .end(done)
-  })
 })
