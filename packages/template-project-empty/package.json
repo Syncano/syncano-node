@@ -2,10 +2,9 @@
   "name": "@syncano/template-project-empty",
   "description": "Empty Project",
   "version": "0.4.2",
-  "main": "index.js",
+  "main": "src/index.js",
   "license": "MIT",
   "files": [
-    "index.js",
     "template"
   ],
   "publishConfig": {
