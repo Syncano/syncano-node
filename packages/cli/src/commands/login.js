@@ -94,9 +94,9 @@ export default class Login {
         await Login.promptCreation()
         return this.register({ email, password })
       }
-      echo(4)('Authentication error! 😢')
       echo()
-      echo(4)(err.message)
+      echo(4)(`😢  ${format.red(err.message)}`)
+      echo()
     }
   }
 
