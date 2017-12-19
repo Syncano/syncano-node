@@ -14,7 +14,7 @@ import Socket from './sockets'
 import Init from './init'
 import Hosting from './hosting'
 import Plugins from './plugins'
-import { echo, echon, error } from './print-tools'
+import { echo } from './print-tools'
 
 const { debug } = logger('utils-session')
 
@@ -106,20 +106,7 @@ export class Session {
   }
 
   async createInstance (name = genUniqueName()) {
-    debug('Creating Instance')
-    echo()
-    echon(4)('Creating Syncano Instance... ')
-
-    try {
-      const newInstance = await this.connection.instance.create({ name })
-      echo(`${format.green('Done')}`)
-      echo(4)(`Syncano Instance ${format.cyan(newInstance.name)} has been created!`)
-      echo()
-      return newInstance
-    } catch (err) {
-      error(err.message || 'Connection error')
-      process.exit()
-    }
+    return this.connection.instance.create({ name })
   }
 
   async getInstance (instanceName) {

@@ -2,7 +2,7 @@ import format from 'chalk'
 import inquirer from 'inquirer'
 
 import logger from '../utils/debug'
-import { p, echo } from '../utils/print-tools'
+import { p, echo, echon, error } from '../utils/print-tools'
 import Login from './login'
 
 const { debug } = logger('cmd-init')
@@ -58,7 +58,29 @@ class InitCmd {
     }
 
     if (!project && !instance) {
-      const newInstance = await this.session.createInstance()
+      let newInstance = null
+      try {
+        debug('Creating Instance')
+        echo()
+        echon(4)('Creating Syncano Instance... ')
+        newInstance = await this.session.createInstance()
+      } catch (err) {
+        echo()
+        echo()
+        if (err.message === 'No such API Key.') {
+          error(4)('It looks like your account key is invalid.')
+          echo(4)(`Try ${format.cyan('syncano-cli logout')} and ${format.cyan('syncano-cli login')} again.`)
+        } else {
+          error(4)(err.message || 'Error while creating instance. Try again!')
+        }
+        echo()
+        process.exit()
+      } finally {
+        echo(`${format.green('Done')}`)
+        echo(4)(`Syncano Instance ${format.cyan(newInstance.name)} has been created!`)
+        echo()
+      }
+
       this.init.addConfigFiles({ instance: newInstance.name })
       this.init.createFilesAndFolders()
       return this.session.load()
