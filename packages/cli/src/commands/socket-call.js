@@ -77,8 +77,7 @@ class SocketEndpointCall {
   async run ([fullEndpointName, cmd]) {
     try {
       const bodyOnly = cmd.body
-      const socketName = fullEndpointName.split('/')[0]
-      const endpointName = fullEndpointName.split('/')[1]
+      const [, socketName, endpointName] = fullEndpointName.match(/([^/]*)\/(.*)/)
       const socket = await this.Socket.get(socketName)
       const endpointObj = await socket.getEndpoint(endpointName)
 
