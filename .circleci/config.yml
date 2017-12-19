@@ -135,9 +135,6 @@ workflows:
   build-test-deploy:
     jobs:
       - build
-      - test:
-          requires:
-            - build
       - test_lint:
           requires:
             - build
