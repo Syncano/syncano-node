@@ -81,7 +81,7 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # run tests!
+      - build
       - run: yarn run lint
       - run: yarn run test:unit
       - run: yarn run test:e2e
@@ -107,3 +107,10 @@ workflows:
       - test:
           requires:
             - build
+      - deploy:
+          requires:
+            - build
+            - test
+          filters:
+            branches:
+              only: master
