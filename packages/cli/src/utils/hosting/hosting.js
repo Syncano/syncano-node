@@ -299,8 +299,8 @@ class Hosting {
           singleFile = await session.connection.hosting.updateFile(this.name, fileToUpdate.id, payload)
           echo(6)(`${format.green('✓')} File updated: ${format.dim(localHostingFilePath)}`)
         } catch (err) {
-          console.log(err)
           echo(`Error while syncing (updating) ${localHostingFilePath}`)
+          debug(err.response.data)
         }
       }
     } else {
@@ -310,6 +310,7 @@ class Hosting {
         echo(6)(`${format.green('✓')} File added:   ${format.dim(localHostingFilePath)}`)
       } catch (err) {
         echo(`Error while syncing (creating) ${file.path}`)
+        debug(err.response.data)
       }
     }
 

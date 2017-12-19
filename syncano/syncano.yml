@@ -1,4 +1,6 @@
 hosting:
+  docs:
+    src: ../docs/docs/
   cheatsheet:
     src: ../docs/cheatsheet/web
   cookbook:

@@ -23,6 +23,7 @@
     ]
   },
   "dependencies": {
+    "@syncano/cli": "^0.5.0-alpha.48815720",
     "babel-eslint": "^8.0.1",
     "chalk": "^2.3.0",
     "git-branch": "^1.0.0",

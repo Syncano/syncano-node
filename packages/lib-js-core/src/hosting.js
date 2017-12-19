@@ -74,15 +74,16 @@ export default class Hosting extends QueryBuilder {
     })
   }
 
-  uploadFile (hostingId, params) {
+  uploadFile (hostingId, payload) {
     return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
+      const headers = payload.getHeaders()
+      headers['X-API-KEY'] = this.instance.accountKey
+
       const options = {
-        method: 'PATCH',
-        body: JSON.stringify(params)
+        method: 'POST',
+        body: payload
       }
+
       this.fetch(this.urlFiles(hostingId), options, headers)
         .then(resolve)
         .catch(reject)
