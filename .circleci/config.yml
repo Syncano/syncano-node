@@ -40,7 +40,7 @@ jobs:
           - v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
           - v1-dependencies-test
 
-      - run: lerna bootstrap
+      - run: npx lerna bootstrap
 
       - save_cache:
           paths:
