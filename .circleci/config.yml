@@ -103,6 +103,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: echo -e "$NPM_USER\n$NPM_PASS\n$NPM_EMAIL" | npm login
       - run: npx lerna publish --canary --yes
       - run: npx s deploy
       - run: npx s hosting sync docs
