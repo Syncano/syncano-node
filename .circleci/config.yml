@@ -103,7 +103,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: lerna publish --canary
+      - run: npx lerna publish --canary
       - run: npx s deploy
       - run: npx s hosting sync docs
       - run: npx s hosting sync cookbook
