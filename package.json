@@ -1,9 +1,9 @@
 {
   "license": "MIT",
   "scripts": {
-    "lint": "lerna run lint",
-    "test:unit": "lerna run test:unit",
-    "test:e2e": "lerna run test:e2e --concurrency 1 --stream",
+    "lint": "npx lerna run lint",
+    "test:unit": "npx lerna run test:unit",
+    "test:e2e": "npx lerna run test:e2e --concurrency 1 --stream",
     "precommit": "lint-staged",
     "deploy": "npm run deploy:cookbook && npm run deploy:cheatsheet",
     "deploy:cookbook": "node scripts/deploy cookbook",
