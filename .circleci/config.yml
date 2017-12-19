@@ -96,9 +96,6 @@ jobs:
 
     working_directory: ~/repo
 
-    environment:
-      SYNCANO_AUTH_KEY: ${CANARY_SYNCANO_AUTH_KEY}
-
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -117,6 +114,9 @@ workflows:
           requires:
             - build
       - deploy:
+          environment:
+            SYNCANO_AUTH_KEY: ${CANARY_SYNCANO_AUTH_KEY}
+            SYNCANO_PROJECT_INSTANCE: ${CANARY_SYNCANO_PROJECT_INSTANCE}
           requires:
             - build
             - test
