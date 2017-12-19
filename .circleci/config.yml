@@ -74,6 +74,11 @@ jobs:
             - packages/lib-js-test/node_modules
           key: v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
 
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo
+
   test:
     docker:
       - image: circleci/node:latest
@@ -81,7 +86,8 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      - build
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: yarn run lint
       - run: yarn run test:unit
       - run: yarn run test:e2e
@@ -93,6 +99,8 @@ jobs:
     working_directory: ~/repo
 
     steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: lerna publish --canary
       - run: npx s deploy
       - run: npx s hosting sync docs
