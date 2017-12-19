@@ -77,7 +77,29 @@ jobs:
           paths:
             - ~/repo
 
-  test:
+  test_unit:
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn run test:unit
+
+  test_e2e:
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn run test:e2e
+
+  test_lint:
     docker:
       - image: circleci/node:latest
 
@@ -87,8 +109,6 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: yarn run lint
-      - run: yarn run test:unit
-      - run: yarn run test:e2e
 
   deploy:
     docker:
@@ -118,10 +138,21 @@ workflows:
       - test:
           requires:
             - build
+      - test_lint:
+          requires:
+            - build
+      - test_unit:
+          requires:
+            - build
+      - test_e2e:
+          requires:
+            - build
       - deploy:
           requires:
             - build
-            - test
+            - test_e2e
+            - test_lint
+            - test_unit
           filters:
             branches:
               only: master
