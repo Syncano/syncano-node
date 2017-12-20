@@ -21,15 +21,13 @@ class Response {
     let setResponse = instance.setResponse || global.setResponse
     let HttpResponse = instance.HttpResponse || global.HttpResponse
 
-    if (this._content) {
-      const args = [this._status, this._content, this._mimetype, this._headers]
+    const args = [this._status, this._content, this._mimetype, this._headers]
 
-      if (setResponse === undefined) {
-        return
-      }
-
-      setResponse(new HttpResponse(...args))
+    if (setResponse === undefined) {
+      return
     }
+
+    setResponse(new HttpResponse(...args))
   }
 }
 
