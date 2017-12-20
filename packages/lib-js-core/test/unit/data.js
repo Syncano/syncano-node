@@ -117,6 +117,23 @@ describe('Data', () => {
     })
   })
 
+  describe('#count()', () => {
+    it('should be a method of the model', () => {
+      should(data.posts)
+        .have.property('count')
+        .which.is.Function()
+    })
+
+    it('should number of records', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 0, include_count: 1}) // eslint-disable-line camelcase
+        .reply(200, {objects_count: 2})
+
+      return data.users.count().should.become(2)
+    })
+  })
+
   describe('#first()', () => {
     it('should be a method of the model', () => {
       should(data.users)

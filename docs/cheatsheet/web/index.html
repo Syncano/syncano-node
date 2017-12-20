@@ -437,11 +437,14 @@ data.posts
   .fields('id', 'title', 'user.first_name as author')
   .list()
 
-// Get values of given collumn
+// Get values of given column
 data.posts.pluck('title')
 
 // Get single object key
 data.posts.where('id', 10).value('title')
+
+// Get number of objects matching query
+data.posts.where('id', '>', 10).count()
 </code></pre>
     </section>
     <!--

@@ -30,14 +30,15 @@ const {data} = new Server(ctx)
 | [whereNotNull](#wherenotnullcolumn)                | Filter objects where column value is not null                              |
 | [whereIn](#whereincolumn-arr)                      | Filter by existence in given array                                         |
 | [whereNotIn](#wherenotincolumn-arr)                | Filter out objects not existing in given array                             |
-| [whereBetween](#wherebetweencolumn-min-max         | Filter objects where column is between given values                        |
+| [whereBetween](#wherebetweencolumn-min-max)        | Filter objects where column is between given values                        |
 | [with](#withrelations)                             | Being querying a object with eager loading                                 |
 | [orderBy](#orderbycolumn-direction)                | Add an "order by" clause to the query                                      |
 | [skip](#skipcount)                                 | Skip given number of results and return the rest                           |
-| [take](#takecount)                                 | Take only given number of results                                          |
+| [take](#takecount)                                 | Take given number of results                                               |
 | [fields](#fieldscolumns)                           | Whitelist returned fields                                                  |
 | [pluck](#pluckcolumn)                              | Return array of values for single column                                   |
 | [value](#valuecolumn)                              | Return column value of first object matching query                         |
+| [count](#count)                                    | Return number of objects matching query                                    |
 
 ## `create(data)`
 
@@ -411,4 +412,14 @@ data.posts.pluck('id')
 ```js
 // Get first post and return it's id
 data.posts.value('id')
+```
+
+## `count()`
+
+```js
+// Count all posts
+data.posts.count()
+
+// Count posts with given status
+data.posts.where('status', 'in', ['draft', 'deleted']).count()
 ```

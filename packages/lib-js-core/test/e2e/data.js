@@ -507,6 +507,11 @@ describe('Data', function () {
     })
   })
 
+  describe('#count()', () => {
+    it('should be able to get number of records', () =>
+      run.count().should.eventually.equal(113))
+  })
+
   describe('#delete()', () => {
     it('can delete single object', () => run.delete(1).should.become(undefined))
 

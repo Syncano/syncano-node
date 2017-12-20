@@ -301,6 +301,12 @@ class Data extends QueryBuilder {
     return items.find(obj => obj.id === reference.value)
   }
 
+  count () {
+    this.withQuery({page_size: 0, include_count: 1})
+
+    return this.fetch(this.url()).then(res => res.objects_count)
+  }
+
   /**
    * Get first element matching query or return null.
    *
