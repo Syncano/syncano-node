@@ -99,6 +99,7 @@
     "dirty-chai": "^2.0.1",
     "mocha": "^4.0.1",
     "mock-fs": "^4.4.2",
+    "npm-cli-login": "^0.0.10",
     "nyc": "^11.3.0",
     "prettier": "^1.7.4",
     "rimraf": "^2.6.2",
