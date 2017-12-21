@@ -26,6 +26,9 @@
     <div class="c-header__tab">
       <a data-tab="cli" href="#cli">CLI</a>
     </div>
+    <div class="c-header__tab">
+      <a data-tab="socket" href="#socket">Socket</a>
+    </div>
   </header>
 
   <div class="c-columns" data-tabs>
@@ -569,6 +572,194 @@ s submit  &lt;socket name&gt; -b patch</code></pre>
       <pre><code class="lang-bash">s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
 s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code></pre>
     </section>
+    <!--
+
+      ====
+
+--><section data-tag="socket" class="c-column">
+    <h3>Basics</h3>
+    <h4>Create socket</h4>
+    <pre><code class="lang-bash">syncano-cli create &lt;socket-name&gt;
+# This will create socket configuration at:
+# ./syncano/socket-name/socket.yml</code></pre>
+    <h4>Basic definition</h4>
+    <pre><code class="lang-bash">name: api # Socket name
+description: My project API
+version: 0.0.1
+</code></pre>
+        <h3>Endpoints</h3>
+        <h4>Define endpoints</h4>
+        <pre><code class="lang-yaml">endpoints:
+  get-books:
+    file: get-books.js # run src/get-books.js
+  add-book:
+    # If you don't pass file, src/SOCKET-NAME.js will be run
+    parameters:
+      title:
+        type: string
+      author:
+        type: integer</code></pre>
+        <h4>Define real-time endpoints</h4>
+        <div>
+          To learn about Channels, view <a data-tab="server" href="#server">Server Cheatsheet</a>
+        </div>
+        <h3>Event Handlers</h3>
+        <h4>Define Event Handlers</h4>
+        <pre><code class="lang-yaml">event_handlers:
+  data.cars.create:
+    file: ./event_handlers/data.cars.create.js</code></pre>
+        <h4>Event Handler Types</h4>
+        <table>
+          <tr>
+            <td>
+              <pre><code class="lang-bash">data.&lt;class&gt;.&lt;create/update/delete&gt;</code></pre>
+            </td>
+            <td>built-in events for classes</td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="lang-bash">schedule.interval.5_minutes</code></pre>
+            </td>
+            <td>built-in events for interval script runs</td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="lang-bash">schedule.crontab.*/5 * * * *</code></pre>
+            </td>
+            <td>built-in events for scheduled script runs with cron</td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="lang-bash">events.&lt;name of custom event&gt;</code></pre>
+            </td>
+            <td>user-defined event</td>
+          </tr>
+        </table>
+        <h3>Config</h3>
+        <h4>Define config</h4>
+        <pre><code class="lang-yaml">config:
+  &lt;config option name&gt;:
+    description: &lt;config option short description&gt;
+    long_description: &lt;config option long description&gt;
+    required: &lt;true|false&gt;</code></pre>
+        <h4>Example config</h4>
+        <pre><code class="lang-yaml">config:
+  API_KEY:
+    description: OpenWeatherMap API key
+    long_description: |
+      To find the API key, go to your OpenWeatherMap account and copy it from
+      API keys section at (https://home.openweathermap.org/api_keys).
+    required: true</code></pre>
+      </section><!--
+
+--><section data-tag="socket" class="c-column">
+    <h3>Data Classes</h3>
+    <h4>Define class</h4>
+    <pre><code class="lang-yaml">classes:
+  book:
+    - name: book_title
+      type: string
+    - name: author
+      type: reference
+      target: user
+    - name: publish_date
+      type: datetime</code></pre>
+      <h4>Schema field types</h4>
+      <table>
+        <tr>
+          <td><h5>string</h5></td>
+          <td>text field limited to 128 chars</td>
+        </tr>
+        <tr>
+          <td><h5>text</h5></td>
+          <td>text field limited to 32000 chars</td>
+        </tr>
+        <tr>
+          <td><h5>integer</h5></td>
+          <td>number field</td>
+        </tr>
+        <tr>
+          <td><h5>float</h5></td>
+          <td>floating point field</td>
+        </tr>
+        <tr>
+          <td><h5>boolean</h5></td>
+          <td>boolean field</td>
+        </tr>
+        <tr>
+          <td><h5>datetime</h5></td>
+          <td>date in UTC format</td>
+        </tr>
+        <tr>
+          <td><h5>file</h5></td>
+          <td>binary data, max 128MB</td>
+        </tr>
+        <tr>
+          <td><h5>reference</h5></td>
+          <td>
+            reference to single Data Object(ID)
+            <pre><code class="lang-yaml">book:
+  - name: author
+    type: reference
+    target: user</code></pre>
+              <pre data-type="server"><code class="lang-yaml">data.book.create({author: 2})</code></pre>
+            </td>
+        </tr>
+        <tr>
+          <td><h5>relation</h5></td>
+          <td>
+            array of references
+            <pre><code class="lang-yaml">book:
+  - name: tags
+    type: relation
+    target: tag</code></pre>
+              <pre data-type="server"><code class="lang-yaml">data.book.create({tags: [3, 5]})</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td><h5>array</h5></td>
+            <td>array field of string types, int, boolean and float</td>
+          </tr>
+          <tr>
+            <td><h5>object</h5></td>
+            <td>object field - JSON like</td>
+          </tr>
+          <tr>
+            <td><h5>geopoint</h5></td>
+            <td>geographic coordinates field</td>
+          </tr>
+        </table>
+        <h4>Schema field indexes</h4>
+      <table>
+        <tr>
+          <td><h5>filter_index</h5></td>
+          <td>
+            allow to filter by given field
+            <pre><code class="lang-yaml">book:
+  - name: category
+    type: string
+    filter_index: true</code></pre>
+              <pre data-type="server"><code class="lang-js">data.books
+  .where('category', 'horror')
+  .list()</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td><h5>order_index</h5></td>
+            <td>
+              allow to order by given field
+              <pre><code class="lang-yaml">book:
+  - name: total_pages
+    type: integer
+    order_index: true</code></pre>
+              <pre data-type="server"><code class="lang-js">data.books
+  .orderBy('total_pages')
+  .list()</code></pre>
+            </td>
+          </tr>
+        </table>
+      </section>
+    </div>
   </div>
 </main>
 <script src="https://unpkg.com/prismjs@1.8.1/prism.js"></script>

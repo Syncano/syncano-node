@@ -1,29 +1,33 @@
 (() => {
   const tabs = document.querySelectorAll('[data-tab]')
   const tags = document.querySelectorAll('[data-tag]')
-  
+
   tabs.forEach(tab => {
-    const activeTab = location.hash.substr(1) || 'client'
-    
+    const activeTab = location.hash.substr(1) || 'socket'
+
     tab.addEventListener('click', toggleTab)
-    
+
     if (tab.dataset.tab === activeTab) {
       tab.dispatchEvent(new Event('click'))
     }
   })
-  
+
   function toggleTab(e) {
     if (e.target.getAttribute('disabled') !== null) {
       e.preventDefault();
-      
+
       return
     }
-    
+
     const tagName = e.target.dataset.tab
+
     tabs.forEach(tab => tab.classList.remove('is-active'))
-    
-    e.target.classList.add('is-active')
-    
+    tabs.forEach(tab => {
+      if (tab.dataset.tab === tagName) {
+        tab.classList.add('is-active')
+      }
+    })
+
     tags.forEach(tag => {
       if (tag.dataset.tag === tagName) {
         tag.classList.add('is-visible')

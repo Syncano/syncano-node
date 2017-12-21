@@ -12,6 +12,7 @@ body {
 
 a {
   text-decoration: none;
+  color: #187eef;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -44,6 +45,28 @@ code, pre {
   max-width: 1432px;
 }
 
+table {
+  border-radius: 3px;
+}
+
+tr + tr td {
+  border-top: 1px solid #e5e5e5;
+}
+
+td {
+  padding: 6px 12px 6px 0;
+  vertical-align: middle;
+}
+
+td:last-child {
+  width: 100%;
+}
+
+td h5,
+td pre[class*="language-"] {
+  margin: 0;
+}
+
 @media screen and (max-width: 480px) {
   .c-main {
     padding: 8px;
@@ -65,12 +88,12 @@ code, pre {
     .c-header__tab a:hover {
       text-decoration: underline;
     }
-    .c-header__tab .is-disabled, 
+    .c-header__tab .is-disabled,
     .c-header__tab .is-active {
       color: #187eef;
       cursor: default;
     }
-    .c-header__tab .is-disabled:hover, 
+    .c-header__tab .is-disabled:hover,
     .c-header__tab .is-active:hover {
       text-decoration: none;
     }
@@ -151,13 +174,13 @@ code, pre {
   top: 5px;
   right: 5px;
   font-size: 11px;
-  padding: 3px 4px 2px 4px;
+  padding: 2px 3px 1px 3px;
   text-shadow: none;
   color: #fff;
   border-radius: 4px;
   text-transform: uppercase;
   font-weight: 700;
-  letter-spacing: .05em; 
+  letter-spacing: .05em;
 }
 
 [data-type="socket"]::after {
