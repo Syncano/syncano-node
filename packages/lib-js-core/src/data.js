@@ -301,6 +301,14 @@ class Data extends QueryBuilder {
     return items.find(obj => obj.id === reference.value)
   }
 
+  /**
+   * Get number of objects matching given query.
+   *
+   * @return {Promise}
+   *
+   * @example {@lang javascript}
+   * const postsCount = await data.posts.count()
+   */
   count () {
     this.withQuery({page_size: 0, include_count: 1})
 
