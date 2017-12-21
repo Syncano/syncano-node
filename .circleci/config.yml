@@ -125,10 +125,10 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
       - run: npx lerna publish --canary --yes
-      - run: npx packages/cli/lib/cli.js deploy
-      - run: npx packages/cli/lib/cli.js hosting sync docs
-      - run: npx packages/cli/lib/cli.js hosting sync cookbook
-      - run: npx packages/cli/lib/cli.js hosting sync cheatsheet
+      - run: node packages/cli/lib/cli.js deploy
+      - run: node packages/cli/lib/cli.js hosting sync docs
+      - run: node packages/cli/lib/cli.js hosting sync cookbook
+      - run: node packages/cli/lib/cli.js hosting sync cheatsheet
 
 workflows:
   version: 2
