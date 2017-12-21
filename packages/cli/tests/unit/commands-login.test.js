@@ -189,7 +189,7 @@ describe('[commands] Login', function () {
       error = {
         message: getRandomString('login_loginOrRegister_error_message')
       }
-      const errorMessages = ['Authentication error! 😢', error.message]
+      const errorMessages = [`😢  ${error.message}`]
 
       this.stub(session.connection.account, 'login').returns(Promise.reject(error))
 
@@ -197,7 +197,6 @@ describe('[commands] Login', function () {
 
       sinon.assert.calledWith(echo, 4)
       sinon.assert.calledWith(interEcho, errorMessages[0])
-      sinon.assert.calledWith(interEcho, errorMessages[1])
     }))
   })
 
