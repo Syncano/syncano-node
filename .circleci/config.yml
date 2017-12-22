@@ -1,6 +1,7 @@
 version: 2
 jobs:
   build:
+    name: Build
     docker:
       - image: circleci/node:latest
 
@@ -147,8 +148,10 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - build
+      - build:
+          name: Build
       - test_lint:
+          name: Linter
           requires:
             - build
       - test_unit:
