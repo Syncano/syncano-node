@@ -148,10 +148,8 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - build:
-          name: Build
+      - build
       - test_lint:
-          name: Linter
           requires:
             - build
       - test_unit:
