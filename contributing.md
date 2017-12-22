@@ -7,3 +7,9 @@
   - [Syncano CLI](packages/cli/contributing.md)
   - [Syncano Core Library](packages/lib-js-core/contributing.md)
   - [Syncano Client Library](packages/lib-js-client/contributing.md)
+
+## Verifying Circle CI config
+
+You can validate Circle CI config file by running `yarn run validate:circleci`.
+Circle CI command line interface (CLI) is a requirement, please follow this instruction to install it in your system:
+https://circleci.com/docs/2.0/local-jobs/#circleci-command-line-interface-cli-overview

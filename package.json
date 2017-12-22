@@ -7,7 +7,8 @@
     "precommit": "lint-staged",
     "deploy": "npm run deploy:cookbook && npm run deploy:cheatsheet",
     "deploy:cookbook": "node scripts/deploy cookbook",
-    "deploy:cheatsheet": "node scripts/deploy cheatsheet"
+    "deploy:cheatsheet": "node scripts/deploy cheatsheet",
+    "validate:circleci": "circleci config validate -c .circleci/config.yml"
   },
   "engines": {
     "node": ">= 7.x <= 8.x",
