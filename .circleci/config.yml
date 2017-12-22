@@ -78,6 +78,7 @@ jobs:
             - ~/repo
 
   test_unit:
+    name: Unit Tests
     docker:
       - image: circleci/node:latest
 
@@ -89,6 +90,7 @@ jobs:
       - run: yarn run test:unit
 
   test_e2e:
+    name: E2E Tests
     docker:
       - image: circleci/node:latest
 
@@ -100,6 +102,7 @@ jobs:
       - run: yarn run test:e2e
 
   test_lint:
+    name: Linter
     docker:
       - image: circleci/node:latest
 
@@ -110,7 +113,8 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: yarn run lint
 
-  deploy:
+  deploy_docs:
+    name: Deploying Docs
     docker:
       - image: circleci/node:latest
 
@@ -121,12 +125,23 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo 'export SYNCANO_AUTH_KEY=${CANARY_SYNCANO_AUTH_KEY}' >> $BASH_ENV
       - run: echo 'export SYNCANO_PROJECT_INSTANCE=${CANARY_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
-      - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
-      - run: npx lerna publish --canary --yes
       - run: node packages/cli/lib/cli.js deploy
       - run: node packages/cli/lib/cli.js hosting sync docs
       - run: node packages/cli/lib/cli.js hosting sync cookbook
       - run: node packages/cli/lib/cli.js hosting sync cheatsheet
+
+  publish:
+    name: NPM publish
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
+      - run: npx lerna publish --canary --yes
 
 workflows:
   version: 2
@@ -142,7 +157,16 @@ workflows:
       - test_e2e:
           requires:
             - build
-      - deploy:
+      - deploy_docs:
+          requires:
+            - build
+            - test_e2e
+            - test_lint
+            - test_unit
+          filters:
+            branches:
+              only: master
+      - publish:
           requires:
             - build
             - test_e2e
