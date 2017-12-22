@@ -115,7 +115,7 @@ class Hosting {
     return this.setRemoteState(response.data)
   }
 
-  deploy () {
+  async deploy () {
     debug('deploy')
 
     if (!this.existRemotely) {
@@ -133,19 +133,16 @@ class Hosting {
       domains: this.domains
     }
 
-    try {
-      const response = axios.request({
-        url: this.editHostingURL,
-        method: 'PATCH',
-        data: paramsToUpdate,
-        headers: {
-          'X-Api-Key': session.settings.account.getAuthKey()
-        }
-      })
-      return this.setRemoteState(response.data)
-    } catch (err) {
-      console.log(err)
-    }
+    const response = await axios.request({
+      url: this.editHostingURL,
+      method: 'PATCH',
+      data: paramsToUpdate,
+      headers: {
+        'X-Api-Key': session.settings.account.getAuthKey()
+      }
+    })
+
+    return this.setRemoteState(response.data)
   }
 
   async delete () {
