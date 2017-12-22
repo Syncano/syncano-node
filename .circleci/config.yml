@@ -116,13 +116,11 @@ jobs:
 
     working_directory: ~/repo
 
-    environment:
-      SYNCANO_AUTH_KEY: ${CANARY_SYNCANO_AUTH_KEY}
-      SYNCANO_PROJECT_INSTANCE: ${CANARY_SYNCANO_PROJECT_INSTANCE}
-
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: export SYNCANO_AUTH_KEY=${CANARY_SYNCANO_AUTH_KEY}
+      - run: export SYNCANO_PROJECT_INSTANCE=${CANARY_SYNCANO_PROJECT_INSTANCE}
       - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
       - run: npx lerna publish --canary --yes
       - run: node packages/cli/lib/cli.js deploy
