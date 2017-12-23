@@ -205,10 +205,8 @@ export class Session {
   }
 
   async checkConnection (instanceName) {
-    let instance = null
-    try {
-      instance = await this.getInstance(instanceName)
-    } catch (err) {
+    const instance = await this.getInstance(instanceName)
+    if (!instance) {
       echo()
       echo(4)(`Instance ${format.cyan(instanceName || this.project.instance)} was not found on your account!`)
       echo()
