@@ -171,6 +171,7 @@ const setup = async () => {
     .action((...options) => {
       const [name] = options
       trackAndDebug(options, { socketName: name })
+      session.hasProject()
       new commands.SocketCreate(context).run(options)
     })
 

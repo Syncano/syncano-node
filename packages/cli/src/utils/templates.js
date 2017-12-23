@@ -15,7 +15,7 @@ const getTemplateSpec = (templateName) => {
   const templatePath = getTemplatePath(templateName)
   debug('getTemplateSpec', templatePath)
   return JSON.parse(
-    fs.readFileSync(path.join(templatePath, '..', 'package.json'))
+    fs.readFileSync(path.join(templatePath, 'package.json'))
   )
 }
 

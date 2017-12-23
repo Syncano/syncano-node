@@ -3,9 +3,8 @@
   "description": "ES6 Syncano Socket Template",
   "version": "0.4.2",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "index.js",
   "files": [
-    "src",
     "template"
   ],
   "publishConfig": {
