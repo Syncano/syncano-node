@@ -5,17 +5,15 @@ import format from 'chalk'
 
 import logger from '../debug'
 import session from '../session'
-import { getTemplateSpec, builtInSocketTemplates } from '../templates'
+import { getTemplateSpec, builtInSocketTemplates, installedSocketTemplates } from '../templates'
 
 const { debug } = logger('utils-sockets-utils')
 
 const socketTemplates = () => {
-  const installedTemplatesNames = session.settings.project.getSocketTemplates()
+  const installedTemplatesNames = installedSocketTemplates()
   const allTemplatesNames = builtInSocketTemplates.concat(installedTemplatesNames)
 
-  const installedTemplates = allTemplatesNames.map((templateName) => {
-    /* eslint-disable import/no-dynamic-require */
-    /* eslint-disable global-require */
+  const installedTemplates = allTemplatesNames.map(templateName => {
     debug('loading template:', templateName)
     const templateSpec = getTemplateSpec(templateName)
 

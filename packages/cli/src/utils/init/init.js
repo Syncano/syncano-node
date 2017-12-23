@@ -5,7 +5,12 @@ import fs from 'fs-extra'
 import session from '../session'
 import logger from '../debug'
 import { echo } from '../print-tools'
-import { getTemplateSpec, getTemplate, builtInProjectTemplates } from '../templates'
+import {
+  getTemplateSpec,
+  getTemplate,
+  builtInProjectTemplates,
+  installedProjectTemplates
+} from '../templates'
 
 const { debug } = logger('utils-init')
 
@@ -15,7 +20,8 @@ class Init {
   }
 
   static projectTemplates () {
-    const installedTemplates = builtInProjectTemplates.map((templateName) => {
+    const allTemplates = builtInProjectTemplates.concat(installedProjectTemplates())
+    const installedTemplates = allTemplates.map(templateName => {
       debug('loading template:', templateName)
       const templateSpec = getTemplateSpec(templateName)
 

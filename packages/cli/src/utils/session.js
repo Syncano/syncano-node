@@ -111,12 +111,7 @@ export class Session {
 
   async getInstance (instanceName) {
     const instanceNameToGet = instanceName || (this.project && this.project.instance)
-    try {
-      return await this.connection.instance.get(instanceNameToGet)
-    } catch (err) {
-      console.log(err)
-      return false
-    }
+    return this.connection.instance.get(instanceNameToGet)
   }
 
   async getInstances () {
@@ -210,9 +205,10 @@ export class Session {
   }
 
   async checkConnection (instanceName) {
-    const instance = await this.getInstance(instanceName)
-
-    if (!instance) {
+    let instance = null
+    try {
+      instance = await this.getInstance(instanceName)
+    } catch (err) {
       echo()
       echo(4)(`Instance ${format.cyan(instanceName || this.project.instance)} was not found on your account!`)
       echo()

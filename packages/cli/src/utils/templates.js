@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import fs from 'fs'
 import path from 'path'
 import logger from './debug'
@@ -5,7 +6,9 @@ import logger from './debug'
 const { debug } = logger('template')
 
 const getTemplatePath = (templateName) => {
-  return path.dirname(require.resolve(templateName))
+  debug('getTemplatePath', templateName)
+  const options = { paths: [path.join(process.cwd(), 'node_modules')] }
+  return path.dirname(require.resolve(templateName, options))
 }
 
 const getTemplateSpec = (templateName) => {
@@ -32,9 +35,33 @@ const builtInProjectTemplates = [
   '@syncano/template-project-hello'
 ]
 
+const findInstalledTemplates = (pattern) => {
+  debug('findInstalledTemplates', pattern)
+  try {
+    const configFile = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json')))
+    const regex = new RegExp(pattern)
+    const devDeps = _.findKey(configFile.devDependencies, (obj, key) => key.match(regex))
+    const deps = _.findKey(configFile.dependencies, (obj, key) => key.match(regex))
+    return [].concat(devDeps || [], deps || [])
+  } catch (err) {
+    debug(err)
+    return []
+  }
+}
+
+const installedProjectTemplates = () => {
+  return findInstalledTemplates('syncano-template-project')
+}
+
+const installedSocketTemplates = () => {
+  return findInstalledTemplates('syncano-template-socket')
+}
+
 export default {
   getTemplate,
   getTemplateSpec,
   builtInSocketTemplates,
-  builtInProjectTemplates
+  builtInProjectTemplates,
+  installedProjectTemplates,
+  installedSocketTemplates
 }
