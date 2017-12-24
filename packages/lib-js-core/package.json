@@ -15,7 +15,8 @@
     "build": "babel src --out-dir lib",
     "build:watch": "babel src --out-dir lib -w",
     "test": "npm run test:unit && npm run test:e2e",
-    "test:unit": "cross-env NODE_ENV=test mocha --reporter spec --require babel-register test/unit/**/*.js",
+    "test:base": "cross-env NODE_ENV=test mocha --reporter spec --require babel-register",
+    "test:unit": "npm run test:base -- test/unit/**/*.js",
     "test:e2e": "npm run test:base -- --timeout 30000 --slow 8000 test/e2e/*.js",
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
