@@ -89,6 +89,10 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: yarn run test:unit
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo
 
   test_e2e:
     name: E2E Tests
