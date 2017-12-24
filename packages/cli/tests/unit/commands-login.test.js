@@ -192,7 +192,7 @@ describe('[commands] Login', function () {
       error = {
         message: getRandomString('login_loginOrRegister_error_message')
       }
-      const errorMessages = [`😢  ${error.message}`]
+      const errorMessages = [`😢  ${format.red(error.message)}`]
 
       this.stub(session.connection.account, 'login').returns(Promise.reject(error))
 
