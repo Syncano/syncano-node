@@ -93,14 +93,12 @@
     "babel-register": "^6.26.0",
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
-    "codecov": "^3.0.0",
     "console.mute": "^0.3.0",
     "dirty-chai": "^2.0.1",
     "husky": "^0.14.3",
     "mocha": "^4.0.1",
     "mock-fs": "^4.4.2",
     "npm-cli-login": "^0.0.10",
-    "nyc": "^11.3.0",
     "prettier": "^1.7.4",
     "rimraf": "^2.6.2",
     "sinon": "^4.1.3",
@@ -118,10 +116,9 @@
     "unit:watch": "yarn run unit -- -w",
     "e2e": "./scripts/e2e",
     "e2e:tutorial": "mocha  --reporter spec --require babel-register --timeout 16000 --slow 8000",
-    "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "test": "npm-run-all --parallel test:unit test:e2e",
     "test:e2e": "yarn run e2e",
-    "test:unit": "nyc yarn run unit",
+    "test:unit": "yarn run unit",
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
   },
@@ -144,12 +141,5 @@
         }
       ]
     ]
-  },
-  "nyc": {
-    "check-coverage": false,
-    "include": [
-      "src/**/*.js"
-    ],
-    "cache": true
   }
 }

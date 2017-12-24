@@ -2,7 +2,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "npx lerna run lint",
-    "test:unit": "npx nyc npx lerna run test:unit",
+    "test:unit": "cross-env LERNA_TEST_RUN=1 NODE_ENV=test nyc lerna run test:unit",
     "test:e2e": "npx lerna run test:e2e --concurrency 1 --stream",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "precommit": "lint-staged",
@@ -33,5 +33,20 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0"
+  },
+  "nyc": {
+    "exclude": [
+      "docs",
+      "**/lib/**",
+      "**/bin/**",
+      "**/coverage/**",
+      "**/dist/**",
+      "**/test/**"
+    ],
+    "reporter": [
+      "text",
+      "lcov"
+    ],
+    "all": true
   }
 }

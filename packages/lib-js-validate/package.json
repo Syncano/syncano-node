@@ -19,7 +19,6 @@
     "chai": "^4.1.2",
     "cross-env": "^5.1.0",
     "mocha": "^3.5.3",
-    "nyc": "^11.2.1",
     "rimraf": "^2.6.2",
     "standard": "^10.0.3"
   },
@@ -29,11 +28,9 @@
     "prebuild": "npm run clean",
     "build": "babel src --out-dir lib",
     "build:watch": "npm run build -- --watch",
-    "test": "npm run lint && npm run test:e2e:coverage",
+    "test": "npm run lint && npm run test:e2e",
     "test:e2e-single": "cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 10000",
-    "test:e2e-single:coverage": "nyc --produce-source-map=true cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 4000",
     "test:e2e": "npm run test:e2e-single",
-    "test:e2e:coverage": "nyc --produce-source-map=true npm run test:e2e",
     "lint": "standard --fix --env mocha"
   },
   "babel": {
