@@ -1,13 +1,14 @@
 /* global it describe before */
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 import 'console.mute'
 import { expect } from 'chai'
 import _ from 'lodash'
 
 import { MAP, printCode, getFormatMethod, warning, error } from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 function increaseByOne (number) {
   return number + 1

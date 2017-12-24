@@ -1,7 +1,6 @@
 /* global describe it beforeEach afterEach */
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 import inquirer from 'inquirer'
 
@@ -10,6 +9,8 @@ import { getRandomString } from '@syncano/test-tools'
 import { SocketUninstall } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] Uninstall Socket', function () {
   const socketName = getRandomString('uninstallSocket_socketName')

@@ -2,12 +2,13 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import axios from 'axios'
 import format from 'chalk'
 
 import context from '../../src/utils/context'
 import { SocketSearch } from '../../src/commands'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] Search Sockets', function () {
   const nameKeyword = 'Segment'

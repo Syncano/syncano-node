@@ -3,7 +3,6 @@ import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 import inquirer from 'inquirer'
 import prettyBytes from 'pretty-bytes'
@@ -14,6 +13,8 @@ import { getRandomString } from '@syncano/test-tools'
 import { HostingFilesCmd } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
+
+sinon.test = sinonTestFactory(sinon)
 
 chai.use(dirtyChai)
 const { expect } = chai

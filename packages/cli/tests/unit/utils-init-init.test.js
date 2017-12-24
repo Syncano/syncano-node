@@ -1,7 +1,6 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import path from 'path'
 import format from 'chalk'
 
@@ -9,6 +8,8 @@ import { getRandomString } from '@syncano/test-tools'
 
 import Init from '../../src/utils/init'
 import printTools from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] init', function () {
   const init = new Init()

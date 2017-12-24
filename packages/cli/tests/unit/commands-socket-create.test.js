@@ -1,7 +1,6 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import inquirer from 'inquirer'
 import format from 'chalk'
 
@@ -10,6 +9,8 @@ import { getRandomString } from '@syncano/test-tools'
 import { SocketCreate } from '../../src/commands'
 import context from '../../src/utils/context'
 import printTools from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] Create Socket', function () {
   const socketCreate = new SocketCreate(context)

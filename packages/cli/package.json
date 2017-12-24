@@ -96,6 +96,7 @@
     "codecov": "^3.0.0",
     "console.mute": "^0.3.0",
     "dirty-chai": "^2.0.1",
+    "husky": "^0.14.3",
     "mocha": "^4.0.1",
     "mock-fs": "^4.4.2",
     "npm-cli-login": "^0.0.10",
@@ -107,6 +108,7 @@
     "standard": "^10.0.3"
   },
   "scripts": {
+    "prepush": "npm run lint && npm run test:unit",
     "prepublish": "yarn run build",
     "build": "babel src -d lib/ --copy-files --ignore *.test.js,*.test-e2e.js --source-maps",
     "build:watch": "yarn run build -- -w",

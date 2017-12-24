@@ -2,12 +2,13 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 
 import { getRandomString } from '@syncano/test-tools'
 
 import program from '../../src/program'
 import session from '../../src/utils/session'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[program]', function () {
   before(function () {

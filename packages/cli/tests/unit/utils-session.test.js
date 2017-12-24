@@ -1,7 +1,6 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import format from 'chalk'
@@ -18,6 +17,8 @@ import Init from '../../src/utils/init'
 import Plugins from '../../src/utils/plugins'
 import getSettings from '../../src/settings'
 import AccountSettings from '../../src/settings/accountSettings'
+
+sinon.test = sinonTestFactory(sinon)
 
 chai.use(dirtyChai)
 const { expect } = chai

@@ -1,13 +1,14 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 import createError from 'create-error'
 
 import { SocketDeploy } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import { currentTime, Timer } from '../../src/utils/date-utils'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] Trace Sockets', function () {
   const interEcho = sinon.stub()

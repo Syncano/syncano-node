@@ -2,7 +2,6 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 import createError from 'create-error'
 import Raven from 'raven'
@@ -12,6 +11,8 @@ import ErrorResponse from '../../src/utils/error-response'
 
 const RequestError = createError('RequestError')
 const SystemError = createError('SystemError')
+
+sinon.test = sinonTestFactory(sinon)
 
 const Errors = {
   404: {

@@ -3,7 +3,6 @@ import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import fs from 'fs-extra'
 import path from 'path'
 
@@ -13,6 +12,8 @@ import getSettings from '../../src/settings'
 import session from '../../src/utils/session'
 import printTools from '../../src/utils/print-tools'
 import Sockets from '../../src/utils/sockets'
+
+sinon.test = sinonTestFactory(sinon)
 
 chai.use(chaiAsPromised)
 

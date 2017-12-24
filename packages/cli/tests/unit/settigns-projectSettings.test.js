@@ -2,13 +2,14 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import fs from 'fs'
 import YAML from 'js-yaml'
 
 import { getRandomString } from '@syncano/test-tools'
 
 import ProjectSettings from '../../src/settings/projectSettings'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[settings] Project Settings', function () {
   let settings = {}

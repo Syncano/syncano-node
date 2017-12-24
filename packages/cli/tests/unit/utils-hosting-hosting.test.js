@@ -3,7 +3,6 @@ import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import Raven from 'raven'
 
 import { getRandomString } from '@syncano/test-tools'
@@ -13,6 +12,8 @@ import Hosting, { HostingFile } from '../../src/utils/hosting'
 import utils from '../../src/utils'
 
 import printTools from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 chai.use(dirtyChai)
 const { expect } = chai

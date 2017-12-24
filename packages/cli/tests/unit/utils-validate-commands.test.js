@@ -1,12 +1,13 @@
 /* global it describe beforeEach afterEach */
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 
 import program from '../../src/program'
 import printTools from '../../src/utils/print-tools'
 import validateCommands from '../../src/utils/validate-commands'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[utils] Validate command', function () {
   const randomString = Math.random().toString(36).substring(7)
