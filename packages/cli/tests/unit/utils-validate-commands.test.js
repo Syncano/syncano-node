@@ -1,5 +1,7 @@
 /* global it describe beforeEach afterEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 
 import program from '../../src/program'

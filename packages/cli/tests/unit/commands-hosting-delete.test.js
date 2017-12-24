@@ -2,6 +2,7 @@
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
@@ -10,6 +11,8 @@ import { getRandomString } from '@syncano/test-tools'
 import {HostingDelete} from '../../src/commands'
 import printTools, { p } from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
+
+sinon.test = sinonTestFactory(sinon)
 
 chai.use(dirtyChai)
 const { expect } = chai
@@ -32,7 +35,7 @@ describe('[commands] Delete Hosting', function () {
 
   beforeEach(function () {
     interEcho = sinon.stub()
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
     warning = sinon.stub(printTools, 'warning')
     error = sinon.stub(printTools, 'error')
     processExit = sinon.stub(process, 'exit')

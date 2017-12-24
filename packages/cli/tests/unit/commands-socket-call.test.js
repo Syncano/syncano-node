@@ -1,6 +1,7 @@
 /* global it describe afterEach beforeEach */
 import _ from 'lodash'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import format from 'chalk'
 import inquirer from 'inquirer'
 import dirtyChai from 'dirty-chai'
@@ -11,6 +12,8 @@ import { getRandomString } from '@syncano/test-tools'
 import { SocketEndpointCall } from '../../src/commands'
 import context from '../../src/utils/context'
 import printTools from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 chai.use(dirtyChai)
 const { expect } = chai
@@ -64,14 +67,14 @@ describe('[commands] Call Socket', function () {
   beforeEach(function () {
     interEcho = sinon.stub()
     interEchon = sinon.stub()
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
-    sinon.stub(printTools, 'echon', (content) => interEchon)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
+    sinon.stub(printTools, 'echon').callsFake((content) => interEchon)
   })
 
   afterEach(function () {
+    interEcho.reset()
     printTools.echo.restore()
     printTools.echon.restore()
-    interEcho.reset()
   })
 
   describe('validateValue', function () {
@@ -128,7 +131,7 @@ describe('[commands] Call Socket', function () {
       sinon.assert.calledWith(listParams, endpointObj)
     }))
 
-    it('should be called with echo and proper message', function () {
+    it('should be called with echo and proper message', sinon.test(function () {
       SocketEndpointCall.listParams(endpointObj)
 
       sinon.assert.calledWith(interEchon, `You can pass ${format.cyan(2)} `)
@@ -138,7 +141,7 @@ describe('[commands] Call Socket', function () {
       )
       sinon.assert.calledWith(echo, 4)
       expect(echo.callCount).to.be.equal(6)
-    })
+    }))
 
     it('should invoke promptParamQuestion method', sinon.test(function () {
       const params = endpointObj.metadata.parameters

@@ -1,6 +1,8 @@
 /* global it describe afterEach beforeEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import fs from 'fs'
 import YAML from 'js-yaml'
 

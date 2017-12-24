@@ -2,12 +2,14 @@
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import fs from 'fs'
 import YAML from 'js-yaml'
 
 import { getRandomString } from '@syncano/test-tools'
-
 import AccountSettings from '../../src/settings/accountSettings'
+
+sinon.test = sinonTestFactory(sinon)
 
 chai.use(dirtyChai)
 const { expect } = chai

@@ -1,6 +1,7 @@
 /* global describe it beforeEach afterEach before */
 import _ from 'lodash'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import { expect } from 'chai'
 import format from 'chalk'
 
@@ -9,6 +10,8 @@ import { getRandomString } from '@syncano/test-tools'
 import { SocketList } from '../../src/commands'
 import context from '../../src/utils/context'
 import printTools, { p, printCode } from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] List Sockets', function () {
   const socketList = new SocketList(context)
@@ -65,7 +68,7 @@ describe('[commands] List Sockets', function () {
 
   beforeEach(function () {
     interEcho = sinon.stub()
-    sinon.stub(printTools, 'echo', (content) => interEcho)
+    sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
     sinon.stub(socketList.session, 'load')
     sinon.stub(process, 'exit')
   })

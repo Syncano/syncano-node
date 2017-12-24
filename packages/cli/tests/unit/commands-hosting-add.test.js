@@ -2,6 +2,7 @@
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import inquirer from 'inquirer'
 import format from 'chalk'
 
@@ -11,6 +12,8 @@ import { HostingSync, HostingAdd } from '../../src/commands'
 import Hosting from '../../src/utils/hosting'
 import context from '../../src/utils/context'
 import printTools, { p } from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 chai.use(dirtyChai)
 const { expect } = chai
@@ -98,7 +101,7 @@ describe('[commands] Add Hosting', function () {
     beforeEach(function () {
       interEcho = sinon.stub()
       error = sinon.stub(printTools, 'error')
-      echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+      echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
       syncNewHosting = sinon.stub(hostingAdd, 'syncNewHosting')
     })
 
@@ -152,7 +155,7 @@ describe('[commands] Add Hosting', function () {
 
     beforeEach(function () {
       interEcho = sinon.stub()
-      echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+      echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
       prompt = sinon.stub(inquirer, 'prompt').returns({})
       exitProcess = sinon.stub(process, 'exit')
     })
@@ -189,7 +192,7 @@ describe('[commands] Add Hosting', function () {
     })
 
     it('should call run method with proper parameters in new HostingSync class instance', async function () {
-      const runHostingSync = sinon.stub(HostingSync.prototype, 'run', () => 0)
+      const runHostingSync = sinon.stub(HostingSync.prototype, 'run').callsFake(() => 0)
 
       prompt.returns({ confirm: true })
 
@@ -225,7 +228,7 @@ describe('[commands] Add Hosting', function () {
     beforeEach(function () {
       interEcho = sinon.stub()
       warning = sinon.stub(printTools, 'warning')
-      echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+      echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
       listLocal = sinon.stub(hostingAdd.Socket, 'listLocal').returns(localSockets)
       getDirectories = sinon.stub(Hosting, 'getDirectories').returns(directories)
       exitProcess = sinon.stub(process, 'exit')

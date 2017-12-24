@@ -1,5 +1,7 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import format from 'chalk'
@@ -32,8 +34,8 @@ describe('[utils] Session', function () {
   beforeEach(function () {
     interEcho = sinon.stub()
     interEchon = sinon.stub()
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
-    sinon.stub(printTools, 'echon', (content) => interEchon)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
+    sinon.stub(printTools, 'echon').callsFake((content) => interEchon)
     error = sinon.stub(printTools, 'error')
     exitProcess = sinon.stub(process, 'exit')
   })
@@ -399,7 +401,7 @@ describe('[utils] Session', function () {
 
   describe('loadPlugins', function () {
     it('should call plugins load function with passed parameters', function () {
-      const loadStub = sinon.stub(Plugins.prototype, 'load', () => 0)
+      const loadStub = sinon.stub(Plugins.prototype, 'load').callsFake(() => 0)
       const args = [
         getRandomString('session_loadPlugins_args[0]'),
         getRandomString('session_loadPlugins_args[1]')

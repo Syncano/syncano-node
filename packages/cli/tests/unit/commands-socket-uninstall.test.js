@@ -1,5 +1,7 @@
 /* global describe it beforeEach afterEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 import inquirer from 'inquirer'
 
@@ -23,8 +25,8 @@ describe('[commands] Uninstall Socket', function () {
   beforeEach(function () {
     exitProcess = sinon.stub(process, 'exit')
     prompt = sinon.stub(inquirer, 'prompt')
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
-    warning = sinon.stub(printTools, 'warning', (content) => interEcho)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
+    warning = sinon.stub(printTools, 'warning').callsFake((content) => interEcho)
     uninstall = sinon.stub(socketUninstall.Socket, 'uninstall')
     getSocket = sinon.stub(socketUninstall.Socket, 'get').returns({ name: socketName })
   })

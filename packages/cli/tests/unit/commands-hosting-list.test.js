@@ -1,5 +1,6 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
@@ -8,6 +9,8 @@ import { getRandomString } from '@syncano/test-tools'
 import { HostingList } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] List Hosting', function () {
   const hostingList = new HostingList(context)
@@ -20,7 +23,7 @@ describe('[commands] List Hosting', function () {
     interEcho = sinon.stub()
     error = sinon.stub(printTools, 'error')
     warning = sinon.stub(printTools, 'warning')
-    sinon.stub(printTools, 'echo', (content) => interEcho)
+    sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
   })
 
   afterEach(function () {

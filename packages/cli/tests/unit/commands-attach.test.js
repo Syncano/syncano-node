@@ -1,6 +1,7 @@
 /* global it describe afterEach beforeEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import inquirer from 'inquirer'
 
 import { getRandomString } from '@syncano/test-tools'
@@ -8,6 +9,8 @@ import { getRandomString } from '@syncano/test-tools'
 import { Attach } from '../../src/commands'
 import context from '../../src/utils/context'
 import printTools from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] Attach', function () {
   let attach = null

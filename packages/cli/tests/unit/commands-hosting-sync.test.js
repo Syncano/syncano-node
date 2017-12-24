@@ -1,5 +1,6 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
@@ -8,6 +9,8 @@ import { getRandomString } from '@syncano/test-tools'
 import { HostingSync } from '../../src/commands'
 import printTools from '../../src/utils/print-tools'
 import context from '../../src/utils/context'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] Sync Hosting', function () {
   let hostingSync = new HostingSync(context)
@@ -18,7 +21,7 @@ describe('[commands] Sync Hosting', function () {
     interEcho = sinon.stub()
     sinon.stub(printTools, 'echon')
     hostingSync = new HostingSync(context)
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
     sinon.stub(printTools, 'error')
     sinon.stub(hostingSync.session, 'load')
     sinon.stub(hostingSync.Socket, 'get').returns(Promise.resolve({

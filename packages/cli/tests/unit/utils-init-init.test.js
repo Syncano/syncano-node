@@ -1,5 +1,7 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import path from 'path'
 import format from 'chalk'
 
@@ -15,7 +17,7 @@ describe('[commands] init', function () {
 
   beforeEach(function () {
     interEcho = sinon.stub()
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
   })
 
   afterEach(function () {

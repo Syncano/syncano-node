@@ -1,6 +1,8 @@
 
 // import { expect } from 'chai';
-// import sinon from 'sinon';
+// import sinon from 'sinon'
+// import sinonTestFactory from 'sinon-test'
+// sinon.test = sinonTestFactory(sinon);
 // import format from 'chalk';
 // import SocketInstall from './socket-install';
 // import context from '../utils/context';

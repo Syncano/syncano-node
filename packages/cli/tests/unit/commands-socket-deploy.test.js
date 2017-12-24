@@ -1,5 +1,7 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 import createError from 'create-error'
 
@@ -14,8 +16,8 @@ describe('[commands] Trace Sockets', function () {
   let error = null
 
   beforeEach(function () {
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
-    error = sinon.stub(printTools, 'error', (content) => interError)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
+    error = sinon.stub(printTools, 'error').callsFake((content) => interError)
   })
 
   afterEach(function () {
@@ -27,7 +29,7 @@ describe('[commands] Trace Sockets', function () {
     it('should echo properly formatted message', function () {
       const socketNameStr = format.cyan('foo')
       const timer = new Timer()
-      sinon.stub(timer, 'getDurationTime', () => 42)
+      sinon.stub(timer, 'getDurationTime').callsFake(() => 42)
 
       SocketDeploy.printUpdateSuccessful('foo', { status: 'ok' }, timer)
 
@@ -41,7 +43,7 @@ describe('[commands] Trace Sockets', function () {
         createError({ detail: 'foo' })
       } catch (err) {
         const timer = new Timer()
-        sinon.stub(timer, 'getDurationTime', () => 42)
+        sinon.stub(timer, 'getDurationTime').callsFake(() => 42)
 
         SocketDeploy.printUpdateFailed('foo', err, new Timer())
 

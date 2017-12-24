@@ -2,6 +2,8 @@
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import SocketSettings from '../../src/settings/socketSettings'
 
 chai.use(dirtyChai)

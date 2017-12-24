@@ -1,5 +1,7 @@
 /* global it describe afterEach beforeEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import inquirer from 'inquirer'
 import format from 'chalk'
 
@@ -21,7 +23,7 @@ describe('[commands] Create Socket', function () {
     interEcho = sinon.stub()
     create = sinon.stub(socketCreate.Socket, 'create')
     prompt = sinon.stub(inquirer, 'prompt')
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
     error = sinon.stub(printTools, 'error')
   })
 

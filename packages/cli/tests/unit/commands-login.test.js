@@ -1,5 +1,6 @@
 /* global it describe before after afterEach beforeEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
@@ -9,6 +10,8 @@ import { Login } from '../../src/commands'
 import context from '../../src/utils/context'
 import session from '../../src/utils/session'
 import printTools from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] Login', function () {
   const email = process.env.E2E_CLI_EMAIL
@@ -22,7 +25,7 @@ describe('[commands] Login', function () {
 
   beforeEach(function () {
     interEcho = sinon.stub()
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
     loadSession = sinon.stub(login.session, 'load').returns(Promise.resolve())
   })
 

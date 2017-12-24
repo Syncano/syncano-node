@@ -1,6 +1,8 @@
 /* global describe it beforeEach afterEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 import format from 'chalk'
 import createError from 'create-error'
 import Raven from 'raven'

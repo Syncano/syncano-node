@@ -1,11 +1,14 @@
 /* global it describe before after afterEach beforeEach */
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
 import format from 'chalk'
 
 import { Logout } from '../../src/commands'
 import context from '../../src/utils/context'
 import session from '../../src/utils/session'
 import printTools from '../../src/utils/print-tools'
+
+sinon.test = sinonTestFactory(sinon)
 
 describe('[commands] Logout', function () {
   const logout = new Logout(context)
@@ -22,7 +25,7 @@ describe('[commands] Logout', function () {
 
   beforeEach(function () {
     interEcho = sinon.stub()
-    echo = sinon.stub(printTools, 'echo', (content) => interEcho)
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
   })
 
   afterEach(function () {

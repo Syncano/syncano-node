@@ -1,6 +1,8 @@
 /* global it describe before afterEach beforeEach */
 import { expect } from 'chai'
 import sinon from 'sinon'
+import sinonTestFactory from 'sinon-test'
+sinon.test = sinonTestFactory(sinon)
 
 import { getRandomString } from '@syncano/test-tools'
 
