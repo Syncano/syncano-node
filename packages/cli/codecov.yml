@@ -25,4 +25,4 @@ parsers:
   javascript:
     enable_partials: false
 ignore:
-  - "test"
+  - "src/::packages/cli/src/"
