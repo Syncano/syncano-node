@@ -118,7 +118,7 @@
     "unit:watch": "yarn run unit -- -w",
     "e2e": "./scripts/e2e",
     "e2e:tutorial": "mocha  --reporter spec --require babel-register --timeout 16000 --slow 8000",
-    "report:coverage": "cat ./coverage/lcov.info | codecov",
+    "test:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "test": "npm-run-all --parallel test:unit test:e2e",
     "test:e2e": "yarn run e2e",
     "test:unit": "nyc --reporter=lcov yarn run unit",
