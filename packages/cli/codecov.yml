@@ -25,4 +25,6 @@ parsers:
   javascript:
     enable_partials: false
 ignore:
+  - "test"
+fixes:
   - "src/::packages/cli/src/"
