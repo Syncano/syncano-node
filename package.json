@@ -38,7 +38,9 @@
   },
   "nyc": {
     "exclude": [
+      "scripts",
       "docs",
+      "**/template/**",
       "**/lib/**",
       "**/bin/**",
       "**/coverage/**",
