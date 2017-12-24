@@ -90,7 +90,7 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: yarn run test:unit
       - save_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v1-repo-units-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo
 
@@ -157,8 +157,8 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npx lerna run report:coverage
+          key: v1-repo-units-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn run report:coverage
 
 workflows:
   version: 2
