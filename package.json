@@ -2,9 +2,9 @@
   "license": "MIT",
   "scripts": {
     "lint": "npx lerna run lint",
-    "test:unit": "npx lerna run test:unit",
+    "test:unit": "npx nyc npx lerna run test:unit",
     "test:e2e": "npx lerna run test:e2e --concurrency 1 --stream",
-    "report:coverage": "npx lerna run report:coverage",
+    "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "precommit": "lint-staged",
     "deploy": "npm run deploy:cookbook && npm run deploy:cheatsheet",
     "deploy:cookbook": "node scripts/deploy cookbook",
@@ -27,8 +27,11 @@
     "chalk": "^2.3.0",
     "git-branch": "^1.0.0",
     "husky": "^0.14.3",
-    "lint-staged": "^5.0.0",
     "lerna": "^2.5.1",
+    "lint-staged": "^5.0.0",
     "standard": "^10.0.3"
+  },
+  "devDependencies": {
+    "codecov": "^3.0.0"
   }
 }
