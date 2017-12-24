@@ -154,7 +154,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run report-coverage
+      - run: npx lerna run report:coverage
 
 workflows:
   version: 2
