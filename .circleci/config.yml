@@ -41,6 +41,7 @@ jobs:
           - v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
           - v1-dependencies-test
 
+      - run: yarn install
       - run: npx lerna bootstrap
 
       - save_cache:
