@@ -108,6 +108,7 @@
     "standard": "^10.0.3"
   },
   "scripts": {
+    "precommit": "npm run lint",
     "prepush": "npm run lint && npm run test:unit",
     "prepublish": "yarn run build",
     "build": "babel src -d lib/ --copy-files --ignore *.test.js,*.test-e2e.js --source-maps",
