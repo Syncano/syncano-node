@@ -42,6 +42,7 @@ class HostingAdd {
     } else {
       const params = {
         name: this.hostingName,
+        browser_router: responses.browser_router,
         src: path.relative(this.session.projectPath, path.join(process.cwd(), this.folder)),
         cname: this.cname || responses.CNAME || null
       }
@@ -98,6 +99,13 @@ class HostingAdd {
       questions.push({
         name: 'CNAME',
         message: p(2)('Set CNAME now (your own domain) or leave it empty')
+      })
+    }
+    if (!this.browser_router) {
+      questions.push({
+        type: 'confirm',
+        name: 'browser_router',
+        message: p(2)('Do you want to use BrowserRouter for this hosting?')
       })
     }
 
