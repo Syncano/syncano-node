@@ -18,6 +18,7 @@
     - [Facebook Weather Bot](/solutions/weather-bot)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
+  - [Creating project template](/deployment/create-project-template)
   - [Using multiple Syncano accounts](/deployment/multiple-accounts)
 - [Support](/common/support)
 - [Contributing](/common/contributing)

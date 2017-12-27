@@ -1,3 +1,6 @@
 {
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "docsify-cli": "^4.1.12"
+  }
 }
