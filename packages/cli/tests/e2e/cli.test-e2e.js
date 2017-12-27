@@ -233,6 +233,8 @@ describe('[E2E] CLI User', function () {
       .respond(`${hostingName}\n`)
       .on(/Set CNAME/)
       .respond('\n')
+      .on(/BrowserRouter/)
+      .respond('\n')
       .on(/sync files now/)
       .respond('\n')
       .stdout(/sync files use: syncano-cli hosting sync/)
