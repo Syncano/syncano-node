@@ -47,13 +47,17 @@ class Hosting {
     this.hostingURL = `/v2/instances/${session.project.instance}/hosting/`
     this.editHostingURL = `https://${session.getHost()}${this.hostingURL}${this.name}/`
     this.hostingHost = session.getHost() === 'api.syncano.rocks' ? 'syncano.ninja' : 'syncano.site'
+    this.config = {}
 
     this.loadLocal()
   }
 
   static async add (params) {
     const configParams = {
-      src: params.src
+      src: params.src,
+      config: {
+        browser_router: params.browser_router || false
+      }
     }
     session.settings.project.addHosting(params.name, configParams)
 
@@ -67,6 +71,9 @@ class Hosting {
 
     const paramsToAdd = {
       name: params.name,
+      config: {
+        browser_router: params.browser_router
+      },
       domains
     }
 
@@ -100,6 +107,9 @@ class Hosting {
 
     const paramsToUpdate = {
       name: this.name,
+      config: {
+        browser_router: params.browser_router
+      },
       domains
     }
 
@@ -214,12 +224,12 @@ class Hosting {
       this.name = hosting.name
       this.description = hosting.description
       this.domains = hosting.domains
-
-      const status = await this.areFilesUpToDate()
-      this.isUpToDate = status
+      this.config.browser_router = hosting.config.browser_router || false
+      this.isUpToDate = await this.areFilesUpToDate()
+    } else {
+      this.existRemotely = false
+      this.error = hosting
     }
-    this.existRemotely = false
-    this.error = hosting
     return Promise.resolve()
   }
 
@@ -227,7 +237,7 @@ class Hosting {
     debug('loadRemote()')
     try {
       const hosting = await this.getRemote()
-      this.setRemoteState(hosting)
+      await this.setRemoteState(hosting)
     } catch (err) {
       this.existRemotely = false
     }
@@ -253,7 +263,8 @@ class Hosting {
       this.existLocally = true
       this.src = localHostingSettings.src
       this.cname = localHostingSettings.cname
-      this.path = path.join(session.projectPath, this.src, '/')
+      this.config.browser_router = localHostingSettings.config.browser_router
+      this.path = path.join(session.projectPath, this.src, path.sep)
       this.url = this.getURL(this.name)
     }
   }
@@ -385,7 +396,10 @@ class Hosting {
   async listRemoteFiles () {
     debug('listRemoteFiles()')
     const files = await session.connection.hosting.listFiles(this.name)
-    return files.map((file) => new HostingFile().loadRemote(file))
+    return files.map(async file => {
+      const hostingFile = new HostingFile(file)
+      return hostingFile.loadRemote(file)
+    })
   }
 
   // Get info about hostings first, then get the files list for given one
@@ -416,8 +430,12 @@ class Hosting {
     return files
   }
 
+  getCNAME () {
+    return _.find(this.domains, (domain) => domain.indexOf('.') !== -1)
+  }
+
   getCnameURL () {
-    const cname = _.find(this.domains, (domain) => domain.indexOf('.') !== -1)
+    const cname = this.getCNAME()
     if (cname) {
       return `http://${cname}`
     }

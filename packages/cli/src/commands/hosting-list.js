@@ -1,6 +1,6 @@
 import format from 'chalk'
 
-import { echo } from '../utils/print-tools'
+import { echo, echon } from '../utils/print-tools'
 import Hosting from '../utils/hosting'
 
 class HostingListCmd {
@@ -35,18 +35,21 @@ class HostingListCmd {
 
   static printHosting (hosting) {
     const cname = typeof hosting.getCnameURL === 'function' && hosting.getCnameURL()
-    echo(4)(`${format.dim('name')}: ${format.cyan(hosting.name)}`)
+    echo(11)(`${format.dim('name')}: ${format.cyan(hosting.name)}`)
 
     if (hosting.existRemotely) {
-      echo(4)(`${format.dim('url')}: ${format.cyan(hosting.getURL())}`)
+      echo(12)(`${format.dim('URL')}: ${format.cyan(hosting.getURL())}`)
     }
 
     if (hosting.getCnameURL()) {
-      echo(4)(`${format.dim('cname')}: ${format.cyan(cname)}`)
+      echo(10)(`${format.dim('CNAME')}: ${format.cyan(cname)}`)
     }
 
+    echon(2)(`${format.dim('BrowserRouter')}:`)
+    echo(` ${format.cyan(hosting.config.browser_router ? format.green('✓') : format.red('x'))}`)
+
     if (!hosting.existRemotely) {
-      echo(4)(`${format.dim('status')}: ${format.red('x')}`)
+      echo(9)(`${format.dim('status')}: ${format.magenta('not synced')}`)
     } else {
       echo(4)(`${format.dim('sync status')}: ${hosting.isUpToDate ? `${format.green('✓')}` : `${format.red('x')}`}`)
     }
