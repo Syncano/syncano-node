@@ -5,47 +5,32 @@ import fs from 'fs-extra'
 import {
   nixt,
   testsLocation,
-  cleanUpAccount,
-  returnTestGlobals
+  deleteInstance,
+  createProject,
+  uniqueInstance
 } from '@syncano/test-tools'
 
 const cliLocation = path.join(process.cwd(), 'lib/cli.js')
 const configTestTemplate = path.join(__dirname, './assets/sockets/hello-config')
-const { email, password, syncanoYmlPath } = returnTestGlobals()
-
-const moveTestSocket = (template) => {
-  try {
-    fs.copySync(template, `${testsLocation}/syncano/hello-config`)
-  } catch (err) {
-    console.error('moveTestSocket', err)
-  }
-}
+const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
 
 describe('[E2E] CLI Config', function () {
-  before(cleanUpAccount)
-  after(cleanUpAccount)
+  let testInstance = uniqueInstance()
 
-  it('can run cli init with existing account', function (done) {
-    nixt()
-      .cwd(testsLocation)
-      .run(`${cliLocation} init`)
-      .on(/Your e-mail/)
-      .respond(`${email}\n`)
-      .on(/Password/)
-      .respond(`${password}\n`)
-      .on(/Hello World/)
-      // Choose from dropdown default project template: hello
-      .respond('\n')
-      .stdout(/Creating Syncano Instance/)
-      .stdout(/Project has been created from/)
-      .match(syncanoYmlPath, /auth_key/)
-      .match(syncanoYmlPath, /instance/)
-      .end(done)
-  })
+  const moveTestSocket = (template) => {
+    fs.copySync(template, path.join(testsLocation, testInstance, 'syncano', 'hello-config'))
+  }
+
+  const testNixt = () => nixt()
+    .env('SYNCANO_PROJECT_INSTANCE', testInstance)
+    .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
+    .cwd(path.join(testsLocation, testInstance))
+
+  before(async () => createProject(testInstance, projectTestTemplate))
+  after(async () => deleteInstance(testInstance))
 
   it('can sync test config socket', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .before(function () {
         return moveTestSocket(configTestTemplate)
       })
@@ -55,45 +40,39 @@ describe('[E2E] CLI Config', function () {
   })
 
   it('can set first config option', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} config-set hello-config TEST1 test1_value`)
       .end(done)
   })
 
   it('can set second config option', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} config-set hello-config TEST2 test2_value`)
       .end(done)
   })
 
   it('can show config of the socket', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} config-show hello-config`)
       .stdout(/value: test2_value/)
       .end(done)
   })
 
   it('can change first config option of the socket', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} config-set hello-config TEST1 test1_value_new`)
       .end(done)
   })
 
   it('can see new config option of the socket', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} config-show hello-config`)
       .stdout(/value: test1_value_new/)
       .end(done)
   })
 
   it('can configure the socket fully', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} config hello-config`)
       .on(/TEST1/)
       .respond('test1\n')
@@ -105,19 +84,9 @@ describe('[E2E] CLI Config', function () {
   })
 
   it('can call hello-config socket endpoint', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} call "hello-config/hello" || exit 0`)
       .stdout(/test1 test2/)
-      .end(done)
-  })
-
-  it('can logout from cli', function (done) {
-    nixt()
-      .cwd(testsLocation)
-      .run(`${cliLocation} logout`)
-      .stdout(/You have been logged out/)
-      .unlink(syncanoYmlPath)
       .end(done)
   })
 })

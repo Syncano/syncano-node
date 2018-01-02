@@ -111,7 +111,12 @@ export default class SocketDeployCmd {
         echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
       } else {
         const status = format.red('socket sync error:')
-        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
+        if (err.message) {
+          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
+        } else {
+          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}`)
+          error(err.message)
+        }
       }
 
       if (this.cmd.bail) {

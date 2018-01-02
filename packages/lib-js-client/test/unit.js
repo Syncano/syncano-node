@@ -1,3 +1,4 @@
+/* globals it describe beforeEach */
 const jsdom = require('mocha-jsdom')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')

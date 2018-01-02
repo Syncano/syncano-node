@@ -7,7 +7,7 @@ import origNixt from 'nixt'
 import _ from 'lodash'
 
 import { p } from '../../cli/src/utils/print-tools'
-import uniqueInstance from '../../cli/src/utils/unique-instance'
+import uniqueInstance from './unique-instance'
 
 import homeDir from 'home-dir'
 
@@ -90,12 +90,12 @@ const shutdownLocation = (location) => {
 }
 
 // Helper functions used in tests
-const createInstance = () => connection.instance
-    .create({ name: uniqueInstance() })
+const createInstance = (instanceName) => connection.instance
+    .create({ name: instanceName || uniqueInstance() })
     .catch((error) => process.stderr.write(JSON.stringify(error.message, null, '')))
 
-const deleteInstance = (item) => connection.instance
-    .delete(item)
+const deleteInstance = (instanceName) => connection.instance
+    .delete(instanceName)
     .catch((error) => process.stderr.write(JSON.stringify(error.message, null, '')))
 
 const deleteEachInstance = (instances) => {
@@ -113,6 +113,11 @@ const cleanUpAccount = () => connection.instance
     })
     .catch((error) => process.stderr.write(JSON.stringify(error.message)))
 
+const createProject = (instanceName, projectTestTemplate) => {
+  fs.copySync(projectTestTemplate, path.join(testsLocation, instanceName))
+  return createInstance(instanceName)
+}
+
 export {
   testsLocation,
   returnTestGlobals,
@@ -127,6 +132,9 @@ export {
   createdSocketName,
   setupLocation,
   shutdownLocation,
+  createProject,
   createInstance,
+  deleteInstance,
+  uniqueInstance,
   cleanUpAccount
 }
