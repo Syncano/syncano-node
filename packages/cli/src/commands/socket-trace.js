@@ -81,7 +81,7 @@ export default class SocketTrace {
 
   // Decide about how to print trace and which
   async printTrace (socket, trace) {
-    if (trace.payload.status === 'pending' || trace.payload.status === 'processing') return
+    if (!trace.payload || trace.payload.status === 'pending' || trace.payload.status === 'processing') return
 
     const traceUrl = trace.payload.links.self
     const fullTrace = await this.Socket.getEndpointTraceByUrl(traceUrl)

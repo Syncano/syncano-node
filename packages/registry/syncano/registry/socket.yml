@@ -1,0 +1,209 @@
+name: registry
+description: Main Logic of Sockets Registry
+version: 0.0.1
+
+classes:
+  storage:
+   - name: file
+     type: file
+  keyword:
+    - name: name
+      type: string
+      filter_index: true
+  user:
+    - name: display_name
+      type: string
+    - name: syncano_owner_id
+      type: integer
+      filter_index: true
+  organization:
+    - name: name
+      type: string
+    - name: members
+      type: relation
+      target: author
+      filter_index: true
+  socket:
+    - name: name
+      type: string
+      filter_index: true
+    - name: description
+      type: string
+      filter_index: true
+    - name: organization
+      type: reference
+      target: organization
+      filter_index: true
+    - name: owner_account
+      type: integer
+      filter_index: true
+    - name: author
+      type: reference
+      target: user
+    - name: url
+      type: string
+    - name: icon
+      type: object
+    - name: version
+      type: string
+      order_index: true
+      filter_index: true
+    - name: keywords
+      type: relation
+      target: keyword
+      filter_index: true
+    - name: official
+      type: boolean
+    - name: private
+      type: boolean
+      filter_index: true
+    - name: config
+      type: object
+    - name: zip_file
+      type: file
+
+endpoints:
+  get:
+    description: Get socket based on name and version
+    parameters:
+      name:
+        type: string
+        description: Name to search for in registry
+        example: facebook-bot
+      version:
+        type: string
+        description: Version of the socket
+        example: 1.0.0
+    response:
+      mimetype: application/json
+      examples:
+        -
+          exit_code: 200
+          description: Successful search
+          example: |
+            {
+              "name": "facebook-bot",
+              "description": "Facebook Messenger bot",
+              "version": "1.0.0",
+              "author: "Eyedea AS",
+              "url": "https://github.com/eyedea-io/facebook-bot",
+              "keywords": [
+                "facebook",
+                "social media"
+              ],
+              "official": true,
+              "private": true
+            }
+
+  list:
+    description: List last version sockets
+    response:
+      mimetype: application/json
+      examples:
+        -
+          exit_code: 200
+          description: Successful list
+          example: |
+            [
+              {
+                "name": "facebook-bot",
+                "description": "Facebook Messenger bot",
+                "version": "1.0.0",
+                "author: "Eyedea AS",
+                "url": "https://github.com/eyedea-io/facebook-bot",
+                "keywords": [
+                  "facebook",
+                  "social media"
+                ],
+                "official": true,
+                "private": true
+              }
+            ]
+
+  search:
+    description: Search for sockets based on keyword
+    parameters:
+      keyword:
+        type: string
+        description: Keyword to search for in the registry
+        example: facebook
+    response:
+      mimetype: application/json
+      examples:
+        -
+          exit_code: 200
+          description: Successful search
+          example: |
+            [
+              {
+                "name": "facebook-bot",
+                "description": "Facebook Messenger bot",
+                "version": "1.0.0",
+                "author": "Eyedea AS",
+                "url": "https://github.com/eyedea-io/facebook-bot",
+                "keywords": [
+                  "facebook",
+                  "social media"
+                ],
+                "official": true
+              }
+            ]
+
+  add:
+    description: Add socket to registry
+    parameters:
+      name:
+        type: string
+        description: Name of the socket
+        example: facebook-bot
+      description:
+        type: string
+        description: Description of the socket
+        example: facebook-bot
+      version:
+        type: string
+        description: Version of the socket
+        example: 1.0.0
+      url:
+        type: string
+        description: URL of the socket repository
+        example: https://github.com/eyedea-io/facebook-bot
+      keywords:
+        type: array
+        description: Tags of the socket
+        example: ["facebook", "social media"]
+      private:
+        type: boolean
+        description: If true socket will be private
+        example: true
+    response:
+      mimetype: application/json
+      examples:
+        -
+          exit_code: 202
+          description: Successful registration
+
+  publish:
+    description: Make private socket available in registry for everyone
+    parameters:
+      name:
+        type: string
+        description: Name of the socket
+        example: facebook-bot
+    response:
+      mimetype: application/json
+      examples:
+        -
+          exit_code: 202
+          description: Successfully published
+
+  upload:
+    description: Get upload link
+    response:
+      mimetype: application/json
+      examples:
+        -
+          exit_code: 202
+          description: Successfully published
+          example: |
+            {"upload_url": "https://upload_url"}

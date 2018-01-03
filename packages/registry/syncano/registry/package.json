@@ -1,0 +1,41 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "semver": "^5.4.1",
+    "@syncano/core": "0.4.2"
+  },
+  "scripts": {
+    "build": "yarn && yarn run build:src && yarn run build:env",
+    "build:src": "sh ./bin/compile",
+    "build:env": "sh ./bin/compile-env",
+    "test:e2e-single": "cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 4000",
+    "test:e2e-single:coverage": "nyc --produce-source-map=true cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 4000",
+    "test:e2e": "yarn run test:e2e-single 'test/*.test.js'",
+    "test:e2e:coverage": "nyc --produce-source-map=true npm run test:e2e",
+    "test:lint": "standard --fix"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "chai": "^4.1.2",
+    "cross-env": "^3.1.4",
+    "mocha": "^3.5.3",
+    "mockery": "^2.1.0",
+    "sinon": "^3.3.0",
+    "standard": "^10.0.3",
+    "@syncano/test": "0.4.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "8"
+          }
+        }
+      ]
+    ]
+  }
+}

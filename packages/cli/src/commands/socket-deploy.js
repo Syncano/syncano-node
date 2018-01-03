@@ -108,7 +108,11 @@ export default class SocketDeployCmd {
       spinner.stop()
       if (err instanceof CompileError) {
         const status = format.red('    compile error:')
-        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+        if (err.traceback) {
+          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+        } else {
+          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} Error while executing 'build' script!`)
+        }
       } else {
         const status = format.red('socket sync error:')
         echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
