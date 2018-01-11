@@ -12,10 +12,10 @@ const {generateSocket} = require('./utils').default()
 
 describe('add', function () {
   let firstAccountObj = {
-    token: process.env.E2E_USER_ACCOUNT_KEY_1
+    token: process.env.REGISTRY_E2E_USER_ACCOUNT_KEY_1
   }
   let secondAccountObj = {
-    token: process.env.E2E_USER_ACCOUNT_KEY_2
+    token: process.env.REGISTRY_E2E_USER_ACCOUNT_KEY_2
   }
   const meta = generateMeta('add', {
     request: {
@@ -113,7 +113,7 @@ describe('add', function () {
   it('new socket as different owner', function (done) {
     const args = Object.assign({}, secondSocket)
     const metaWithSecondUser = Object.assign({}, meta)
-    metaWithSecondUser.request.HTTP_X_SYNCANO_ACCOUNT_KEY = process.env.E2E_USER_ACCOUNT_KEY_2
+    metaWithSecondUser.request.HTTP_X_SYNCANO_ACCOUNT_KEY = process.env.REGISTRY_E2E_USER_ACCOUNT_KEY_2
 
     run('add', {args, meta: metaWithSecondUser})
       .then(response => {
@@ -141,7 +141,7 @@ describe('add', function () {
   it('existing socket as different owner', function (done) {
     const args = Object.assign({}, firstSocket)
     const metaWithSecondUser = Object.assign({}, meta)
-    metaWithSecondUser.request.HTTP_X_SYNCANO_ACCOUNT_KEY = process.env.E2E_USER_ACCOUNT_KEY_2
+    metaWithSecondUser.request.HTTP_X_SYNCANO_ACCOUNT_KEY = process.env.REGISTRY_E2E_USER_ACCOUNT_KEY_2
 
     run('add', {args, meta: metaWithSecondUser})
       .then(response => {

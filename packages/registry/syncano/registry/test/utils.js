@@ -25,10 +25,10 @@ export default () => {
       description: 'Some description',
       version: '1.0.1',
       url: 'http://my_socket.io',
-      // icon: {
-      //   background: faker.internet.color(),
-      //   url: 'https://cdn.rawgit.com/eyedea-io/syncano-socket-user-auth/9efd5f6a/icon.svg'
-      // },
+      icon: {
+        background: faker.internet.color(),
+        url: 'https://cdn.rawgit.com/eyedea-io/syncano-socket-user-auth/9efd5f6a/icon.svg'
+      },
       keywords: [
         'facebook', 'social media'
       ],
