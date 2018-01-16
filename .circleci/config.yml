@@ -136,6 +136,18 @@ jobs:
       - run: node packages/cli/lib/cli.js hosting sync cookbook
       - run: node packages/cli/lib/cli.js hosting sync cheatsheet
 
+  deploy_registry:
+    name: Deploying Test Registry
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/registry
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: sh ./bin/deploy-staging
+
   publish:
     name: NPM publish
     docker:
@@ -166,6 +178,9 @@ workflows:
   build-test-deploy:
     jobs:
       - build
+      - deploy_registry:
+          requires:
+            - build
       - test_lint:
           requires:
             - build
@@ -175,6 +190,7 @@ workflows:
       - test_e2e:
           requires:
             - build
+            - deploy_registry
       - deploy_docs:
           requires:
             - build

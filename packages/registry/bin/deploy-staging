@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+export SYNCANO_PROJECT_INSTANCE=socket-registry-test
+export SYNCANO_AUTH_KEY=$E2E_CLI_ACCOUNT_KEY
+
+npx s deploy
