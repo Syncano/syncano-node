@@ -698,6 +698,7 @@ class Data extends QueryBuilder {
     }
 
     return this.fetch(fetchObject.url, fetchObject, headers)
+      .then(this.resolveRelatedModels.bind(this))
       .then(this._replaceCustomTypesWithValue.bind(this))
       .then(this._mapFields.bind(this))
   }

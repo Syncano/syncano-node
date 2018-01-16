@@ -240,7 +240,7 @@ describe('Data', function () {
   })
 
   describe('#with()', () => {
-    it('should extend reference with object', () =>
+    it('should expand reference with object', () =>
       users
         .create({username: 'John', password: 'test'})
         .then(user =>
@@ -253,8 +253,9 @@ describe('Data', function () {
             .should.eventually.have.nested.property('author.username', 'john')
         }))
 
-    it('should extend reference with object after update', async () => {
-      const user = await users.create({username: 'john1', password: 'test'})
+    it('should expand reference with object after update', async () => {
+      const username = getRandomString()
+      const user = await users.create({username, password: 'test'})
       const obj = await run()
         .with('author')
         .create({field_string: 'with author', author: user.id})
@@ -262,10 +263,20 @@ describe('Data', function () {
       await run()
         .with('author')
         .update(obj.id, {field_string: 'with author'})
-        .should.eventually.have.nested.property('author.username', 'john1')
+        .should.eventually.have.nested.property('author.username', username)
     })
 
-    it('should extend relation with array of objects', async () => {
+    it('should expand reference with object after create', async () => {
+      const username = getRandomString()
+      const user = await users.create({username, password: 'test'})
+
+      await run()
+        .with('author')
+        .create({field_string: 'with author', author: user.id})
+        .should.eventually.have.nested.property('author.username', username)
+    })
+
+    it('should expand relation with array of objects', async () => {
       const usersList = await users
         .create([
           {username: 'lou', password: 'test'},
@@ -286,7 +297,7 @@ describe('Data', function () {
         )
     })
 
-    it('should throw error when extended field has no target', async () => {
+    it('should throw error when expanded field has no target', async () => {
       await run().create({field_string: 'example-string1'})
 
       run()
