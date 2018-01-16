@@ -19,7 +19,6 @@
     "xo": "^0.17.1"
   },
   "scripts": {
-    "deploy-staging": "sh ./bin/deploy",
     "test": "npm run e2e",
     "e2e": "cross-env NODE_ENV=test mocha 'tests/*.js' --slow=2000 --reporter spec --require babel-register --no-timeouts"
   },
