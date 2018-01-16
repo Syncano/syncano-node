@@ -1,3 +1,4 @@
+/* global it describe beforeEach */
 import nock from 'nock'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
@@ -176,7 +177,7 @@ describe('Data', () => {
       return data.users.firstOrFail().should.become({name: 'John Doe', id: 3})
     })
 
-    it('should throw error when object was not found', () => {
+    it('should throw error when object was not found', async () => {
       api
         .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
@@ -243,7 +244,7 @@ describe('Data', () => {
         .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({query, page_size: 1})
         .reply(200, {objects: [{name: 'John Doe', id: 3}], next: null})
-        .post('/v2/instances/testInstance/classes/users/objects/', user)
+        .patch(`/v2/instances/${instanceName}/classes/users/objects/3/`)
         .query({query, page_size: 1})
         .reply(200, user)
 

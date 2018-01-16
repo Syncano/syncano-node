@@ -1,3 +1,4 @@
+/* global describe before after */
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
 describe('Endpoint', function () {

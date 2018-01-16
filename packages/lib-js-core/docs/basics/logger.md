@@ -8,7 +8,7 @@ With `logger` method you're able to:
 # Import
 
 ```js
-const {logger} = new Server(ctx)
+const {logger} = Server(ctx)
 ```
 
 # Methods

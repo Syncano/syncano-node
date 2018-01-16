@@ -1,3 +1,4 @@
+/* global it describe beforeEach */
 import nock from 'nock'
 import Server from '../../src'
 import chai from 'chai'

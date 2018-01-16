@@ -85,7 +85,7 @@ describe('[E2E] CLI Config', function () {
 
   it('can call hello-config socket endpoint', function (done) {
     testNixt()
-      .run(`${cliLocation} call "hello-config/hello" || exit 0`)
+      .run(`${cliLocation} call hello-config/hello`)
       .stdout(/test1 test2/)
       .end(done)
   })

@@ -8,7 +8,7 @@ With `users` you're able to:
 # Import
 
 ```js
-const {users} = new Server(ctx)
+const {users} = Server(ctx)
 ```
 
 # Methods
