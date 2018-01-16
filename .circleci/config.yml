@@ -185,9 +185,11 @@ workflows:
       - test_lint:
           requires:
             - build
+            - deploy_registry
       - test_unit:
           requires:
             - build
+            - deploy_registry
       - test_e2e:
           requires:
             - build
