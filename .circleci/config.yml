@@ -146,6 +146,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn cache clean
       - run: yarn
       - run: sh ./bin/deploy-staging
 
