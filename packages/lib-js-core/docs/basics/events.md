@@ -7,7 +7,7 @@ With `event` method you're able to:
 # Import
 
 ```js
-const {event} = Server(ctx)
+const {event} = new Server(ctx)
 ```
 
 # Methods

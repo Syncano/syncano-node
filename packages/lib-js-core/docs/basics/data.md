@@ -7,7 +7,7 @@ With `data` method you're able to:
 # Import
 
 ```js
-const {data} = Server(ctx)
+const {data} = new Server(ctx)
 ```
 
 # Methods

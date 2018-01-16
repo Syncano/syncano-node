@@ -7,7 +7,7 @@ With `channel` method you're able to:
 # Import
 
 ```js
-const {channel} = Server(ctx)
+const {channel} = new Server(ctx)
 ```
 
 # Methods

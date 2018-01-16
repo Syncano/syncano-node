@@ -7,7 +7,7 @@ With `socket` method you're able to:
 # Import
 
 ```js
-const {socket} = Server(ctx)
+const {socket} = new Server(ctx)
 ```
 
 # Methods

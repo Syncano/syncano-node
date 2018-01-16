@@ -8,7 +8,7 @@ With `response` method you're able to:
 # Import
 
 ```js
-const {response} = Server(ctx)
+const {response} = new Server(ctx)
 ```
 
 # Methods

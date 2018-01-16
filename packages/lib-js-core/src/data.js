@@ -149,11 +149,6 @@ class Data extends QueryBuilder {
     return processedResult
   }
 
-  // saveToResult (response) {
-  //   // return = this.result.concat(response.objects)
-  //   return = response.objects)
-  // }
-
   resolveIfFinished (result) {
     if (this.query.page_size !== 0) {
       return result.slice(0, this.query.page_size)
@@ -216,9 +211,6 @@ class Data extends QueryBuilder {
     const uniqueIds = []
 
     const fetches = urls.map(async url => self.request(url))
-
-    // results = await self._replaceCustomTypesWithValue(results)
-    // results = await self._mapFields(results)
 
     let results = await Promise.all(fetches)
     results = [].concat.apply([], results)

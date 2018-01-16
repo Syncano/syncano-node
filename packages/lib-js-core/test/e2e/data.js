@@ -306,7 +306,7 @@ describe('Data', function () {
         .take(3)
         .pluck('field_string')
         .should.become(['example-string1', 'example-string2', 'example-string3'])
-    }) // eslint-disable-line camelcase
+    })
   })
 
   describe('#value()', () => {
@@ -339,7 +339,7 @@ describe('Data', function () {
 
       run()
         .where([
-          ['field_string', '=', 'example-string'], // eslint-disable-line camelcase
+          ['field_string', '=', 'example-string'],
           ['field_integer', '>=', 100]
         ])
         .list()
