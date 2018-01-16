@@ -3,4 +3,3 @@
 rm -rf e2e-tests
 rm -rf ~/syncano-test.yml
 mkdir -p e2e-tests/hosting/
-mocha 'tests/e2e/*.test-e2e.js' --reporter spec --require babel-register --timeout 50000 --slow 8000

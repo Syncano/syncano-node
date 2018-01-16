@@ -1,3 +1,4 @@
+/* global it describe before after */
 import should from 'should/as-function'
 import Server from '../../src/server'
 
@@ -55,11 +56,13 @@ describe('Response', () => {
   })
 
   it('should use setResponse to return response', done => {
+    class HttpResponse {}
+
     const {response: r} = new Server({
       token: 'testKey',
       instanceName: 'testInstance',
       setResponse: () => done(),
-      HttpResponse: () => {}
+      HttpResponse
     })
 
     r('hello')

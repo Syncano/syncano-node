@@ -1,10 +1,14 @@
+import logger from 'debug'
 import nodeFetch from 'node-fetch'
 import {checkStatus, parseJSON} from './utils'
+
+const debug = logger('core:query-builder')
 
 export default class QueryBuilder {
   constructor (instance) {
     this.instance = instance
     this.baseUrl = `https://${instance.host}`
+    this.result = []
   }
 
   _getSyncanoURL () {
@@ -63,6 +67,7 @@ export default class QueryBuilder {
   }
 
   withQuery (query) {
+    debug('withQuery', query)
     this._query = Object.assign({}, this.query, query)
 
     return this

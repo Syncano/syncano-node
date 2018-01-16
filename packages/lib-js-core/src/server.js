@@ -13,44 +13,25 @@ import Channel from './channel'
 import Class from './class'
 import Settings from './settings'
 
-const server = (ctx = {}) => {
-  const settings = new Settings(ctx)
-  const getConfig = className => Object.assign({className}, settings)
-  const config = getConfig()
+class Server {
+  constructor (ctx = {}) {
+    const settings = Settings(ctx)
+    const getConfig = className => Object.assign({className}, settings)
+    const config = getConfig()
 
-  const _class = new Class(config)
-  const event = new Event(config)
-  const endpoint = new Endpoint(config)
-  const channel = new Channel(config)
-  const socket = new Socket(config)
-  const trace = new Trace(config)
-  const hosting = new Hosting(config)
-  const response = new Response(config)
-  const account = new Account(config)
-  const instance = new Instance(config)
-  const logger = new Logger(config)
-
-  return {
-    _class,
-    users: new Proxy(
-      {},
-      {
-        get(target, prop) {
-          return new Users(config)[prop];
-        }
-      }
-    ),
-    account,
-    instance,
-    event,
-    endpoint,
-    channel,
-    socket,
-    trace,
-    hosting,
-    response,
-    logger,
-    data: new Proxy(new Data(settings), {
+    this._class = new Class(config)
+    this.event = new Event(config)
+    this.endpoint = new Endpoint(config)
+    this.channel = new Channel(config)
+    this.socket = new Socket(config)
+    this.trace = new Trace(config)
+    this.hosting = new Hosting(config)
+    this.response = Response(config)
+    this.account = new Account(config)
+    this.instance = new Instance(config)
+    this.logger = Logger(config)
+    this.users = new Users(config)
+    this.data = new Proxy(new Data(settings), {
       get (target, className) {
         return new Data(getConfig(className))
       }
@@ -58,4 +39,4 @@ const server = (ctx = {}) => {
   }
 }
 
-export default server
+export default Server

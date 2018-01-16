@@ -1,3 +1,4 @@
+/* global it describe before after */
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'

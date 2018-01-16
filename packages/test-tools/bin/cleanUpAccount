@@ -1,0 +1,3 @@
+import {cleanUpAccount} from '../lib/index'
+
+cleanUpAccount()
