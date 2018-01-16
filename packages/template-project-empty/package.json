@@ -1,7 +1,7 @@
 {
   "name": "@syncano/template-project-empty",
   "description": "Empty Project Template",
-  "version": "0.4.2",
+  "version": "0.6.0",
   "main": "index.js",
   "license": "MIT",
   "files": [

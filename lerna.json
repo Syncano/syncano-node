@@ -11,10 +11,15 @@
     },
     "publish": {
       "exact": true,
-      "ignore": "registry"
+      "ignore": [
+        "@syncano/registry*"
+      ]
     }
   },
-  "version": "0.4.2",
+  "version": "0.6.0",
   "npmClient": "yarn",
-  "npmClientArgs": ["--production", "--no-optional"]
+  "npmClientArgs": [
+    "--production",
+    "--no-optional"
+  ]
 }
