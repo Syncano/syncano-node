@@ -1,6 +1,7 @@
 - Getting started
   - [Quickstart Guide](/getting-started/quickstart)
   - [Syncano Ecosystem](/getting-started/intro)
+  - [Windows Development Guide](/getting-started/windows)
 - Starting a Project
   - [Overview](/project/overview)
   - [Hosting](/project/hosting)
