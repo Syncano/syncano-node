@@ -26,18 +26,17 @@ cd chat-app/
 # Install the Syncano CLI
 
 > **In order to use the Syncano CLI you will have to install the following dependencies:**
-* NodeJS greater than [![NODE](https://img.shields.io/badge/node-v4.6.7-blue.svg)](http://nodejs.org/)
+* NodeJS greater than [![NODE](https://img.shields.io/badge/node-v8.9.0-blue.svg)](http://nodejs.org/)
 * NPM greater than [![NPM](https://img.shields.io/badge/npm-v3.9-blue.svg)](http://npmjs.com/)
-* Yarn greater than [![Yarn](https://img.shields.io/badge/yarn-v18.1-blue.svg)](https://yarnpkg.com/en/docs/install)
+* Yarn greater than [![Yarn](https://img.shields.io/badge/yarn-v1.3.2-blue.svg)](https://yarnpkg.com/en/docs/install)
 
 The `syncano-cli` is the main tool for setting up and managing your projects on the Syncano Platform. To install it, run:
 
 ```sh
-npm install -g syncano-cli
+npm install -g @syncano/cli
 ```
 > Remember to install `yarn`, which the Syncano CLI depends on! You can do this by:
-> * `brew install yarn` on a Mac using Homebrew
-> or
+
 > * `npm install -g yarn`
 
 # Sign up and create a project
@@ -46,6 +45,9 @@ Once the Syncano CLI is installed you can sign up for an account. Run the follow
 ```sh
 syncano-cli init
 ```
+
+> There's shortcut for `syncano-cli` - you can simple type `s`
+> * `s init`
 
 You'll be asked for an `email` and `password` so that we can create an account for you.
 You'll also be prompted for a project template. Choose the recommended `Hello World` template and press enter.

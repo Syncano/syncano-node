@@ -45,7 +45,7 @@
     </div>
     <div class="buttons">
       <a class="button side-button" href="https://cookbook.syncano.io/#/">Cookbook</a>
-      <a class="button main-button" href="#/getting-started/quickstart">Quick Start</a>
+      <a class="button main-button" href="#/getting-started/quickstart">Docs</a>
       <a class="button side-button" href="https://cheatsheet.syncano.io/#/">Cheatsheet</a>
     </div>
   </section>
