@@ -82,8 +82,13 @@ describe('[E2E] CLI Hosting', function () {
   it('can sync local hosting', function (done) {
     testNixt()
       .run(`${cliLocation} hosting sync ${hostingName}`)
-      .on(/Choose socket in which you want to set up hosting/)
-      .respond('\n')
+      .stdout(/files synchronized/)
+      .end(done)
+  })
+
+  it('can sync local hosting again', function (done) {
+    testNixt()
+      .run(`${cliLocation} hosting sync ${hostingName}`)
       .stdout(/files synchronized/)
       .end(done)
   })

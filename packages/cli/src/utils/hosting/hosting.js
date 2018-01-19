@@ -396,10 +396,10 @@ class Hosting {
   async listRemoteFiles () {
     debug('listRemoteFiles()')
     const files = await session.connection.hosting.listFiles(this.name)
-    return files.map(async file => {
+    return Promise.all(files.map(async file => {
       const hostingFile = new HostingFile(file)
       return hostingFile.loadRemote(file)
-    })
+    }))
   }
 
   // Get info about hostings first, then get the files list for given one
