@@ -67,7 +67,9 @@ function run (endpoint, ctx = {}, params = {}) {
   const mocks = params.mocks
   const socketMeta = generateMeta(endpoint, meta)
 
-  verifyRequest({args, config, meta: socketMeta})
+  if (run.verifyRequest !== false) {
+    verifyRequest({args, config, meta: socketMeta})
+  }
 
   return new Promise(function (resolve, reject) {
     let output = null
@@ -79,7 +81,11 @@ function run (endpoint, ctx = {}, params = {}) {
       } else {
         response = {code, data, mimetype}
       }
-      response.is = (responseType) => verifyResponse(endpoint, responseType, response)
+      response.is = (responseType) => {
+        if (run.verifyResponse !== false) {
+          return verifyResponse(endpoint, responseType, response)
+        }
+      }
       return response
     }
 

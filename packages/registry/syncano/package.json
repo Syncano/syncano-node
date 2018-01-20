@@ -1,0 +1,69 @@
+{
+  "dependencies": {
+    "lodash": "latest",
+    "node-fetch": "^1.6.3",
+    "semver": "^5.3.0",
+    "syncano-middleware": "^0.1.2",
+    "@syncano/core": "0.6.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.22.0",
+    "babel-preset-env": "^1.1.8",
+    "babel-register": "^6.22.0",
+    "chai": "^3.5.0",
+    "cross-env": "^3.1.4",
+    "faker": "^3.1.0",
+    "mocha": "^3.2.0",
+    "syncano-client": "beta",
+    "xo": "^0.17.1"
+  },
+  "scripts": {
+    "test": "npm run e2e",
+    "e2e": "cross-env NODE_ENV=test mocha 'tests/*.js' --slow=2000 --reporter spec --require babel-register --no-timeouts"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env"
+      ]
+    ],
+    "plugins": [
+      "transform-object-rest-spread",
+      "transform-class-properties"
+    ]
+  },
+  "xo": {
+    "esnext": true,
+    "space": true,
+    "module": false,
+    "semicolon": false,
+    "ignores": [
+      "node_modules",
+      "\\.(json|css|jpg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm)$"
+    ],
+    "globals": [
+      "META",
+      "NODE_ENV",
+      "setResponse",
+      "HttpResponse",
+      "FACEBOOK_TOKEN",
+      "SYNCANO_INSTANCE",
+      "SYNCANO_HOST"
+    ],
+    "envs": [
+      "browser",
+      "mocha"
+    ],
+    "rules": {
+      "object-curly-spacing": 0,
+      "unicorn/filename-case": 0,
+      "react/forbid-component-props": 0,
+      "react/jsx-no-bind": 0,
+      "import/named": 0,
+      "import/prefer-default-export": 0,
+      "import/no-unresolved": 0,
+      "import/no-unassigned-import": 0
+    }
+  }
+}

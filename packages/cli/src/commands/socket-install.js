@@ -41,7 +41,8 @@ export default class SocketInstall {
       const version = format.dim(`(${this.socketFromRegistry.version})`)
       echo(7)(`${status} ${currentTime()} ${name} ${version}`)
 
-      const deploy = new SocketDeployCmd(this.context)
+      const deploy = await new SocketDeployCmd(this.context)
+
       if (cmd.socket) {
         return deploy.run([this.socket.name, {}])
       }

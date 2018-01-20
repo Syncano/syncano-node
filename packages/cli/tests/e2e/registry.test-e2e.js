@@ -16,7 +16,6 @@ const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
 
 describe('[E2E] CLI Registry', function () {
   let testInstance = uniqueInstance()
-  const registrySocketName = 'openweathermap2'
 
   const testNixt = () => nixt()
     .env('SYNCANO_PROJECT_INSTANCE', testInstance)
@@ -30,22 +29,6 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .run(`${cliLocation} search ${getRandomString()}`)
       .stdout(/No sockets found/)
-      .end(done)
-  })
-
-  it('can search for existing socket', function (done) {
-    testNixt()
-      .run(`${cliLocation} search ${registrySocketName}`)
-      .stdout(/socket\(s\) found/)
-      .end(done)
-  })
-
-  it('can add registry socket', function (done) {
-    testNixt()
-      .run(`${cliLocation} add ${registrySocketName}`)
-      .on(/Type in value:/)
-      .respond(`${randomKey}\n`)
-      .stdout(/socket synced:/)
       .end(done)
   })
 
@@ -83,6 +66,31 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .run(`${cliLocation} publish ${createdSocketName}`)
       .stdout(/This socket is not private/)
+      .end(done)
+  })
+
+  it('can search for existing socket', function (done) {
+    testNixt()
+      .run(`${cliLocation} search ${createdSocketName}`)
+      .stdout(/socket\(s\) found/)
+      .end(done)
+  })
+
+  it('can add registry socket', function (done) {
+    const testInstance = uniqueInstance()
+    const testNixt = () => nixt()
+      .env('SYNCANO_PROJECT_INSTANCE', testInstance)
+      .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
+      .cwd(path.join(testsLocation, testInstance))
+
+    testNixt()
+      .before(async () => createProject(testInstance, projectTestTemplate))
+      .after(async () => deleteInstance(testInstance))
+      .env('DEBUG', '*')
+      .run(`${cliLocation} add ${createdSocketName}`)
+      .on(/Type in value:/)
+      .respond(`${randomKey}\n`)
+      .stdout(/socket synced:/)
       .end(done)
   })
 })

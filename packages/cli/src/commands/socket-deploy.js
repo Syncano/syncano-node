@@ -57,7 +57,13 @@ export default class SocketDeployCmd {
         configs[socketFromList.name] = config
       })
       await this.deployProject()
-      await Promise.all(this.socketList.map((socket) => this.deploySocket(socket, configs[socket.name])))
+
+      let index
+      for (index in this.socketList) {
+        const socket = this.socketList[index]
+        await this.deploySocket(socket, configs[socket.name])
+      }
+
       echo()
     } catch (err) {
       if (err.response && err.response.data && err.response.data.detail) {
@@ -108,14 +114,18 @@ export default class SocketDeployCmd {
       spinner.stop()
       if (err instanceof CompileError) {
         const status = format.red('    compile error:')
-        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+        if (err.traceback) {
+          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+        } else {
+          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} Error while executing 'build' script!`)
+        }
       } else {
         const status = format.red('socket sync error:')
         if (err.message) {
           echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
         } else {
           echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}`)
-          error(err.message)
+          error(err)
         }
       }
 

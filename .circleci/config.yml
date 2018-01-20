@@ -105,6 +105,8 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+
+      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
       - run: yarn run test:e2e
 
   test_lint:
@@ -136,6 +138,18 @@ jobs:
       - run: node packages/cli/lib/cli.js hosting sync cookbook
       - run: node packages/cli/lib/cli.js hosting sync cheatsheet
 
+  deploy_registry:
+    name: Deploying Test Registry
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/registry
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: sh ./bin/deploy-staging
+
   publish:
     name: NPM publish
     docker:
@@ -166,15 +180,21 @@ workflows:
   build-test-deploy:
     jobs:
       - build
+      - deploy_registry:
+          requires:
+            - build
       - test_lint:
           requires:
             - build
+            - deploy_registry
       - test_unit:
           requires:
             - build
+            - deploy_registry
       - test_e2e:
           requires:
             - build
+            - deploy_registry
       - deploy_docs:
           requires:
             - build

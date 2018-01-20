@@ -86,7 +86,7 @@ describe('[E2E] CLI Hosting', function () {
       .end(done)
   })
 
-  it('can sync local hosting again', function (done) {
+  it('can sync again local hosting', function (done) {
     testNixt()
       .run(`${cliLocation} hosting sync ${hostingName}`)
       .stdout(/files synchronized/)

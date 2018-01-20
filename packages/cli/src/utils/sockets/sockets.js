@@ -318,6 +318,7 @@ class Socket {
 
   // Creating Socket simple object
   static getLocal (socketName) {
+    debug('getLocal')
     return new Socket(socketName)
   }
 
@@ -344,6 +345,7 @@ class Socket {
   }
 
   static publish (socketName, version) {
+    debug('publish')
     const registry = new Registry()
     return registry.publishSocket(socketName, version)
   }
@@ -447,7 +449,10 @@ class Socket {
     debug(`loadFromRegistry: ${this.name}`)
     const registry = new Registry()
     const registrySocket = await registry.getFullSocket(this.name)
-    this.spec = registrySocket.config
+
+    if (registrySocket.config) {
+      this.spec = registrySocket.config
+    }
     this.url = registrySocket.url
   }
 
@@ -770,9 +775,11 @@ class Socket {
       archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
       archive.file(path.join(this.getSocketPath(), 'package.json'), { name: 'package.json' })
       archive.directory(this.getSrcFolder(), 'src')
+      archive.directory(path.join(this.getSocketPath(), 'bin'), 'bin')
       archive.finalize()
 
       output.on('close', () => {
+        debug('package zip created:', this.getSocketZip())
         resolve()
       })
     })
@@ -1235,7 +1242,7 @@ class Socket {
 
   getConfigOptionsToAsk () {
     // If there is not options in spec it is always no options to ask
-    if (!this.spec.config) { return {} }
+    if (this.spec && !this.spec.config) { return {} }
 
     const options = {}
 
@@ -1243,6 +1250,7 @@ class Socket {
       if (this.remote.status === 'ok') {
         return options
       }
+
       Object.keys(this.spec.config).forEach((optionName) => {
         const envValue = this.getConfigOptionFromEnv(optionName)
         const option = this.spec.config[optionName]
