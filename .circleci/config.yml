@@ -338,6 +338,7 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
+      - run: yarn run changelog
       - run: npx lerna publish --canary --yes
 
   codecov:
