@@ -363,7 +363,6 @@ workflows:
       - test_lint:
           requires:
             - build
-            - deploy_registry
       - test_unit:
           requires:
             - build
@@ -395,7 +394,6 @@ workflows:
       - test_e2e_core:
           requires:
             - build
-            - deploy_registry
       - deploy_docs:
           requires:
             - build
