@@ -20,16 +20,18 @@ describe('[E2E] CLI User', function () {
   before(cleanUpAccount)
   after(cleanUpAccount)
 
+  const testNixt = () => nixt()
+    .cwd(path.join(testsLocation))
+
   it('can run cli command', function (done) {
-    nixt()
+    testNixt()
       .run('node lib/cli.js')
       .stdout(/Usage: cli \[options\] \[command\]/)
       .end(done)
   })
 
   it('can run cli init with existing account', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} init`)
       .on(/Your e-mail/)
       .respond(`${email}\n`)
@@ -46,7 +48,7 @@ describe('[E2E] CLI User', function () {
   })
 
   it('can logout from cli', function (done) {
-    nixt()
+    testNixt()
       .cwd(testsLocation)
       .run(`${cliLocation} logout`)
       .stdout(/You have been logged out/)
@@ -56,7 +58,7 @@ describe('[E2E] CLI User', function () {
   // This is end of tests dependency
 
   it('can run cli init --instance with existing account', function (done) {
-    nixt()
+    testNixt()
       .cwd(testsLocation)
       .run(`${cliLocation} init --instance ${instance}`)
       .on(/Your e-mail/)
@@ -73,8 +75,7 @@ describe('[E2E] CLI User', function () {
   })
 
   it('can run cli init with new account', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} init`)
       .on(/Your e-mail/)
       .respond(`${tempEmail}\n`)
@@ -96,8 +97,7 @@ describe('[E2E] CLI User', function () {
   // For now we don't support create new instance on Syncano with specific name during init project.
   // Unlock this test in CLI-208
   it.skip('can run cli init --instance with new account', function (done) {
-    nixt()
-      .cwd(testsLocation)
+    testNixt()
       .run(`${cliLocation} init --instance ${uniqueInstance()}`)
       .on(/Your e-mail/)
       .respond(`${tempEmail}\n`)

@@ -3,4 +3,4 @@
 mkdir -p .dist
 cp package.json .dist
 cd .dist
-yarn --production
+yarn --mutex file:/tmp/.yarn --production

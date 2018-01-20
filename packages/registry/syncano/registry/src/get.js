@@ -26,7 +26,6 @@ export default function run (ctx) {
 
     return getSocket()
       .then(socket => {
-        console.log("XXX", socket)
         debug('Socket found:', socket.name)
         responseObj.name = socket.name
         responseObj.version = socket.version

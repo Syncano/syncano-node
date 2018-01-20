@@ -112,19 +112,17 @@
     "build": "babel src -d lib/ --copy-files --ignore *.test.js,*.test-e2e.js --source-maps",
     "build:watch": "yarn run build -w",
     "clean": "rm -rf lib/",
-    "unit": "mocha 'tests/unit/*.test.js' --reporter spec --require babel-register",
+    "unit": "mocha 'tests/unit/*.test.js' --require babel-register",
     "unit:watch": "yarn run unit -w",
-    "e2e": "./scripts/e2e && npm-run-all test:e2e:*",
-    "test:e2e-single": "mocha --reporter spec --require babel-register --timeout 100000 --slow 8000",
-    "test": "npm-run-all --parallel test:unit test:e2e",
-    "test:e2e": "yarn run e2e && yarn run test:e2e-main",
-    "test:e2e-main": "yarn run test:e2e-single tests/e2e/init.test-e2e.js",
+    "test": "npm-run-all --parallel test:unit test:e2e:group:*",
+    "test:e2e:init": "yarn run test:e2e-single tests/e2e/init.test-e2e.js",
     "test:e2e:anonymous": "yarn run test:e2e-single tests/e2e/anonymous.test-e2e.js",
     "test:e2e:deploy": "yarn run test:e2e-single tests/e2e/deploy.test-e2e.js",
     "test:e2e:config": "yarn run test:e2e-single tests/e2e/config.test-e2e.js",
     "test:e2e:registry": "yarn run test:e2e-single tests/e2e/registry.test-e2e.js",
     "test:e2e:hosting": "yarn run test:e2e-single tests/e2e/hosting.test-e2e.js",
     "test:e2e:socket": "yarn run test:e2e-single tests/e2e/socket.test-e2e.js",
+    "test:e2e-single": "mocha --require babel-register --timeout 100000 --slow 8000",
     "test:unit": "yarn run unit",
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
@@ -143,7 +141,7 @@
         "env",
         {
           "targets": {
-            "node": "7"
+            "node": "8"
           }
         }
       ]

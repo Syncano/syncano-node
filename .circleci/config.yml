@@ -14,17 +14,17 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
+          - v1-dependencies
 
       - restore_cache:
           keys:
           - v1-dependencies-cli-{{ checksum "packages/cli/package.json" }}
-          - v1-dependencies-cli-
+          - v1-dependencies-cli
 
       - restore_cache:
           keys:
           - v1-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
-          - v1-dependencies-core-
+          - v1-dependencies-core
 
       - restore_cache:
           keys:
@@ -41,12 +41,48 @@ jobs:
           - v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
           - v1-dependencies-test
 
+      - restore_cache:
+          keys:
+          - v1-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+          - v1-dependencies-template-project-empty
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
+          - v1-dependencies-template-project-hello
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
+          - v1-dependencies-template-socket-es6
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
+          - v1-dependencies-registry-organization
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
+          - v1-dependencies-registry-registry
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
+          - v1-dependencies-test-tools
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-registry-{{ checksum "packages/registry/package.json" }}
+          - v1-dependencies-registry
+
       - run: yarn install
       - run: npx lerna bootstrap
 
       - save_cache:
           paths:
             - node_modules
+            - .yarn-cache
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - save_cache:
@@ -75,6 +111,46 @@ jobs:
           key: v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
 
       - save_cache:
+          paths:
+            - packages/template-project-empty/node_modules
+          key: v1-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/template-project-empty/node_modules
+          key: v1-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/template-project-hello/node_modules
+          key: v1-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/template-socket-es6/node_modules
+          key: v1-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/registry/syncano/organization/node_modules
+          key: v1-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/registry/syncano/registry/node_modules
+          key: v1-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/registry/node_modules
+          key: v1-dependencies-registry-{{ checksum "packages/registry/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/test-tools/node_modules
+          key: v1-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
+
+      - save_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo
@@ -90,17 +166,14 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: yarn run test:unit
-      - save_cache:
-          key: v1-repo-units-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - ~/repo
+      - run: yarn run report:coverage
 
-  test_e2e:
+  test_e2e_client:
     name: E2E Tests
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo
+    working_directory: ~/repo/packages/lib-js-client/
 
     steps:
       - restore_cache:
@@ -108,6 +181,110 @@ jobs:
 
       - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
       - run: yarn run test:e2e
+
+  test_e2e_validate:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/lib-js-validate/
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn run test:e2e
+
+  test_e2e_core:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/lib-js-core/
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+
+      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
+      - run: yarn run test:e2e
+
+  test_e2e_registry:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/cli
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+
+      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
+      - run: yarn run test:e2e:registry
+
+  test_e2e_hosting:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/cli
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+
+      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
+      - run: yarn run test:e2e:hosting
+
+  test_e2e_socket:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/cli
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+
+      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
+      - run: yarn run test:e2e:socket
+
+  test_e2e_anonymous:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/cli
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn run test:e2e:anonymous
+
+  test_e2e_deploy:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/cli
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn run test:e2e:deploy
+
+  test_e2e_config:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/cli
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn run test:e2e:config
 
   test_lint:
     name: Linter
@@ -190,15 +367,47 @@ workflows:
       - test_unit:
           requires:
             - build
+      - test_e2e_validate:
+          requires:
+            - build
+      - test_e2e_client:
+          requires:
+            - build
+      - test_e2e_deploy:
+          requires:
+            - build
+      - test_e2e_config:
+          requires:
+            - build
+      - test_e2e_anonymous:
+          requires:
+            - build
+      - test_e2e_hosting:
+          requires:
+            - build
+      - test_e2e_socket:
+          requires:
+            - build
+      - test_e2e_registry:
+          requires:
+            - build
             - deploy_registry
-      - test_e2e:
+      - test_e2e_core:
           requires:
             - build
             - deploy_registry
       - deploy_docs:
           requires:
             - build
-            - test_e2e
+            - test_e2e_validate
+            - test_e2e_client
+            - test_e2e_registry
+            - test_e2e_socket
+            - test_e2e_hosting
+            - test_e2e_core
+            - test_e2e_anonymous
+            - test_e2e_config
+            - test_e2e_deploy
             - test_lint
             - test_unit
           filters:
@@ -206,12 +415,17 @@ workflows:
               only: master
       - publish:
           requires:
-            - test_e2e
+            - test_e2e_validate
+            - test_e2e_client
+            - test_e2e_registry
+            - test_e2e_socket
+            - test_e2e_hosting
+            - test_e2e_core
+            - test_e2e_anonymous
+            - test_e2e_config
+            - test_e2e_deploy
             - test_lint
             - test_unit
           filters:
             branches:
               only: master
-      - codecov:
-          requires:
-            - test_unit

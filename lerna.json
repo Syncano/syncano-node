@@ -20,6 +20,7 @@
   "npmClient": "yarn",
   "npmClientArgs": [
     "--production",
-    "--no-optional"
+    "--no-optional",
+    "--cache-folder .yarn-cache"
   ]
 }
