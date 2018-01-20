@@ -39,9 +39,7 @@ describe('Data', function () {
   })
 
   beforeEach(() => {
-    run = () => {
-      return data[testClassName]
-    }
+    run = () => data[testClassName]
   })
 
   after(() => deleteTestInstance(instanceName))
@@ -85,6 +83,112 @@ describe('Data', function () {
       return run()
         .create(record)
         .should.eventually.have.deep.property('field_integer', 987)
+    })
+  })
+
+  describe('#take()', () => {
+    it('should limit number of results', async () => {
+      // Adding 3 objects to set limit of listing 2
+      await run().create({field_string: 'example-string'})
+      await run().create({field_string: 'example-string'})
+      await run().create({field_string: 'example-string'})
+
+      await run()
+        .take(2)
+        .list()
+        .should.eventually.be.an('array')
+        .of.length(2)
+    })
+  })
+
+  describe('#with()', () => {
+    it('should expand reference with object', () =>
+      users
+        .create({username: 'John', password: 'test'})
+        .then(user =>
+          run().create({field_string: 'with author', author: user.id})
+        )
+        .then(field => {
+          run()
+            .with('author')
+            .find(field.id)
+            .should.eventually.have.nested.property('author.username', 'john')
+        }))
+
+    it('should expand reference with object after update', async () => {
+      const username = getRandomString()
+      const user = await users.create({username, password: 'test'})
+      const obj = await run()
+        .with('author')
+        .create({field_string: 'with author', author: user.id})
+
+      await run()
+        .with('author')
+        .update(obj.id, {field_string: 'with author'})
+        .should.eventually.have.nested.property('author.username', username)
+    })
+
+    it('should expand reference with object after create', async () => {
+      const username = getRandomString()
+      const user = await users.create({username, password: 'test'})
+
+      await run()
+        .with('author')
+        .create({field_string: 'with author', author: user.id})
+        .should.eventually.have.nested.property('author.username', username)
+    })
+
+    it('should expand relation with array of objects', async () => {
+      const usersList = await users
+        .create([
+          {username: 'lou', password: 'test'},
+          {username: 'jane', password: 'test'}
+        ])
+
+      const editorObj = await run().create({
+        editors: usersList.map(u => u.id)
+      })
+
+      const withEditors = await run()
+        .with('editors')
+        .find(editorObj.id)
+
+      withEditors.should.have.nested.property(
+          'editors.1.username',
+          'jane'
+        )
+    })
+
+    it('should throw error when expanded field has no target', async () => {
+      await run().create({field_string: 'example-string1'})
+
+      run()
+        .with('created_at')
+        .list()
+        .should.be.rejectedWith(Error)
+    })
+  })
+
+  describe('#pluck()', () => {
+    it('should be able to take column values', async () => {
+      await run().create({field_string: 'example-string1'})
+      await run().create({field_string: 'example-string2'})
+      await run().create({field_string: 'example-string3'})
+
+      run()
+        .take(3)
+        .pluck('field_string')
+        .should.become(['example-string1', 'example-string2', 'example-string3'])
+    })
+  })
+
+  describe('#value()', () => {
+    it('should be able to take column value of single record', async () => {
+      await run().create({field_string: 'example-string1'})
+
+      run()
+        .value('field_string')
+        .should.become('example-string1')
     })
   })
 
@@ -222,112 +326,6 @@ describe('Data', function () {
         .where('field_string', 'asdasd')
         .findOrFail(1001)
         .should.be.rejectedWith(NotFoundError))
-  })
-
-  describe('#take()', () => {
-    it('should limit number of results', async () => {
-      // Adding 3 objects to set limit of listing 2
-      await run().create({field_string: 'example-string'})
-      await run().create({field_string: 'example-string'})
-      await run().create({field_string: 'example-string'})
-
-      await run()
-        .take(2)
-        .list()
-        .should.eventually.be.an('array')
-        .of.length(2)
-    })
-  })
-
-  describe('#with()', () => {
-    it('should expand reference with object', () =>
-      users
-        .create({username: 'John', password: 'test'})
-        .then(user =>
-          run().create({field_string: 'with author', author: user.id})
-        )
-        .then(field => {
-          run()
-            .with('author')
-            .find(field.id)
-            .should.eventually.have.nested.property('author.username', 'john')
-        }))
-
-    it('should expand reference with object after update', async () => {
-      const username = getRandomString()
-      const user = await users.create({username, password: 'test'})
-      const obj = await run()
-        .with('author')
-        .create({field_string: 'with author', author: user.id})
-
-      await run()
-        .with('author')
-        .update(obj.id, {field_string: 'with author'})
-        .should.eventually.have.nested.property('author.username', username)
-    })
-
-    it('should expand reference with object after create', async () => {
-      const username = getRandomString()
-      const user = await users.create({username, password: 'test'})
-
-      await run()
-        .with('author')
-        .create({field_string: 'with author', author: user.id})
-        .should.eventually.have.nested.property('author.username', username)
-    })
-
-    it('should expand relation with array of objects', async () => {
-      const usersList = await users
-        .create([
-          {username: 'lou', password: 'test'},
-          {username: 'jane', password: 'test'}
-        ])
-
-      const editorObj = await run().create({
-        editors: usersList.map(u => u.id)
-      })
-
-      const withEditors = await run()
-        .with('editors')
-        .find(editorObj.id)
-
-      withEditors.should.have.nested.property(
-          'editors.1.username',
-          'jane'
-        )
-    })
-
-    it('should throw error when expanded field has no target', async () => {
-      await run().create({field_string: 'example-string1'})
-
-      run()
-        .with('created_at')
-        .list()
-        .should.be.rejectedWith(Error)
-    })
-  })
-
-  describe('#pluck()', () => {
-    it('should be able to take column values', async () => {
-      await run().create({field_string: 'example-string1'})
-      await run().create({field_string: 'example-string2'})
-      await run().create({field_string: 'example-string3'})
-
-      run()
-        .take(3)
-        .pluck('field_string')
-        .should.become(['example-string1', 'example-string2', 'example-string3'])
-    })
-  })
-
-  describe('#value()', () => {
-    it('should be able to take column value of single record', async () => {
-      await run().create({field_string: 'example-string1'})
-
-      run()
-        .value('field_string')
-        .should.become('example-string1')
-    })
   })
 
   describe('#where()', () => {
