@@ -22,5 +22,12 @@
     "--production",
     "--no-optional",
     "--cache-folder .yarn-cache"
-  ]
+  ],
+  "changelog": {
+    "labels": {
+      "enhancement": ":rocket: Enhancement",
+      "bug": ":bug: Bug Fix"
+    },
+    "cacheDir": ".changelog"
+  }
 }

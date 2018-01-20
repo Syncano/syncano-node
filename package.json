@@ -6,6 +6,7 @@
     "test:e2e": "npx lerna run test:e2e --stream",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "precommit": "lint-staged",
+    "changelog": "npx lerna-changelog",
     "deploy": "yarn run deploy:cookbook && yarn run deploy:cheatsheet",
     "deploy:cookbook": "node scripts/deploy cookbook",
     "deploy:cheatsheet": "node scripts/deploy cheatsheet",
@@ -28,6 +29,7 @@
     "git-branch": "^1.0.0",
     "husky": "^0.14.3",
     "lerna": "^2.5.1",
+    "lerna-changelog": "^0.7.0",
     "lint-staged": "^5.0.0",
     "standard": "^10.0.3"
   },
