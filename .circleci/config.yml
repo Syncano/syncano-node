@@ -341,20 +341,6 @@ jobs:
       - run: yarn run changelog
       - run: npx lerna publish --canary --yes
 
-  release:
-    name: NPM publish
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo
-
-    steps:
-      - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
-      - run: yarn run changelog
-      - run: npx lerna publish --yes
-
   codecov:
     name: Codecov report
     docker:
@@ -442,19 +428,3 @@ workflows:
           filters:
             branches:
               only: master
-      - release:
-          requires:
-            - test_e2e_validate
-            - test_e2e_client
-            - test_e2e_registry
-            - test_e2e_socket
-            - test_e2e_hosting
-            - test_e2e_core
-            - test_e2e_anonymous
-            - test_e2e_config
-            - test_e2e_deploy
-            - test_lint
-            - test_unit
-          filters:
-            branches:
-              only: /\d\.\d/
