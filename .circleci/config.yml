@@ -457,4 +457,4 @@ workflows:
             - test_unit
           filters:
             branches:
-              only: \d\.\d
+              only: /\d\.\d/
