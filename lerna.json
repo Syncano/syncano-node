@@ -24,9 +24,11 @@
     "--cache-folder .yarn-cache"
   ],
   "changelog": {
+    "repo": "syncano/syncano-node",
     "labels": {
-      "enhancement": ":rocket: Enhancement",
-      "bug": ":bug: Bug Fix"
+      "feature": ":rocket: Feature",
+      "bug": ":bug: Bug Fix",
+      "docs": ":bug: Documentation"
     },
     "cacheDir": ".changelog"
   }
