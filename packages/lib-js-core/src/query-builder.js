@@ -17,6 +17,14 @@ export default class QueryBuilder {
     return `https://${host}/${apiVersion}`
   }
 
+  _getSyncanoRegistryURL () {
+    const {host} = this.instance
+    const endpointHost = host === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
+    const registryInstance = process.env.SYNCANO_SOCKET_REGISTRY_INSTANCE || 'socket-registry'
+    this.registryHost = `${registryInstance}.${endpointHost}`
+    return `https://${this.registryHost}`
+  }
+
   _getInstanceURL (instanceName) {
     return `${this._getSyncanoURL()}/instances/${instanceName}`
   }

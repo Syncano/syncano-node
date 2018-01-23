@@ -86,6 +86,134 @@ describe('Data', function () {
     })
   })
 
+  describe('#delete()', () => {
+    it('can delete single object', async () => {
+      const obj = await run().create({field_string: 'test1'})
+      // TODO why undefined here? while in next tests we have ids?
+      run().delete(obj.id).should.become(undefined)
+    })
+
+    it('can delete multiple objects', async () => {
+      const obj1 = await run().create({field_string: 'test1'})
+      const obj2 = await run().create({field_string: 'test1'})
+      await run().delete([obj1.id, obj2.id]).should.become([obj1.id, obj2.id])
+      await run().list().should.become([])
+    })
+
+    it('can delete multiple objects by query', async () => {
+      const obj1 = await run().create({field_string: 'test1'})
+      await run().create({field_string: 'test2'})
+      await run().create({field_string: 'test3'})
+
+      run()
+        .where('id', 'lte', obj1.id)
+        .delete()
+        // TODO: should we really respond here with the deleted objects?
+        .should.become([obj1.id])
+    })
+  })
+
+  describe('#count()', () => {
+    it('should be able to get number of records', async () => {
+      const records = '.'
+        .repeat(120)
+        .split('.')
+        .map((a, i) => ({
+          field_string: `item ${i}`
+        }))
+      await run().create(records)
+
+      run().count().should.eventually.equal(121)
+    })
+  })
+
+  describe('#fields()', () => {
+    it('should be able to whitelist fields', async () => {
+      await run().create({'field_integer': 182})
+
+      run()
+        .fields('field_integer')
+        .first()
+        .should.become({field_integer: 182})
+    })
+
+    it('should be able to map field names', async () => {
+      const username = getRandomString()
+      const user = await users.create({username, password: 'test'})
+      const obj = await run().create({author: user.id})
+
+      run()
+        .with('author')
+        .fields('id', 'author.username as name')
+        .find(obj.id)
+        .should.become({id: obj.id, name: username})
+    })
+
+    it('should handle list of records', async () => {
+      await run().create({field_string: 'test1'})
+      await run().create({field_string: 'test2'})
+      await run().create({field_string: 'test3'})
+
+      await run()
+        .fields(['field_string'])
+        .take(2)
+        .list()
+        .should.become([
+          {field_string: 'test1'},
+          {field_string: 'test2'}
+        ])
+    })
+
+    it('should work with create method', () =>
+      run()
+        .fields('field_string')
+        .create({
+          field_string: 'test create method'
+        })
+        .should.become({field_string: 'test create method'}))
+
+    it('should work with batch create', () =>
+      run()
+        .fields('field_string')
+        .create([
+          {field_string: 'test batch create method 1'},
+          {field_string: 'test batch create method 2'}
+        ])
+        .should.become([
+          {field_string: 'test batch create method 1'},
+          {field_string: 'test batch create method 2'}
+        ]))
+
+    it('should work with update method', async () => {
+      await run().create({field_string: 'test3'})
+      const id = await run().value('id')
+
+      run()
+        .fields('field_string')
+        .update(id, {
+          field_string: 'test create method'
+        })
+        .should.become({field_string: 'test create method'})
+    })
+
+    it('should work with batch update', async () => {
+      await run().create({field_string: 'test1'})
+      await run().create({field_string: 'test2'})
+      const ids = await run().take(2).pluck('id')
+
+      run()
+        .fields('field_string')
+        .update([
+          [ids[0], {field_string: 'test batch update method 1'}],
+          [ids[1], {field_string: 'test batch update method 2'}]
+        ])
+        .should.become([
+          {field_string: 'test batch update method 1'},
+          {field_string: 'test batch update method 2'}
+        ])
+    })
+  })
+
   describe('#take()', () => {
     it('should limit number of results', async () => {
       // Adding 3 objects to set limit of listing 2
@@ -442,93 +570,6 @@ describe('Data', function () {
     })
   })
 
-  describe('#fields()', () => {
-    it('should be able to whitelist fields', async () => {
-      await run().create({'field_integer': 182})
-
-      run()
-        .fields('field_integer')
-        .first()
-        .should.become({field_integer: 182})
-    })
-
-    it('should be able to map field names', async () => {
-      const username = getRandomString()
-      const user = await users.create({username, password: 'test'})
-      const obj = await run().create({author: user.id})
-
-      run()
-        .with('author')
-        .fields('id', 'author.username as name')
-        .find(obj.id)
-        .should.become({id: obj.id, name: username})
-    })
-
-    it('should handle list of records', async () => {
-      await run().create({field_string: 'test1'})
-      await run().create({field_string: 'test2'})
-      await run().create({field_string: 'test3'})
-
-      await run()
-        .fields(['field_string'])
-        .take(2)
-        .list()
-        .should.become([
-          {field_string: 'test1'},
-          {field_string: 'test2'}
-        ])
-    })
-
-    it('should work with create method', () =>
-      run()
-        .fields('field_string')
-        .create({
-          field_string: 'test create method'
-        })
-        .should.become({field_string: 'test create method'}))
-
-    it('should work with batch create', () =>
-      run()
-        .fields('field_string')
-        .create([
-          {field_string: 'test batch create method 1'},
-          {field_string: 'test batch create method 2'}
-        ])
-        .should.become([
-          {field_string: 'test batch create method 1'},
-          {field_string: 'test batch create method 2'}
-        ]))
-
-    it('should work with update method', async () => {
-      await run().create({field_string: 'test3'})
-      const id = await run().value('id')
-
-      run()
-        .fields('field_string')
-        .update(id, {
-          field_string: 'test create method'
-        })
-        .should.become({field_string: 'test create method'})
-    })
-
-    it('should work with batch update', async () => {
-      await run().create({field_string: 'test1'})
-      await run().create({field_string: 'test2'})
-      const ids = await run().take(2).pluck('id')
-
-      run()
-        .fields('field_string')
-        .update([
-          [ids[0], {field_string: 'test batch update method 1'}],
-          [ids[1], {field_string: 'test batch update method 2'}]
-        ])
-        .should.become([
-          {field_string: 'test batch update method 1'},
-          {field_string: 'test batch update method 2'}
-        ])
-    })
-  })
-
   describe('#update()', () => {
     it('can update single object', async () => {
       const obj = await run().create({field_string: 'test1'})
@@ -640,47 +681,6 @@ describe('Data', function () {
         .list()
         .should.eventually.be.an('array')
         .of.length.above(120)
-    })
-  })
-
-  describe('#count()', () => {
-    it('should be able to get number of records', async () => {
-      const records = '.'
-        .repeat(120)
-        .split('.')
-        .map((a, i) => ({
-          field_string: `item ${i}`
-        }))
-      await run().create(records)
-
-      run().count().should.eventually.equal(121)
-    })
-  })
-
-  describe('#delete()', () => {
-    it('can delete single object', async () => {
-      const obj = await run().create({field_string: 'test1'})
-      // TODO why undefined here? while in next tests we have ids?
-      run().delete(obj.id).should.become(undefined)
-    })
-
-    it('can delete multiple objects', async () => {
-      const obj1 = await run().create({field_string: 'test1'})
-      const obj2 = await run().create({field_string: 'test1'})
-      await run().delete([obj1.id, obj2.id]).should.become([obj1.id, obj2.id])
-      await run().list().should.become([])
-    })
-
-    it('can delete multiple objects by query', async () => {
-      const obj1 = await run().create({field_string: 'test1'})
-      await run().create({field_string: 'test2'})
-      await run().create({field_string: 'test3'})
-
-      run()
-        .where('id', 'lte', obj1.id)
-        .delete()
-        // TODO: should we really respond here with the deleted objects?
-        .should.become([obj1.id])
     })
   })
 

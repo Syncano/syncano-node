@@ -77,7 +77,7 @@ export default async (ctx) => {
         ? socket.keywords.map(keyword => keyword.name) : []
     })
   } catch (err) {
-    error(err)
+    error(err.message)
     response.json({message: err.message}, 400)
   }
 }

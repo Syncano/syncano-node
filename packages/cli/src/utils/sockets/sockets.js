@@ -448,7 +448,7 @@ class Socket {
   async loadFromRegistry () {
     debug(`loadFromRegistry: ${this.name}`)
     const registry = new Registry()
-    const registrySocket = await registry.getFullSocket(this.name)
+    const registrySocket = await registry.searchSocketByName(this.name)
 
     if (registrySocket.config) {
       this.spec = registrySocket.config
