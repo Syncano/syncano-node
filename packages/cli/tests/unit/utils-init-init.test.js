@@ -35,19 +35,21 @@ describe('[commands] init', function () {
     })
 
     afterEach(function () {
-      init.session.settings.account.addProject.restore()
+      if (init.session.settings.account.addProject.restore instanceof Function) {
+        init.session.settings.account.addProject.restore()
+      }
     })
 
-    it('should call add project method with proper parameters', function () {
-      init.addConfigFiles(projectParams)
+    it('should call add project method with proper parameters', async function () {
+      await init.addConfigFiles(projectParams)
 
       sinon.assert.calledWith(addProject, path.join(process.cwd(), 'syncano'), projectParams)
     })
 
-    it('should print response about connected instance with proper padding', function () {
+    it('should print response about connected instance with proper padding', async function () {
       const response = `Your project is attached to ${format.green(projectParams.instance)} instance now!`
 
-      init.addConfigFiles(projectParams)
+      await init.addConfigFiles(projectParams)
 
       sinon.assert.calledWith(echo, 4)
       sinon.assert.calledWith(interEcho, response)

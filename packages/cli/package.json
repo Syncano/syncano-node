@@ -23,9 +23,11 @@
     "s": "./lib/cli.js",
     "syncano-cli": "./lib/cli.js",
     "syncano-cli-hosting": "./lib/cli-hosting.js",
-    "s-hosting": "./lib/cli-hosting.js",
     "syncano-cli-component": "./lib/cli-component.js",
-    "s-component": "./lib/cli-component.js"
+    "syncano-cli-instance": "./lib/cli-instance.js",
+    "s-hosting": "./lib/cli-hosting.js",
+    "s-component": "./lib/cli-component.js",
+    "s-instance": "./lib/cli-instance.js"
   },
   "bugs": {
     "url": "https://github.com/Syncano/syncano-node-cli/issues"

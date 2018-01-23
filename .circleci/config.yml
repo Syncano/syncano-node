@@ -178,8 +178,6 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
       - run: yarn run test:e2e
 
   test_e2e_validate:
@@ -204,8 +202,6 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
       - run: yarn run test:e2e
 
   test_e2e_registry:
@@ -218,9 +214,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
-      - run: yarn run test:e2e:registry
+      - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} yarn run test:e2e:registry
 
   test_e2e_hosting:
     name: E2E Tests
@@ -232,8 +226,6 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
       - run: yarn run test:e2e:hosting
 
   test_e2e_socket:
@@ -246,8 +238,6 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-      - run: echo 'export SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
       - run: yarn run test:e2e:socket
 
   test_e2e_anonymous:
@@ -337,7 +327,20 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: echo 'export REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}' >> $BASH_ENV
       - run: sh ./bin/deploy-staging
+
+  delete_registry:
+    name: Delete Test Registry
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/registry
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: SYNCANO_AUTH_KEY=${REGISTRY_TEST_SYNCANO_AUTH_KEY} npx s instance delete ${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}
 
   publish:
     name: NPM publish
@@ -410,6 +413,9 @@ workflows:
       - test_e2e_core:
           requires:
             - build
+      - delete_registry:
+          requires:
+            - test_e2e_registry
       - deploy_docs:
           requires:
             - build

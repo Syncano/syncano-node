@@ -21,6 +21,7 @@ export default class SocketDeployCmd {
     this.session = context.session
     this.Socket = context.Socket
     this.registry = new context.Registry()
+    this.init = new context.Init()
     this.firstRun = true
   }
 
@@ -32,6 +33,7 @@ export default class SocketDeployCmd {
     // Create Instance if --create-instance provided
     if (cmd.createInstance) {
       await createInstance(cmd.createInstance, this.session)
+      await this.init.addConfigFiles({ instance: cmd.createInstance })
     } else {
       // If not, we have to check if we have a project attached to any instance
       this.session.hasProject()
@@ -80,6 +82,7 @@ export default class SocketDeployCmd {
       } else {
         error(4)(err)
       }
+      process.exit(1)
     }
   }
 

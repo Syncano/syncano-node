@@ -54,14 +54,14 @@ class InitCmd {
 
     if (!project && instance) {
       await this.session.checkConnection(instance)
-      this.init.addConfigFiles({ instance })
+      await this.init.addConfigFiles({ instance })
       return this.init.createFilesAndFolders()
     }
 
     if (!project && !instance) {
       const newInstance = createInstance()
 
-      this.init.addConfigFiles({ instance: newInstance.name })
+      await this.init.addConfigFiles({ instance: newInstance.name })
       this.init.createFilesAndFolders()
       return this.session.load()
     }

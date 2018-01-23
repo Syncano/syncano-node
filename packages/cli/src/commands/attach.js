@@ -39,7 +39,7 @@ class Attach {
       instanceName = await this.createNewInstance()
     }
 
-    this.init.addConfigFiles({ instance: instanceName }, this.session.projectPath)
+    await this.init.addConfigFiles({ instance: instanceName }, this.session.projectPath)
 
     echo()
     return this.session.load()
