@@ -263,9 +263,12 @@ class Hosting {
       this.existLocally = true
       this.src = localHostingSettings.src
       this.cname = localHostingSettings.cname
-      this.config.browser_router = localHostingSettings.config.browser_router
       this.path = path.join(session.projectPath, this.src, path.sep)
       this.url = this.getURL(this.name)
+
+      if (localHostingSettings.config && localHostingSettings.config.browser_router) {
+        this.config.browser_router = localHostingSettings.config.browser_router
+      }
     }
   }
 
