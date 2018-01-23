@@ -24,6 +24,9 @@ import SocketCreate from './socket-create'
 import SocketUninstall from './socket-uninstall'
 import ComponentList from './component-list'
 import ComponentLink from './component-link'
+import InstanceList from './instance-list'
+import InstanceCreate from './instance-create'
+import InstanceDelete from './instance-delete'
 
 export default {
   Attach,
@@ -51,5 +54,8 @@ export default {
   SocketCreate,
   SocketUninstall,
   ComponentList,
-  ComponentLink
+  ComponentLink,
+  InstanceList,
+  InstanceCreate,
+  InstanceDelete
 }

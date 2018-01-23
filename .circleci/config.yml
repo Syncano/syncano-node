@@ -262,6 +262,18 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: yarn run test:e2e:anonymous
 
+  test_e2e_instance:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/cli
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: yarn run test:e2e:instance
+
   test_e2e_deploy:
     name: E2E Tests
     docker:
@@ -373,6 +385,9 @@ workflows:
       - test_e2e_client:
           requires:
             - build
+      - test_e2e_instance:
+          requires:
+            - build
       - test_e2e_deploy:
           requires:
             - build
@@ -398,6 +413,7 @@ workflows:
       - deploy_docs:
           requires:
             - build
+            - test_e2e_instance
             - test_e2e_validate
             - test_e2e_client
             - test_e2e_registry
@@ -414,6 +430,7 @@ workflows:
               only: master
       - publish:
           requires:
+            - test_e2e_instance
             - test_e2e_validate
             - test_e2e_client
             - test_e2e_registry

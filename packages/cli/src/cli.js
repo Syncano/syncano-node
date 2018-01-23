@@ -278,6 +278,10 @@ const setup = async () => {
     .command('component', 'Manage your Socket components')
     .on('*', (commandsArr) => validateCommands(commandsArr))
 
+  program
+    .command('instance', 'Manage your instances')
+    .on('*', (commandsArr) => validateCommands(commandsArr))
+
   context.session.loadPlugins(program, context)
   program.parse(process.argv)
 

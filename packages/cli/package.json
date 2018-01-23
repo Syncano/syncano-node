@@ -122,6 +122,7 @@
     "test:e2e:registry": "yarn run test:e2e-single tests/e2e/registry.test-e2e.js",
     "test:e2e:hosting": "yarn run test:e2e-single tests/e2e/hosting.test-e2e.js",
     "test:e2e:socket": "yarn run test:e2e-single tests/e2e/socket.test-e2e.js",
+    "test:e2e:instance": "yarn run test:e2e-single tests/e2e/instance.test-e2e.js",
     "test:e2e-single": "mocha --require babel-register --timeout 100000 --slow 8000",
     "test:unit": "yarn run unit",
     "lint": "standard --fix --env mocha",

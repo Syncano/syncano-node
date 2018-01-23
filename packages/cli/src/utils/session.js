@@ -105,6 +105,10 @@ export class Session {
     } catch (err) {}
   }
 
+  async deleteInstance (name) {
+    return this.connection.instance.delete(name)
+  }
+
   async createInstance (name = genUniqueName()) {
     return this.connection.instance.create({ name })
   }
@@ -115,7 +119,7 @@ export class Session {
   }
 
   async getInstances () {
-    return this.connection.Instance.please().list()
+    return this.connection.instance.list()
   }
 
   async checkAuth () {
