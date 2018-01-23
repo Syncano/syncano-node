@@ -96,7 +96,9 @@ const createInstance = (instanceName) => connection.instance
 
 const deleteInstance = (instanceName) => connection.instance
     .delete(instanceName)
-    .catch((error) => process.stderr.write(JSON.stringify(error.message, null, '')))
+    .catch((error) => process.stderr.write(
+      JSON.stringify(`deleteInstance: ${error.message}`, null, '')
+    ))
 
 const deleteEachInstance = (instances) => {
   const list = []

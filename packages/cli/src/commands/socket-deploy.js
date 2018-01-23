@@ -4,6 +4,7 @@ import Promise from 'bluebird'
 
 import logger from '../utils/debug'
 import { SimpleSpinner } from './helpers/spinner'
+import { createInstance } from './helpers/create-instance'
 import { askQuestions } from './helpers/socket'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
@@ -27,6 +28,14 @@ export default class SocketDeployCmd {
     this.cmd = cmd
 
     // echo(2)(`♻️ ${format.grey(' Deploying...')}`);
+
+    // Create Instance if --create-instance provided
+    if (cmd.createInstance) {
+      await createInstance(cmd.createInstance, this.session)
+    } else {
+      // If not, we have to check if we have a project attached to any instance
+      this.session.hasProject()
+    }
 
     if (socketName) {
       debug(`Deploying Socket: ${socketName}`)

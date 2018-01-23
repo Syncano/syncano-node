@@ -63,6 +63,11 @@ syncano-cli deploy
 ```
 It compiles and deploys all global configuration and Syncano Sockets in your project. From now on, you can call every endpoint from every Socket in your project. Dependencies will be also deployed in that process.
 
+I you don't have instance for that project yet, you can create it during `deploy` process:
+```sh
+syncano-cli deploy --create-instance <my new instance>
+```
+
 #### Deploy single Socket
 
 To deploy single Socket provide socket name as an additional argument:
