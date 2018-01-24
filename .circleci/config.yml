@@ -463,9 +463,3 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy_registry:
-          requires:
-            - publish
-          filters:
-            branches:
-              only: /\d/
