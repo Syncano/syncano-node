@@ -1,5 +1,6 @@
 {
   "license": "MIT",
+  "private": true,
   "scripts": {
     "lint": "npx lerna run lint",
     "test:unit": "cross-env LERNA_TEST_RUN=1 NODE_ENV=test nyc lerna run test:unit",
