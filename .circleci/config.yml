@@ -317,7 +317,7 @@ jobs:
       - run: node packages/cli/lib/cli.js hosting sync cookbook
       - run: node packages/cli/lib/cli.js hosting sync cheatsheet
 
-  deploy_registry:
+  deploy_test_registry:
     name: Deploying Test Registry
     docker:
       - image: circleci/node:latest
@@ -329,6 +329,18 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo 'export REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}' >> $BASH_ENV
       - run: sh ./bin/deploy-staging
+
+  deploy_registry:
+    name: Deploy Registry
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/registry
+
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: sh ./bin/deploy
 
   delete_registry:
     name: Delete Test Registry
@@ -373,7 +385,7 @@ workflows:
   build-test-deploy:
     jobs:
       - build
-      - deploy_registry:
+      - deploy_test_registry::
           requires:
             - build
       - test_lint:
@@ -409,7 +421,7 @@ workflows:
       - test_e2e_registry:
           requires:
             - build
-            - deploy_registry
+            - deploy_test_registry:
       - test_e2e_core:
           requires:
             - build
@@ -451,3 +463,9 @@ workflows:
           filters:
             branches:
               only: master
+      - deploy_registry:
+          requires:
+            - publish
+          filters:
+            branches:
+              only: /\d/
