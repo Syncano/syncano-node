@@ -34,7 +34,7 @@ describe('[E2E] CLI Instance', function () {
       .end(done)
   })
 
-  it('can list if there is no instances', function (done) {
+  it.skip('can list if there is no instances', function (done) {
     testNixt()
       .run(`${cliLocation} instance list`)
       .stdout(/You don't have any instances!/)
