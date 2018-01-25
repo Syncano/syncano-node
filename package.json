@@ -2,6 +2,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "bootstrap": "npx lerna bootstrap --concurrency=1",
     "lint": "npx lerna run lint",
     "test:unit": "cross-env LERNA_TEST_RUN=1 NODE_ENV=test nyc lerna run test:unit",
     "test:e2e": "npx lerna run test:e2e --stream",
