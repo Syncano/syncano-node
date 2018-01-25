@@ -2,7 +2,7 @@
   "scripts": {
     "build": "npm install && npm run build:src && npm run build:env",
     "build:src": "sh ./bin/compile",
-    "build:env": "sh ./bin/compile-env",
+    "build:env": "sh ./bin/compile-env"
   },
   "dependencies": {
     "@syncano/core": "0.6.0",
