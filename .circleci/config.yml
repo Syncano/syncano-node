@@ -76,13 +76,11 @@ jobs:
           - v1-dependencies-registry-{{ checksum "packages/registry/package.json" }}
           - v1-dependencies-registry
 
-      - run: yarn install
-      - run: yarn run bootstrap
+      - run: npm run bootstrap
 
       - save_cache:
           paths:
             - node_modules
-            - .yarn-cache
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - save_cache:
@@ -165,8 +163,8 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:unit
-      - run: yarn run report:coverage
+      - run: npm run test:unit
+      - run: npm run report:coverage
 
   test_e2e_client:
     name: E2E Tests
@@ -178,7 +176,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e
+      - run: npm run test:e2e
 
   test_e2e_validate:
     name: E2E Tests
@@ -190,7 +188,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e
+      - run: npm run test:e2e
 
   test_e2e_core:
     name: E2E Tests
@@ -202,7 +200,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e
+      - run: npm run test:e2e
 
   test_e2e_registry:
     name: E2E Tests
@@ -214,7 +212,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} yarn run test:e2e:registry
+      - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} npm run test:e2e:registry
 
   test_e2e_hosting:
     name: E2E Tests
@@ -226,7 +224,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e:hosting
+      - run: npm run test:e2e:hosting
 
   test_e2e_socket:
     name: E2E Tests
@@ -238,7 +236,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e:socket
+      - run: npm run test:e2e:socket
 
   test_e2e_anonymous:
     name: E2E Tests
@@ -250,7 +248,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e:anonymous
+      - run: npm run test:e2e:anonymous
 
   test_e2e_instance:
     name: E2E Tests
@@ -262,7 +260,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e:instance
+      - run: npm run test:e2e:instance
 
   test_e2e_deploy:
     name: E2E Tests
@@ -274,7 +272,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e:deploy
+      - run: npm run test:e2e:deploy
 
   test_e2e_config:
     name: E2E Tests
@@ -286,7 +284,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run test:e2e:config
+      - run: npm run test:e2e:config
 
   test_lint:
     name: Linter
@@ -298,7 +296,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run lint
+      - run: npm run lint
 
   deploy_docs:
     name: Deploying Docs
@@ -365,7 +363,7 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
-      - run: yarn run changelog
+      - run: npm run changelog
       - run: npx lerna publish --canary --yes
 
   codecov:
@@ -378,7 +376,7 @@ jobs:
     steps:
       - restore_cache:
           key: v1-repo-units-{{ .Environment.CIRCLE_SHA1 }}
-      - run: yarn run report:coverage
+      - run: npm run report:coverage
 
 workflows:
   version: 2
