@@ -71,6 +71,11 @@ jobs:
           - v3-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
           - v3-dependencies-test-tools
 
+      - restore_cache:
+          keys:
+          - v3-dependencies-registry-{{ checksum "packages/registry/package.json" }}
+          - v3-dependencies-registry
+
       - run: npm install
       - run: npm run bootstrap
 
@@ -133,6 +138,11 @@ jobs:
           paths:
             - packages/registry/syncano/registry/node_modules
           key: v3-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
+
+      - save_cache:
+          paths:
+            - packages/registry/node_modules
+          key: v3-dependencies-registry-{{ checksum "packages/registry/package.json" }}
 
       - save_cache:
           paths:
