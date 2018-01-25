@@ -29,7 +29,7 @@
     "s-instance": "./lib/cli-instance.js"
   },
   "bugs": {
-    "url": "https://github.com/Syncano/syncano-node-cli/issues"
+    "url": "https://github.com/Syncano/syncano-node/issues"
   },
   "dependencies": {
     "@syncano/core": "0.7.0",
