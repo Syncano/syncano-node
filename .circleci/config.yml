@@ -76,6 +76,7 @@ jobs:
           - v2-dependencies-registry-{{ checksum "packages/registry/package.json" }}
           - v2-dependencies-registry
 
+      - run: npm install
       - run: npm run bootstrap
 
       - save_cache:
