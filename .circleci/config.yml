@@ -351,7 +351,7 @@ jobs:
     steps:
       - restore_cache:
           key: v3-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: SYNCANO_AUTH_KEY=${REGISTRY_TEST_SYNCANO_AUTH_KEY} ../../cli/lib/cli.js instance delete ${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}
+      - run: SYNCANO_AUTH_KEY=${REGISTRY_TEST_SYNCANO_AUTH_KEY} ../cli/lib/cli.js instance delete ${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}
 
   publish:
     name: Publish packages to NPM
