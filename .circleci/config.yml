@@ -369,7 +369,7 @@ jobs:
       - run: npx lerna publish --canary --yes
 
   codecov:
-    name: Codecov report
+    name: Send Codecov report
     docker:
       - image: circleci/node:latest
 
