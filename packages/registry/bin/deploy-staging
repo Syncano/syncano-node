@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
 export SYNCANO_AUTH_KEY=$REGISTRY_TEST_SYNCANO_AUTH_KEY
-npx s deploy --create-instance $REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE
+../../cli/lib/cli.js deploy --create-instance $REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE
 
 exit $?
