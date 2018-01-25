@@ -77,7 +77,7 @@ jobs:
           - v1-dependencies-registry
 
       - run: yarn install
-      - run: npx lerna bootstrap
+      - run: YARN_CACHE_FOLDER=.yarn-cache npx lerna bootstrap
 
       - save_cache:
           paths:
