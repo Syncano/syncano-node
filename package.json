@@ -4,7 +4,7 @@
   "scripts": {
     "bootstrap": "npx lerna bootstrap",
     "lint": "npx lerna run lint",
-    "test:unit": "cross-env LERNA_TEST_RUN=1 NODE_ENV=test nyc lerna run test:unit",
+    "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test nyc npx lerna run test:unit",
     "test:e2e": "npx lerna run test:e2e --stream",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "precommit": "lint-staged",
@@ -21,7 +21,7 @@
   },
   "lint-staged": {
     "packages/**/src/**/*.js": [
-      "yarn run lint"
+      "npm run lint"
     ]
   },
   "dependencies": {
@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0",
-    "cross-env": "^5.1.3",
     "nyc": "^11.4.1"
   },
   "nyc": {
