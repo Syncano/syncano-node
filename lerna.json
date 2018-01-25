@@ -19,7 +19,6 @@
   "version": "0.7.0",
   "npmClient": "yarn",
   "npmClientArgs": [
-    "--production",
     "--no-optional",
     "--cache-folder .yarn-cache"
   ],
