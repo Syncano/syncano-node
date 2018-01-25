@@ -13,7 +13,7 @@ describe('[E2E] CLI Instance', function () {
   const testNixt = () => nixt()
     .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
 
-  it.only('can create an instance', function (done) {
+  it('can create an instance', function (done) {
     const testInstance = uniqueInstance()
 
     testNixt()
