@@ -17,7 +17,7 @@
   "homepage": "http://syncano.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Syncano/syncano-node-cli.git"
+    "url": "https://github.com/Syncano/syncano-node.git"
   },
   "bin": {
     "s": "./lib/cli.js",
@@ -77,7 +77,6 @@
     "pretty-bytes": "4.0.2",
     "raven": "^2.2.1",
     "readdirp": "2.1.0",
-    "replace": "^0.3.0",
     "semver": "^5.4.1",
     "source-map": "^0.6.1",
     "stack-trace": "0.0.10",
