@@ -355,7 +355,7 @@ jobs:
       - run: SYNCANO_AUTH_KEY=${REGISTRY_TEST_SYNCANO_AUTH_KEY} npx s instance delete ${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}
 
   publish:
-    name: NPM publish
+    name: Publish packages to NPM 
     docker:
       - image: circleci/node:latest
 
