@@ -8,7 +8,7 @@
     "@syncano/core": "0.6.0"
   },
   "scripts": {
-    "build": "yarn && yarn run build:src && yarn run build:env",
+    "build": "npm install && npm run build:src && yarn run build:env",
     "build:src": "sh ./bin/compile",
     "build:env": "sh ./bin/compile-env",
     "test:e2e-single": "cross-env NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 4000",
