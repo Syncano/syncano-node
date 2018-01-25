@@ -331,7 +331,7 @@ jobs:
       - run: sh ./bin/deploy-staging
 
   deploy_registry:
-    name: Deploy Registry
+    name: Deploy Production Registry
     docker:
       - image: circleci/node:latest
 
