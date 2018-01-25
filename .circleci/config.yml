@@ -385,7 +385,7 @@ workflows:
   build-test-deploy:
     jobs:
       - build
-      - deploy_test_registry::
+      - deploy_test_registry:
           requires:
             - build
       - test_lint:
