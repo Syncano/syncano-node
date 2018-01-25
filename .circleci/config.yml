@@ -13,143 +13,143 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies
+          - v2-dependencies-{{ checksum "package.json" }}
+          - v2-dependencies
 
       - restore_cache:
           keys:
-          - v1-dependencies-cli-{{ checksum "packages/cli/package.json" }}
-          - v1-dependencies-cli
+          - v2-dependencies-cli-{{ checksum "packages/cli/package.json" }}
+          - v2-dependencies-cli
 
       - restore_cache:
           keys:
-          - v1-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
-          - v1-dependencies-core
+          - v2-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
+          - v2-dependencies-core
 
       - restore_cache:
           keys:
-          - v1-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
-          - v1-dependencies-client
+          - v2-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
+          - v2-dependencies-client
 
       - restore_cache:
           keys:
-          - v1-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
-          - v1-dependencies-validate
+          - v2-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
+          - v2-dependencies-validate
 
       - restore_cache:
           keys:
-          - v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
-          - v1-dependencies-test
+          - v2-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
+          - v2-dependencies-test
 
       - restore_cache:
           keys:
-          - v1-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
-          - v1-dependencies-template-project-empty
+          - v2-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+          - v2-dependencies-template-project-empty
 
       - restore_cache:
           keys:
-          - v1-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
-          - v1-dependencies-template-project-hello
+          - v2-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
+          - v2-dependencies-template-project-hello
 
       - restore_cache:
           keys:
-          - v1-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
-          - v1-dependencies-template-socket-es6
+          - v2-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
+          - v2-dependencies-template-socket-es6
 
       - restore_cache:
           keys:
-          - v1-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
-          - v1-dependencies-registry-organization
+          - v2-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
+          - v2-dependencies-registry-organization
 
       - restore_cache:
           keys:
-          - v1-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
-          - v1-dependencies-registry-registry
+          - v2-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
+          - v2-dependencies-registry-registry
 
       - restore_cache:
           keys:
-          - v1-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
-          - v1-dependencies-test-tools
+          - v2-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
+          - v2-dependencies-test-tools
 
       - restore_cache:
           keys:
-          - v1-dependencies-registry-{{ checksum "packages/registry/package.json" }}
-          - v1-dependencies-registry
+          - v2-dependencies-registry-{{ checksum "packages/registry/package.json" }}
+          - v2-dependencies-registry
 
       - run: npm run bootstrap
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ checksum "package.json" }}
 
       - save_cache:
           paths:
             - packages/cli/node_modules
-          key: v1-dependencies-cli-{{ checksum "packages/cli/package.json" }}
+          key: v2-dependencies-cli-{{ checksum "packages/cli/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-core/node_modules
-          key: v1-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
+          key: v2-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-client/node_modules
-          key: v1-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
+          key: v2-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-validate/node_modules
-          key: v1-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
+          key: v2-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-test/node_modules
-          key: v1-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
+          key: v2-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-project-empty/node_modules
-          key: v1-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+          key: v2-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-project-empty/node_modules
-          key: v1-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+          key: v2-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-project-hello/node_modules
-          key: v1-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
+          key: v2-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-socket-es6/node_modules
-          key: v1-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
+          key: v2-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
 
       - save_cache:
           paths:
             - packages/registry/syncano/organization/node_modules
-          key: v1-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
+          key: v2-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
 
       - save_cache:
           paths:
             - packages/registry/syncano/registry/node_modules
-          key: v1-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
+          key: v2-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
 
       - save_cache:
           paths:
             - packages/registry/node_modules
-          key: v1-dependencies-registry-{{ checksum "packages/registry/package.json" }}
+          key: v2-dependencies-registry-{{ checksum "packages/registry/package.json" }}
 
       - save_cache:
           paths:
             - packages/test-tools/node_modules
-          key: v1-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
+          key: v2-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
 
       - save_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo
 
@@ -162,7 +162,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:unit
       - run: npm run report:coverage
 
@@ -175,7 +175,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e
 
   test_e2e_validate:
@@ -187,7 +187,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e
 
   test_e2e_core:
@@ -199,7 +199,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e
 
   test_e2e_registry:
@@ -211,7 +211,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} npm run test:e2e:registry
 
   test_e2e_hosting:
@@ -223,7 +223,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:hosting
 
   test_e2e_socket:
@@ -235,7 +235,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:socket
 
   test_e2e_anonymous:
@@ -247,7 +247,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:anonymous
 
   test_e2e_instance:
@@ -259,7 +259,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:instance
 
   test_e2e_deploy:
@@ -271,7 +271,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:deploy
 
   test_e2e_config:
@@ -283,7 +283,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:config
 
   test_lint:
@@ -295,7 +295,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run lint
 
   deploy_docs:
@@ -307,7 +307,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo 'export SYNCANO_AUTH_KEY=${CANARY_SYNCANO_AUTH_KEY}' >> $BASH_ENV
       - run: echo 'export SYNCANO_PROJECT_INSTANCE=${CANARY_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
       - run: node packages/cli/lib/cli.js deploy
@@ -324,7 +324,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo 'export REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}' >> $BASH_ENV
       - run: sh ./bin/deploy-staging
 
@@ -337,7 +337,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: sh ./bin/deploy
 
   delete_registry:
@@ -349,7 +349,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: SYNCANO_AUTH_KEY=${REGISTRY_TEST_SYNCANO_AUTH_KEY} npx s instance delete ${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}
 
   publish:
@@ -361,7 +361,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
       - run: npm run changelog
       - run: npx lerna publish --canary --yes
@@ -375,7 +375,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v1-repo-units-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-units-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run report:coverage
 
 workflows:
