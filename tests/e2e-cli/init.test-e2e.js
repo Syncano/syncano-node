@@ -11,7 +11,7 @@ import {
 
 import uniqueInstance from '../../src/utils/unique-instance'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
+const cliLocation = path.join(process.cwd(), '../packages/cli/lib/cli.js')
 const { email, password, syncanoYmlPath, instance } = returnTestGlobals()
 const tempPass = Date.now()
 const tempEmail = createTempEmail(process.env.E2E_CLI_TEMP_EMAIL, tempPass)

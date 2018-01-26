@@ -7,7 +7,7 @@ import {
   uniqueInstance
 } from '@syncano/test-tools'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
+const cliLocation = path.join(process.cwd(), '../packages/cli/lib/cli.js')
 
 describe('[E2E] CLI Instance', function () {
   const testNixt = () => nixt()

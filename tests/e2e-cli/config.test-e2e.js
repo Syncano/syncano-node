@@ -10,7 +10,7 @@ import {
   uniqueInstance
 } from '@syncano/test-tools'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
+const cliLocation = path.join(process.cwd(), '../packages/cli/lib/cli.js')
 const configTestTemplate = path.join(__dirname, './assets/sockets/hello-config')
 const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
 
