@@ -208,7 +208,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/test
+    working_directory: ~/repo/tests
 
     steps:
       - restore_cache:
@@ -220,7 +220,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/tests
+    working_directory: ~/repo/testss
 
     steps:
       - restore_cache:
@@ -232,7 +232,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/test
+    working_directory: ~/repo/tests
 
     steps:
       - restore_cache:
@@ -244,7 +244,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/test
+    working_directory: ~/repo/tests
 
     steps:
       - restore_cache:
@@ -256,7 +256,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/test
+    working_directory: ~/repo/tests
 
     steps:
       - restore_cache:
@@ -268,7 +268,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/test
+    working_directory: ~/repo/tests
 
     steps:
       - restore_cache:
@@ -280,7 +280,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/test
+    working_directory: ~/repo/tests
 
     steps:
       - restore_cache:
