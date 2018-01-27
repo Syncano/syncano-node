@@ -1,6 +1,8 @@
 ![][Banner]
 
 ## Syncano Toolkit
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Syncano/syncano-node.svg)](https://greenkeeper.io/)
 - [CLI](packages/cli/readme.md) - Manage Syncano Instances, install and deploy Syncano Sockets
 - [Client Library](packages/lib-js-client/readme.md) - Interact with Syncano Sockets via JavaScript
 - [Core Library](packages/lib-js-core/readme.md) - Communicate with Syncano Core Services
