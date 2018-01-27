@@ -2,27 +2,26 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "bootstrap": "npx lerna bootstrap --concurrency 1",
+    "bootstrap": "npx lerna bootstrap",
     "lint": "npx lerna run lint",
-    "test:unit": "cross-env LERNA_TEST_RUN=1 NODE_ENV=test nyc lerna run test:unit",
+    "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test npx nyc npx lerna run test:unit",
     "test:e2e": "npx lerna run test:e2e --stream",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "precommit": "lint-staged",
     "changelog": "npx lerna-changelog",
     "publish": "npx lerna publish --conventional-commits",
-    "deploy": "yarn run deploy:cookbook && yarn run deploy:cheatsheet",
+    "deploy": "npm run deploy:cookbook && yarn run deploy:cheatsheet",
     "deploy:cookbook": "node scripts/deploy cookbook",
     "deploy:cheatsheet": "node scripts/deploy cheatsheet",
     "validate:circleci": "circleci config validate -c .circleci/config.yml"
   },
   "engines": {
     "node": ">= 8.4.0",
-    "npm": ">= 2.x <= 5.x",
-    "yarn": ">=1.0.0"
+    "npm": ">= 2.x <= 5.x"
   },
   "lint-staged": {
     "packages/**/src/**/*.js": [
-      "yarn run lint"
+      "npm run lint"
     ]
   },
   "dependencies": {
@@ -38,7 +37,6 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0",
-    "cross-env": "^5.1.3",
     "nyc": "^11.4.1"
   },
   "nyc": {

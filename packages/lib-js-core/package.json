@@ -12,7 +12,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "prebuild": "rimraf ./lib",
-    "build": "babel src --out-dir lib",
+    "build": "npx babel src --out-dir lib",
     "build:watch": "babel src --out-dir lib -w",
     "test": "npm run test:unit && npm run test:e2e",
     "test:base": "cross-env NODE_ENV=test mocha --reporter spec --require babel-register",
