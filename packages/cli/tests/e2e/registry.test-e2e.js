@@ -1,4 +1,5 @@
 /* global describe it before after */
+import replace from 'replace'
 import path from 'path'
 import {
   nixt,
@@ -41,7 +42,7 @@ describe('[E2E] CLI Registry', function () {
       .end(done)
   })
 
-  it('can submit created socket to registry', function (done) {
+  it('can submit created socket to the registry', function (done) {
     testNixt()
       .run(`${cliLocation} submit ${createdSocketName}`)
       .stdout(/to make it available for everyone/)
@@ -50,8 +51,24 @@ describe('[E2E] CLI Registry', function () {
 
   it('can bump version of submited socket', function (done) {
     testNixt()
-      .run(`${cliLocation} submit ${createdSocketName} -b major`)
-      .stdout(/\(1\.0\.0\)\.\.\. Done/)
+      .run(`${cliLocation} submit ${createdSocketName} -b minor`)
+      .stdout(/\(0\.1\.0\)\.\.\. Done/)
+      .end(done)
+  })
+
+  it('can submit socket with wrong version to the registry', function (done) {
+    testNixt()
+      .before(() => {
+        replace({
+          regex: 'version: 0.1.0',
+          replacement: 'version: 25.0.1',
+          paths: [path.join(testsLocation, testInstance, 'syncano', createdSocketName)],
+          recursive: true,
+          silent: true
+        })
+      })
+      .run(`${cliLocation} submit ${createdSocketName}`)
+      .stdout(/is not comaptible with this Syncano environment/)
       .end(done)
   })
 

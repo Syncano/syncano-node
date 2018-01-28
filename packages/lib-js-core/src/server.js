@@ -1,3 +1,4 @@
+import pjson from '../package.json'
 import Data from './data'
 import Users from './users'
 import Account from './account'
@@ -19,6 +20,9 @@ class Server {
     const settings = Settings(ctx)
     const getConfig = className => Object.assign({className}, settings)
     const config = getConfig()
+
+    this.version = pjson.version
+    this.majorVersion = pjson.version.split('.')[0]
 
     this._class = new Class(config)
     this.event = new Event(config)
