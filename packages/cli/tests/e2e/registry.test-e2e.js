@@ -33,7 +33,7 @@ describe('[E2E] CLI Registry', function () {
       .end(done)
   })
 
-  it.only('can create new socket', function (done) {
+  it('can create new socket', function (done) {
     testNixt()
       .run(`${cliLocation} create ${createdSocketName}`)
       .on(/Choose template for your Socket/)
@@ -42,7 +42,7 @@ describe('[E2E] CLI Registry', function () {
       .end(done)
   })
 
-  it.only('can submit created socket to the registry', function (done) {
+  it('can submit created socket to the registry', function (done) {
     testNixt()
       .run(`${cliLocation} submit ${createdSocketName}`)
       .stdout(/to make it available for everyone/)
