@@ -8,6 +8,7 @@ import walkUp from 'node-walkup'
 import Promise from 'bluebird'
 
 import logger from './debug'
+import pjson from '../../package.json'
 import getSettings from '../settings'
 import genUniqueName from './unique-instance'
 import Socket from './sockets'
@@ -25,6 +26,8 @@ export class Session {
     this.project = null
     this.userId = null
     this.walkup = Promise.promisify(walkUp)
+
+    this.majorVersion = pjson.version.split('.')[0]
 
     this.HOST = process.env.SYNCANO_HOST || 'api.syncano.io'
     this.ENDPOINT_HOST = this.HOST === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'

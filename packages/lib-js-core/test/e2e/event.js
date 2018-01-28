@@ -1,3 +1,4 @@
+/* global it describe before after */
 import {expect} from 'chai'
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'

@@ -24,7 +24,7 @@ import Hosting from '../hosting'
 import Registry from '../registry'
 import { p, echo } from '../print-tools'
 import { getTemplate } from '../templates'
-import { CompileError } from '../errors'
+import { CompileError, CompatibilityError } from '../errors'
 
 const { debug } = logger('utils-sockets')
 
@@ -1284,6 +1284,7 @@ class Socket {
 
   submit () {
     debug('submit')
+    this.isCompatible()
     const registry = new Registry()
     return registry.submitSocket(this)
   }
@@ -1367,6 +1368,14 @@ class Socket {
       checksums[fileReltivePath] = md5(fs.readFileSync(file, 'utf8'))
     })
     return checksums
+  }
+
+  isCompatible () {
+    const socketMajorVersion = this.spec.version.split('.')[0]
+    if (socketMajorVersion !== session.majorVersion) {
+      throw new CompatibilityError(socketMajorVersion, session.majorVersion)
+    }
+    return true
   }
 
   shouldBeUpdated () {

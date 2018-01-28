@@ -1,4 +1,5 @@
 import format from 'chalk'
+import { CompatibilityError } from '../utils/errors'
 import { error, echo, echon } from '../utils/print-tools'
 
 export default class SocketSubmitCmd {
@@ -44,7 +45,10 @@ export default class SocketSubmitCmd {
       echo(`Type ${publishCommand} to make it available for everyone!`)
       echo()
     } catch (err) {
-      if (err.response && err.response.data) {
+      if (err instanceof CompatibilityError) {
+        error(4)(err.message)
+        echo()
+      } else if (err.response && err.response.data) {
         error(4)(err.response.data.message)
         echo()
       } else {
