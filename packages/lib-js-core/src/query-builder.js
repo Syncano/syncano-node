@@ -1,4 +1,5 @@
 import logger from 'debug'
+import pjson from '../package.json'
 import nodeFetch from 'node-fetch'
 import {checkStatus, parseJSON} from './utils'
 
@@ -20,8 +21,10 @@ export default class QueryBuilder {
   _getSyncanoRegistryURL () {
     const {host} = this.instance
     const endpointHost = host === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
-    const registryInstance = process.env.SYNCANO_SOCKET_REGISTRY_INSTANCE || 'socket-registry'
+    const majorVersion = pjson.version.split('.')[0]
+    const registryInstance = process.env.SYNCANO_SOCKET_REGISTRY_INSTANCE || `registry-${majorVersion}`
     this.registryHost = `${registryInstance}.${endpointHost}`
+    debug('registryHost', this.registryHost)
     return `https://${this.registryHost}`
   }
 
