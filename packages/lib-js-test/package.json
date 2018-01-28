@@ -11,7 +11,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
-    "bluebird": "^3.5.0",
+    "bluebird": "^3.5.1",
     "faker": "^4.1.0",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",

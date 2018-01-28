@@ -1,6 +1,6 @@
 import Syncano from '@syncano/core'
 import _ from 'lodash'
-import fs from 'fs-extra'
+import fs from 'fs'
 import format from 'chalk'
 import path from 'path'
 import mkdirp from 'mkdirp'

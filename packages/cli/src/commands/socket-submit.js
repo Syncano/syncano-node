@@ -49,7 +49,6 @@ export default class SocketSubmitCmd {
       echo()
     } catch (err) {
       debug(err)
-      debug(err.response.data)
       if (err instanceof CompatibilityError) {
         error(4)(err.message)
         echo()

@@ -3,7 +3,6 @@ import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
-import fs from 'fs-extra'
 import path from 'path'
 
 import { getRandomString } from '@syncano/test-tools'
@@ -12,6 +11,7 @@ import getSettings from '../../src/settings'
 import session from '../../src/utils/session'
 import printTools from '../../src/utils/print-tools'
 import Sockets from '../../src/utils/sockets'
+import socketUtils from '../../src/utils/sockets/utils'
 
 sinon.test = sinonTestFactory(sinon)
 
@@ -129,13 +129,13 @@ describe('[Class] Socket', function () {
     }
 
     beforeEach(function () {
-      removeDirectory = sinon.stub(fs, 'removeSync')
+      removeDirectory = sinon.stub(socketUtils, 'deleteFolderRecursive')
       uninstallSocket = sinon.stub(session.settings.project, 'uninstallSocket')
       uninstallRemote = sinon.stub(Sockets, 'uninstallRemote').returns(Promise.resolve({ name: socketName }))
     })
 
     afterEach(function () {
-      fs.removeSync.restore()
+      socketUtils.deleteFolderRecursive.restore()
       session.settings.project.uninstallSocket.restore()
       uninstallRemote.restore()
     })

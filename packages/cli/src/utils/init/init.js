@@ -1,6 +1,6 @@
+import fs from 'fs-extra'
 import format from 'chalk'
 import path from 'path'
-import fs from 'fs-extra'
 
 import session from '../session'
 import logger from '../debug'

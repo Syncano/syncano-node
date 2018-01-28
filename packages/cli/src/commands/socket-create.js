@@ -1,7 +1,10 @@
 import path from 'path'
 import inquirer from 'inquirer'
 import format from 'chalk'
+import logger from '../utils/debug'
 import { p, echo, error } from '../utils/print-tools'
+
+const { debug } = logger('cmd-socket-deploy')
 
 class SocketCreate {
   constructor (context) {
@@ -33,6 +36,7 @@ class SocketCreate {
       echo(4)(`Your Socket configuration is stored at ${format.cyan(socket.getSocketPath())}`)
       echo()
     } catch (err) {
+      debug(err)
       error(err.message)
     }
   }

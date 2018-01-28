@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import fs from 'fs'
 import YAML from 'js-yaml'
 import path from 'path'
 import format from 'chalk'
@@ -83,7 +83,22 @@ const getOrigFilePath = (origFileLine) => {
   return origFilePath
 }
 
+const deleteFolderRecursive = (folder) => {
+  if (fs.existsSync(folder)) {
+    fs.readdirSync(folder).forEach((file, index) => {
+      const curPath = path.join(folder, file)
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath)
+      } else {
+        fs.unlinkSync(curPath)
+      }
+    })
+    fs.rmdirSync(folder)
+  }
+}
+
 export default {
+  deleteFolderRecursive,
   getTemplatesChoices,
   findLocalPath,
   listLocal,

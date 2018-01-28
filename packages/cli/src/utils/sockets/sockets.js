@@ -1,4 +1,5 @@
-import fs from 'fs-extra'
+import fs from 'fs'
+import klawSync from 'klaw-sync'
 import child from 'child_process'
 import FindKey from 'find-key'
 import md5 from 'md5'
@@ -256,7 +257,7 @@ class Socket {
   }
 
   static uninstallLocal (socket) {
-    fs.removeSync(socket.localPath)
+    utils.deleteFolderRecursive(socket.localPath)
   }
 
   // TODO: check if the socket is installed (it may be not yet installed yet (before sync))
@@ -360,19 +361,19 @@ class Socket {
 
       try {
         const templateFolder = path.normalize(getTemplate(templateName))
-        const files = fs.walkSync(templateFolder)
-        files.forEach((file) => {
-          const oldContent = fs.readFileSync(file, 'utf8')
+        const files = klawSync(templateFolder, {nodir: true})
+        files.forEach(file => {
+          const oldContent = fs.readFileSync(file.path, 'utf8')
           const socket = {
             socketName: this.name,
             socketDescription: `Description of ${this.name}`
           }
 
           const newContent = template(oldContent, socket, { partial: true })
-          const fileToSave = path.join(socketPath, file.replace(templateFolder, ''))
+          const fileToSave = path.join(socketPath, file.path.replace(templateFolder, ''))
 
           mkdirp.sync(path.parse(fileToSave).dir)
-          fs.writeFileSync(path.join(socketPath, file.replace(templateFolder, '')), newContent)
+          fs.writeFileSync(path.join(socketPath, file.path.replace(templateFolder, '')), newContent)
         })
         resolve(this)
       } catch (err) {
@@ -1361,11 +1362,11 @@ class Socket {
   }
 
   getSocketSrcChecksum () {
-    const files = fs.walkSync(this.getSrcFolder())
+    const files = klawSync(this.getSrcFolder(), {nodir: true})
     const checksums = {}
     files.forEach((file) => {
-      const fileReltivePath = file.replace(this.getSrcFolder(), '')
-      checksums[fileReltivePath] = md5(fs.readFileSync(file, 'utf8'))
+      const fileReltivePath = file.path.replace(this.getSrcFolder(), '')
+      checksums[fileReltivePath] = md5(fs.readFileSync(file.path, 'utf8'))
     })
     return checksums
   }

@@ -123,6 +123,7 @@ export default class SocketDeployCmd {
         SocketDeployCmd.bail()
       }
     } catch (err) {
+      debug(err)
       spinner.stop()
       if (err instanceof CompileError) {
         const status = format.red('    compile error:')

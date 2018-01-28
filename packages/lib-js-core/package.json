@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "author": "Syncano Inc.",
   "license": "MIT",
-  "repository": "https://github.com/Syncano/syncano-server-js.git",
+  "repository": "https://github.com/Syncano/syncano-node.git",
   "publishConfig": {
     "access": "public"
   },
@@ -52,8 +52,8 @@
     "cross-env": "^5.1.1",
     "husky": "^0.14.3",
     "isparta": "^4.0.0",
-    "lint-staged": "^5.0.0",
-    "mocha": "^4.0.1",
+    "lint-staged": "^6.1.0",
+    "mocha": "^5.0.0",
     "nock": "^9.0.22",
     "prettier": "^1.7.4",
     "rimraf": "^2.6.2",

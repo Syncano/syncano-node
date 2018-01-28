@@ -1,10 +1,10 @@
 /* global it describe afterEach beforeEach */
+import fs from 'fs'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
 import dirtyChai from 'dirty-chai'
 import chai from 'chai'
 import format from 'chalk'
-import fs from 'fs-extra'
 import path from 'path'
 import mkdirp from 'mkdirp'
 import Promise from 'bluebird'

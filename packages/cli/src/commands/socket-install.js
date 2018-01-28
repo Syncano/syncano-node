@@ -1,5 +1,4 @@
 import format from 'chalk'
-import Promise from 'bluebird'
 
 import logger from '../utils/debug'
 import { echo, error } from '../utils/print-tools'
@@ -22,9 +21,6 @@ export default class SocketInstall {
     try {
       const socketFromRegistry = await this.registry.searchSocketByName(socketName)
       debug(`socket found: ${socketFromRegistry.name} ${socketFromRegistry.vesrion}`)
-      if (!socketFromRegistry) {
-        Promise.reject(new Error('No such socket in registry!'))
-      }
       this.socketFromRegistry = socketFromRegistry
 
       if (cmd.socket) {

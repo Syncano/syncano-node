@@ -116,11 +116,6 @@ jobs:
 
       - save_cache:
           paths:
-            - packages/template-project-empty/node_modules
-          key: v5-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
-
-      - save_cache:
-          paths:
             - packages/template-project-hello/node_modules
           key: v5-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
 
