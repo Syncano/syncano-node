@@ -3,4 +3,4 @@
 mkdir -p .dist
 cp package.json .dist
 cd .dist
-yarn --production
+npm install --production
