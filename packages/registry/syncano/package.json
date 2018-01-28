@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "lodash": "latest",
+    "lodash": "^4.17.4",
     "node-fetch": "^1.6.3",
     "semver": "^5.3.0",
     "syncano-middleware": "^0.1.2",
