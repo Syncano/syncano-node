@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.7.1"></a>
+## [0.7.1](https://github.com/Syncano/syncano-node/compare/v0.7.0...v0.7.1) (2018-01-28)
+
+
+### Bug Fixes
+
+* listing current instances ([#80](https://github.com/Syncano/syncano-node/issues/80)) ([#90](https://github.com/Syncano/syncano-node/issues/90)) ([fdad0a1](https://github.com/Syncano/syncano-node/commit/fdad0a1))
+* re-enable registry deploy ([a32f3c9](https://github.com/Syncano/syncano-node/commit/a32f3c9))
+* **circecli:** syntax error ([cf370ae](https://github.com/Syncano/syncano-node/commit/cf370ae))
+* **lerna:config:** build without "production" flag ([3b54ea4](https://github.com/Syncano/syncano-node/commit/3b54ea4))
+* trying to fix lerna/yarn builds ([d4d58cf](https://github.com/Syncano/syncano-node/commit/d4d58cf))
+
+
+
+
 <a name="0.7.0"></a>
 # [0.7.0](https://github.com/Syncano/syncano-node/compare/v0.4.2...v0.7.0) (2018-01-24)
 
