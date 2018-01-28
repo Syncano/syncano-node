@@ -15,6 +15,19 @@ class Users extends Data {
 
     return query ? `${url}?${query}` : url
   }
+
+  login ({username, password}) {
+    const fetch = this.fetch.bind(this)
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({ username, password })
+      }
+      fetch(`${this.url()}auth/`, options)
+        .then(res => resolve(res))
+        .catch(err => reject(err))
+    })
+  }
 }
 
 export default Users

@@ -4,7 +4,7 @@
     "@syncano/core": "latest"
   },
   "scripts": {
-    "build": "yarn && yarn run build:src && yarn run build:env",
+    "build": "npm install && npm run build:src && npm run build:env",
     "build:src": "sh ./bin/compile",
     "build:env": "sh ./bin/compile-env"
   },
