@@ -1,6 +1,9 @@
 import format from 'chalk'
+import logger from '../utils/debug'
 import { CompatibilityError } from '../utils/errors'
 import { error, echo, echon } from '../utils/print-tools'
+
+const { debug } = logger('cmd-submit')
 
 export default class SocketSubmitCmd {
   constructor (context) {
@@ -45,6 +48,8 @@ export default class SocketSubmitCmd {
       echo(`Type ${publishCommand} to make it available for everyone!`)
       echo()
     } catch (err) {
+      debug(err)
+      debug(err.response.data)
       if (err instanceof CompatibilityError) {
         error(4)(err.message)
         echo()

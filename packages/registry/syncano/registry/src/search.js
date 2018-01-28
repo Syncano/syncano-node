@@ -11,7 +11,6 @@ export default async (ctx) => {
   const allSocketsDict = {}
   const responseObj = {}
   let socketsGroupsStore = null
-  let userObj = null
 
   const getSocketDetails = async (socket) => {
     debug(`Getting details for socket: ${socket.name}`)
@@ -69,7 +68,7 @@ export default async (ctx) => {
       debug(`Found ${group.length} sockets in a group`)
       group.forEach(socket => {
         // That way we will have always newest version on top
-        if (!socket.private || (userObj && socket.owner_account === user.id)) {
+        if (!socket.private || (user && socket.owner_account === user.id)) {
           allSocketsDict[socket.name] = socket
         }
       })
