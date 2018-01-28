@@ -384,6 +384,9 @@ workflows:
   build-test-deploy:
     jobs:
       - build
+      - deploy_test_registry:
+          requires:
+            - build
       - test_lint:
           requires:
             - build
@@ -412,9 +415,6 @@ workflows:
           requires:
             - build
       - test_e2e_socket:
-          requires:
-            - build
-      - deploy_test_registry:
           requires:
             - build
       - test_e2e_registry:
