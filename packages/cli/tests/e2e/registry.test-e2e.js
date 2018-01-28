@@ -52,7 +52,7 @@ describe('[E2E] CLI Registry', function () {
   it('can bump version of submited socket', function (done) {
     testNixt()
       .run(`${cliLocation} submit ${createdSocketName} -b minor`)
-      .stdout(/\(1\.0\.0\)\.\.\. Done/)
+      .stdout(/\(0\.1\.0\)\.\.\. Done/)
       .end(done)
   })
 
@@ -60,7 +60,7 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .before(() => {
         replace({
-          regex: 'version: 0.0.1',
+          regex: 'version: 0.1.0',
           replacement: 'version: 25.0.1',
           paths: [path.join(testsLocation, testInstance, 'syncano', createdSocketName)],
           recursive: true,
