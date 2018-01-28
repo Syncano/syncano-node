@@ -6,7 +6,6 @@ import Syncano from '@syncano/core'
 import origNixt from 'nixt'
 import _ from 'lodash'
 
-import { p } from '../../cli/src/utils/print-tools'
 import uniqueInstance from './unique-instance'
 
 import homeDir from 'home-dir'
@@ -51,10 +50,10 @@ const removeTestRegistryEnv = () => {
 if (process.env.SYNCANO_E2E_DEBUG) {
   origNixt.prototype.expect = function (fn) {
     function wrappedExpect (result) {
-      console.log(p(6)('stdout:'))
-      console.log(p(8)(result.stdout))
-      console.log(p(6)('code:'))
-      console.log(p(8)(result.code.toString()))
+      console.log(' '.repeat(6), 'stdout:')
+      console.log(' '.repeat(8), result.stdout)
+      console.log(' '.repeat(6), 'code:')
+      console.log(' '.repeat(8), result.code.toString())
       return fn(result)
     }
     this.expectations.push(wrappedExpect)
