@@ -22,7 +22,7 @@
     "test:e2e:hosting": "npm run test:e2e-single packages/cli/tests/e2e/hosting.test-e2e.js",
     "test:e2e:socket": "npm run test:e2e-single packages/cli/tests/e2e/socket.test-e2e.js",
     "test:e2e:instance": "npm run test:e2e-single packages/cli/tests/e2e/instance.test-e2e.js",
-    "test:e2e-single": "npx nyc --clean=false mocha --require babel-register --timeout 100000 --slow 8000",
+    "test:e2e-single": "npx nyc --clean=false mocha --require babel-register --timeout 100000 --slow 8000"
   },
   "engines": {
     "node": ">= 8.4.0",
