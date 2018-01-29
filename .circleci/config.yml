@@ -209,6 +209,7 @@ jobs:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} npm run test:e2e:registry
+      - run: npm run report:coverage
 
   test_e2e_hosting:
     name: E2E Tests
@@ -221,6 +222,7 @@ jobs:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:hosting
+      - run: npm run report:coverage
 
   test_e2e_socket:
     name: E2E Tests
@@ -233,6 +235,7 @@ jobs:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:socket
+      - run: npm run report:coverage
 
   test_e2e_anonymous:
     name: E2E Tests
@@ -245,6 +248,7 @@ jobs:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:anonymous
+      - run: npm run report:coverage
 
   test_e2e_instance:
     name: E2E Tests
@@ -257,6 +261,7 @@ jobs:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:instance
+      - run: npm run report:coverage
 
   test_e2e_deploy:
     name: E2E Tests
@@ -269,6 +274,7 @@ jobs:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:deploy
+      - run: npm run report:coverage
 
   test_e2e_config:
     name: E2E Tests
@@ -281,6 +287,7 @@ jobs:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:config
+      - run: npm run report:coverage
 
   test_lint:
     name: Linter

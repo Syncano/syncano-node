@@ -115,6 +115,7 @@
     "unit": "mocha 'tests/unit/*.test.js' --require babel-register",
     "unit:watch": "npm run unit -- -w",
     "test": "npm-run-all --parallel test:unit test:e2e:group:*",
+    "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "test:e2e:init": "npm run test:e2e-single tests/e2e/init.test-e2e.js",
     "test:e2e:anonymous": "npm run test:e2e-single tests/e2e/anonymous.test-e2e.js",
     "test:e2e:deploy": "npm run test:e2e-single tests/e2e/deploy.test-e2e.js",
@@ -123,7 +124,7 @@
     "test:e2e:hosting": "npm run test:e2e-single tests/e2e/hosting.test-e2e.js",
     "test:e2e:socket": "npm run test:e2e-single tests/e2e/socket.test-e2e.js",
     "test:e2e:instance": "npm run test:e2e-single tests/e2e/instance.test-e2e.js",
-    "test:e2e-single": "mocha --require babel-register --timeout 100000 --slow 8000",
+    "test:e2e-single": "nyc mocha --require babel-register --timeout 100000 --slow 8000",
     "test:unit": "npm run unit",
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
