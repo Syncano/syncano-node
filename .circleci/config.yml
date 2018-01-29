@@ -282,6 +282,18 @@ jobs:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:config
 
+  test_e2e:
+    name: E2E Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/
+
+    steps:
+      - restore_cache:
+          key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: npm run test:e2e
+
   test_lint:
     name: Linter
     docker:
@@ -388,72 +400,27 @@ workflows:
       - test_unit:
           requires:
             - build
-      - test_e2e_validate:
-          requires:
-            - build
-      - test_e2e_client:
-          requires:
-            - build
-      - test_e2e_instance:
-          requires:
-            - build
-      - test_e2e_deploy:
-          requires:
-            - build
-      - test_e2e_config:
-          requires:
-            - build
-      - test_e2e_anonymous:
-          requires:
-            - build
-      - test_e2e_hosting:
-          requires:
-            - build
-      - test_e2e_socket:
-          requires:
-            - build
-      - test_e2e_registry:
+      - test_e2e:
           requires:
             - build
             - deploy_test_registry
-      - test_e2e_core:
-          requires:
-            - build
       - delete_registry:
           requires:
-            - test_e2e_registry
+            - test_e2e
       - deploy_docs:
           requires:
             - build
-            - test_e2e_instance
-            - test_e2e_validate
-            - test_e2e_client
-            - test_e2e_registry
-            - test_e2e_socket
-            - test_e2e_hosting
-            - test_e2e_core
-            - test_e2e_anonymous
-            - test_e2e_config
-            - test_e2e_deploy
             - test_lint
             - test_unit
+            - test_e2e
           filters:
             branches:
               only: master
       - publish:
           requires:
-            - test_e2e_instance
-            - test_e2e_validate
-            - test_e2e_client
-            - test_e2e_registry
-            - test_e2e_socket
-            - test_e2e_hosting
-            - test_e2e_core
-            - test_e2e_anonymous
-            - test_e2e_config
-            - test_e2e_deploy
             - test_lint
             - test_unit
+            - test_e2e
           filters:
             branches:
               only: master
