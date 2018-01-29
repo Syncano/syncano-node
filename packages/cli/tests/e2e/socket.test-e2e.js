@@ -51,6 +51,14 @@ describe('[E2E] CLI Socket', function () {
       .end(done)
   })
 
+  it('can list single installed socket with docs', function (done) {
+    testNixt()
+      .run(`${cliLocation} list hello`)
+      .stdout(/input:/)
+      .stdout(/output:/)
+      .end(done)
+  })
+
   it('can\'t list non existing Socket', function (done) {
     testNixt()
       .run(`${cliLocation} list ${getRandomString()}`)

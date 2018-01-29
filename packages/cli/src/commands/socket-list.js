@@ -46,24 +46,28 @@ class SocketListCmd {
     echo()
 
     if (endpoint.metadata.parameters && this.fullPrint) {
-      echo(12)(this.responses.params)
+      echo(8)(this.responses.params)
       echo()
       Object.keys(endpoint.metadata.parameters).forEach((param) => {
-        echo(12)(endpointResponses.parameter(param).name)
-        echo(12)(endpointResponses.parameter(param).description)
-        echo(12)(endpointResponses.parameter(param).example)
+        echo(10)(endpointResponses.parameter(param).name)
+        echo(10)(endpointResponses.parameter(param).description)
+        echo(10)(endpointResponses.parameter(param).example)
         echo()
       })
     }
 
-    if (endpoint.metadata.response && this.fullPrint) {
-      echo(12)(endpointResponses.response().mimetype)
+    const responses = endpoint.metadata.response
+
+    if (responses && this.fullPrint) {
+      echo(8)(this.responses.responses)
       echo()
-      if (endpoint.metadata.response.examples) {
-        endpoint.metadata.response.examples.forEach((example) => {
-          echo(12)(endpointResponses.response(example).description)
-          echo(12)(endpointResponses.response(example).exitCode)
-          echo(12)(endpointResponses.response(example).example)
+      if (responses) {
+        Object.keys(responses).forEach(exampleKey => {
+          const example = responses[exampleKey]
+          echo(10)(endpointResponses.response(example).description)
+          echo(10)(endpointResponses.response(example).mimetype)
+          echo(10)(endpointResponses.response(example).exitCode)
+          echo(10)(endpointResponses.response(example).example)
           echo()
         })
       }

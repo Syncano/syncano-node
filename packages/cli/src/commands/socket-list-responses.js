@@ -23,7 +23,8 @@ const socketListResponses = (session) => ({
   ),
   createNewOne: `Type ${format.cyan('syncano-cli create <name>')} to create new one.`,
   installNewOne: `Type ${format.cyan('syncano-cli add <name>')} to install new one from registry.`,
-  params: `${format.white('params')}:`,
+  params: `${format.white('input')}:`,
+  responses: `${format.white('output')}:`,
   socket: (socket) => {
     let description = ''
     if (socket.existRemotely) {
@@ -54,17 +55,20 @@ const socketListResponses = (session) => ({
         example: `${format.dim('example')}: ${format.cyan.dim(metadata.parameters[param].example)}`
       }),
       response: (example) => {
-        const { exit_code, description } = example || ''
+        const exitCode = example.exit_code || '200'
+        const mimetype = example.mimetype || 'application/json'
+        const { description } = example || ''
+
         let exampleLines = ''
         if (example && example.example) {
           exampleLines = example.example.split('\n').map((line) => p(12)(line)).join('\n')
         }
 
         return {
-          mimetype: `${format.white('response')}: ${metadata.response.mimetype}`,
-          description: example && `${format.dim('description')}: ${printCode(exit_code, description)}`,
-          exitCode: example && `${format.dim('exit code')}: ${printCode(exit_code)}`,
-          example: exampleLines && `${format.dim('example')}:\n${exampleLines}`
+          mimetype: `${format.dim('mimetype')}: ${mimetype}`,
+          description: example && `${format.dim('description')}: ${printCode(exitCode, description)}`,
+          exitCode: example && `${format.dim('exit code')}: ${printCode(exitCode)}`,
+          example: exampleLines && `${format.dim('example')}:\n${p(2)(exampleLines)}`
         }
       }
     }

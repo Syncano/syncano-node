@@ -1,5 +1,4 @@
 /* global describe it beforeEach afterEach before */
-import _ from 'lodash'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
 import { expect } from 'chai'
@@ -9,7 +8,7 @@ import { getRandomString } from '@syncano/test-tools'
 
 import { SocketList } from '../../src/commands'
 import context from '../../src/utils/context'
-import printTools, { p, printCode } from '../../src/utils/print-tools'
+import printTools from '../../src/utils/print-tools'
 
 sinon.test = sinonTestFactory(sinon)
 
@@ -256,53 +255,6 @@ describe('[commands] List Sockets', function () {
       it('example', function () {
         sinon.assert.calledWith(interEcho,
         `${format.dim('example')}: ${format.cyan.dim(endpoint.metadata.parameters[param].example)}`)
-      })
-    })
-
-    describe('should print endpoint response with', function () {
-      let example = null
-
-      before(function () {
-        endpoint.metadata.response = {
-          mimetype: 'text/plain',
-          examples: [{
-            example: getRandomString('createSocket_printEndpoint_response_example'),
-            exit_code: _.random(100, 600),
-            description: getRandomString('createSocket_printEndpoint_response_description')
-          }]
-        }
-        example = endpoint.metadata.response.examples[0]
-        socketList.fullPrint = true
-      })
-
-      beforeEach(function () {
-        socketList.printEndpoint(endpoint, true)
-      })
-
-      it('mimetype', function () {
-        sinon.assert.calledWith(interEcho,
-        `${format.white('response')}: ${endpoint.metadata.response.mimetype}`)
-      })
-
-      it('description', function () {
-        const { exit_code, description } = endpoint.metadata.response.examples[0]
-
-        sinon.assert.calledWith(interEcho,
-        example && `${format.dim('description')}: ${printCode(exit_code, description)}`)
-      })
-
-      it('exit code', function () {
-        const { exit_code } = endpoint.metadata.response.examples[0]
-
-        sinon.assert.calledWith(interEcho,
-        example && `${format.dim('exit code')}: ${printCode(exit_code)}`)
-      })
-
-      it('example', function () {
-        const exampleLines = example.example.split('\n').map((line) => p(12)(line)).join('\n')
-
-        sinon.assert.calledWith(interEcho,
-        exampleLines && `${format.dim('example')}:\n${exampleLines}`)
       })
     })
   })
