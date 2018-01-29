@@ -114,7 +114,7 @@
     "clean": "rm -rf lib/",
     "unit": "mocha 'tests/unit/*.test.js' --require babel-register",
     "unit:watch": "npm run unit -- -w",
-    "test": "npm-run-all --parallel test:unit test:e2e:group:*",
+    "test:e2e": "npm-run-all test:e2e:*",
     "test:e2e:init": "npm run test:e2e-single tests/e2e/init.test-e2e.js",
     "test:e2e:anonymous": "npm run test:e2e-single tests/e2e/anonymous.test-e2e.js",
     "test:e2e:deploy": "npm run test:e2e-single tests/e2e/deploy.test-e2e.js",

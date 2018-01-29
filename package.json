@@ -4,7 +4,7 @@
   "scripts": {
     "bootstrap": "npx lerna bootstrap --hoist",
     "lint": "npx lerna run lint",
-    "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test npx nyc npx lerna run test:unit",
+    "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test npx nyc --clean=false npx lerna run test:unit",
     "test:e2e": "npx lerna run test:e2e --stream",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "precommit": "lint-staged",
@@ -13,7 +13,16 @@
     "deploy": "npm run deploy:cookbook && yarn run deploy:cheatsheet",
     "deploy:cookbook": "node scripts/deploy cookbook",
     "deploy:cheatsheet": "node scripts/deploy cheatsheet",
-    "validate:circleci": "circleci config validate -c .circleci/config.yml"
+    "validate:circleci": "circleci config validate -c .circleci/config.yml",
+    "test:e2e:init": "npm run test:e2e-single packages/cli/tests/e2e/init.test-e2e.js",
+    "test:e2e:anonymous": "npm run test:e2e-single packages/cli/tests/e2e/anonymous.test-e2e.js",
+    "test:e2e:deploy": "npm run test:e2e-single packages/cli/tests/e2e/deploy.test-e2e.js",
+    "test:e2e:config": "npm run test:e2e-single packages/cli/tests/e2e/config.test-e2e.js",
+    "test:e2e:registry": "npm run test:e2e-single packages/cli/tests/e2e/registry.test-e2e.js",
+    "test:e2e:hosting": "npm run test:e2e-single packages/cli/tests/e2e/hosting.test-e2e.js",
+    "test:e2e:socket": "npm run test:e2e-single packages/cli/tests/e2e/socket.test-e2e.js",
+    "test:e2e:instance": "npm run test:e2e-single packages/cli/tests/e2e/instance.test-e2e.js",
+    "test:e2e-single": "npx nyc --clean=false mocha --require babel-register --timeout 100000 --slow 8000",
   },
   "engines": {
     "node": ">= 8.4.0",

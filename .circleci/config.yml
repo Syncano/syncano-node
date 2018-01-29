@@ -203,7 +203,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/
 
     steps:
       - restore_cache:
@@ -215,7 +215,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/
 
     steps:
       - restore_cache:
@@ -227,7 +227,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/
 
     steps:
       - restore_cache:
@@ -239,7 +239,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/
 
     steps:
       - restore_cache:
@@ -251,7 +251,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/
 
     steps:
       - restore_cache:
@@ -263,7 +263,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/
 
     steps:
       - restore_cache:
@@ -275,7 +275,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/
 
     steps:
       - restore_cache:
@@ -299,7 +299,7 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo
+    working_directory: ~/repo/
 
     steps:
       - restore_cache:

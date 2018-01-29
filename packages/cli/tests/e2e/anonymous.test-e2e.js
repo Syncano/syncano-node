@@ -28,7 +28,7 @@ describe('CLI Anonymous User', function () {
 
   it('can run cli deploy command', function (done) {
     testNixt()
-      .run(`${cliLocation} list`)
+      .run(`${cliLocation} deploy`)
       .stdout(/You are not logged in!/)
       .end(done)
   })
