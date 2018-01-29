@@ -59,27 +59,25 @@ npm run e2e:tutorial -- src/tests/e2e/tutorials/quickstart.test-e2e.js
 
 #### Prerequisites
 
-  * You have `node` v7.0.0+ installed and `yarn` at v0.17.10+ (as we use it for development)
-  * You are familiar with `npm`/`yarn`
+  * You have `node` v7.0.0+ installed (as we use it for development)
+  * You are familiar with `npm`
   * You are familiar with `git`, `github` and proper branching flow
   * You know how to set `ENV` variables on your OS
   * You know `JavaScript`
 
 #### Before you submit a pull request
 
-  * Fork our repository and create a branch from `devel`
+  * Fork our repository and create a branch from `master`
   * If you have added or changed existing code, add `unit tests`!
   * If you have changed the way `CLI` works, update `README.md`
-  * If you have changed/bumped package update and commit `yarn.lock`
-  * Ensure that all `unit tests` passes (`yarn test`)
-  * Check that your code lints (`yarn lint`/`yarn lint-tests`)
-  * Check that your code passes all tests on `CI`
+  * If you have changed/bumped package update and commit `package-lock.json` 
+  * Check that your code passes all tests on `Circle CI`
 
 #### Branching flow
 
-We branch our work from `devel`.
-After merging your changes, they (changes) will wait for our `devel` tests to pass and then automatically merged into `beta` branch.
-It will be submitted to npm with `@beta` tag. From there we will merge it into `master` that will bump proper version of `CLI`.
+We branch our work from `master`.
+After merging your changes, they (changes) will wait for our `master` tests to pass and then automatically merged into `canary` branch.
+It will be submitted to npm with `@canary` tag. From there we will merge it into `master` that will bump proper version of `CLI`.
 
 #### Waiting for review
 

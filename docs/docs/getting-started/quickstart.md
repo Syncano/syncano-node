@@ -27,17 +27,13 @@ cd chat-app/
 
 > **In order to use the Syncano CLI you will have to install the following dependencies:**
 * NodeJS greater than [![NODE](https://img.shields.io/badge/node-v8.9.0-blue.svg)](http://nodejs.org/)
-* NPM greater than [![NPM](https://img.shields.io/badge/npm-v3.9-blue.svg)](http://npmjs.com/)
-* Yarn greater than [![Yarn](https://img.shields.io/badge/yarn-v1.3.2-blue.svg)](https://yarnpkg.com/en/docs/install)
+* NPM greater than [![NPM](https://img.shields.io/badge/npm-v8.9.0-blue.svg)](http://npmjs.com/) 
 
 The `syncano-cli` is the main tool for setting up and managing your projects on the Syncano Platform. To install it, run:
 
 ```sh
 npm install -g @syncano/cli
-```
-> Remember to install `yarn`, which the Syncano CLI depends on! You can do this by:
-
-> * `npm install -g yarn`
+``` 
 
 # Sign up and create a project
 Once the Syncano CLI is installed you can sign up for an account. Run the following command in the root directory of your project:

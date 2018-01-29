@@ -23,6 +23,7 @@
 - CLI Reference Guide
   - [Installation](/cli-reference/installation)
   - [Commands](/cli-reference/commands)
+  - [Config Files](/cli-reference/config-files)
   - [Advanced](/cli-reference/advanced)
   - [Development](/cli-reference/development)
 - Client Lib Reference

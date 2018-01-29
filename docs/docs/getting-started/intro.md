@@ -15,12 +15,12 @@ So, starting from the very top of the diagram:
 The Syncano chain of tools currently consists:
 
 - `CLI` - command-line interface to operate whole platform
-- `Client Library` (*syncano-client*) - library used on the client-side (application, website etc.)
-- `Server-side Library` (*syncano-server*) - used inside the Socket's scripts for communication with Core Syncano Services (e.g. build-in database)
+- `Client Library` (*@syncano/lib-js-client*) - library used on the client-side (application, website etc.)
+- `Server-side Library` (*@syncano/lib-js-core*) - used inside the Socket's scripts for communication with Core Syncano Services (e.g. build-in database)
 
 ### The Syncano CLI
 
-Use the Syncano Command Line interface (CLI) to manage the whole build and deploy process. You can get it from npm with `npm install syncano-cli -g` command (it requires Node and Yarn to be installed). It's a powerful terminal tool, so you won't have to leave your working environment. The whole synchronization and deployment process happens automatically and seamlessly.
+Use the Syncano Command Line interface (CLI) to manage the whole build and deploy process. You can get it from npm with `npm install @syncano/cli -g` command (it requires Node to be installed). It's a powerful terminal tool, so you won't have to leave your working environment. The whole synchronization and deployment process happens automatically and seamlessly.
 
 See the [Syncano CLI Reference](/cli-reference/installation) for more information about the commands and possible options.
 

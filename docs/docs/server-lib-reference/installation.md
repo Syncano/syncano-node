@@ -27,7 +27,7 @@ cat <my-project>/syncano/<my-socket-name>/package.json
 }
 ```
 
-If `syncano-server` is not listed there you can use `yarn` to install it (you have to be inside Socket folder):
+If `syncano-server` is not listed there you can use `npm` to install it (you have to be inside Socket folder):
 ```sh
 cd <my-project>/syncano/<my-socket-name>/package.json
 yarn add syncano-server

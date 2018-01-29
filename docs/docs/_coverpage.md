@@ -27,8 +27,7 @@
           </div>
         </div>
         <div class="terminal-text">
-          <p>
-            <span class="lite">⬢</span> $ npm install -g yarn<br />
+          <p> 
             <span class="lite">⬢</span> $ npm install -g @syncano/cli<br />
             <span class="lite">⬢</span> $ syncano-cli init
           </p>
