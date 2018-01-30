@@ -174,6 +174,7 @@ function SyncanoClient(instanceName = required('instanceName'), options = {}) {
 
   function client(endpoint = required('endpoint'), data = {}, options = {}) {
     const url = this.url(endpoint)
+    const method = data._method || 'POST'
     const headers = this.headers(options.headers)
 
     const transformRequest = [
@@ -187,9 +188,9 @@ function SyncanoClient(instanceName = required('instanceName'), options = {}) {
     ]
 
     return fetch({
-      method: data._method || 'POST',
+      method: method,
       url,
-      data: data._method !== 'POST' ? {params: data} : data,
+      data: method !== 'POST' ? {params: data} : data,
       headers,
       transformRequest,
       ...options
