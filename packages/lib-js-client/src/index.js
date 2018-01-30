@@ -1,7 +1,7 @@
 import querystring from 'querystring'
 import fetch from 'axios'
 
-function SyncanoClient (instanceName = required('instanceName'), options = {}) {
+function SyncanoClient(instanceName = required('instanceName'), options = {}) {
   const host = options.host || 'syncano.space'
   const DEFAULT_HEADERS = {'Content-Type': 'application/json'}
 
@@ -13,25 +13,26 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
   client.headers = headers => Object.assign({}, DEFAULT_HEADERS, headers)
   client.post = client
 
-  client.login = function (username, password) {
+  client.login = function(username, password) {
     const login = this.loginMethod
       ? this.loginMethod
       : (username, password) => {
-        const url = `https://api.syncano.io/v2/instances/${this
-            .instanceName}/users/auth/`
-        const data = JSON.stringify({username, password})
+          const url = `https://api.syncano.io/v2/instances/${
+            this.instanceName
+          }/users/auth/`
+          const data = JSON.stringify({username, password})
 
-        return fetch({url, data}).then(user => {
-          this.setToken(user.token)
+          return fetch({url, data}).then(user => {
+            this.setToken(user.token)
 
-          return user
-        })
-      }
+            return user
+          })
+        }
 
     return login(username, password)
   }
 
-  client.url = function (endpoint, data) {
+  client.url = function(endpoint, data) {
     let url = `${this.baseUrl}${endpoint}/?`
 
     if (data) {
@@ -45,11 +46,11 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     return url
   }
 
-  client.logout = function () {
+  client.logout = function() {
     this.token = undefined
   }
 
-  client.setToken = function (token) {
+  client.setToken = function(token) {
     this.token = token
 
     if (typeof client.setTokenCallback === 'function') {
@@ -57,7 +58,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     }
   }
 
-  client.get = function (
+  client.get = function(
     endpoint = required('endpoint'),
     data = {},
     options = {}
@@ -65,7 +66,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     return this.post(endpoint, {...data, _method: 'GET'}, options)
   }
 
-  client.delete = function (
+  client.delete = function(
     endpoint = required('endpoint'),
     data = {},
     options = {}
@@ -73,7 +74,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     return this.post(endpoint, {...data, _method: 'DELETE'}, options)
   }
 
-  client.put = function (
+  client.put = function(
     endpoint = required('endpoint'),
     data = {},
     options = {}
@@ -81,7 +82,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     return this.post(endpoint, {...data, _method: 'PUT'}, options)
   }
 
-  client.patch = function (
+  client.patch = function(
     endpoint = required('endpoint'),
     data = {},
     options = {}
@@ -90,7 +91,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
   }
 
   // Used by the client.subscribe method to start polling from the correct id
-  client.setLastId = function (endpoint, data) {
+  client.setLastId = function(endpoint, data) {
     const url = this.url(`${endpoint}/history`, data)
     // eslint-disable-next-line camelcase
     if (data.last_id) {
@@ -103,7 +104,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     })
   }
 
-  client.subscribe = function (endpoint = required('endpoint'), data, callback) {
+  client.subscribe = function(endpoint = required('endpoint'), data, callback) {
     let abort = false
     const hasData = typeof data === 'object' && data !== null
     const options = {
@@ -115,7 +116,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     let url = this.url(endpoint, data)
     const cb = hasData ? callback : data
 
-    function loop () {
+    function loop() {
       if (abort) {
         return
       }
@@ -152,7 +153,7 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     }
   }
 
-  client.subscribe.once = function (
+  client.subscribe.once = function(
     endpoint = required('endpoint'),
     data = {},
     callback
@@ -171,12 +172,12 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
 
   return client
 
-  function client (endpoint = required('endpoint'), data = {}, options = {}) {
+  function client(endpoint = required('endpoint'), data = {}, options = {}) {
     const url = this.url(endpoint)
     const headers = this.headers(options.headers)
 
     const transformRequest = [
-      function (data) {
+      function(data) {
         if (data instanceof window.FormData) {
           return data
         }
@@ -186,18 +187,17 @@ function SyncanoClient (instanceName = required('instanceName'), options = {}) {
     ]
 
     return fetch({
-      method: data._method,
+      method: data._method || 'POST',
       url,
       data: data._method !== 'POST' ? {params: data} : data,
       headers,
       transformRequest,
       ...options
-    })
-    .then(response => response.data)
+    }).then(response => response.data)
   }
 }
 
-function required (param) {
+function required(param) {
   throw new Error(`${param} parameter is required by SyncanoClient`)
 }
 
