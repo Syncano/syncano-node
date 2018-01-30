@@ -16,6 +16,28 @@
 - [Test Library](packages/lib-js-test/docs/readme.md)
 - [Validate Library](packages/lib-js-validate/docs/readme.md)
 
+## Installing
+
+# Command Line Interface (Syncano CLI)
+
+Installing Syncano CLI in your project folder:
+
+```sh
+npm install @syncano/cli
+```
+
+# Client Library
+
+Installing from NPM:
+```sh
+npm install @syncano/cli
+```
+
+Also available at UNPKG:
+```html
+<script src="https://unpkg.com/@syncano/client@latest/dist/syncano-client.min.js"></script>
+```
+
 ## Issues
 
 Found a bug? Let us know so we can take care of it.
