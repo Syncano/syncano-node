@@ -2,6 +2,6 @@
 
 export SYNCANO_AUTH_KEY=$REGISTRY_TEST_SYNCANO_AUTH_KEY
 export SYNCANO_PROJECT_INSTANCE=registry-0
-npx s deploy
+../cli/lib/cli.js deploy
 
 exit $?
