@@ -40,7 +40,7 @@ function SyncanoClient(instanceName = required('instanceName'), options = {}) {
     }
 
     if (client.token) {
-      url += `_user_key=${client.token}`
+      url += `user_key=${client.token}`
     }
 
     return url

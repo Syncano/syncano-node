@@ -76,7 +76,7 @@ describe('Syncano client units', () => {
     })
 
     it('returns valid url', () => {
-      const expected = `https://test-instance.syncano.space/users/?_user_key=${instanceApiKey}`
+      const expected = `https://test-instance.syncano.space/users/?user_key=${instanceApiKey}`
 
       assert.equal(url('users'), expected)
     })
