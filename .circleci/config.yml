@@ -348,6 +348,18 @@ jobs:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: SYNCANO_AUTH_KEY=${REGISTRY_TEST_SYNCANO_AUTH_KEY} ../cli/lib/cli.js instance delete ${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}
 
+  deploy_canary_registry:
+    name: Deploy Test Registry
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/registry
+
+    steps:
+      - restore_cache:
+          key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: sh ./bin/deploy-canary
+
   publish:
     name: Publish packages to NPM
     docker:
@@ -463,3 +475,9 @@ workflows:
           filters:
             branches:
               only: /\d/
+      - deploy_canary_registry:
+          requires:
+            - publish
+          filters:
+            branches:
+              only: master
