@@ -477,7 +477,18 @@ workflows:
               only: /\d/
       - deploy_canary_registry:
           requires:
-            - publish
+            - test_e2e_instance
+            - test_e2e_validate
+            - test_e2e_client
+            - test_e2e_registry
+            - test_e2e_socket
+            - test_e2e_hosting
+            - test_e2e_core
+            - test_e2e_anonymous
+            - test_e2e_config
+            - test_e2e_deploy
+            - test_lint
+            - test_unit
           filters:
             branches:
               only: master
