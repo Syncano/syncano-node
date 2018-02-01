@@ -7,11 +7,11 @@ Installed Sockets can be reached by calling them using the `syncano-client` libr
 For testing purposes you can call the Syncano Socket's endpoint directly from the Syncano CLI:
 
 ```sh
-syncano-cli call <socket name>/<endpoint name>
+npx syncano-cli call <socket name>/<endpoint name>
 ```
 Example:
 ```sh
-syncano-cli call openweathermap/get-three-hours-forecast
+npx syncano-cli call openweathermap/get-three-hours-forecast
 ```
 You will be asked to provide the parameters (based on the specification of the endpoint):
 ```
@@ -41,11 +41,11 @@ const s = new Syncano('<your instance name>')
 s('openweathermap/get-three-hours-forecast', {city: "Oslo"})
 ```
 
-## Calling Syncano Sockets from the syncano-server
+## Calling Syncano Sockets from the @syncano/core
 
 From inside the Socket script, (the code of the Syncano Socket, which is what powers it), you can call any other `endpoint` of the Socket installed in your Instance:
 ```js
-import { socket } from 'syncano-server'
+import { socket } from '@syncano/core'
 
 // calling "openweathermap" socket and "get-three-hours-forecast" endpoint
 socket.get('openweathermap/get-three-hours-forecast', {city: "Oslo"})

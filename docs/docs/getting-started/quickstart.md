@@ -32,18 +32,18 @@ cd chat-app/
 The `syncano-cli` is the main tool for setting up and managing your projects on the Syncano Platform. To install it, run:
 
 ```sh
-npm install -g @syncano/cli
+npm install @syncano/cli
 ``` 
 
 # Sign up and create a project
 Once the Syncano CLI is installed you can sign up for an account. Run the following command in the root directory of your project:
 
 ```sh
-syncano-cli init
+npx syncano-cli init
 ```
 
 > There's shortcut for `syncano-cli` - you can simple type `s`
-> * `s init`
+> * `npx s init`
 
 You'll be asked for an `email` and `password` so that we can create an account for you.
 You'll also be prompted for a project template. Choose the recommended `Hello World` template and press enter.
@@ -57,7 +57,7 @@ Now, we will install the `chat` socket from the `Syncano Registry`.
 > The Syncano Sockets are backend modules that enclose a piece of functionality needed for your app. The difference is, that instead of functions they expose endpoints for communication with the server, and emit events so that integrations with other Syncano Sockets are possible. You can find out more about the Sockets concept in the Sockets Overview section.
 
 ```sh
-syncano-cli add chat
+npx syncano-cli add chat
 ```
 ![syncano-cli install chat](/img/syncano-cli-add-chat.png)
 
@@ -65,7 +65,7 @@ This command will add a `chat` Socket as a dependency of your project. It has ev
 
 ![chat-project-structure](/img/chat-project-structure.png)
 
-> Run `syncano-cli list chat` to view the Socket documentation
+> Run `npx syncano-cli list chat` to view the Socket documentation
 
 To make sure it has been added correctly, you can open the `chat-app/syncano/syncano.yml` and see if these lines are present:
 > The chat app Socket you installed may have a higher version number
@@ -90,7 +90,7 @@ The only change you need to make in the code is in the `web/index.html` file. Op
 Now it's time to deploy your app to the cloud. To do this, run the following command:
 
 ```sh
-syncano-cli hosting add web/
+npx syncano-cli hosting add web/
 ```
 ![Add hosting](/img/syncano-cli-hosting-add.png)
 

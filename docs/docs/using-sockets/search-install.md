@@ -6,12 +6,12 @@ The easiest way to start working with Syncano is to install ready made Syncano S
 Syncano Sockets can be searched by name, description and tags, so you will find Sockets matching your search criteria. When you find Socket that interests you, use its name to install it.
 
 ```sh
-syncano-cli search <keyword>
+npx syncano-cli search <keyword>
 ```
 
 Example:
 ```sh
-syncano-cli search weather
+npx syncano-cli search weather
 ```
 ```sh
     1 socket(s) found:
@@ -22,7 +22,7 @@ syncano-cli search weather
 
 ## Install
 ```sh
-syncano-cli add openweathermap
+npx syncano-cli add openweathermap
 ```
 
 ```
@@ -47,5 +47,5 @@ dependencies:
 
 After doing that it is necessary to run `sync` command for it to be installed on the server side:
 ```sh
-syncano-cli deploy
+npx syncano-cli deploy
 ```

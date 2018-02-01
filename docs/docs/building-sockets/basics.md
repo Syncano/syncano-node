@@ -34,18 +34,18 @@ syncano
 
 > .dist folder
 >
-> When you run `syncano-cli deploy` command, one additional folder will be created:
+> When you run `npx syncano-cli deploy` command, one additional folder will be created:
 > - .dist - contains zipped socket.yml files. syncano-cli is using these files to update your Instance configuration.
 
 ## Creating a Syncano Socket
 
 ```sh
-syncano-cli create <name>
+npx syncano-cli create <name>
 ```
 
 Example:
 ```sh
-syncano-cli create hello-world
+npx syncano-cli create hello-world
 ```
 Later, you will be asked to choose the template:
 
@@ -61,7 +61,7 @@ Your Socket configuration is stored at /Users/qk/my_project/syncano/hello-world
 Now you can check if it was installed correctly, by typing:
 
 ```sh
-syncano-cli list hello-world
+npx syncano-cli list hello-world
 ```
 
 ```yaml
@@ -114,7 +114,7 @@ Currently it has `not synced` status which means you should deploy this Socket b
 To deploy a socket type:
 
 ```sh
-syncano-cli deploy hello-world
+npx syncano-cli deploy hello-world
 ```
 ```
     socket synced: 17:10:06 hello-world 3943 ms
@@ -125,7 +125,7 @@ syncano-cli deploy hello-world
 You can use a hot deployment feature which watches your socket's files and deploys it on change (you need to deploy your socket first in order to use this feature). If no socket name is provided it watches all of your sockets.
 
 ```sh
-syncano-cli hot <socketname>
+npx syncano-cli hot <socketname>
 ```
 ```
   🔥  Hot deploy started (Hit Ctrl-C to stop) 

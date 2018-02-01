@@ -28,8 +28,8 @@
         </div>
         <div class="terminal-text">
           <p> 
-            <span class="lite">⬢</span> $ npm install -g @syncano/cli<br />
-            <span class="lite">⬢</span> $ syncano-cli init
+            <span class="lite">⬢</span> $ npm install @syncano/cli<br />
+            <span class="lite">⬢</span> $ npx syncano-cli init
           </p>
           <p class="cli-output">   ...<br />
                 <span class="lite">New project? Exciting! 🎉</span> <br /><br />

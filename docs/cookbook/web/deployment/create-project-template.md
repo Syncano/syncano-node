@@ -37,4 +37,4 @@ If you template was submitted to [NPM](https://www.npm.com) you can install it a
 yarn add --dev syncano-template-project-my-template
 ```
 
-Now you will be able to find your template on the list of templates while executing `syncano-cli init` command.
+Now you will be able to find your template on the list of templates while executing `npx syncano-cli init` command.

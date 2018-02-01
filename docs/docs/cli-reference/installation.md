@@ -4,13 +4,13 @@
 # Installing the Syncano CLI
 
 ```sh 
-npm install -g @syncano/cli
+npm install  @syncano/cli
 ```
 
-Now you can use `syncano-cli`:
+Now you can use `npx syncano-cli`:
 
 ```sh
-syncano-cli
+npx syncano-cli
 ```
 ```
   Usage: syncano-cli [options] [command] 

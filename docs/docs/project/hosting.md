@@ -11,7 +11,7 @@ Managing your hosting is straightforward:
 To add a folder with your static website files, run:
 
 ```
-syncano-cli hosting add
+npx syncano-cli hosting add
 ```
 
 If you answer `yes` when prompted about syncing the files, they will be hosted for you instantly and available under the url matching the following schema:

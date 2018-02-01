@@ -6,7 +6,7 @@ Syncano Sockets contain definition of the API they are exposing. Therefore when 
 
 To list all installed Syncano Sockets on your Syncano Instance, type:
 ```sh
-syncano-cli list
+npx syncano-cli list
 ```
 
 You will get all the Sockets and basic information about them:
@@ -46,7 +46,7 @@ status: synced
 
 ## Details
 ```sh
-syncano-cli list <socket name>
+npx syncano-cli list <socket name>
 ```
 You will get detailed information about chosen socket:
   - basic info (name, description, status)
@@ -58,7 +58,7 @@ You will get detailed information about chosen socket:
 
 Example:
 ```sh
-syncano-cli list openweathermap
+npx syncano-cli list openweathermap
 ```
 ```yaml
 socket: openweathermap

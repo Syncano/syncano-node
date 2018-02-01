@@ -122,7 +122,7 @@ Scope examples: `commands`, `constants`, `program`, `settings`, `utils`, `releas
 
 For community contributors - GitHub issue id and title, for example:
 
-`#123 syncano-cli list command doesn't list remote sockets`
+`#123 npx syncano-cli list command doesn't list remote sockets`
 
 For in-house developers - id and title of JIRA issue, for example:
 
@@ -144,13 +144,13 @@ We are using [`semantic-release`](https://github.com/semantic-release/semantic-r
   * Commit containing a fix/feature/breaking change is merged to devel from a feature branch
   * Tests pass on the CI tool
   * During deployment phase, `semantic-release` determines the next correct version to bump and changes it in the `package.json` file
-  * Version is published to `npm` with the `beta` tag. It's available with `npm i -g syncano-cli@beta`
+  * Version is published to `npm` with the `canary` tag. It's available with `npm i  @syncano/cli@canary`
   * `semantic-release` generates a change log and sends it to GitHub (to be implemented: the changelog should have a `pre-release` or `draft` flag)
 
 2. Official release
   * A pull request is merged from the devel to master branch.
   * Tests pass on the CI tool
-  * During deployment phase, a `latest` tag is set on the current beta version. It's now available with `npm i -g syncano-cli`
+  * During deployment phase, a `latest` tag is set on the current beta version. It's now available with `npm i @syncano/cli`
 
 ## Documentation
 

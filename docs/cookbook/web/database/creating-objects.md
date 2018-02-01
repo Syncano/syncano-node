@@ -15,7 +15,7 @@ Create empty `hello-world` Socket and `hello` endpoint, use `data` from `syncano
 #### Create Socket
 
 ```sh
-syncano-cli create hello-world --template example
+npx syncano-cli create hello-world --template example
 ```
 
 #### Add data class
@@ -59,7 +59,7 @@ Now you can call URL for `hello` endpoint using browser:
 ```
 https://<your_instance_name>.syncano.space/hello-world/hello/
 ```
-> You can find URL for `hello` endpoint by typing `syncano-cli list hello-world`
+> You can find URL for `hello` endpoint by typing `npx syncano-cli list hello-world`
 
 You will get a response JSON response like this one:
 

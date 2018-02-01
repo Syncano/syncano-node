@@ -22,7 +22,7 @@ Our solution is based on two Sockets. [openweathermap](https://syncano.io/#/sock
 
 To install `openweathermap` type:
 ```sh
-$ syncano-cli socket install openweathermap
+$ npx syncano-cli socket install openweathermap
 ```
 
 Now you have to provide API key for the OpenWeatherMap Service:
@@ -34,12 +34,12 @@ Now you have to provide API key for the OpenWeatherMap Service:
     API keys section at (https://home.openweathermap.org/api_keys).
 
     Type in value: bf0a7ccf140879bc0098a85f3b8b2c94
-    Your socket is ready to use! Type syncano-cli socket list openweathermap to see docs.
+    Your socket is ready to use! Type npx syncano-cli socket list openweathermap to see docs.
 ```
 
 To install `messenger-bot` type:
 ```sh
-$ syncano-cli socket install messenger-bot
+$ npx syncano-cli socket install messenger-bot
 ```
 
 To properly configure the Socket you will need create Facebook Page and Facebook Application.
@@ -51,7 +51,7 @@ Then you have to provide `Page Token`, follow the instructions to get it from Fa
     To find the token, go to the 'Messenger > Settings > Token Generation' section in your Facebook Application settings panel at https://developers.facebook.com.
 
     Type in value: EAAbvRMZClZC4YBAL63OHJLSMWwbSKg9BM1eojt2VU0fv95vkgURMjqDqKPUVZCuN3HjNE8fjt2TJfK8Jt68fwVAAltb8JnQjgpcbMHF9eqh2OiH4ZC0ftsJz3h5ZA7wKOWacDOQGte9b9Lhl3KKuvdrJJhIgjZAAeXKgUXmSkEdgZDZD
-    Your socket is ready to use! Type syncano-cli socket list messenger-bot to see docs.
+    Your socket is ready to use! Type npx syncano-cli socket list messenger-bot to see docs.
 ```
 
 #### Creating a "responder" Socket
@@ -66,7 +66,7 @@ We need to only create a logic which will be responsible for the data flow:
 We will create new Socket called `responder`:
 
 ```sh
-$ syncano-cli socket create responder
+$ npx syncano-cli socket create responder
 ```
 
 Choose empty project for this Socket:
