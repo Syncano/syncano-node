@@ -10,7 +10,7 @@ You want to create user account inside the Socket script.
 
 ### Solution
 
-Create empty `hello-world` Socket and `hello` endpoint, use `user` from `syncano-server` library.
+Create empty `hello-world` Socket and `hello` endpoint, use `user` from `@syncano/core` library.
 `username` is given, but the `password` is going to be generated.
 
 #### Create Socket
@@ -26,7 +26,7 @@ Edit file `syncano/hello-world/src/hello.js` and change its content to:
 
 ```js
 import crypto
-import Syncano from 'syncano-server'
+import Syncano from '@syncano/core'
 
 export default (ctx) => {
   const {user, response} = Syncano(ctx)

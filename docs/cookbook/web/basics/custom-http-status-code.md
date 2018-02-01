@@ -24,7 +24,7 @@ npx syncano-cli create hello-world --template example
 Edit file `syncano/hello-world/src/hello.js` and change its content to:
 
 ```js
-import Syncano from 'syncano-server'
+import Syncano from '@syncano/core'
 
 export default (ctx) => {
   const {response} = Syncano(ctx)

@@ -103,7 +103,7 @@ event_handlers:
 Next step is to create actual script to:
 
 ```javascript
-import { endpoint, event } from 'syncano-server'
+import { endpoint, event } from '@syncano/core'
 
 
 const city = ARGS.text  // Getting a city name from the input argument

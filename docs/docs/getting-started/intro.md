@@ -37,7 +37,7 @@ The Server Library is used to communicate with the Syncano Cloud OS. The scripts
 In order to use the Syncano Server Library, simply include it in your server side scripts, like so:
 
 ```javascript
-import server from 'syncano-server-js'
+import server from '@syncano/core-js'
 
 const { data } = server()
 ```

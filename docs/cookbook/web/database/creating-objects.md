@@ -10,7 +10,7 @@ You want to create two object of different classes.
 
 ### Solution
 
-Create empty `hello-world` Socket and `hello` endpoint, use `data` from `syncano-server` library.
+Create empty `hello-world` Socket and `hello` endpoint, use `data` from `@syncano/core` library.
 
 #### Create Socket
 
@@ -37,7 +37,7 @@ classes:
 Edit file `syncano/hello-world/src/hello.js` and change its content to:
 
 ```js
-import Syncano from 'syncano-server'
+import Syncano from '@syncano/core'
 
 export default (ctx) => {
   const {data, response} = Syncano(ctx)
