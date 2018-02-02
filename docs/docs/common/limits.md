@@ -19,7 +19,7 @@ Limits for the specific Data Object fields:
 |integer|32-bit (signed)||
 |float|64-bit|Double precision field with up to 15 decimal digit precision|
 |array|Can hold only Strings, Integer or Floats|Cannot contain Object type (JSON fields)|
-|relation|Can hold relations to max 1000 Data Objects from one selected Data Class|Relation can be linked to only one selected data class. You cannot have Relation field storing references to Data Objects from multiple different data classes.|
+|relation|Can hold relations to max 1000 Data Objects||
 |object|Any JSON object|Without limits, limited only by the max size of Data Object (32kB)|
 |file|binary data, max 128MB|||
 
