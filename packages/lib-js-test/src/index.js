@@ -5,7 +5,7 @@ import path from 'path'
 import YAML from 'js-yaml'
 import Promise from 'bluebird'
 import proxyquire from 'proxyquire'
-import Validator from 'syncano-validator'
+import Validator from '@syncano/validate'
 
 const socketFolder = process.cwd()
 const socketScriptsFolder = path.join(socketFolder, 'src')
