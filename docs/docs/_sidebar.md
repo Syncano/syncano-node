@@ -31,6 +31,7 @@
   - [Installation](/server-lib-reference/installation)
   - [Usage](/server-lib-reference/usage)
 - [Support](/common/support)
+- [Limits](/common/limits)
 - [Contributing](/common/contributing)
 - [License](/common/license)
 - [Changelog](/common/changelog)
