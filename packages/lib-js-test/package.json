@@ -17,7 +17,7 @@
     "lodash": "^4.17.4",
     "lodash.merge": "^4.6.0",
     "proxyquire": "^1.8.0",
-    "syncano-validator": "^0.0.1"
+    "@syncano/validate": "0.7.1"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

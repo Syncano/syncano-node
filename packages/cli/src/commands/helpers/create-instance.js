@@ -1,11 +1,12 @@
 import format from 'chalk'
 
 import logger from '../../utils/debug'
+import session from '../../utils/session'
 import { echo, echon, error } from '../../utils/print-tools'
 
 const { debug } = logger('cmd-helpers-socket')
 
-export const createInstance = async (instanceName, session) => {
+export const createInstance = async (instanceName) => {
   let newInstance = null
   try {
     debug('Creating Instance')
@@ -13,6 +14,7 @@ export const createInstance = async (instanceName, session) => {
     echon(4)('Creating Syncano Instance... ')
     newInstance = await session.createInstance(instanceName)
   } catch (err) {
+    debug(err)
     echo()
     echo()
     if (err.message === 'No such API Key.') {

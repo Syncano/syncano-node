@@ -32,7 +32,7 @@ export default class SocketDeployCmd {
 
     // Create Instance if --create-instance provided
     if (cmd.createInstance) {
-      await createInstance(cmd.createInstance, this.session)
+      await createInstance(cmd.createInstance)
       await this.init.addConfigFiles({ instance: cmd.createInstance })
     } else {
       // If not, we have to check if we have a project attached to any instance
