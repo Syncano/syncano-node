@@ -4,10 +4,11 @@ The limits we apply are based on our research on data operations and are set to 
 
 ## Data Objects
 
-- Maximal size of a Data Object is `32kB`
+- Maximal size of a Data Object is `32kB`.
 - Data Objects can have a max of `32` fields.
-- `16` of the fields can be indexed, `8` if both `order_index` and `filter_index` is used for each field; `text` and `file` fields can't be indexed).
-- Data Object field names can have a maximum length of `64` characters
+- `16` of the fields can be indexed, `8` if both `order_index` and `filter_index` is used for each field
+- `text`, `file` and `object` fields can't be indexed.
+- Data Object field names can have a maximum length of `64` characters.
 
 Limits for the specific Data Object fields:
 
@@ -20,7 +21,7 @@ Limits for the specific Data Object fields:
 |array|Can hold only Strings, Integer or Floats|Cannot contain Object type (JSON fields)|
 |relation|Can hold relations to max 1000 Data Objects from one selected Data Class|Relation can be linked to only one selected data class. You cannot have Relation field storing references to Data Objects from multiple different data classes.|
 |object|Any JSON object|Without limits, limited only by the max size of Data Object (32kB)|
-|file|binary data, max 128MB|This is a web server limit and can be worked around by sending larger files in chunks.|
+|file|binary data, max 128MB|||
 
 ## Requests
 
