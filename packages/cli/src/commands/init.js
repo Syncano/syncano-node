@@ -60,7 +60,7 @@ class InitCmd {
 
     if (!project && !instance) {
       debug('no project, no instance')
-      const newInstance = createInstance()
+      const newInstance = await createInstance()
 
       await this.init.addConfigFiles({ instance: newInstance.name })
       this.init.createFilesAndFolders()
