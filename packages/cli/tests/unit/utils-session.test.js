@@ -112,11 +112,11 @@ describe('[utils] Session', function () {
     let syncanoInstance = null
 
     beforeEach(function () {
-      syncanoInstance = sinon.stub(session.connection.Instance, 'please')
+      syncanoInstance = sinon.stub(session.connection.instance)
     })
 
     afterEach(function () {
-      session.connection.Instance.please.restore()
+      session.connection.instance.restore()
     })
 
     it('should print created instance name', sinon.test(async function () {
@@ -210,7 +210,7 @@ describe('[utils] Session', function () {
 
     beforeEach(function () {
       session.project = { instance: instanceName }
-      getInstance = sinon.stub(session, 'getInstance')
+      getInstance = sinon.stub(session, 'getInstance').throws({ message: 'Not found.' })
     })
 
     afterEach(function () {
@@ -237,8 +237,7 @@ describe('[utils] Session', function () {
 
     describe('with parameter', function () {
       it('should print proper error message and exit process when instance does not exists', async function () {
-        const instance = getRandomString()
-        getInstance.returns(false)
+        const instance = getRandomString('session_checkConnection_name')
 
         await session.checkConnection(instance)
 
@@ -249,13 +248,10 @@ describe('[utils] Session', function () {
 
     describe('without parameter', function () {
       it('should print proper error message and exit process when instance does not exists', async function () {
-        getInstance.returns(false)
 
         await session.checkConnection()
 
         sinon.assert.calledWith(interEcho, `Instance ${format.cyan(instanceName)} was not found on your account!`)
-        // eslint-disable-next-line max-len
-        sinon.assert.calledWith(interEcho, `Type ${format.cyan('syncano-cli attach')} to choose one of the existing instances.`)
         sinon.assert.calledOnce(exitProcess)
       })
     })

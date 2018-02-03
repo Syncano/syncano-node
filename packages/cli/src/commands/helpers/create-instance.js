@@ -4,7 +4,7 @@ import logger from '../../utils/debug'
 import session from '../../utils/session'
 import { echo, echon, error } from '../../utils/print-tools'
 
-const { debug } = logger('cmd-helpers-socket')
+const { debug } = logger('cmd-helpers-create-instance')
 
 export const createInstance = async (instanceName) => {
   let newInstance = null

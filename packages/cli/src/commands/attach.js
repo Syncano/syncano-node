@@ -3,6 +3,7 @@ import inquirer from 'inquirer'
 import logger from '../utils/debug'
 import { p, echo } from '../utils/print-tools'
 import genUniqueInstanceName from '../utils/unique-instance'
+import { createInstance } from './helpers/create-instance'
 
 const { debug } = logger('cmd-attach')
 
@@ -56,7 +57,7 @@ class Attach {
       }
     ])
 
-    const instance = await this.session.createInstance(instanceName)
+    const instance = await createInstance(instanceName)
 
     return instance.name
   }

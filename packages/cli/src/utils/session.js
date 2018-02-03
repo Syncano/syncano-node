@@ -212,18 +212,23 @@ export class Session {
   }
 
   async checkConnection (instanceName) {
-    const instance = await this.getInstance(instanceName)
-    if (!instance) {
-      echo()
-      echo(4)(`Instance ${format.cyan(instanceName || this.project.instance)} was not found on your account!`)
-      echo()
+    let instance
 
-      if (instanceName) return process.exit()
+    try {
+      instance = await this.getInstance(instanceName)
+    } catch (err) {
+      debug(err.message)
+      if (err.message === 'Not found.') {
+        echo()
+        echo(4)(`Instance ${format.cyan(instanceName || this.project.instance)} was not found on your account!`)
+        echo()
 
-      echo(4)(`Type ${format.cyan('syncano-cli attach')} to choose one of the existing instances.`)
-      echo()
+        if (instanceName) return process.exit()
 
-      return process.exit()
+        echo(4)(`Type ${format.cyan('syncano-cli attach')} to choose one of the existing instances.`)
+        echo()
+      }
+      process.exit()
     }
 
     return instance

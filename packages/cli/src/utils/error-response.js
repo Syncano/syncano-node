@@ -17,7 +17,7 @@ process.on('unhandledRejection', (reason, p) => {
   }
 
   const message = `Unhandled Rejection! ${reason}`
-  const fileIssue = 'Please file an issue here:\nhttps://github.com/Syncano/syncano-node-cli/issues'
+  const fileIssue = 'Please file an issue here:\nhttps://github.com/Syncano/syncano-node/issues'
   error(message, fileIssue)
   if (process.env.NODE_ENV === 'test' || process.env.CLI_SHOW_STACK) {
     console.log(reason.stack)
