@@ -68,11 +68,16 @@
       <h3>Requests</h3>
       <h4>API</h4>
       <pre><code class="lang-js">s(endpoint, data?, options?)
+
+// HTTP Request method (s.post, s.get, etc.) declaration
+// adds '{ "_method": "HTTP Method" }' param in the
+// request to be handled by the Syncano Server lib
 s.post(endpoint, data?, options?)
 s.get(endpoint, data?, options?)
 s.delete(endpoint, data?, options?)
 s.put(endpoint, data?, options?)
-s.patch(endpoint, data?, options?)</code></pre>
+s.patch(endpoint, data?, options?)
+</code></pre>
       <h4>Call socket endpoint</h4>
       <pre><code class="lang-js">// Send POST request
 s('countries/list', {sort_by: 'population'})
