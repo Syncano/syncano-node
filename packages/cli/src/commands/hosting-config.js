@@ -10,7 +10,7 @@ class HostingConfig {
   }
 
   static toggleBrowserRouter (command, responses) {
-    if (responses.browser_router) return responses.browser_router
+    if (responses.browserRouter) return responses.browserRouter
 
     return command === 'true'
   }
@@ -34,14 +34,14 @@ class HostingConfig {
       }
 
       let responses = {}
-      if (!(cmd.removeCname || cmd.cname || cmd.browser_router)) {
+      if (!(cmd.removeCname || cmd.cname || cmd.browserRouter)) {
         responses = await inquirer.prompt(this.getQuestions()) || {}
       }
 
       const paramsToUpdate = {
         cname: this.cname || responses.CNAME,
         removeCNAME: cmd.removeCname,
-        browser_router: HostingConfig.toggleBrowserRouter(cmd.browser_router, responses)
+        browser_router: HostingConfig.toggleBrowserRouter(cmd.browserRouter, responses)
       }
 
       await this.hosting.configure(paramsToUpdate)
