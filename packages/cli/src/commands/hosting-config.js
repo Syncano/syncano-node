@@ -9,6 +9,12 @@ class HostingConfig {
     this.hosting = null
   }
 
+  static toggleBrowserRouter (command, responses) {
+    if (responses.browser_router) return responses.browser_router
+
+    return command === 'true'
+  }
+
   async run ([hostingName, cmd]) {
     this.cname = cmd.cname
     this.fullPath = null
@@ -35,7 +41,7 @@ class HostingConfig {
       const paramsToUpdate = {
         cname: this.cname || responses.CNAME,
         removeCNAME: cmd.removeCname,
-        browser_router: cmd.browser_router || responses.browser_router
+        browser_router: HostingConfig.toggleBrowserRouter(cmd.browser_router, responses)
       }
 
       await this.hosting.configure(paramsToUpdate)

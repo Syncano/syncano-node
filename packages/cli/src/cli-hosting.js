@@ -76,7 +76,7 @@ const setup = async () => {
     .description('Configure hosting parameters')
     .option('-c, --cname <domain_name>', 'add CNAME to hosting')
     .option('-d, --remove-cname <domain_name>', 'remove CNAME from hosting')
-    .option('-b, --browser_router', 'turn on BrowserRouter support')
+    .option('-b, --browser_router <true|false>', 'turn on/off the BrowserRouter support')
     .action(async (...options) => {
       session.isAuthenticated()
       session.hasProject()
