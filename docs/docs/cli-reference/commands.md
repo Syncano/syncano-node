@@ -4,7 +4,7 @@
 
 To start the Syncano project use:
 ```sh
-syncano-cli init
+npx syncano-cli init
 ```
 
 What will happen?
@@ -13,14 +13,14 @@ What will happen?
 
 If you have an Instance already, you can initiate project using it, instead of creating it:
 ```sh
-syncano-cli init -i <existing_instance_name>
+npx syncano-cli init -i <existing_instance_name>
 ```
 
 ### attach
 
 To attach project from the current folder the Syncano Instance use:
 ```sh
-syncano-cli attach
+npx syncano-cli attach
 ```
 
 What will happen?
@@ -28,18 +28,18 @@ What will happen?
 
 You can also use flag:
 ```sh
-syncano-cli attach --instance <instance_name>
+npx syncano-cli attach --instance <instance_name>
 ```
 
 ### login
 ```sh
-syncano-cli login
+npx syncano-cli login
 ```
 Provide login and password of your account to log you in.
 
 ### logout
 ```sh
-syncano-cli logout
+npx syncano-cli logout
 ```
 Your account keys will be removed from your machine.
 
@@ -49,9 +49,9 @@ Your account keys will be removed from your machine.
 
 Hot deploy to make your project continuously synced to the Syncano cloud:
 ```sh
-syncano-cli hot
+npx syncano-cli hot
 ```
-> `syncano-cli hot` is an alias to `syncano-cli deploy --hot --trace`
+> `npx syncano-cli hot` is an alias to `npx syncano-cli deploy --hot --trace`
 
 It compiles and deploys all global configuration and Syncano Sockets in your project right away.
 
@@ -59,7 +59,7 @@ It compiles and deploys all global configuration and Syncano Sockets in your pro
 
 To deploy your backend execute:
 ```sh
-syncano-cli deploy
+npx syncano-cli deploy
 ```
 It compiles and deploys all global configuration and Syncano Sockets in your project. From now on, you can call every endpoint from every Socket in your project. Dependencies will be also deployed in that process.
 
@@ -67,35 +67,35 @@ It compiles and deploys all global configuration and Syncano Sockets in your pro
 
 To deploy single Socket provide socket name as an additional argument:
 ```sh
-syncano-cli deploy <socket_name>
+npx syncano-cli deploy <socket_name>
 ```
 
 #### Hot deploy
 When you are developing your Socket you probably do not want to deploy it manually every time you make a change. To make it more efficient, you can use `--hot` flag to track changes in your Socket scripts and configuration. Every time you change something, it will be deployed automatically.
 
 ```sh
-syncano-cli deploy --hot
-syncano-cli deploy <socket_name> --hot
+npx syncano-cli deploy --hot
+npx syncano-cli deploy <socket_name> --hot
 ```
 
 In `hot` deploy mode you can also use `trace`:
 ```sh
-syncano-cli deploy --hot --trace
-syncano-cli deploy <socket_name> --hot --trace
+npx syncano-cli deploy --hot --trace
+npx syncano-cli deploy <socket_name> --hot --trace
 ```
 
 ### call
 You can test your Socket by calling it:
 ```sh
-syncano-cli call <socket_name>/<endpoint>
+npx syncano-cli call <socket_name>/<endpoint>
 ```
 If your Socket has any parameters, you will be asked about them. Next, you will get a response from your script.
-You can also call your Socket's endpoint by making a HTTP request to an URL that you can find by running `syncano-cli list <socket_name>`.
+You can also call your Socket's endpoint by making a HTTP request to an URL that you can find by running `npx syncano-cli list <socket_name>`.
 
 ### trace
 You can trace your Socket call by using:
 ```sh
-syncano-cli trace [socket_name]
+npx syncano-cli trace [socket_name]
 ```
 
 If you will not provide any particular Socket name, all the socket will be traced.
@@ -106,7 +106,7 @@ If you will not provide any particular Socket name, all the socket will be trace
 
 To list all your Syncano Sockets:
 ```sh
-syncano-cli list
+npx syncano-cli list
 ```
 Example response:
 ```
@@ -165,7 +165,7 @@ description: Test Socket
 
 ### add
 ```sh
-syncano-cli add <name>
+npx syncano-cli add <name>
 ```
 This command allows you to `add` a Syncano Socket from the Syncano Registry. It's a place where Syncano Sockets made by other developers are stored, so that you can use them in your own project. Some Sockets need a configuration (e.g. API keys, usernames etc.) - you will be asked to provide configuration options during `deploy`.
 
@@ -187,12 +187,12 @@ You will not be asked to provide values for config options if it will be set in 
 ### create
 To create a Socket execute:
 ```sh
-syncano-cli create <name>
+npx syncano-cli create <name>
 ```
 
 Example:
 ```sh
-syncano-cli create my_new_socket
+npx syncano-cli create my_new_socket
 ```
 
 You will be asked to choose a template:
@@ -211,28 +211,28 @@ After that you can start working with your new Socket. Currently it has got 'not
 
 To configure a given Socket use:
 ```sh
-syncano-cli config <socket_name>
+npx syncano-cli config <socket_name>
 ```
 
 ### config-set
 
 To configure chosen option of a given Socket use:
 ```sh
-syncano-cli config-set <socket_name> <option_name> <value>
+npx syncano-cli config-set <socket_name> <option_name> <value>
 ```
 
 ### config-show
 
 To preview configuration options of a given Socket use:
 ```sh
-syncano-cli config-show <socket_name>
+npx syncano-cli config-show <socket_name>
 ```
 
 ### remove
 
 To remove the Syncano Socket from your configuration
 ```sh
-syncano-cli remove <socket_name>
+npx syncano-cli remove <socket_name>
 ```
 This command deletes your Socket only from local config. To apply changes you have to deploy your configuration.
 
@@ -240,21 +240,21 @@ This command deletes your Socket only from local config. To apply changes you ha
 
 ### search
 ```sh
-syncano-cli search <keyword>
+npx syncano-cli search <keyword>
 ```
 Sockets will be searched by name, description and tags, so you will find Sockets matching only your search term. When you find a Syncano Socket that interests you, you use its name to install it.
 
 ### info (coming soon)
 Use Socket name and `info` command to print detailed information about it (from the Sockets Registry):
 ```sh
-syncano-cli info <socket_name>
+npx syncano-cli info <socket_name>
 ```
 
 ### submit
 
 If you want to submit your Socket to the `Syncano Sockets Registry` use:
 ```sh
-syncano-cli submit <socket_name>
+npx syncano-cli submit <socket_name>
 ```
 Where the `<socket_name>` is the name of your Socket available locally.
 
@@ -264,7 +264,7 @@ Where the `<socket_name>` is the name of your Socket available locally.
 
 Publishing Socket mean to make it available for everyone. To do it use:
 ```sh
-syncano-cli publish <socket_name>
+npx syncano-cli publish <socket_name>
 ```
 Where the `<socket_name>` is the name of your Socket you already submitted to the Registry. You cannot reverse this action.
 
@@ -272,7 +272,7 @@ Where the `<socket_name>` is the name of your Socket you already submitted to th
 
 ### add
 ```sh
-syncano-cli hosting add [hosting_path]
+npx syncano-cli hosting add [hosting_path]
 ```
 Later, you will be asked to provide some info:
 * Please choose for which socket you want to list hostings
@@ -286,13 +286,13 @@ After proceeding with these prompts, hosting will be added to your configuration
 
 Thanks to the `config` command you can configure CNAME for the given hosting:
 ```sh
-syncano-cli config <hosting_name> --cname <your_domain>
+npx syncano-cli config <hosting_name> --cname <your_domain>
 ```
 
 ### sync
 To synchronize all the hosting files execute:
 ```sh
-syncano-cli hosting sync
+npx syncano-cli hosting sync
 ```
 After running this command all the hosting files will be uploaded to the server. You can find all of them in URL printed after successful synchronization.
 
@@ -312,14 +312,14 @@ Example:
 
 #### Synchronizing files of specific Hosting
 ```sh
-syncano-cli hosting sync <hosting-name>
+npx syncano-cli hosting sync <hosting-name>
 ```
 
 ### list
 To list Hosting configuration:
 ```sh
-syncano-cli hosting list
-syncano-cli hosting list <hosting-name>
+npx syncano-cli hosting list
+npx syncano-cli hosting list <hosting-name>
 ```
 
 Example response:
@@ -332,7 +332,7 @@ Example response:
 
 ### list files
 ```sh
-syncano-cli hosting files <hosting-name>
+npx syncano-cli hosting files <hosting-name>
 ```
 Example response:
 ```
@@ -348,7 +348,7 @@ Example response:
 ### delete
 To delete Hosting configuration:
 ```sh
-syncano-cli hosting delete <hosting-name>
+npx syncano-cli hosting delete <hosting-name>
 ```
 !> After that your Hosting will be deleted from the configuration but folder with files will still be available in your local directory.
-Hosting will be removed from your backend during the next `syncano-cli deploy`.
+Hosting will be removed from your backend during the next `npx syncano-cli deploy`.

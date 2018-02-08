@@ -42,7 +42,7 @@ Once the Syncano CLI is installed you can sign up for an account. Run the follow
 npx syncano-cli init
 ```
 
-> There's shortcut for `syncano-cli` - you can simple type `s`
+> There's shortcut for `syncano-cli` - you can simply type `s`
 > * `npx s init`
 
 You'll be asked for an `email` and `password` so that we can create an account for you.

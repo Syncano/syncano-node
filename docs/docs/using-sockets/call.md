@@ -1,6 +1,6 @@
 # Calling Sockets
 
-Installed Sockets can be reached by calling them using the `syncano-client` library, directly by calling a URL, or via the Syncano CLI.
+Installed Sockets can be reached by calling them using the `@syncano/client` library, directly by calling a URL, or via the Syncano CLI.
 
 ## Calling Syncano Sockets from the Syncano CLI
 
@@ -29,11 +29,11 @@ You will be asked to provide the parameters (based on the specification of the e
       { forecast: 'Rain', hour: '9 PM' },
       { forecast: 'Clouds', hour: '12 AM' } ]
 ```
-## Calling Syncano Sockets from the syncano-client
+## Calling Syncano Sockets from the @syncano/client
 
 You can call an endpoint from any JS environment:
 ```js
-import Syncano from 'syncano-client';
+import Syncano from '@syncano/client';
 
 const s = new Syncano('<your instance name>')
 

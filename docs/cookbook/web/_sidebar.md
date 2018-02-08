@@ -21,6 +21,5 @@
   - [Creating project template](/deployment/create-project-template)
   - [Using multiple Syncano accounts](/deployment/multiple-accounts)
 - [Support](/common/support)
-- [Contributing](/common/contributing)
 - [License](/common/license)
 - [Changelog](/common/changelog)

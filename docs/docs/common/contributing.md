@@ -75,11 +75,6 @@ npm run e2e:tutorial -- src/tests/e2e/tutorials/quickstart.test-e2e.js
   * Check that your code lints (`yarn lint`/`yarn lint-tests`)
   * Check that your code passes all tests on `CI`
 
-#### Branching flow
-
-We branch our work from `devel`.
-After merging your changes, they (changes) will wait for our `devel` tests to pass and then automatically merged into `beta` branch.
-It will be submitted to npm with `@beta` tag. From there we will merge it into `master` that will bump proper version of `CLI`.
 
 #### Waiting for review
 
@@ -99,43 +94,6 @@ Next, we will give you feedback and either request changes, merge or close it.
   * Do not use `console.log`, etc in code (expect debugging locally)
   * Always add exact versions of packages `3.2.0` instead of `^3.2.0`
 
-
-## Committing
-
-We use [commitizen](https://github.com/commitizen/cz-cli) as a tool that helps us write meaningful commit messages.
-
-To use it, run the following command **instead** of `git commit`:
-```sh
-npm run commit
-```
-Follow the prompt questions with these guidelines:
-
-#### 1. Change type
-
-As prompted
-
-#### 2. Change scope
-
-Scope examples: `commands`, `constants`, `program`, `settings`, `utils`, `release`, `templates`, `configuration`, `ci`, `tests`
-
-#### 3. Short description
-
-For community contributors - GitHub issue id and title, for example:
-
-`#123 npx syncano-cli list command doesn't list remote sockets`
-
-For in-house developers - id and title of JIRA issue, for example:
-
-`[CLI-123] Update all prompts and command descriptions`
-
-#### 4. Long description (optional)
-
-Longer explanation of an issue.
-
-#### 5. Breaking changes (optional)
-
-Breaking change is a one that introduces backwards incompatibility.
-If a commit changes how users would interact with an already existing interface, then it's a breaking change and should be listed as such.
 
 ## The Release Process
 
