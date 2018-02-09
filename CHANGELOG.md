@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.8.0"></a>
+# [0.8.0](https://github.com/Syncano/syncano-node/compare/v0.7.1...v0.8.0) (2018-02-09)
+
+
+### Bug Fixes
+
+* added missing await ([#126](https://github.com/Syncano/syncano-node/issues/126)) ([d78b1ca](https://github.com/Syncano/syncano-node/commit/d78b1ca))
+* **circleci:** proper deploy key ([c4ff73d](https://github.com/Syncano/syncano-node/commit/c4ff73d))
+* **cli:e2e:** turn on forgoten tests ([edbb9e9](https://github.com/Syncano/syncano-node/commit/edbb9e9))
+* **cli:e2e:registry:** fixing tests ([e528943](https://github.com/Syncano/syncano-node/commit/e528943))
+* **cli:init:** createInstance bug ([#121](https://github.com/Syncano/syncano-node/issues/121)) ([e3718bb](https://github.com/Syncano/syncano-node/commit/e3718bb))
+* **test:** package name ([b301bf3](https://github.com/Syncano/syncano-node/commit/b301bf3))
+* adding host ([53482fd](https://github.com/Syncano/syncano-node/commit/53482fd))
+* paths ([4a15344](https://github.com/Syncano/syncano-node/commit/4a15344))
+
+
+### Features
+
+* installation guide ([c120e38](https://github.com/Syncano/syncano-node/commit/c120e38))
+* links update & windows guide draft ([8e006ca](https://github.com/Syncano/syncano-node/commit/8e006ca))
+* **cli:socket:** verifying socket compatibility ([c3003f8](https://github.com/Syncano/syncano-node/commit/c3003f8))
+
+
+
+
 <a name="0.7.1"></a>
 ## [0.7.1](https://github.com/Syncano/syncano-node/compare/v0.7.0...v0.7.1) (2018-01-28)
 

@@ -1,13 +1,14 @@
 {
   "name": "@syncano/test",
   "description": "Testing tools for Syncano Sockets",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "license": "MIT",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "@syncano/validate": "0.8.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
@@ -16,8 +17,7 @@
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",
     "lodash.merge": "^4.6.0",
-    "proxyquire": "^1.8.0",
-    "@syncano/validate": "0.7.1"
+    "proxyquire": "^1.8.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
