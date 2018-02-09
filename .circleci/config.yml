@@ -305,7 +305,7 @@ jobs:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo 'export SYNCANO_AUTH_KEY=${CANARY_SYNCANO_AUTH_KEY}' >> $BASH_ENV
-      - run: echo 'export SYNCANO_PROJECT_INSTANCE=${CANARY_SYNCANO_PROJECT_INSTANCE}' >> $BASH_ENV
+      - run: echo 'export SYNCANO_PROJECT_INSTANCE=syncano-docs-${CIRCLE_BRANCH}' >> $BASH_ENV
       - run: node packages/cli/lib/cli.js deploy
       - run: node packages/cli/lib/cli.js hosting sync docs
       - run: node packages/cli/lib/cli.js hosting sync cookbook
@@ -451,7 +451,9 @@ workflows:
             - test_unit
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - /\d/
       - publish:
           requires:
             - test_e2e_instance
