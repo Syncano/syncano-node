@@ -75,11 +75,6 @@ npm run e2e:tutorial -- src/tests/e2e/tutorials/quickstart.test-e2e.js
   * Check that your code lints (`yarn lint`/`yarn lint-tests`)
   * Check that your code passes all tests on `CI`
 
-#### Branching flow
-
-We branch our work from `devel`.
-After merging your changes, they (changes) will wait for our `devel` tests to pass and then automatically merged into `beta` branch.
-It will be submitted to npm with `@beta` tag. From there we will merge it into `master` that will bump proper version of `CLI`.
 
 #### Waiting for review
 
@@ -100,43 +95,6 @@ Next, we will give you feedback and either request changes, merge or close it.
   * Always add exact versions of packages `3.2.0` instead of `^3.2.0`
 
 
-## Committing
-
-We use [commitizen](https://github.com/commitizen/cz-cli) as a tool that helps us write meaningful commit messages.
-
-To use it, run the following command **instead** of `git commit`:
-```sh
-npm run commit
-```
-Follow the prompt questions with these guidelines:
-
-#### 1. Change type
-
-As prompted
-
-#### 2. Change scope
-
-Scope examples: `commands`, `constants`, `program`, `settings`, `utils`, `release`, `templates`, `configuration`, `ci`, `tests`
-
-#### 3. Short description
-
-For community contributors - GitHub issue id and title, for example:
-
-`#123 syncano-cli list command doesn't list remote sockets`
-
-For in-house developers - id and title of JIRA issue, for example:
-
-`[CLI-123] Update all prompts and command descriptions`
-
-#### 4. Long description (optional)
-
-Longer explanation of an issue.
-
-#### 5. Breaking changes (optional)
-
-Breaking change is a one that introduces backwards incompatibility.
-If a commit changes how users would interact with an already existing interface, then it's a breaking change and should be listed as such.
-
 ## The Release Process
 
 We are using [`semantic-release`](https://github.com/semantic-release/semantic-release) for the release management. It's a tool for automatic version detection based on the commit message history. It also generates the change log and adds it to github. Current set up works as follows:
@@ -144,13 +102,13 @@ We are using [`semantic-release`](https://github.com/semantic-release/semantic-r
   * Commit containing a fix/feature/breaking change is merged to devel from a feature branch
   * Tests pass on the CI tool
   * During deployment phase, `semantic-release` determines the next correct version to bump and changes it in the `package.json` file
-  * Version is published to `npm` with the `beta` tag. It's available with `npm i -g syncano-cli@beta`
+  * Version is published to `npm` with the `canary` tag. It's available with `npm i  @syncano/cli@canary`
   * `semantic-release` generates a change log and sends it to GitHub (to be implemented: the changelog should have a `pre-release` or `draft` flag)
 
 2. Official release
   * A pull request is merged from the devel to master branch.
   * Tests pass on the CI tool
-  * During deployment phase, a `latest` tag is set on the current beta version. It's now available with `npm i -g syncano-cli`
+  * During deployment phase, a `latest` tag is set on the current beta version. It's now available with `npm i @syncano/cli`
 
 ## Documentation
 

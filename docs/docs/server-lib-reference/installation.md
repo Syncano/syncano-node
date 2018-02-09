@@ -1,5 +1,5 @@
-[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)   [![CircleCI](https://circleci.com/gh/Syncano/syncano-server-js/tree/devel.svg?style=shield&circle-token=0340c11444db6f3dc227cf310f4d8ff1bd90dee8)](https://circleci.com/gh/Syncano/syncano-server-js/tree/devel)
-[![codecov](https://codecov.io/gh/Syncano/syncano-server-js/branch/devel/graph/badge.svg)](https://codecov.io/gh/Syncano/syncano-server-js)
+[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)   [![CircleCI](https://circleci.com/gh/Syncano/@syncano/core-js/tree/devel.svg?style=shield&circle-token=0340c11444db6f3dc227cf310f4d8ff1bd90dee8)](https://circleci.com/gh/Syncano/@syncano/core-js/tree/devel)
+[![codecov](https://codecov.io/gh/Syncano/@syncano/core-js/branch/devel/graph/badge.svg)](https://codecov.io/gh/Syncano/@syncano/core-js)
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 
@@ -22,13 +22,13 @@ cat <my-project>/syncano/<my-socket-name>/package.json
 ```json
 {
   "dependencies": {
-    "syncano-server": "0.8.9"
+    "@syncano/core": "0.8.9"
   }
 }
 ```
 
-If `syncano-server` is not listed there you can use `yarn` to install it (you have to be inside Socket folder):
+If `@syncano/core` is not listed there you can use `npm` to install it (you have to be inside Socket folder):
 ```sh
 cd <my-project>/syncano/<my-socket-name>/package.json
-yarn add syncano-server
+yarn add @syncano/core
 ```

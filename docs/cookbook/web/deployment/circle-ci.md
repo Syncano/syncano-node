@@ -25,7 +25,7 @@ machine:
 
 dependencies:
   override:
-    - yarn global add syncano-cli
+    - npm install @syncano/cli
 
 test:
   override:
@@ -35,7 +35,7 @@ deployment:
   production:
     branch: master
     commands:
-      - syncano-cli deploy
+      - npx syncano-cli deploy
 ```
 
 Now add this file to your repository:

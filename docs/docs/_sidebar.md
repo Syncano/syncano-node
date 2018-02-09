@@ -1,6 +1,7 @@
 - Getting started
   - [Quickstart Guide](/getting-started/quickstart)
   - [Syncano Ecosystem](/getting-started/intro)
+  - [Windows Development Guide](/getting-started/windows)
 - Starting a Project
   - [Overview](/project/overview)
   - [Hosting](/project/hosting)
@@ -22,6 +23,7 @@
 - CLI Reference Guide
   - [Installation](/cli-reference/installation)
   - [Commands](/cli-reference/commands)
+  - [Config Files](/cli-reference/config-files)
   - [Advanced](/cli-reference/advanced)
   - [Development](/cli-reference/development)
 - Client Lib Reference

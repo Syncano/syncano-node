@@ -31,7 +31,7 @@ classes:
       type: boolean
     - name: author
       type: reference
-			target: author
+      target: author
 ```
 
 The `name` is the name of the field, and `type` is what kind of field it is such as `string`, `integer`, or even `file`! You'll also notice `target`. This field is actually a reference or relation to another Data Class.

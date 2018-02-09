@@ -1,9 +1,7 @@
-- Getting started
-  - [Quick Start](getting-started/quickstart.md)
-  - [Building Sockets](building-sockets/config-options.md)
-  - [Using Sockets](using-sockets/config-options.md)
-
 - Resources
-  - [Syncano CLI](https://github.com/Syncano/syncano-node-cli)
-  - [Syncano Client library](https://github.com/Syncano/syncano-client-js)
-  - [Syncano Server library](https://github.com/Syncano/syncano-server-js)
+  - [Cheatsheet](https://cheatsheet.syncano.io/#/)
+  - [Cookbook](https://cookbook.syncano.io/#/) 
+
+- Canary version
+  - [v. 0.6](https://syncano.github.io/syncano-node-cli/#/)
+  - [Legacy version](https://docs.syncano.io/)

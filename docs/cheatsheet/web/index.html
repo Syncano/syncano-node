@@ -40,7 +40,7 @@
     <section data-tag="client" class="c-column">
       <h3>Setup</h3>
       <h4>Install</h4>
-      <pre><code class="lang-bash">npm install syncano-client --save</code></pre>
+      <pre><code class="lang-bash">npm install @syncano/client --save</code></pre>
       <p>or</p>
       <pre><code class="lang-html">&lt;script src="https://unpkg.com/syncano-client"&gt;&lt;/script&gt;</code></pre>
 
@@ -107,7 +107,7 @@ s.subscribe.once(endpoint, data?, callback)</code></pre>
       <pre data-type="socket"><code class="lang-yaml">endpoints:
   messages:
     channel: messages</code></pre>
-      <pre data-type="server"><code class="lang-js">import {channel} from 'syncano-server'
+      <pre data-type="server"><code class="lang-js">import {channel} from '@syncano/core'
 channel.publish(`messages`, message)</code></pre>
       <pre><code class="lang-js">s.subscribe('chat/messages', res => {})</code></pre>
       <h4>Listen for changes on channel room</h4>
@@ -143,10 +143,10 @@ listener.stop()
       -->
       <h3>Setup</h3>
       <h4>Install</h4>
-      <pre><code class="lang-bash">npm install syncano-server --save</code></pre>
+      <pre><code class="lang-bash">npm install @syncano/core --save</code></pre>
 
       <h4>Usage</h4>
-      <pre><code class="lang-js">import Syncano from ‘syncano-server’
+      <pre><code class="lang-js">import Syncano from ‘@syncano/core’
 
 export default (ctx) => {
   const {data} = new Syncano(ctx)
@@ -458,121 +458,121 @@ data.posts.where('id', '>', 10).count()
     <section data-tag="cli" class="c-column">
       <h3>Basics</h3>
       <h4>Install</h4>
-      <pre><code class="lang-bash">npm install --global yarn
-npm install -g syncano-cli</code></pre>
+      <pre><code class="lang-bash">
+npm install @syncano/cli</code></pre>
       <div class="c-note">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#5c9fd6" d="M272 428v28c0 10.449-6.68 19.334-16 22.629V488c0 13.255-10.745 24-24 24h-80c-13.255 0-24-10.745-24-24v-9.371c-9.32-3.295-16-12.18-16-22.629v-28c0-6.627 5.373-12 12-12h136c6.627 0 12 5.373 12 12zM128 176c0-35.29 28.71-64 64-64 8.837 0 16-7.164 16-16s-7.163-16-16-16c-52.935 0-96 43.065-96 96 0 8.836 7.164 16 16 16s16-7.164 16-16zm64-128c70.734 0 128 57.254 128 128 0 77.602-37.383 60.477-80.98 160h-94.04C101.318 236.33 64 253.869 64 176c0-70.735 57.254-128 128-128m0-48C94.805 0 16 78.803 16 176c0 101.731 51.697 91.541 90.516 192.674 3.55 9.249 12.47 15.326 22.376 15.326h126.215c9.906 0 18.826-6.078 22.376-15.326C316.303 267.541 368 277.731 368 176 368 78.803 289.195 0 192 0z"/></svg>
         <p>s is alias for syncano-cli</p>
       </div>
       <h4>Output usage information</h4>
-      <pre><code class="lang-bash">s --help</code></pre>
+      <pre><code class="lang-bash">npx s --help</code></pre>
       <h4>Output the version number</h4>
-      <pre><code class="lang-bash">s --version</code></pre>
+      <pre><code class="lang-bash">npx s --version</code></pre>
       <h4>Initiate project</h4>
-      <pre><code class="lang-bash">s init
+      <pre><code class="lang-bash">npx s init
 
 # init with given instance nam
 s init -i <new_or_existing_instance></code></pre>
       <h4>Login to/register Syncano account</h4>
-      <pre><code class="lang-bash">s login</code></pre>
+      <pre><code class="lang-bash">npx s login</code></pre>
       <h4>Logout (delete account keys from this computer)</h4>
-      <pre><code class="lang-bash">s logout</code></pre>
+      <pre><code class="lang-bash">npx s logout</code></pre>
       <h4>Attach project to the chosen Instance</h4>
-      <pre><code class="lang-bash">s attach --instance my_instance_name</code></pre>
+      <pre><code class="lang-bash">npx s attach --instance my_instance_name</code></pre>
 
       <h3>Deploy</h3>
 
       <h4>Deploy whole project</h4>
-      <pre><code class="lang-bash">s deploy</code></pre>
+      <pre><code class="lang-bash">npx s deploy</code></pre>
 
       <h4>Deploy whole project (with instance creation)</h4>
       <pre><code class="lang-bash">s deploy --create-instance &lt;new instance name&gt;</code></pre>
 
       <h4>Deploy whole project</h4>
-      <pre><code class="lang-bash">s deploy &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s deploy &lt;socket name&gt;</code></pre>
 
       <h4>🔥 Hot deploy (deploy every change in the source code right away)</h4>
-      <pre><code class="lang-bash">s hot </code></pre>
+      <pre><code class="lang-bash">npx s hot </code></pre>
 
       <h4>🔥 Hot deploy chooses Socket</h4>
-      <pre><code class="lang-bash">s hot &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s hot &lt;socket name&gt;</code></pre>
 
       <h4>Call Socket endpoint:</h4>
-      <pre><code class="lang-bash">s call &lt;socket name&gt;/&lt;endpoint&gt;</code></pre>
+      <pre><code class="lang-bash">npx s call &lt;socket name&gt;/&lt;endpoint&gt;</code></pre>
     </section>
     <section data-tag="cli" class="c-column">
       <h3>Traces</h3>
 
       <h4>Trace all Socket calls</h4>
-      <pre><code class="lang-bash">s trace</code></pre>
+      <pre><code class="lang-bash">npx s trace</code></pre>
 
       <h4>Trace chosen Socket calls</h4>
-      <pre><code class="lang-bash">s trace &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s trace &lt;socket name&gt;</code></pre>
 
       <h3>Sockets</h3>
 
       <h4>List Sockets</h4>
-      <pre><code class="lang-bash">s list</code></pre>
+      <pre><code class="lang-bash">npx s list</code></pre>
 
       <h4>Socket details</h4>
-      <pre><code class="lang-bash">s list &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s list &lt;socket name&gt;</code></pre>
 
       <h4>Adding socket from the Sockets Registry (last version)</h4>
-      <pre><code class="lang-bash">s add &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s add &lt;socket name&gt;</code></pre>
 
       <h4>Remove Socket</h4>
-      <pre><code class="lang-bash">s remove &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s remove &lt;socket name&gt;</code></pre>
 
       <h4>Create new Socket</h4>
-      <pre><code class="lang-bash">s create &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s create &lt;socket name&gt;</code></pre>
 
       <h4>Full configuration of given Socket</h4>
 
       <pre data-type="socket"><code class="lang-yaml">config:
   API_KEY:
     description: Slack API key</code></pre>
-      <pre><code class="lang-bash">s config &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s config &lt;socket name&gt;</code></pre>
 
       <h4>Show configuration of given socket</h4>
-      <pre><code class="lang-bash">s config-show &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s config-show &lt;socket name&gt;</code></pre>
 
       <h4>Change single configuration option</h4>
-      <pre><code class="lang-bash">s config-set &lt;socket name&gt; &lt;option name&gt; &lt;value&gt;</code></pre>
+      <pre><code class="lang-bash">npx s config-set &lt;socket name&gt; &lt;option name&gt; &lt;value&gt;</code></pre>
     </section>
     <section data-tag="cli" class="c-column">
       <h3>Registry</h3>
 
       <h4>Search for Sockets</h4>
-      <pre><code class="lang-bash">s search &lt;keyword&gt;</code></pre>
+      <pre><code class="lang-bash">npx s search &lt;keyword&gt;</code></pre>
 
       <h4>Submit your Socket to the registry</h4>
-      <pre><code class="lang-bash">s submit  &lt;socket name&gt;
+      <pre><code class="lang-bash">npx s submit  &lt;socket name&gt;
 
 # bump version of the Socket (e.g. major, minor, patch)
 s submit  &lt;socket name&gt; -b patch</code></pre>
 
       <h4>Make you private Socket public</h4>
-      <pre><code class="lang-bash">s publish &lt;socket name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s publish &lt;socket name&gt;</code></pre>
 
       <h3>Hosting</h3>
 
       <h4>Add new hosting</h4>
-      <pre><code class="lang-bash">s hosting add &lt;local path&gt;</code></pre>
+      <pre><code class="lang-bash">npx s hosting add &lt;local path&gt;</code></pre>
 
       <h4>Delete hosting</h4>
-      <pre><code class="lang-bash">s hosting delete &lt;hosting name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s hosting delete &lt;hosting name&gt;</code></pre>
 
       <h4>List all hostinngs</h4>
-      <pre><code class="lang-bash">s hosting list</code></pre>
+      <pre><code class="lang-bash">npx s hosting list</code></pre>
 
       <h4>List files of given hosting</h4>
-      <pre><code class="lang-bash">s hosting files &lt;hosting name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s hosting files &lt;hosting name&gt;</code></pre>
 
       <h4>Synchronize files of given hosting</h4>
-      <pre><code class="lang-bash">s hosting sync &lt;hosting name&gt;</code></pre>
+      <pre><code class="lang-bash">npx s hosting sync &lt;hosting name&gt;</code></pre>
 
       <h4>Configure hosting options</h4>
-      <pre><code class="lang-bash">s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
+      <pre><code class="lang-bash">npx s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
 s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code></pre>
     </section>
     <!--
@@ -582,7 +582,7 @@ s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code><
 --><section data-tag="socket" class="c-column">
     <h3>Basics</h3>
     <h4>Create socket</h4>
-    <pre><code class="lang-bash">syncano-cli create &lt;socket-name&gt;
+    <pre><code class="lang-bash">npx syncano-cli create &lt;socket-name&gt;
 # This will create socket configuration at:
 # ./syncano/socket-name/socket.yml</code></pre>
     <h4>Basic definition</h4>

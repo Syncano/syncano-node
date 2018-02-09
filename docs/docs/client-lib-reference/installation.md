@@ -10,7 +10,7 @@ The `Syncano Client` side library enables you to interact with the Syncano Socke
 Installing from NPM:
 
 ```sh
-npm install syncano-client --save
+npm install @syncano/client -D
 ```
 
 Library is also at [JSDELIVR](http://www.jsdelivr.com/projects/syncano-client-js):
@@ -21,13 +21,13 @@ Library is also at [JSDELIVR](http://www.jsdelivr.com/projects/syncano-client-js
 When the library is installed you can import it. The library supports the CommonJS syntax:
 
 ```js
-var Syncano = require('syncano-client');
+var Syncano = require('@syncano/client');
 ```
 
 You can also use it with ES6 modules:
 
 ```js
-import Syncano from 'syncano-client';
+import Syncano from '@syncano/client';
 ```
 
 ## Connection

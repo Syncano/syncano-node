@@ -2,14 +2,14 @@
 
 To initialize library simply import it in a Socket script where library will be used:
 ```js
-import { data, users, socket, response, event, logger } from 'syncano-server'
+import { data, users, socket, response, event, logger } from '@syncano/core'
 ```
 
 Library initiated that way will grab necessary information from the context of you Socket Script - it means that you don't need to provide additional information such as Instance name or authentication key (token) to your Instance.
 
 If you want to force the library to connect to specified instance type:
 ```js
-import Server from 'syncano-server'
+import Server from '@syncano/core'
 
 const { data, events } = new Server({
   token: '9-12jdiasdnfo23nrokms',
@@ -142,7 +142,7 @@ response
 ### Logging
 
 ```js
-import {logger} from 'syncano-server'
+import {logger} from '@syncano/core'
 
 // Listen for all events
 logger.listen(event => {
