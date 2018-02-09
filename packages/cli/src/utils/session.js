@@ -228,7 +228,7 @@ export class Session {
         echo(4)(`Type ${format.cyan('syncano-cli attach')} to choose one of the existing instances.`)
         echo()
       }
-      process.exit()
+      process.exit(1)
     }
 
     return instance
