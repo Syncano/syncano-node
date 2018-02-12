@@ -2,6 +2,7 @@ import format from 'chalk'
 import inquirer from 'inquirer'
 import { p, echo, error, warning } from '../utils/print-tools'
 import Hosting from '../utils/hosting'
+import HostingListCmd from './hosting-list'
 
 class HostingConfig {
   constructor (context) {
@@ -10,8 +11,9 @@ class HostingConfig {
   }
 
   static toggleBrowserRouter (command, responses) {
-    if (responses.browserRouter) return responses.browserRouter
-
+    if (responses.browser_router) {
+      return responses.browser_router
+    }
     return command === 'true'
   }
 
@@ -45,7 +47,11 @@ class HostingConfig {
       }
 
       await this.hosting.configure(paramsToUpdate)
+
+      echo()
       echo(4)(format.green('Configuration successfully updated!'))
+      echo()
+      HostingListCmd.printHosting(this.hosting)
       echo()
     } catch (err) {
       try {
