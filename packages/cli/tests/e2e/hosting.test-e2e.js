@@ -108,7 +108,7 @@ describe('[E2E] CLI Hosting', function () {
   it('can set hosting config with flags', function (done) {
     testNixt()
       .run(`${cliLocation} hosting config ${hostingName} --browser-router false --remove-cname my.dom.ain`)
-      .stdout(/^((?!CNAME: http:\/\/my.dom.ain)[\s\S])*$/) 
+      .stdout(/^((?!CNAME: http:\/\/my.dom.ain)[\s\S])*$/)
       .stdout(/BrowserRouter: x/)
       .end(done)
   })
