@@ -86,10 +86,30 @@ describe('[E2E] CLI Hosting', function () {
       .end(done)
   })
 
-  it('can sync again local hosting', function (done) {
+  it('can sync local hosting again', function (done) {
     testNixt()
       .run(`${cliLocation} hosting sync ${hostingName}`)
       .stdout(/files synchronized/)
+      .end(done)
+  })
+
+  it('can set hosting config with prompt', function (done) {
+    testNixt()
+      .run(`${cliLocation} hosting config ${hostingName}`)
+      .on(/Set CNAME now/)
+      .respond('my.dom.ain\n')
+      .on(/Do you want to use BrowserRouter for this hosting?/)
+      .respond('Y\n')
+      .stdout(/CNAME: http:\/\/my.dom.ain/)
+      .stdout(/BrowserRouter: ✓/)
+      .end(done)
+  })
+
+  it('can set hosting config with flags', function (done) {
+    testNixt()
+      .run(`${cliLocation} hosting config ${hostingName} --browser-router false --remove-cname my.dom.ain`)
+      .stdout(/^((?!CNAME: http:\/\/my.dom.ain)[\s\S])*$/) 
+      .stdout(/BrowserRouter: x/)
       .end(done)
   })
 
