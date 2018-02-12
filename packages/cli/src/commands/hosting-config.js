@@ -2,11 +2,19 @@ import format from 'chalk'
 import inquirer from 'inquirer'
 import { p, echo, error, warning } from '../utils/print-tools'
 import Hosting from '../utils/hosting'
+import HostingListCmd from './hosting-list'
 
 class HostingConfig {
   constructor (context) {
     this.context = context
     this.hosting = null
+  }
+
+  static toggleBrowserRouter (command, responses) {
+    if (responses.browser_router) {
+      return responses.browser_router
+    }
+    return command === 'true'
   }
 
   async run ([hostingName, cmd]) {
@@ -28,18 +36,22 @@ class HostingConfig {
       }
 
       let responses = {}
-      if (!(cmd.removeCname || cmd.cname || cmd.browser_router)) {
+      if (!(cmd.removeCname || cmd.cname || cmd.browserRouter)) {
         responses = await inquirer.prompt(this.getQuestions()) || {}
       }
 
       const paramsToUpdate = {
         cname: this.cname || responses.CNAME,
         removeCNAME: cmd.removeCname,
-        browser_router: cmd.browser_router || responses.browser_router
+        browser_router: HostingConfig.toggleBrowserRouter(cmd.browserRouter, responses)
       }
 
       await this.hosting.configure(paramsToUpdate)
+
+      echo()
       echo(4)(format.green('Configuration successfully updated!'))
+      echo()
+      HostingListCmd.printHosting(this.hosting)
       echo()
     } catch (err) {
       try {

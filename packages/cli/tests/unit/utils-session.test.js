@@ -248,7 +248,6 @@ describe('[utils] Session', function () {
 
     describe('without parameter', function () {
       it('should print proper error message and exit process when instance does not exists', async function () {
-
         await session.checkConnection()
 
         sinon.assert.calledWith(interEcho, `Instance ${format.cyan(instanceName)} was not found on your account!`)
