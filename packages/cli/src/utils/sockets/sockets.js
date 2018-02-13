@@ -1,5 +1,6 @@
 import fs from 'fs'
 import klawSync from 'klaw-sync'
+import glob from 'glob'
 import child from 'child_process'
 import FindKey from 'find-key'
 import md5 from 'md5'
@@ -669,7 +670,7 @@ class Socket {
     return this.composeComponentsFromSpec('components', Component)
   }
 
-  async createZip ({ plainSources = false } = {}) {
+  async createZip () {
     debug('createZip')
     return new Promise((resolve, reject) => {
       let numberOfFiles = 0
@@ -681,33 +682,13 @@ class Socket {
       archive.pipe(output)
       archive.on('error', reject)
 
-      function fileFilter (file) {
-        const remoteFiles = this.remote.files
-        if (file.fullPath.match(/yarn\.lock/)) { return false }
-        if (file.fullPath.match(/.*\.log$/)) { return false }
-        if (file.fullPath.match(/node_modules/)) { return false }
-        if (file.fullPath.match(/\.js\.map$/)) { return false }
-        if (!plainSources && file.fullPath.match(/\.js$/)) { return false }
-        if (file.fullPath.match(/\.js$/)) { return false }
-        if (file.path.match(/^\./)) { return false }
-        debug(`createZip: Checking file ${file.name}`)
-        if (remoteFiles) {
-          const remoteFile = remoteFiles[file.path]
-          if (remoteFile) {
-            return remoteFile.checksum !== md5(fs.readFileSync(file.fullPath))
-          }
-          return true
-        }
-        return true
-      }
-
-      const findFiles = readdirp({ root: this.getSrcFolder(), fileFilter: fileFilter.bind(this) })
-
       // Adding socket.yml if needed
       const localYMLChecksum = md5(fs.readFileSync(this.getSocketYMLFile()))
       const remoteYMLChecksum = this.remote.files && this.remote.files['socket.yml']
         ? this.remote.files['socket.yml'].checksum
         : ''
+
+      debug('Processing: \'socket.yml\'')
       if (remoteYMLChecksum !== localYMLChecksum) {
         debug('Adding file to archive: \'socket.yml\'')
         archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
@@ -717,46 +698,39 @@ class Socket {
         debug('Ignoring file: socket.yml')
       }
 
+      // Ignore patterns from .syncanoignore file
+      let ignore = []
+      try {
+        ignore = fs.readFileSync(`${this.getCompiledScriptsFolder()}/.syncanoignore`, 'utf8').split('\n')
+      } catch (err) {}
+
+      const files = glob.sync(`**`, {
+        cwd: this.getCompiledScriptsFolder(),
+        ignore,
+        realpath: true,
+        nodir: true
+      })
+
       // Adding all files (besides those filtered out)
-      findFiles.on('data', (file) => {
+      files.forEach(file => {
         // with "internal" path
-        const fileNameWithPath = file.fullPath.replace(`${this.getSrcFolder()}`, '')
-        debug(`Adding file to archive: ${fileNameWithPath}`)
-        archive.file(file.fullPath, { name: fileNameWithPath })
+        const fileNameWithPath = file.replace(`${this.getCompiledScriptsFolder()}`, '')
+        const remoteFile = this.remote.files ? this.remote.files[fileNameWithPath] : null
+
+        if (remoteFile) {
+          if (remoteFile.checksum !== md5(fs.readFileSync(file))) {
+            debug(`Adding file to archive: ${fileNameWithPath}`)
+            archive.file(file, { name: fileNameWithPath })
+          } else {
+            debug(`Not adding file to archive (same checksum): ${fileNameWithPath}`)
+          }
+        } else {
+          archive.file(file, { name: fileNameWithPath })
+        }
         allFilesList.push(fileNameWithPath)
         numberOfFiles += 1
       })
-
-      findFiles.on('end', async () => {
-        if (!plainSources) {
-          const scripts = await this.getScriptsInSocket()
-          scripts.forEach((script) => {
-            const scriptNameWithPath = script.srcFile.replace(`${this.getSrcFolder()}`, '')
-            const scriptBundlePath = script.compiledFile
-            const remoteFile = this.remote.files ? this.remote.files[scriptNameWithPath] : null
-
-            allFilesList.push(scriptNameWithPath)
-
-            if (remoteFile) {
-              if (!fs.existsSync(scriptBundlePath)) {
-                return
-              }
-              const scriptLocalChecksum = md5(fs.readFileSync(scriptBundlePath))
-              const scriptRemoteChecksum = remoteFile.checksum
-              if (scriptLocalChecksum === scriptRemoteChecksum) {
-                debug('Ignoring file:', scriptNameWithPath)
-                return
-              }
-            }
-
-            debug(`Adding file to archive: ${scriptNameWithPath}`)
-            archive.file(scriptBundlePath, { name: scriptNameWithPath })
-            numberOfFiles += 1
-          })
-          debug(`createZip: all files processed: ${numberOfFiles}`)
-        }
-        archive.finalize()
-      })
+      archive.finalize()
 
       output.on('close', () => {
         resolve({ numberOfFiles, allFilesList })

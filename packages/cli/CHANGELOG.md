@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-* **cli:e2e:** turn on forgoten tests ([edbb9e9](https://github.com/Syncano/syncano-node/commit/edbb9e9))
+* **cli:e2e:** turn on forgotten tests ([edbb9e9](https://github.com/Syncano/syncano-node/commit/edbb9e9))
 * **cli:e2e:registry:** fixing tests ([e528943](https://github.com/Syncano/syncano-node/commit/e528943))
 * **cli:init:** createInstance bug ([#121](https://github.com/Syncano/syncano-node/issues/121)) ([e3718bb](https://github.com/Syncano/syncano-node/commit/e3718bb))
 * added missing await ([#126](https://github.com/Syncano/syncano-node/issues/126)) ([d78b1ca](https://github.com/Syncano/syncano-node/commit/d78b1ca))
