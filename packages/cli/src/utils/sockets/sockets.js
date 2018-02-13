@@ -1042,6 +1042,32 @@ class Socket {
     //   })
   }
 
+  build () {
+    debug(`socket build: ${this.name}`)
+
+    return new Promise(async (resolve, reject) => {
+      const command = 'npm'
+      const args = 'install'
+
+      process.env.FORCE_COLOR = true
+      const out = child.spawnSync(
+        command,
+        args.split(' '),
+        {
+          cwd: this.socketPath,
+          maxBuffer: 2048 * 1024,
+          stdio: [process.stdio, 'pipe', 'pipe']
+        }
+      )
+
+      if (out.status !== 0) {
+        reject(new CompileError(out.stderr.toString()))
+      } else {
+        resolve()
+      }
+    })
+  }
+
   isConfigSynced (config) {
     debug('isConfigSynced')
     return _.isEqual(config, this.remote.config)

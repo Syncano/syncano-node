@@ -22,7 +22,7 @@
     "labels": {
       "feature": ":rocket: Feature",
       "bug": ":bug: Bug Fix",
-      "docs": ":docs: Documentation"
+      "docs": ":book: Documentation"
     },
     "cacheDir": ".changelog"
   }

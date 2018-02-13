@@ -44,7 +44,7 @@ describe('[E2E] CLI Deploy', function () {
       .run(`${cliLocation} create hello`)
       .on(/Choose template for your Socket/)
       .respond('\n')
-      .stdout(/Your Socket configuration is stored at/)
+      .code(0)
       .end(done)
   })
 
