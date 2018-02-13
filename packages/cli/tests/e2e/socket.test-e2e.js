@@ -40,7 +40,7 @@ describe('[E2E] CLI Socket', function () {
       .run(`${cliLocation} create hello`)
       .on(/Choose template for your Socket/)
       .respond('\n')
-      .stdout(/Your Socket configuration is stored at/)
+      .code(0)
       .end(done)
   })
 
@@ -86,7 +86,7 @@ describe('[E2E] CLI Socket', function () {
       .run(`${cliLocation} create ${createdSocketName}`)
       .on(/Choose template for your Socket/)
       .respond('\n')
-      .stdout(/Your Socket configuration is stored at/)
+      .code(0)
       .end(done)
   })
 

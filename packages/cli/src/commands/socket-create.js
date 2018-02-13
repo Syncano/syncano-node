@@ -2,6 +2,7 @@ import path from 'path'
 import inquirer from 'inquirer'
 import format from 'chalk'
 import logger from '../utils/debug'
+import { SimpleSpinner } from './helpers/spinner'
 import { p, echo, error } from '../utils/print-tools'
 
 const { debug } = logger('cmd-socket-deploy')
@@ -32,8 +33,11 @@ class SocketCreate {
 
     echo()
     try {
+      const spinner = new SimpleSpinner(p(2)('Creating Socket...')).start()
       const socket = await this.Socket.create(socketName, template)
-      echo(4)(`Your Socket configuration is stored at ${format.cyan(socket.getSocketPath())}`)
+      await socket.build()
+      spinner.stop()
+      spinner.succeed(p(2)(`Your Socket configuration is stored at ${format.cyan(socket.getSocketPath())}`))
       echo()
     } catch (err) {
       debug(err)

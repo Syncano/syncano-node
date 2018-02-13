@@ -43,6 +43,16 @@ class SimpleSpinner {
     this.spinner.stop()
     return this
   }
+
+  succeed (msg) {
+    this.spinner.succeed(msg)
+    return this
+  }
+
+  fail (msg) {
+    this.spinner.fail(msg)
+    return this
+  }
 }
 
 export default {
