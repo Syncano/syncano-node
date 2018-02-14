@@ -3,5 +3,6 @@
 }
 
 button.sidebar-toggle {
-  bottom: 93vh;
+  top: 0;
+  bottom: auto;
 }

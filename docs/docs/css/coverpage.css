@@ -22,8 +22,70 @@ body {
  	Top Nav Bar
 ----------------*/
 
+.app-nav {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  top: 25px;
+  right: 80px;
+}
+
+.app-nav > * + * {
+  margin-left: 16px;
+}
+
 .app-nav li ul {
-	overflow-y: hidden;
+  overflow-y: hidden;
+  padding: 8px 0;
+}
+
+.app-nav li ul li {
+  padding: 0;
+  margin: 0;
+}
+
+.app-nav li ul a {
+  padding: 7px 15px;
+  transition: background-color .25s;
+}
+.app-nav li ul a:hover {
+  background-color: rgba(56, 113, 208, .1);
+}
+
+.c-version-select {
+  position: relative;
+  border-radius: 4px;
+  background: #187eef;
+}
+.c-version-select:after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 16px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #ffffff transparent transparent transparent;
+}
+.c-version-select select {
+  position: relative;
+  z-index: 1;
+  border: none;
+  background-color: transparent;
+  padding: 10px 28px 10px 14px;
+  color: #fff;
+  font-weight: bold;
+  display: block;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  line-height: 16px;
+  cursor: pointer;
+}
+.c-version-select option { color: #333; }
+.c-version-select select:focus {
+  outline: none;
 }
 
 /*----------------
