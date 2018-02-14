@@ -23,8 +23,8 @@ s('countries/list')
   })
 ```
 
-#### Types of HTTP request
-To specify particular type of HTTP request use:
+#### HTTP request types
+To specify particular type of HTTP request, use:
 
 `s.<request type>(<socket-name>/<endpoint-name>, data?, options?)`
 
@@ -36,6 +36,9 @@ s.delete('hello/test')
 s.patch('hello/test')
 ```
 
+!> Specifying the HTTP request method will result in sending a `POST` request
+with an extra `"_method": "method type"` params available in `ctx.args`
+on the server side.
 
 #### Options
 

@@ -3,7 +3,7 @@
   const tags = document.querySelectorAll('[data-tag]')
 
   tabs.forEach(tab => {
-    const activeTab = location.hash.substr(1) || 'socket'
+    const activeTab = location.hash.substr(1) || 'client'
 
     tab.addEventListener('click', toggleTab)
 
