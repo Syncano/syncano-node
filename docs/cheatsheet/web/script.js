@@ -54,6 +54,12 @@
   }
 
   const $select = document.querySelector('[data-version]')
+  const $options = document.querySelectorAll(`[data-version] option`)
+  const version = window.location.host.match(/^[0-9a-z\.]+/)
+  const $selectedOption = document.querySelector(`option[value="${version}"]`)
+  const selectedOptionIndex = Array.prototype.indexOf.call($options, $selectedOption);
+
+  $select.selectedIndex = selectedOptionIndex
 
   $select.addEventListener('change', event => {
     const version = event.target.value
