@@ -52,6 +52,13 @@
       socket: 'Socket'
     }[name]
   }
+
+  const $select = document.querySelector('[data-version]')
+
+  $select.addEventListener('change', event => {
+    const version = event.target.value
+    window.location.href = `https://${version}.docs.syncano.io`
+  })
 })()
 
 /* = PRISM =================================================================== */

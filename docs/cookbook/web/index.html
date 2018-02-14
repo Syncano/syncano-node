@@ -66,4 +66,10 @@ Prism.languages.insertBefore('yaml', 'attr-name', {
   analytics.page();
   }}();
 </script>
+<script>
+  $select.addEventListener('change', event => {
+    const version = event.target.value
+    window.location.href = `https://${version}.docs.syncano.io`
+  })
+</script>
 </html>

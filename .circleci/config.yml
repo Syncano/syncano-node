@@ -309,8 +309,11 @@ jobs:
       - run: echo 'export SYNCANO_PROJECT_INSTANCE=syncano-docs-${CIRCLE_BRANCH}' >> $BASH_ENV
       - run: node packages/cli/lib/cli.js deploy
       - run: node packages/cli/lib/cli.js hosting sync docs
+      - run: node packages/cli/lib/cli.js hosting config docs --cname ${CIRCLE_BRANCH}.docs.syncano.io
       - run: node packages/cli/lib/cli.js hosting sync cookbook
+      - run: node packages/cli/lib/cli.js hosting config cookbook --cname ${CIRCLE_BRANCH}.cookbook.syncano.io
       - run: node packages/cli/lib/cli.js hosting sync cheatsheet
+      - run: node packages/cli/lib/cli.js hosting config cheatsheet --cname ${CIRCLE_BRANCH}.cheatsheet.syncano.io
 
   deploy_test_registry:
     name: Deploying Test Registry
