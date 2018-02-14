@@ -52,6 +52,19 @@
       socket: 'Socket'
     }[name]
   }
+  
+  const $select = document.querySelector('[data-version]')
+  const $options = document.querySelectorAll(`[data-version] option`)
+  const version = window.location.host.match(/^[0-9a-z\.]+/)
+  const $selectedOption = document.querySelector(`option[value="${version}"]`)
+  const selectedOptionIndex = Array.prototype.indexOf.call($options, $selectedOption)
+
+  $select.selectedIndex = selectedOptionIndex >= 0 ? selectedOptionIndex : 0
+
+  $select.addEventListener('change', event => {
+    const version = event.target.value
+    window.location.href = `https://${version}-cheatsheet.syncano.io`
+  })
 })()
 
 /* = PRISM =================================================================== */

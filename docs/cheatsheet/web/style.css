@@ -80,6 +80,9 @@ td pre[class*="language-"] {
   .c-header__tab + * {
     margin-left: 32px;
   }
+  .c-header__tab--right {
+    margin-left: auto;
+  }
     .c-header__tab a {
       color: #666;
       font-size: .875rem;
@@ -189,6 +192,15 @@ td pre[class*="language-"] {
 
 [data-type="server"]::after {
   background: #7a9a99;
+}
+
+[data-version] {
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  background: #187eef;
+  color: #fff;
+  font-weight: bold;
 }
 
 /* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript */
