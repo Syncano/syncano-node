@@ -36,10 +36,10 @@ class HostingSync {
       process.exit()
     }
 
-    return hosting.existRemotely && this.syncHosting(hosting)
+    return hosting.existRemotely && this.syncHosting(hosting, {delete: cmd.delete})
   }
 
-  async syncHosting (hosting) {
+  async syncHosting (hosting, params) {
     debug(`Syncing ${hosting.name} (${this.session.project.instance})`)
 
     if (!hosting.name) return
@@ -48,7 +48,7 @@ class HostingSync {
     echo()
 
     try {
-      const output = await hosting.syncFiles()
+      const output = await hosting.syncFiles(params)
       echo(output)
     } catch (err) {
       error(8)(err)

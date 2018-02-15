@@ -19,7 +19,7 @@ class HostingFile {
   loadRemote (fileRemoteData) {
     this.id = fileRemoteData.id
     this.instanceName = fileRemoteData.instanceName
-    this.path = fileRemoteData.path
+    this.path = decodeURIComponent(fileRemoteData.path)
     this.checksum = fileRemoteData.checksum
     this.size = fileRemoteData.size
     return this
@@ -289,7 +289,7 @@ class Hosting {
     const fileToUpdate = _.find(remoteFiles, { path: localHostingFilePath })
     const payload = new FormData()
     payload.append('file', fs.createReadStream(file.localPath))
-    payload.append('path', localHostingFilePath)
+    payload.append('path', encodeURIComponent(localHostingFilePath))
 
     let singleFile = null
 
@@ -328,6 +328,19 @@ class Hosting {
     return singleFile
   }
 
+  // Verify remote file if it deleted
+  getFilesToDelete (remoteFiles, localFiles) {
+    debug('getFilesToDelete')
+
+    const filesToDelete = remoteFiles.filter(file => !_.find(localFiles, {path: file.path}))
+
+    return filesToDelete.map(async file => {
+      const singleFile = await session.connection.hosting.deleteFile(this.name, file.id)
+      echo(6)(`${format.green('✓')} File deleted: ${format.dim(file.path)}`)
+      return singleFile
+    })
+  }
+
   // Files upload report
   generateUploadFilesResult (result) {
     if (!result) {
@@ -339,30 +352,36 @@ class Hosting {
     \t${format.green(this.name)} is available at: ${format.green(this.getURL())}\n`
   }
 
-  async uploadFiles (files) {
+  async uploadFiles (files, params) {
     let uploadedFilesCount = 0
     let uploadedSize = 0
-    const promises = []
+    let promises = []
 
     const localFiles = await this.listLocalFiles()
 
+    // promises for add/update operations
     await localFiles.forEach(file => {
       promises.push(this.getFilesToUpload(file, files))
     })
+
+    if (params.delete) {
+      // promises for deleting files
+      promises = promises.concat(this.getFilesToDelete(files, localFiles))
+    }
 
     const values = await Promise.all(promises)
     uploadedFilesCount = 0
     uploadedSize = 0
     values.forEach(upload => {
       uploadedFilesCount += 1
-      uploadedSize += upload.size
+      uploadedSize += upload ? upload.size : 0
     })
     return { uploadedFilesCount, uploadedSize }
   }
 
   // Run this to synchronize hosted files
   // first we are getting remote files
-  async syncFiles () {
+  async syncFiles (params) {
     debug('syncFiles()')
 
     if (!fs.existsSync(this.path)) {
@@ -370,7 +389,7 @@ class Hosting {
     }
 
     const remoteFiles = await this.listRemoteFiles()
-    const result = await this.uploadFiles(remoteFiles)
+    const result = await this.uploadFiles(remoteFiles, params)
     return this.generateUploadFilesResult(result)
   }
 
@@ -382,12 +401,12 @@ class Hosting {
       return false
     }
 
-    const localChecksums = await this.listLocalFiles().map((localFile) => ({
+    const localChecksums = await this.listLocalFiles().map(localFile => ({
       filePath: this.getLocalFilePath(localFile),
       checksum: localFile.checksum
     }))
 
-    const remoteChecksums = await this.listRemoteFiles().map((remoteFile) => ({
+    const remoteChecksums = await this.listRemoteFiles().map(remoteFile => ({
       filePath: remoteFile.path,
       checksum: remoteFile.checksum
     }))
@@ -400,6 +419,9 @@ class Hosting {
     debug('listRemoteFiles()')
     const files = await session.connection.hosting.listFiles(this.name)
     return Promise.all(files.map(async file => {
+      // TODO: Maybe it should be somehow done in the library not here
+      file.path = decodeURIComponent(file.path)
+
       const hostingFile = new HostingFile(file)
       return hostingFile.loadRemote(file)
     }))
@@ -411,7 +433,7 @@ class Hosting {
     const localHostingFiles = this.path ? await getFiles(this.path) : []
     if (!Array.isArray(localHostingFiles)) return localHostingFiles
 
-    return localHostingFiles ? localHostingFiles.map((file) => new HostingFile().loadLocal({ path: file })) : []
+    return localHostingFiles ? localHostingFiles.map(file => new HostingFile().loadLocal({ path: file })) : []
   }
 
   async listFiles () {
@@ -419,7 +441,7 @@ class Hosting {
     const listLocalFiles = await this.listLocalFiles()
 
     const files = []
-    listLocalFiles.forEach((localFile) => {
+    listLocalFiles.forEach(localFile => {
       const file = localFile
       const remoteCopy = _.find(remoteFiles, { path: this.getLocalFilePath(file) })
 

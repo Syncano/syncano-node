@@ -61,6 +61,7 @@ const setup = async () => {
     .command('sync <name>')
     .group('Hosting')
     .description('Publish your local hosting files')
+    .option('-d, --no-delete', 'Update and add files only (do not delete files)')
     .option('-s, --socket <name>', 'socket')
     .action(async (...options) => {
       session.isAuthenticated()

@@ -74,6 +74,19 @@ export default class Hosting extends QueryBuilder {
     })
   }
 
+  deleteFile (hostingId, fileId) {
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.instance.accountKey
+      }
+      const options = { method: 'DELETE' }
+
+      this.fetch(this.urlFiles(hostingId, fileId), options, headers)
+        .then(resolve)
+        .catch(reject)
+    })
+  }
+
   uploadFile (hostingId, payload) {
     return new Promise((resolve, reject) => {
       const headers = payload.getHeaders()
