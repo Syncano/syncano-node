@@ -63,6 +63,6 @@
     "webpack": "^3.6.0"
   },
   "dependencies": {
-    "axios": "^0.15.3"
+    "axios": "^0.17.1"
   }
 }
