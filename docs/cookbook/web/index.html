@@ -22,7 +22,34 @@
     subMaxLevel: 2,
     homepage: './intro.md',
     coverpage: false,
-    loadNavbar: true
+    loadNavbar: true,
+    plugins: [
+      function (hook, vm) {
+        hook.ready(function() {
+          setTimeout(() => {
+            const version = window.location.host.match(/^[0-9\.|master]+/) || 'master';
+
+            [].forEach.call(document.querySelectorAll('.app-nav a'), a => {
+              a.setAttribute('href', a.getAttribute('href').replace('https://', `https://${version}-`))
+            })
+
+            const $select = document.querySelector('[data-version]')
+            const $options = document.querySelectorAll(`[data-version] option`)
+            const $selectedOption = document.querySelector(`option[value="${version}"]`)
+            const selectedOptionIndex = Array.prototype.indexOf.call($options, $selectedOption)
+
+            $select.selectedIndex = selectedOptionIndex >= 0 ? selectedOptionIndex : 0
+
+            $select.addEventListener('change', event => {
+              const version = event.target.value
+              const url = event.target.options[event.target.selectedIndex].dataset.url
+
+              window.location.href = url || `https://${version}-cookbook.syncano.io`
+            })
+          }, 100);
+        })
+      }
+    ]
   };
 </script>
 <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>

@@ -63,7 +63,6 @@
 
   $select.addEventListener('change', event => {
     const version = event.target.value
-
     window.location.href = `https://${version}-cheatsheet.syncano.io`
   })
 })()

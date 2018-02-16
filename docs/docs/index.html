@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="css/prism.css">
   <link rel="stylesheet" href="css/docs.css">
   <link rel="stylesheet" href="css/coverpage.css">
-  <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
   <div id="app">Please wait...</div>
@@ -27,25 +26,38 @@
     plugins: [
       function (hook, vm) {
         hook.ready(function() {
-          const version = window.location.host.match(/^[0-9\.|master|legacy]+/) || 'master';
+          setTimeout(() => {
+            [].forEach.call(document.querySelectorAll('[data-autoselect]'), item => {
+              item.addEventListener('click', e => e.target.select())
+            })
 
-          [].forEach.call(document.querySelectorAll('.app-nav a'), a => {
-            a.setAttribute('href', a.getAttribute('href').replace('https://', `https://${version}-`))
-          })
+            const version = window.location.host.match(/^[0-9\.]+|master|legacy/) || 'master';
 
-          const $select = document.querySelector('[data-version]')
-          const $options = document.querySelectorAll(`[data-version] option`)
-          const $selectedOption = document.querySelector(`option[value="${version}"]`)
-          const selectedOptionIndex = Array.prototype.indexOf.call($options, $selectedOption)
+            [].forEach.call(document.querySelectorAll('a'), a => {
+              if (a.getAttribute('href').match(/https:\/\/(docs|cheatsheet|cookbook)/)) {
+                a.setAttribute('href', a.getAttribute('href').replace('https://', `https://${version}-`))
+              }
+              if (a.getAttribute('href') === 'https://github.com/Syncano/syncano-node/tree/master#readme') {
+                a.setAttribute('href', a.getAttribute('href').replace('master', version))
+              }
+            })
 
-          $select.selectedIndex = selectedOptionIndex >= 0 ? selectedOptionIndex : 0
+            const $select = document.querySelectorAll('[data-version]')
+            const $options = document.querySelectorAll(`[data-version] option`)
+            const $selectedOption = document.querySelector(`option[value="${version}"]`)
+            const selectedOptionIndex = Array.prototype.indexOf.call($options, $selectedOption);
 
-          $select.addEventListener('change', event => {
-            const version = event.target.value
-            const url = event.target.options[event.target.selectedIndex].dataset.url
+            [].forEach.call($select, select => {
+              select.selectedIndex = selectedOptionIndex >= 0 ? selectedOptionIndex : 0
 
-            window.location.href = url || `https://${version}-docs.syncano.io`
-          })
+              select.addEventListener('change', event => {
+                const version = event.target.value
+                const url = event.target.options[event.target.selectedIndex].dataset.url
+
+                window.location.href = url || `https://${version}-docs.syncano.io`
+              })
+            })
+          }, 100);
         })
       }
     ]
