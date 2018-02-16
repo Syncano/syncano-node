@@ -1238,7 +1238,10 @@ class Socket {
   }
 
   getConfigOptionFromEnv (optionName) {
-    return process.env[`${this.name.toUpperCase()}_${optionName.toUpperCase()}`]
+    const socketVarName = this.name.replace('-', '_').toUpperCase()
+    const optionVarName = optionName.replace('-', '_').toUpperCase()
+    return process.env[`${socketVarName}__${optionVarName}`] ||
+      process.env[`${socketVarName}_${optionVarName}`]
   }
 
   getConfigOptionsToAsk () {
