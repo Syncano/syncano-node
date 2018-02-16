@@ -1,8 +1,3 @@
-- Resources
-  - [Docs](https://docs.github.io)
-  - [Cookbook](https://cookbook.syncano.io)
-  - [Cheatsheet](https://cheatsheet.syncano.io)
-
 <div class="c-version-select">
   <select data-version>
     <option value="master">master</option>
