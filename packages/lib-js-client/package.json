@@ -3,6 +3,7 @@
   "version": "0.8.0",
   "description": "Interact with your Syncano Sockets.",
   "main": "lib/index.js",
+  "unpkg": "dist/syncano-client.min.js",
   "author": "Syncano Inc.",
   "license": "MIT",
   "repository": {
