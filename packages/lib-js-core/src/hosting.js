@@ -1,4 +1,7 @@
+import logger from 'debug'
 import QueryBuilder from './query-builder'
+
+const debug = logger('core:hosting')
 
 /**
  * Hosting related operations.
@@ -24,6 +27,7 @@ export default class Hosting extends QueryBuilder {
   }
 
   getFile (hostingId, fileId) {
+    debug('getFile')
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -35,6 +39,7 @@ export default class Hosting extends QueryBuilder {
   }
 
   listFiles (hostingId) {
+    debug('listFiles')
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -48,6 +53,7 @@ export default class Hosting extends QueryBuilder {
   }
 
   get (hostingId) {
+    debug('get')
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -59,6 +65,7 @@ export default class Hosting extends QueryBuilder {
   }
 
   updateFile (hostingId, fileId, payload) {
+    debug('updateFile')
     return new Promise((resolve, reject) => {
       const headers = payload.getHeaders()
       headers['X-API-KEY'] = this.instance.accountKey
@@ -75,6 +82,7 @@ export default class Hosting extends QueryBuilder {
   }
 
   deleteFile (hostingId, fileId) {
+    debug('deleteFile')
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -88,6 +96,7 @@ export default class Hosting extends QueryBuilder {
   }
 
   uploadFile (hostingId, payload) {
+    debug('uploadFile')
     return new Promise((resolve, reject) => {
       const headers = payload.getHeaders()
       headers['X-API-KEY'] = this.instance.accountKey

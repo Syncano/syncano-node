@@ -188,7 +188,6 @@ class Hosting {
   // list all hostings (mix of locally definde and installed on server)
   static async list (socket) {
     debug('list()')
-    // const localHostings = Hosting.listLocal(socket);
     if (!socket) {
       const projectHostings = Hosting.listFromProject()
       debug('projectHostings', projectHostings)
@@ -303,7 +302,6 @@ class Hosting {
       // Check if checksum of the local file is the same as remote one
       if (remoteChecksum === localChecksum) {
         try {
-          singleFile = await session.connection.hosting.getFile(this.name, fileToUpdate.id)
           echo(6)(`${format.green('✓')} File skipped: ${format.dim(file.path)}`)
         } catch (err) {
           error(err)
@@ -477,13 +475,6 @@ class Hosting {
     if (cname) {
       return `http://${cname}`
     }
-  }
-
-  // TODO: filtering hostings (wating for core)
-  static async listRemote (socket) {
-    debug('listRemote')
-    const hostings = await session.connection.hosting.list()
-    return hostings.map((hosting) => new Hosting(hosting.name, socket))
   }
 
   getRemote () {
