@@ -198,6 +198,18 @@ jobs:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e
 
+  test_e2e_client:
+    name: E2E Client Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/lib-js-client/
+
+    steps:
+      - restore_cache:
+          key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: npm run test:e2e:main
+
   test_e2e_registry:
     name: E2E Tests
     docker:

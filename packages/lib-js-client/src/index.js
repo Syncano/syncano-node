@@ -1,5 +1,6 @@
 import querystring from 'querystring'
 import fetch from 'axios'
+import FormData from 'form-data'
 
 function SyncanoClient(instanceName = required('instanceName'), options = {}) {
   const host = options.host || 'syncano.space'
@@ -14,16 +15,16 @@ function SyncanoClient(instanceName = required('instanceName'), options = {}) {
   client.post = client
 
   client.login = function(username, password) {
-    const login = this.loginMethod
-      ? this.loginMethod
+    const login = client.loginMethod
+      ? client.loginMethod
       : (username, password) => {
           const url = `https://api.syncano.io/v2/instances/${
-            this.instanceName
+            client.instanceName
           }/users/auth/`
           const data = JSON.stringify({username, password})
 
           return fetch({url, data}).then(user => {
-            this.setToken(user.token)
+            client.setToken(user.token)
 
             return user
           })
@@ -107,13 +108,20 @@ function SyncanoClient(instanceName = required('instanceName'), options = {}) {
   client.subscribe = function(endpoint = required('endpoint'), data, callback) {
     let abort = false
     const hasData = typeof data === 'object' && data !== null
+
+    const bodyParams = data
+    const requestData = {}
+    delete bodyParams['_method']
+
     const options = {
-      method: 'GET',
       timeout: 1000 * 60 * 5, // 5 minutes
-      headers: this.headers()
+      headers: client.headers(),
+      method: 'GET',
+      params: bodyParams,
+      data: requestData
     }
 
-    let url = this.url(endpoint, data)
+    let url = client.url(endpoint, data)
     const cb = hasData ? callback : data
 
     function loop() {
@@ -139,7 +147,7 @@ function SyncanoClient(instanceName = required('instanceName'), options = {}) {
         })
     }
 
-    this.setLastId(endpoint, data).then(response => {
+    client.setLastId(endpoint, data).then(response => {
       // eslint-disable-next-line camelcase
       data.last_id = response
       url = client.url(endpoint, data)
@@ -173,16 +181,24 @@ function SyncanoClient(instanceName = required('instanceName'), options = {}) {
   return client
 
   function client(endpoint = required('endpoint'), data = {}, options = {}) {
-    const url = this.url(endpoint)
     const method = data._method || 'POST'
-    const headers = this.headers(options.headers)
+    const headers = client.headers(options.headers)
+    let url = client.url(endpoint)
+
+    let bodyParams = {}
+    let requestData = data
+    delete bodyParams['_method']
+
+    if (method === 'GET') {
+      requestData = {}
+      bodyParams = data
+    }
 
     const transformRequest = [
       function(data) {
-        if (data instanceof window.FormData) {
+        if (data instanceof FormData) {
           return data
         }
-
         return JSON.stringify(data)
       }
     ]
@@ -190,7 +206,8 @@ function SyncanoClient(instanceName = required('instanceName'), options = {}) {
     return fetch({
       method: method,
       url,
-      data: method !== 'POST' ? {params: data} : data,
+      params: bodyParams,
+      data: requestData,
       headers,
       transformRequest,
       ...options

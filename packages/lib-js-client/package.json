@@ -18,14 +18,14 @@
     "prebuild": "npm run clean",
     "precommit": "lint-staged",
     "postversion": "git push origin $CIRCLE_BRANCH && git push origin $CIRCLE_BRANCH --tags",
-    "build": "webpack && babel src --out-dir lib",
-    "build:watch": "babel src --watch --out-dir lib",
+    "build": "npx webpack && npx babel src --out-dir lib",
+    "build:watch": "npx babel src --watch --out-dir lib",
     "clean": "rm -rf ./dist && rm -rf ./lib",
     "test": "npm run test:unit && npm run test:e2e",
-    "test:base": "cross-env NODE_ENV=test mocha --reporter spec --require babel-register",
-    "test:unit": "npm run test:base -- test/unit.js",
-    "test:e2e": "npm run test:base -- --timeout 30000 --slow 8000 test/e2e.js",
+    "test:unit": "NODE_ENV=test mocha --reporter spec --require babel-register test/unit.js",
     "test:watch": "mocha --watch test/**/*.js --compilers js:babel-register",
+    "test:e2e:main": "npm run test:e2e-single test/e2e/main.test.js",
+    "test:e2e-single": "npx mocha --require babel-register --timeout 100000 --slow 8000",
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js",
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
@@ -38,16 +38,27 @@
       "git add"
     ]
   },
+  "dependencies": {
+    "axios": "^0.17.1"
+  },
   "devDependencies": {
+    "@syncano/test-tools": "0.8.0",
     "axios-mock-adapter": "^1.9.0",
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.1",
     "babel-loader": "^7.1.2",
     "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-dynamic-import-node": "^1.0.2",
+    "babel-plugin-extensible-destructuring": "^4.1.0",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "babel-preset-latest": "^6.24.1",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
@@ -63,7 +74,21 @@
     "standard": "^10.0.3",
     "webpack": "^3.6.0"
   },
-  "dependencies": {
-    "axios": "^0.17.1"
+  "babel": {
+    "plugins": [
+      "add-module-exports",
+      "transform-async-to-generator",
+      "transform-object-rest-spread"
+    ],
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "8"
+          }
+        }
+      ]
+    ]
   }
 }

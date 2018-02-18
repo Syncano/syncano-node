@@ -11,7 +11,24 @@ module.exports = [
       library: 'SyncanoClient'
     },
     module: {
-      rules: [{test: /\.js$/, exclude: /node_modules/, use: ['babel-loader']}]
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              babelrc: false,
+              plugins: [
+                require('babel-plugin-transform-object-rest-spread'),
+                require('babel-plugin-transform-class-properties'),
+                require('babel-plugin-add-module-exports')
+              ],
+              presets: ['env']
+            }
+          }
+        }
+      ]
     },
     plugins: [
       new webpack.LoaderOptionsPlugin({
@@ -38,7 +55,24 @@ module.exports = [
       library: 'SyncanoClient'
     },
     module: {
-      rules: [{test: /\.js$/, exclude: /node_modules/, use: ['babel-loader']}]
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              babelrc: false,
+              plugins: [
+                require('babel-plugin-transform-object-rest-spread'),
+                require('babel-plugin-transform-class-properties'),
+                require('babel-plugin-add-module-exports')
+              ],
+              presets: ['env']
+            }
+          }
+        }
+      ]
     },
     plugins: [
       new webpack.LoaderOptionsPlugin({

@@ -64,7 +64,7 @@ describe('Syncano client units', () => {
 
       axiosMock.onGet(url('users')).reply(200, expected)
 
-      return client.get('users').then(response => {
+      return client.post('users').then(response => {
         assert.deepEqual(response, expected)
       })
     })
@@ -125,10 +125,11 @@ describe('Syncano client units', () => {
 
     it('resolves with valid output', () => {
       const expected = {hello: 'world'}
+      const params = {test: '123'}
 
-      axiosMock.onGet(url('users')).reply(200, expected)
+      axiosMock.onGet(url('users'), params).reply(200, expected)
 
-      return client.get('users').then(response => {
+      return client.get('users', params).then(response => {
         assert.deepEqual(response, expected)
       })
     })
@@ -286,7 +287,7 @@ describe('Syncano client units', () => {
         objects: [{id: 42}]
       }
 
-      axiosMock.onGet(url('chat/message/history', data)).reply(200, response)
+      axiosMock.onGet(url('chat/message/history'), data).reply(200, response)
 
       return assert.eventually.equal(
         client.setLastId('chat/message', data),
