@@ -1,6 +1,6 @@
 {
   "name": "@syncano/cli",
-  "version": "0.9.0",
+  "version": "0.9.3",
   "description": "CLI for Syncano",
   "author": "Maciej Kucharz",
   "license": "MIT",
@@ -32,11 +32,11 @@
     "url": "https://github.com/Syncano/syncano-node/issues"
   },
   "dependencies": {
-    "@syncano/core": "0.9.0",
-    "@syncano/template-project-empty": "0.9.0",
-    "@syncano/template-project-hello": "0.9.0",
-    "@syncano/template-socket-es6": "0.9.0",
-    "@syncano/template-socket-vanilla": "0.9.0",
+    "@syncano/core": "0.9.3",
+    "@syncano/template-project-empty": "0.9.3",
+    "@syncano/template-project-hello": "0.9.3",
+    "@syncano/template-socket-es6": "0.9.3",
+    "@syncano/template-socket-vanilla": "0.9.3",
     "analytics-node": "^3.1.1",
     "archiver": "^2.1.0",
     "axios": "^0.17.1",
@@ -75,7 +75,7 @@
     "ws": "^4.0.0"
   },
   "devDependencies": {
-    "@syncano/test-tools": "0.9.0",
+    "@syncano/test-tools": "0.9.3",
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dynamic-import-node": "^1.0.2",

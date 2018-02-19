@@ -1,7 +1,7 @@
 {
   "name": "@syncano/template-project-hello",
   "description": "Hello World Project Template",
-  "version": "0.9.0",
+  "version": "0.9.3",
   "license": "MIT",
   "main": "index.js",
   "files": [
