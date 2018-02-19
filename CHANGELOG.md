@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.9.0"></a>
+# [0.9.0](https://github.com/Syncano/syncano-node/compare/v0.8.0...v0.9.0) (2018-02-19)
+
+
+### Bug Fixes
+
+* domain names ([ad9d018](https://github.com/Syncano/syncano-node/commit/ad9d018))
+* for docs icon ([ae83944](https://github.com/Syncano/syncano-node/commit/ae83944))
+* select style ([b7a2a04](https://github.com/Syncano/syncano-node/commit/b7a2a04))
+* **cli:hosting:** fixing bug with hosting sync ([2029cd3](https://github.com/Syncano/syncano-node/commit/2029cd3))
+* **docs:** link ([3df664f](https://github.com/Syncano/syncano-node/commit/3df664f))
+* **hosting:** Fix [#112](https://github.com/Syncano/syncano-node/issues/112). The BrowserRouter flag should be kebab, not snake cased. BREAKING CHANGE ([fee17d0](https://github.com/Syncano/syncano-node/commit/fee17d0))
+* **hosting:** Fix [#112](https://github.com/Syncano/syncano-node/issues/112). The BrowserRouter option should accept true|false in hosting config ([2d2bde6](https://github.com/Syncano/syncano-node/commit/2d2bde6))
+
+
+### Features
+
+* set current version from url in version picker ([65b85d0](https://github.com/Syncano/syncano-node/commit/65b85d0))
+* **cheatsheet:** add version picker ([1fe223c](https://github.com/Syncano/syncano-node/commit/1fe223c))
+* **cookbook:** add version switch ([a79c534](https://github.com/Syncano/syncano-node/commit/a79c534))
+* **docs:** add version switcher ([6dc21fd](https://github.com/Syncano/syncano-node/commit/6dc21fd))
+* **docs:** add version switcher and make small css fixes ([a6cfda1](https://github.com/Syncano/syncano-node/commit/a6cfda1))
+* **docs:** versioning ([83c4829](https://github.com/Syncano/syncano-node/commit/83c4829))
+* **hosting:** Print config after update ([09f159d](https://github.com/Syncano/syncano-node/commit/09f159d))
+* style docs ([06dc50b](https://github.com/Syncano/syncano-node/commit/06dc50b))
+* style version input ([0cb5494](https://github.com/Syncano/syncano-node/commit/0cb5494))
+* update select style ([e6a8aae](https://github.com/Syncano/syncano-node/commit/e6a8aae))
+
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://github.com/Syncano/syncano-node/compare/v0.7.1...v0.8.0) (2018-02-09)
 

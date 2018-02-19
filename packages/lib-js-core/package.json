@@ -1,6 +1,6 @@
 {
   "name": "@syncano/core",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "A library to intereact with the Syncano API on a server side.",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
@@ -37,7 +37,7 @@
     "node-fetch": "2.0.0-alpha.9"
   },
   "devDependencies": {
-    "@syncano/test-tools": "0.8.0",
+    "@syncano/test-tools": "0.9.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-plugin-add-module-exports": "^0.2.1",
