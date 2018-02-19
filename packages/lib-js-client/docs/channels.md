@@ -30,11 +30,11 @@ endpoints:
   global-messages:
     channel: global-messages
   create-message:
-    file: scripts/create-message.js
+    file: src/create-message.js
 ```
 
 ```js
-// chat/scripts/create-message.js
+// chat/src/create-message.js
 import {data, channel} from 'syncano-server'
 
 data.messages
@@ -55,17 +55,17 @@ endpoints:
   private-messages:
     channel: private-messages.{room}
   create-message:
-    file: scripts/create-message.js
+    file: src/create-message.js
 ```
 
 ```js
-// chat/scripts/create-message.js
+// chat/src/create-message.js
 import {data, channel} from 'syncano-server'
 
 data.messages
   .create({
     room_id: ARGS.room_id,
-    content: ARGS.content, 
+    content: ARGS.content,
     user: META.user.id
   })
   .then(message => {
@@ -89,10 +89,10 @@ endpoints:
   get:
     channel: notifications.{user}
   notify:
-    file: scripts/notify.js
+    file: src/notify.js
 ```
 
-Then you can subscribe to channel by passing socket and endpoint name. User channels require `user_key` to be send in payload. 
+Then you can subscribe to channel by passing socket and endpoint name. User channels require `user_key` to be send in payload.
 
 ```js
 s.subscribe('notifications/get', {user_key: 'USER_KEY'}, notification => {
@@ -100,12 +100,12 @@ s.subscribe('notifications/get', {user_key: 'USER_KEY'}, notification => {
 })
 ```
 
-To publish to the user channel, you have to know it's `username`. 
+To publish to the user channel, you have to know it's `username`.
 
 > In channel name `notifications.{user}` - `{user}` must always be `username`, not id or any other property.
 
 ```js
-// notifications/scripts/notify.js
+// notifications/src/notify.js
 import {data, channel} from 'syncano-server'
 
 data.notifications

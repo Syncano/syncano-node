@@ -15,7 +15,7 @@ When you do a `npx syncano-cli init` from the Syncano CLI, a `syncano` folder wi
 |syncano.yml|This file contains an Instance configuration. It lists Instance variables and plugins used by the CLI. It's in the root of `syncano` directory.|
 |package.json|You can use `npm` packages within your Syncano scripts. `npm i <package> --save-dev` and require them as you would in a regular project.|
 |`/socket/` directory|Each socket installed in your Instance will have its own directory. It will contain:|
-|`/scripts/`directory|Will contain all the scripts that are executed by endpoints defined in the `socket.yml` file|
+|`/src/`directory|Will contain all the scripts that are executed by endpoints defined in the `socket.yml` file|
 |socket.yml|Socket configuration file. It contains socket specific information like:<br/>-endpoints definitions<br/>-class schema configuration<br/>-hosting configuration|
 
 
