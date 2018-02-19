@@ -1,6 +1,6 @@
 {
   "name": "@syncano/client",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Interact with your Syncano Sockets.",
   "main": "lib/index.js",
   "unpkg": "dist/syncano-client.min.js",
@@ -17,7 +17,6 @@
     "prepublish": "npm run build",
     "prebuild": "npm run clean",
     "precommit": "lint-staged",
-    "postversion": "git push origin $CIRCLE_BRANCH && git push origin $CIRCLE_BRANCH --tags",
     "build": "npx webpack && npx babel src --out-dir lib",
     "build:watch": "npx babel src --watch --out-dir lib",
     "clean": "rm -rf ./dist && rm -rf ./lib",
