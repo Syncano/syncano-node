@@ -1,9 +1,20 @@
+import http from 'https'
 import logger from 'debug'
 import pjson from '../package.json'
 import nodeFetch from 'node-fetch'
 import {checkStatus, parseJSON} from './utils'
 
 const debug = logger('core:query-builder')
+
+const generalOptions = {
+  compress: true,
+  agent: new http.Agent({
+    protocol: 'https',
+    keepAlive: true,
+    keepAliveMsecs: 5000,
+    maxSockets: 60
+  })
+}
 
 export default class QueryBuilder {
   constructor (instance) {
@@ -32,7 +43,7 @@ export default class QueryBuilder {
     return `${this._getSyncanoURL()}/instances/${instanceName}`
   }
 
-  fetch (url, options, headers = {}) {
+  fetch (url, options = {}, headers = {}) {
     const headersToSend = Object.assign(
       {
         'content-type': 'application/json',
@@ -41,21 +52,23 @@ export default class QueryBuilder {
       headers
     )
 
+    const fetchOptions = Object.assign({}, generalOptions, options)
     return nodeFetch(url, {
       headers: headersToSend,
-      ...options
+      ...fetchOptions
     })
       .then(parseJSON)
       .then(checkStatus)
   }
 
-  nonInstanceFetch (url, options, headers) {
+  nonInstanceFetch (url, options = {}, headers) {
+    const fetchOptions = Object.assign({}, generalOptions, options)
     return nodeFetch(url, {
       headers: {
         'content-type': 'application/json',
         ...headers
       },
-      ...options
+      ...fetchOptions
     })
       .then(parseJSON)
       .then(checkStatus)

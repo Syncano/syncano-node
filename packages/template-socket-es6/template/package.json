@@ -1,12 +1,12 @@
 {
   "license": "MIT",
-  "dependencies": {
-    "@syncano/core": "latest"
-  },
   "scripts": {
-    "build": "npm install && npm run build:src && npm run build:env",
+    "build": "npm run build:src && npm run build:env",
     "build:src": "sh ./bin/compile",
     "build:env": "sh ./bin/compile-env"
+  },
+  "dependencies": {
+    "@syncano/core": "latest"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

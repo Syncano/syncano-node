@@ -1,5 +1,6 @@
 {
   "lerna": "2.4.0",
+  "version": "0.9.3",
   "packages": [
     "packages/*",
     "packages/registry/syncano/organization",
@@ -10,19 +11,21 @@
       "exact": true
     },
     "publish": {
+      "publish": {
+        "allowBranch": "master"
+      },
       "exact": true,
       "ignore": [
         "@syncano/registry*"
       ]
     }
   },
-  "version": "0.8.0",
   "changelog": {
     "repo": "syncano/syncano-node",
     "labels": {
       "feature": ":rocket: Feature",
       "bug": ":bug: Bug Fix",
-      "docs": ":docs: Documentation"
+      "docs": ":book: Documentation"
     },
     "cacheDir": ".changelog"
   }

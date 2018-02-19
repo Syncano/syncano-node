@@ -4,6 +4,8 @@
     - [Hello world](/basics/hello-world)
     - [Response with custom HTTP status code](/basics/custom-http-status-code)
     - [Response with custom MIME type](/basics/custom-mime-type)
+    - [File upload](/basics/file-upload)
+    - [Update your socket to 0.8+ version](/basics/update)
   - Database
     - [Creating objects](/database/creating-objects)
   - Users & Groups

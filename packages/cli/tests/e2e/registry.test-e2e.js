@@ -38,7 +38,7 @@ describe('[E2E] CLI Registry', function () {
       .run(`${cliLocation} create ${createdSocketName}`)
       .on(/Choose template for your Socket/)
       .respond('\n')
-      .stdout(/Your Socket configuration is stored at/)
+      .code(0)
       .end(done)
   })
 

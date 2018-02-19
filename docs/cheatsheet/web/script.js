@@ -3,7 +3,7 @@
   const tags = document.querySelectorAll('[data-tag]')
 
   tabs.forEach(tab => {
-    const activeTab = location.hash.substr(1) || 'socket'
+    const activeTab = location.hash.substr(1) || 'client'
 
     tab.addEventListener('click', toggleTab)
 
@@ -52,7 +52,7 @@
       socket: 'Socket'
     }[name]
   }
-  
+
   const $select = document.querySelector('[data-version]')
   const $options = document.querySelectorAll(`[data-version] option`)
   const version = window.location.host.match(/^[0-9a-z\.]+/)

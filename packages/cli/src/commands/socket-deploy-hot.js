@@ -22,7 +22,7 @@ export default class SocketDeployCmd {
     this.session = context.session
     this.Socket = context.Socket
     this.registry = new context.Registry()
-    this.firstRun = true
+    this.firstRun = []
 
     this.mainSpinner = new GlobalSpinner(p(3)(`${format.grey('waiting...')}`))
   }
@@ -125,12 +125,15 @@ export default class SocketDeployCmd {
     }
 
     try {
-      const updateStatus = await socket.update({ config })
+      const updateEnv = !(this.firstRun[socket.name])
+      const updateStatus = await socket.update({ config, updateEnv })
 
       spinner.stop()
       SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
       await updateEnds()
+      this.firstRun[socket.name] = true
     } catch (err) {
+      debug(err)
       spinner.stop()
       if (err instanceof CompileError) {
         const status = format.red('    compile error:')

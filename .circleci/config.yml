@@ -198,6 +198,18 @@ jobs:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e
 
+  test_e2e_client:
+    name: E2E Client Tests
+    docker:
+      - image: circleci/node:latest
+
+    working_directory: ~/repo/packages/lib-js-client/
+
+    steps:
+      - restore_cache:
+          key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: npm run test:e2e:main
+
   test_e2e_registry:
     name: E2E Tests
     docker:
@@ -309,8 +321,11 @@ jobs:
       - run: echo 'export SYNCANO_PROJECT_INSTANCE=syncano-docs-${CIRCLE_BRANCH}' >> $BASH_ENV
       - run: node packages/cli/lib/cli.js deploy
       - run: node packages/cli/lib/cli.js hosting sync docs
+      - run: node packages/cli/lib/cli.js hosting config docs --cname ${CIRCLE_BRANCH}-docs.syncano.io
       - run: node packages/cli/lib/cli.js hosting sync cookbook
+      - run: node packages/cli/lib/cli.js hosting config cookbook --cname ${CIRCLE_BRANCH}-cookbook.syncano.io
       - run: node packages/cli/lib/cli.js hosting sync cheatsheet
+      - run: node packages/cli/lib/cli.js hosting config cheatsheet --cname ${CIRCLE_BRANCH}-cheatsheet.syncano.io
 
   deploy_test_registry:
     name: Deploying Test Registry

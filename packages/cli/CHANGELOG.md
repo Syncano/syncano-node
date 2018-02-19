@@ -3,13 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.9.3"></a>
+## [0.9.3](https://github.com/Syncano/syncano-node/compare/v0.9.1...v0.9.3) (2018-02-19)
+
+
+
+
+**Note:** Version bump only for package @syncano/cli
+
+<a name="0.9.0"></a>
+# [0.9.0](https://github.com/Syncano/syncano-node/compare/v0.8.0...v0.9.0) (2018-02-19)
+
+
+### Bug Fixes
+
+* **cli:hosting:** fixing bug with hosting sync ([2029cd3](https://github.com/Syncano/syncano-node/commit/2029cd3))
+* **hosting:** Fix [#112](https://github.com/Syncano/syncano-node/issues/112). The BrowserRouter flag should be kebab, not snake cased. BREAKING CHANGE ([fee17d0](https://github.com/Syncano/syncano-node/commit/fee17d0))
+* **hosting:** Fix [#112](https://github.com/Syncano/syncano-node/issues/112). The BrowserRouter option should accept true|false in hosting config ([2d2bde6](https://github.com/Syncano/syncano-node/commit/2d2bde6))
+
+
+### Features
+
+* **hosting:** Print config after update ([09f159d](https://github.com/Syncano/syncano-node/commit/09f159d))
+
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://github.com/Syncano/syncano-node/compare/v0.7.1...v0.8.0) (2018-02-09)
 
 
 ### Bug Fixes
 
-* **cli:e2e:** turn on forgoten tests ([edbb9e9](https://github.com/Syncano/syncano-node/commit/edbb9e9))
+* **cli:e2e:** turn on forgotten tests ([edbb9e9](https://github.com/Syncano/syncano-node/commit/edbb9e9))
 * **cli:e2e:registry:** fixing tests ([e528943](https://github.com/Syncano/syncano-node/commit/e528943))
 * **cli:init:** createInstance bug ([#121](https://github.com/Syncano/syncano-node/issues/121)) ([e3718bb](https://github.com/Syncano/syncano-node/commit/e3718bb))
 * added missing await ([#126](https://github.com/Syncano/syncano-node/issues/126)) ([d78b1ca](https://github.com/Syncano/syncano-node/commit/d78b1ca))

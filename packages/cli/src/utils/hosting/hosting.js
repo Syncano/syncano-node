@@ -17,16 +17,18 @@ const { debug } = logger('utils-hosting')
 
 class HostingFile {
   loadRemote (fileRemoteData) {
+    debug('loadRemote')
     this.id = fileRemoteData.id
     this.instanceName = fileRemoteData.instanceName
-    this.path = fileRemoteData.path
+    this.path = decodeURIComponent(fileRemoteData.path)
     this.checksum = fileRemoteData.checksum
     this.size = fileRemoteData.size
     return this
   }
   loadLocal (fileLocalData) {
-    this.localPath = fileLocalData.path
-    this.path = path.basename(this.localPath)
+    debug('loadLocal')
+    this.localPath = fileLocalData.localPath
+    this.path = fileLocalData.path
     this.checksum = md5(fs.readFileSync(this.localPath))
     this.size = fs.statSync(this.localPath).size
     return this
@@ -186,7 +188,6 @@ class Hosting {
   // list all hostings (mix of locally definde and installed on server)
   static async list (socket) {
     debug('list()')
-    // const localHostings = Hosting.listLocal(socket);
     if (!socket) {
       const projectHostings = Hosting.listFromProject()
       debug('projectHostings', projectHostings)
@@ -276,20 +277,21 @@ class Hosting {
     return `https://${this.name}--${session.project.instance}.${this.hostingHost}`
   }
 
-  getLocalFilePath (file) {
-    debug('getLocalFilePath')
-    if (!file) return null
-    return file.localPath.replace(this.path, '')
+  encodePath (pathToEncode) {
+    return pathToEncode.split(path.sep).map(part => encodeURIComponent(part)).join(path.sep)
+  }
+
+  decodePath (pathToEncode) {
+    return pathToEncode.split('/').map(part => decodeURIComponent(part)).join('/')
   }
 
   // Verify local file if it should be created or updated
   async getFilesToUpload (file, remoteFiles) {
     debug('getFilesToUpload')
-    const localHostingFilePath = this.getLocalFilePath(file)
-    const fileToUpdate = _.find(remoteFiles, { path: localHostingFilePath })
+    const fileToUpdate = _.find(remoteFiles, { path: file.path })
     const payload = new FormData()
     payload.append('file', fs.createReadStream(file.localPath))
-    payload.append('path', localHostingFilePath)
+    payload.append('path', this.encodePath(file.path))
 
     let singleFile = null
 
@@ -300,17 +302,16 @@ class Hosting {
       // Check if checksum of the local file is the same as remote one
       if (remoteChecksum === localChecksum) {
         try {
-          singleFile = await session.connection.hosting.getFile(this.name, fileToUpdate.id)
-          echo(6)(`${format.green('✓')} File skipped: ${format.dim(localHostingFilePath)}`)
+          echo(6)(`${format.green('✓')} File skipped: ${format.dim(file.path)}`)
         } catch (err) {
           error(err)
         }
       } else {
         try {
           singleFile = await session.connection.hosting.updateFile(this.name, fileToUpdate.id, payload)
-          echo(6)(`${format.green('✓')} File updated: ${format.dim(localHostingFilePath)}`)
+          echo(6)(`${format.green('✓')} File updated: ${format.dim(file.path)}`)
         } catch (err) {
-          echo(`Error while syncing (updating) ${localHostingFilePath}`)
+          echo(`Error while syncing (updating) ${file.path}`)
           debug(err.response.data)
         }
       }
@@ -318,7 +319,7 @@ class Hosting {
       // Adding (first upload) file
       try {
         singleFile = await session.connection.hosting.uploadFile(this.name, payload)
-        echo(6)(`${format.green('✓')} File added:   ${format.dim(localHostingFilePath)}`)
+        echo(6)(`${format.green('✓')} File added:   ${format.dim(file.path)}`)
       } catch (err) {
         echo(`Error while syncing (creating) ${file.path}`)
         debug(err.response.data)
@@ -326,6 +327,19 @@ class Hosting {
     }
 
     return singleFile
+  }
+
+  // Verify remote file if it deleted
+  getFilesToDelete (remoteFiles, localFiles) {
+    debug('getFilesToDelete')
+
+    const filesToDelete = remoteFiles.filter(file => !_.find(localFiles, {path: file.path}))
+
+    return filesToDelete.map(async file => {
+      const singleFile = await session.connection.hosting.deleteFile(this.name, file.id)
+      echo(6)(`${format.green('✓')} File deleted: ${format.dim(file.path)}`)
+      return singleFile
+    })
   }
 
   // Files upload report
@@ -339,13 +353,14 @@ class Hosting {
     \t${format.green(this.name)} is available at: ${format.green(this.getURL())}\n`
   }
 
-  async uploadFiles (files) {
+  async uploadFiles (files, params) {
     let uploadedFilesCount = 0
     let uploadedSize = 0
-    const promises = []
+    let promises = []
 
     const localFiles = await this.listLocalFiles()
 
+    // promises for add/update operations
     await localFiles.forEach(file => {
       promises.push(this.getFilesToUpload(file, files))
     })
@@ -355,14 +370,20 @@ class Hosting {
     uploadedSize = 0
     values.forEach(upload => {
       uploadedFilesCount += 1
-      uploadedSize += upload.size
+      uploadedSize += upload ? upload.size : 0
     })
+
+    if (params.delete) {
+      // promises for deleting files
+      await Promise.all(this.getFilesToDelete(files, localFiles))
+    }
+
     return { uploadedFilesCount, uploadedSize }
   }
 
   // Run this to synchronize hosted files
   // first we are getting remote files
-  async syncFiles () {
+  async syncFiles (params) {
     debug('syncFiles()')
 
     if (!fs.existsSync(this.path)) {
@@ -370,7 +391,7 @@ class Hosting {
     }
 
     const remoteFiles = await this.listRemoteFiles()
-    const result = await this.uploadFiles(remoteFiles)
+    const result = await this.uploadFiles(remoteFiles, params)
     return this.generateUploadFilesResult(result)
   }
 
@@ -382,12 +403,12 @@ class Hosting {
       return false
     }
 
-    const localChecksums = await this.listLocalFiles().map((localFile) => ({
-      filePath: this.getLocalFilePath(localFile),
+    const localChecksums = await this.listLocalFiles().map(localFile => ({
+      filePath: localFile.path,
       checksum: localFile.checksum
     }))
 
-    const remoteChecksums = await this.listRemoteFiles().map((remoteFile) => ({
+    const remoteChecksums = await this.listRemoteFiles().map(remoteFile => ({
       filePath: remoteFile.path,
       checksum: remoteFile.checksum
     }))
@@ -400,6 +421,9 @@ class Hosting {
     debug('listRemoteFiles()')
     const files = await session.connection.hosting.listFiles(this.name)
     return Promise.all(files.map(async file => {
+      // TODO: Maybe it should be somehow done in the library not here
+      file.path = this.decodePath(file.path)
+
       const hostingFile = new HostingFile(file)
       return hostingFile.loadRemote(file)
     }))
@@ -411,7 +435,17 @@ class Hosting {
     const localHostingFiles = this.path ? await getFiles(this.path) : []
     if (!Array.isArray(localHostingFiles)) return localHostingFiles
 
-    return localHostingFiles ? localHostingFiles.map((file) => new HostingFile().loadLocal({ path: file })) : []
+    const getLocalPath = (file) => {
+      if (!file) return null
+      return file.replace(this.path, '')
+    }
+
+    return localHostingFiles ? localHostingFiles.map(file => {
+      return new HostingFile().loadLocal({
+        localPath: file,
+        path: getLocalPath(file)
+      })
+    }) : []
   }
 
   async listFiles () {
@@ -419,9 +453,8 @@ class Hosting {
     const listLocalFiles = await this.listLocalFiles()
 
     const files = []
-    listLocalFiles.forEach((localFile) => {
-      const file = localFile
-      const remoteCopy = _.find(remoteFiles, { path: this.getLocalFilePath(file) })
+    listLocalFiles.forEach(file => {
+      const remoteCopy = _.find(remoteFiles, { path: file.path })
 
       if (remoteCopy) {
         file.isUpToDate = file.checksum === remoteCopy.checksum
@@ -442,13 +475,6 @@ class Hosting {
     if (cname) {
       return `http://${cname}`
     }
-  }
-
-  // TODO: filtering hostings (wating for core)
-  static async listRemote (socket) {
-    debug('listRemote')
-    const hostings = await session.connection.hosting.list()
-    return hostings.map((hosting) => new Hosting(hosting.name, socket))
   }
 
   getRemote () {
