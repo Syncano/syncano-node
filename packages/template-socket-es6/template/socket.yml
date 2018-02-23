@@ -24,18 +24,17 @@ endpoints:
         parameters:
           message:
             description: Hello message
-        example: |
-          {
-            "message": "Hello Tyler Durden!"
-          }
+            example: |
+              {
+                "message": "Hello Tyler Durden!"
+              }
       fail:
         exit_code: 400
         description: Failed
         parameters:
           message:
             description: Error message
-
-        example: |
-          {
-            "message": "You have to send "firstname" and "lastname" arguments!"
-          }
+            example: |
+              {
+                "message": "You have to send "firstname" and "lastname" arguments!"
+              }
