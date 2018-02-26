@@ -75,6 +75,8 @@
     "test:e2e:cli:socket": "npm run test:e2e-single e2e/cli/socket.test-e2e.js",
     "test:e2e:cli:instance": "npm run test:e2e-single e2e/cli/instance.test-e2e.js",
     "test:e2e-single": "npx mocha --require babel-register --timeout 100000 --slow 8000",
+    "test:e2e:client": "npm-run-all test:e2e:client:*",
+    "test:e2e:client:main": "npm run test:e2e-single e2e/client/main.js",
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
   },
