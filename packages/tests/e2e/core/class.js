@@ -11,7 +11,7 @@ import {
 
 describe('Class', function () {
   let _class = null
-  const testClassName = getRandomString().toLowerCase()
+  const testClassName = getRandomString()
   const instanceName = uniqueInstance()
 
   before(function (done) {
