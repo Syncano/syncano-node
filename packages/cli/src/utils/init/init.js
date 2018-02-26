@@ -64,8 +64,6 @@ class Init {
       this.session.settings.account.addProject(path.join(process.cwd(), 'syncano'), projectParams)
     }
     await this.session.load()
-
-    echo(4)(`Your project is attached to ${format.green(projectParams.instance)} instance now!`)
   }
 
   noConfigFiles () {

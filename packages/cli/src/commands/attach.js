@@ -1,6 +1,7 @@
 import inquirer from 'inquirer'
 
 import logger from '../utils/debug'
+import format from 'chalk'
 import { p, echo } from '../utils/print-tools'
 import genUniqueInstanceName from '../utils/unique-instance'
 import { createInstance } from './helpers/create-instance'
@@ -30,19 +31,31 @@ class Attach {
       if (confirm === false) return process.exit()
     }
 
-    const questions = await this.getQuestions()
-    const { instance } = await inquirer.prompt(questions) || {}
+    let instanceName
+    let instance
 
-    const respInstanceName = instance && instance !== p(2)('Create a new one...') ? instance.trim() : null
-    let instanceName = cmd.instance || respInstanceName
+    if (cmd.createInstance) {
+      instance = await createInstance(cmd.createInstance)
+      instanceName = instance.name
+    } else {
+      const questions = await this.getQuestions()
+      const answer = await inquirer.prompt(questions) || {}
+
+      instanceName = answer.instance &&
+        answer.instance !== p(2)('Create a new one...')
+        ? answer.instance.trim() : null
+    }
 
     if (!instanceName) {
-      instanceName = await this.createNewInstance()
+      instance = await this.createNewInstance()
+      console.log("XXX", instance)
+      instanceName = instance.name
     }
 
     await this.init.addConfigFiles({ instance: instanceName }, this.session.projectPath)
-
+    echo(4)(`Your project is attached to ${format.green(instanceName)} instance now!`)
     echo()
+
     return this.session.load()
   }
 
@@ -57,9 +70,7 @@ class Attach {
       }
     ])
 
-    const instance = await createInstance(instanceName)
-
-    return instance.name
+    return createInstance(instanceName)
   }
 
   async getQuestions () {

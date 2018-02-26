@@ -55,6 +55,8 @@ class InitCmd {
     if (!project && instance) {
       await this.session.checkConnection(instance)
       await this.init.addConfigFiles({ instance })
+      echo(4)(`Your project is attached to ${format.green(instance.name)} instance now!`)
+
       return this.init.createFilesAndFolders()
     }
 
@@ -63,6 +65,8 @@ class InitCmd {
       const newInstance = await createInstance()
 
       await this.init.addConfigFiles({ instance: newInstance.name })
+      echo(4)(`Your project is attached to ${format.green(newInstance.name)} instance now!`)
+
       this.init.createFilesAndFolders()
       return this.session.load()
     }

@@ -1,5 +1,6 @@
 /* global it describe afterEach beforeEach */
 import { expect } from 'chai'
+import format from 'chalk'
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
 import inquirer from 'inquirer'
@@ -16,17 +17,23 @@ describe('[commands] Attach', function () {
   let attach = null
   let prompt = null
   let exitProcess = null
+  let interEcho = null
+  let echo = null
 
   beforeEach(function () {
     attach = new Attach(context)
     attach.session.project = { instance: getRandomString('attach_session_project_instance') }
     prompt = sinon.stub(inquirer, 'prompt')
     exitProcess = sinon.stub(process, 'exit')
+    interEcho = sinon.stub()
+    echo = sinon.stub(printTools, 'echo').callsFake((content) => interEcho)
   })
 
   afterEach(function () {
     inquirer.prompt.restore()
     process.exit.restore()
+    interEcho.reset()
+    printTools.echo.restore()
   })
 
   describe('[run]', function () {
@@ -37,7 +44,7 @@ describe('[commands] Attach', function () {
         addConfigFiles: (configFiles) => configFiles
       })
       sinon.stub(attach.session, 'load')
-      createNewInstance = sinon.stub(attach, 'createNewInstance')
+      createNewInstance = sinon.stub(attach, 'createNewInstance').returns({name: 'newInstance'})
       sinon.stub(attach, 'getQuestions')
     })
 
@@ -84,14 +91,17 @@ describe('[commands] Attach', function () {
       const newInstanceName = getRandomString('attach_newInstanceName')
       const init = new attach.Init()
       const addConfigFiles = sinon.stub(init, 'addConfigFiles')
+      const response = `Your project is attached to ${format.green(newInstanceName)} instance now!`
 
       prompt.returns(Promise.resolve({ instance: printTools.p(2)('Create a new one...') }))
-      createNewInstance.returns(newInstanceName)
+      createNewInstance.returns({name: newInstanceName})
 
       await attach.run([])
 
       init.addConfigFiles.restore()
 
+      sinon.assert.calledWith(echo, 4)
+      sinon.assert.calledWith(interEcho, response)
       sinon.assert.calledWith(addConfigFiles, { instance: newInstanceName })
     })
   })

@@ -47,6 +47,7 @@ const setup = async () => {
     .group('Basics')
     .description('Attach project to the chosen Instance')
     .option('-i, --instance <name>', 'Instance you want to use for your project')
+    .option('-c, --create-instance <name>', 'Create instance you want to use for your project')
     .action(async (...options) => {
       trackAndDebug(options)
       session.isAuthenticated()
