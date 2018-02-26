@@ -30,7 +30,7 @@ describe('add', function () {
   const firstSocket = generateSocket()
   const secondSocket = generateSocket()
 
-  const {account} = Syncano({meta})
+  const {account} = new Syncano({meta})
 
   before(function (done) {
     Promise.all([

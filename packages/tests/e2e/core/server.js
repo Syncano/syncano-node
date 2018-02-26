@@ -1,7 +1,8 @@
 /* global it describe */
 import {expect} from 'chai'
-import pjson from '../../package.json'
-import Server from '../../src'
+
+import pjson from '../../../lib-js-core/package.json'
+import Server from '../../../lib-js-core/src'
 
 describe('Server', function () {
   it('get major version', async () => {

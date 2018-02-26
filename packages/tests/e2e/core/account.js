@@ -1,5 +1,6 @@
+/* global describe it before */
 import {expect} from 'chai'
-import Server from '../../src'
+import Server from '../../../lib-js-core/src'
 
 describe('Account', function () {
   let account = null

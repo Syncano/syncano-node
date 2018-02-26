@@ -1,5 +1,4 @@
 /* global describe it */
-import path from 'path'
 import {
   nixt,
   deleteInstance,
@@ -7,7 +6,7 @@ import {
   uniqueInstance
 } from '@syncano/test-tools'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
+import {cliLocation} from '../utils'
 
 describe('[E2E] CLI Instance', function () {
   const testNixt = () => nixt()

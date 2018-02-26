@@ -10,9 +10,7 @@ import {
   uniqueInstance
 } from '@syncano/test-tools'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
-const configTestTemplate = path.join(__dirname, './assets/sockets/hello-config')
-const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
+import {cliLocation, projectTestTemplate, configTestTemplate} from '../utils'
 
 describe('[E2E] CLI Config', function () {
   let testInstance = uniqueInstance()

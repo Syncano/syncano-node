@@ -9,8 +9,7 @@ import {
   uniqueInstance
 } from '@syncano/test-tools'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
-const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
+import {cliLocation, projectTestTemplate, hostingAssets} from '../utils'
 
 describe('[E2E] CLI Hosting', function () {
   let testInstance = uniqueInstance()
@@ -23,7 +22,6 @@ describe('[E2E] CLI Hosting', function () {
     .cwd(path.join(testsLocation, testInstance))
 
   const copyHosting = () => {
-    const hostingAssets = path.join(__dirname, './assets/hosting_test')
     fs.copySync(hostingAssets, path.join(testsLocation, testInstance, 'hosting'))
   }
 
@@ -48,7 +46,7 @@ describe('[E2E] CLI Hosting', function () {
 
   it('can add hosting with folder outside of syncano folder', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting add ../../tests/e2e/assets/hosting_test`)
+      .run(`${cliLocation} hosting add ${hostingAssets}`)
       .on(/Set hosting's name/)
       .respond(`${hostingName2}\n`)
       .on(/Set CNAME/)

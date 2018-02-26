@@ -11,8 +11,7 @@ import {
   createdSocketName
 } from '@syncano/test-tools'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
-const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
+import {cliLocation, projectTestTemplate} from '../utils'
 
 describe('[E2E] CLI Socket', function () {
   let testInstance = uniqueInstance()

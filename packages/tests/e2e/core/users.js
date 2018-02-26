@@ -1,11 +1,17 @@
 /* globals it describe before after */
 import {expect} from 'chai'
-import Server from '../../src'
-import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
+
+import {
+  uniqueInstance,
+  deleteInstance,
+  createInstance
+} from '@syncano/test-tools'
+
+import Server from '../../../lib-js-core/src'
 
 describe('Users', function () {
   let users
-  const instanceName = getRandomString()
+  const instanceName = uniqueInstance()
 
   before(function () {
     const server = new Server({
@@ -18,10 +24,10 @@ describe('Users', function () {
     })
     users = server.users
 
-    return createTestInstance(instanceName)
+    return createInstance(instanceName)
   })
 
-  after(() => deleteTestInstance(instanceName))
+  after(() => deleteInstance(instanceName))
 
   it('can\'t log in with wrong credentials', async () => {
     const credentials = {
