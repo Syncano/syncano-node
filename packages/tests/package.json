@@ -13,8 +13,8 @@
   },
   "engineStrict": true,
   "dependencies": {
-    "@syncano/core": "0.8.0",
-    "@syncano/test-tools": "0.8.0",
+    "@syncano/core": "0.9.3",
+    "@syncano/test-tools": "0.9.3",
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dynamic-import-node": "^1.0.2",

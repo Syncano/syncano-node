@@ -12,3 +12,4 @@ coverage.lcov
 .envrc
 .vscode
 *.log
+.changelog
