@@ -29,9 +29,7 @@ export default () => {
         background: faker.internet.color(),
         url: 'https://cdn.rawgit.com/eyedea-io/syncano-socket-user-auth/9efd5f6a/icon.svg'
       },
-      keywords: [
-        'facebook', 'social media'
-      ],
+      keywords: '["facebook", "social media"]',
       private: true,
       config: {
         'name': 'registry',

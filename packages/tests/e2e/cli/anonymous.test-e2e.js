@@ -1,14 +1,11 @@
 /* global describe it before after */
-import path from 'path'
+import {cliLocation, projectTestTemplate} from '../utils'
 import {
   nixt,
   deleteInstance,
   uniqueInstance,
   createProject
 } from '@syncano/test-tools'
-
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
-const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
 
 // Tests
 describe('CLI Anonymous User', function () {

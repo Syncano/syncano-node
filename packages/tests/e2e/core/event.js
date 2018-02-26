@@ -1,13 +1,19 @@
 /* global it describe before after */
 import {expect} from 'chai'
-import Server from '../../src'
-import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
+import {
+  getRandomString,
+  uniqueInstance,
+  deleteInstance,
+  createInstance
+} from '@syncano/test-tools'
+
+import Server from '../../../lib-js-core/src'
 
 describe('Event', function () {
   let event = null
   const testEventName = getRandomString()
   const testSocketName = getRandomString()
-  const instanceName = getRandomString()
+  const instanceName = uniqueInstance()
 
   const ctx = {
     meta: {
@@ -17,7 +23,7 @@ describe('Event', function () {
   }
 
   before(function (done) {
-    createTestInstance(instanceName)
+    createInstance(instanceName)
       .then(instanceObj => {
         ctx.meta.instance = instanceObj.name
         event = new Server(ctx).event
@@ -33,7 +39,7 @@ describe('Event', function () {
   })
 
   after(function (done) {
-    deleteTestInstance(instanceName)
+    deleteInstance(instanceName)
       .then(() => {
         done()
       })

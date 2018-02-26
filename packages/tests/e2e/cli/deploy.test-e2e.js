@@ -11,8 +11,7 @@ import {
   getRandomString
 } from '@syncano/test-tools'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
-const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
+import {cliLocation, projectTestTemplate} from '../utils'
 
 describe('[E2E] CLI Deploy', function () {
   let testInstance = uniqueInstance()
@@ -70,7 +69,6 @@ describe('[E2E] CLI Deploy', function () {
   it('can deploy with instance creation', function (done) {
     let testInstance = uniqueInstance()
 
-    const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
     const moveTestProject = (template) => {
       fs.copySync(template, path.join(testsLocation, testInstance))
     }
@@ -90,7 +88,6 @@ describe('[E2E] CLI Deploy', function () {
   it('can\'t deploy with instance creation if instance already exist', function (done) {
     let testInstance = uniqueInstance()
 
-    const projectTestTemplate = path.join(__dirname, './assets/project/empty/')
     const moveTestProject = (template) => {
       fs.copySync(template, path.join(testsLocation, testInstance))
     }

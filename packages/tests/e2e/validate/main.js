@@ -1,6 +1,6 @@
 /* global describe it */
 import {assert} from 'chai'
-import Validator from '../src'
+import Validator from '../../../lib-js-validate/src'
 import {generateContext, generateResponse} from './utils'
 
 describe('Validator', function () {

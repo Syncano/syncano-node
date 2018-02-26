@@ -4,9 +4,15 @@ import {join} from 'path'
 import FormData from 'form-data'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import Server from '../../src'
-import {NotFoundError} from '../../src/errors'
-import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
+
+import Server from '../../../lib-js-core/src'
+import {NotFoundError} from '../../../lib-js-core/src/errors'
+import {
+  uniqueInstance,
+  getRandomString,
+  deleteInstance,
+  createInstance
+} from '@syncano/test-tools'
 
 chai.use(chaiAsPromised)
 chai.should()
@@ -18,7 +24,7 @@ describe('Data', function () {
   let field_string = getRandomString() // eslint-disable-line camelcase
   let field_integer = 182 // eslint-disable-line camelcase
   const testClassName = getRandomString()
-  const instanceName = getRandomString()
+  const instanceName = uniqueInstance()
 
   before(function () {
     const server = new Server({
@@ -33,7 +39,7 @@ describe('Data', function () {
     data = server.data
     users = server.users
 
-    return createTestInstance(instanceName).then(() =>
+    return createInstance(instanceName).then(() =>
       server._class.create({name: testClassName, schema: getSchema()})
     )
   })
@@ -42,7 +48,7 @@ describe('Data', function () {
     run = () => data[testClassName]
   })
 
-  after(() => deleteTestInstance(instanceName))
+  after(() => deleteInstance(instanceName))
 
   afterEach(() => run().delete())
 

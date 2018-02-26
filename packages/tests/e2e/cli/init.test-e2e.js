@@ -6,17 +6,21 @@ import {
   testsLocation,
   cleanUpAccount,
   returnTestGlobals,
-  createTempEmail
+  createTempEmail,
+  uniqueInstance,
+  createProject,
+  deleteInstance
 } from '@syncano/test-tools'
 
-import uniqueInstance from '../../src/utils/unique-instance'
+import {cliLocation, projectTestTemplate} from '../utils'
 
-const cliLocation = path.join(process.cwd(), 'lib/cli.js')
-const { email, password, syncanoYmlPath, instance } = returnTestGlobals()
+const { email, password, syncanoYmlPath } = returnTestGlobals()
 const tempPass = Date.now()
 const tempEmail = createTempEmail(process.env.E2E_CLI_TEMP_EMAIL, tempPass)
 
 describe('[E2E] CLI User', function () {
+  let testInstance = uniqueInstance()
+
   before(cleanUpAccount)
   after(cleanUpAccount)
 
@@ -25,13 +29,15 @@ describe('[E2E] CLI User', function () {
 
   it('can run cli command', function (done) {
     testNixt()
-      .run('node lib/cli.js')
+      .cwd(testsLocation)
+      .run(`${cliLocation}`)
       .stdout(/Usage: cli \[options\] \[command\]/)
       .end(done)
   })
 
   it('can run cli init with existing account', function (done) {
     testNixt()
+      .cwd(testsLocation)
       .run(`${cliLocation} init`)
       .on(/Your e-mail/)
       .respond(`${email}\n`)
@@ -59,8 +65,10 @@ describe('[E2E] CLI User', function () {
 
   it('can run cli init --instance with existing account', function (done) {
     testNixt()
+      .before(() => createProject(testInstance, projectTestTemplate))
+      .after(() => deleteInstance(testInstance))
       .cwd(testsLocation)
-      .run(`${cliLocation} init --instance ${instance}`)
+      .run(`${cliLocation} init --instance ${testInstance}`)
       .on(/Your e-mail/)
       .respond(`${email}\n`)
       .on(/Password/)
@@ -69,7 +77,7 @@ describe('[E2E] CLI User', function () {
       .respond('\n')
       .stdout(/Project has been created from/)
       .match(syncanoYmlPath, /auth_key/)
-      .match(syncanoYmlPath, /instance/)
+      .match(syncanoYmlPath, new RegExp(testInstance))
       .unlink(syncanoYmlPath)
       .end(done)
   })

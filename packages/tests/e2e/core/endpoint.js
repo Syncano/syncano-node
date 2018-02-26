@@ -1,11 +1,15 @@
 /* global describe before after */
-import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
+import {
+  uniqueInstance,
+  deleteInstance,
+  createInstance
+} from '@syncano/test-tools'
 
 describe('Endpoint', function () {
-  const instanceName = getRandomString()
+  const instanceName = uniqueInstance()
 
   before(function (done) {
-    createTestInstance(instanceName)
+    createInstance(instanceName)
       .then(instanceObj => {
         done()
       })
@@ -19,7 +23,7 @@ describe('Endpoint', function () {
   })
 
   after(function (done) {
-    deleteTestInstance(instanceName).then(() => {
+    deleteInstance(instanceName).then(() => {
       done()
     })
   })

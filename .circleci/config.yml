@@ -179,24 +179,24 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/lib-js-validate/
+    working_directory: ~/repo/packages/tests/
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e
+      - run: npm run test:e2e:validate
 
   test_e2e_core:
     name: E2E Tests
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/lib-js-core/
+    working_directory: ~/repo/packages/tests/
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e
+      - run: npm run test:e2e:core
 
   test_e2e_client:
     name: E2E Client Tests
@@ -215,84 +215,96 @@ jobs:
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/packages/tests
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} npm run test:e2e:registry
+      - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} npm run test:e2e:cli:registry
 
   test_e2e_hosting:
     name: E2E Tests
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/packages/tests
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e:hosting
+      - run: npm run test:e2e:cli:hosting
+
+  # test_e2e_init:
+  #   name: E2E Tests
+  #   docker:
+  #     - image: circleci/node:latest
+  #
+  #   working_directory: ~/repo/packages/tests
+  #
+  #   steps:
+  #     - restore_cache:
+  #         key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
+  #     - run: npm run test:e2e:cli:init
 
   test_e2e_socket:
     name: E2E Tests
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/packages/tests
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e:socket
+      - run: npm run test:e2e:cli:socket
 
   test_e2e_anonymous:
     name: E2E Tests
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/packages/tests
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e:anonymous
+      - run: npm run test:e2e:cli:anonymous
 
   test_e2e_instance:
     name: E2E Tests
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/packages/tests
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e:instance
+      - run: npm run test:e2e:cli:instance
 
   test_e2e_deploy:
     name: E2E Tests
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/packages/tests
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e:deploy
+      - run: npm run test:e2e:cli:deploy
 
   test_e2e_config:
     name: E2E Tests
     docker:
       - image: circleci/node:latest
 
-    working_directory: ~/repo/packages/cli
+    working_directory: ~/repo/packages/tests
 
     steps:
       - restore_cache:
           key: v5-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e:config
+      - run: npm run test:e2e:cli:config
 
   test_lint:
     name: Linter
@@ -440,6 +452,9 @@ workflows:
       - test_e2e_socket:
           requires:
             - build
+      # - test_e2e_init:
+      #     requires:
+      #       - build
       - test_e2e_registry:
           requires:
             - build
@@ -478,6 +493,7 @@ workflows:
             - test_e2e_registry
             - test_e2e_socket
             - test_e2e_hosting
+            # - test_e2e_init
             - test_e2e_core
             - test_e2e_anonymous
             - test_e2e_config
@@ -501,6 +517,7 @@ workflows:
             - test_e2e_registry
             - test_e2e_socket
             - test_e2e_hosting
+            # - test_e2e_init
             - test_e2e_core
             - test_e2e_anonymous
             - test_e2e_config

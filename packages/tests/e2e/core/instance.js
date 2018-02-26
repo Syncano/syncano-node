@@ -1,13 +1,13 @@
 /* globals it describe before */
 /* eslint-disable no-unused-expressions */
 import {expect} from 'chai'
+import {uniqueInstance} from '@syncano/test-tools'
 
-import Server from '../../src'
-import {getRandomString} from '../utils'
+import Server from '../../../lib-js-core/src'
 
 describe('Instance', function () {
   let instance = null
-  const testInstanceName = getRandomString()
+  const testInstanceName = uniqueInstance()
 
   this.timeout(5000)
 

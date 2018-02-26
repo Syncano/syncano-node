@@ -2,12 +2,18 @@
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'
+import fetch from 'node-fetch'
 import chai, {expect} from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import Server from '../../src'
-import fetch from 'node-fetch'
-import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
-import {parseJSON, checkStatus} from '../../src/utils'
+
+import Server from '../../../lib-js-core/src'
+import {parseJSON, checkStatus} from '../../../lib-js-core/src/utils'
+
+import {
+  getRandomString,
+  deleteInstance,
+  createInstance
+} from '@syncano/test-tools'
 
 chai.use(chaiAsPromised)
 chai.should()
@@ -19,13 +25,13 @@ describe.skip('Channel', function () {
   })
 
   before(() =>
-    createTestInstance(instanceName)
+    createInstance(instanceName)
       .then(uploadEnvironment)
       .then(uploadSocket)
       .then(waitForSocket)
   )
 
-  after(() => deleteTestInstance(instanceName))
+  after(() => deleteInstance(instanceName))
 
   describe('#publish()', () => {
     it('can publish to channel', () =>

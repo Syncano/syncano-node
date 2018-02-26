@@ -1,12 +1,18 @@
 /* global it describe before after */
 import {expect} from 'chai'
-import Server from '../../src'
-import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
+import Server from '../../../lib-js-core/src'
+
+import {
+  uniqueInstance,
+  getRandomString,
+  deleteInstance,
+  createInstance
+} from '@syncano/test-tools'
 
 describe('Class', function () {
   let _class = null
-  const testClassName = getRandomString()
-  const instanceName = getRandomString()
+  const testClassName = getRandomString().toLowerCase()
+  const instanceName = uniqueInstance()
 
   before(function (done) {
     const ctx = {
@@ -15,7 +21,7 @@ describe('Class', function () {
         token: process.env.E2E_ACCOUNT_KEY
       }
     }
-    createTestInstance(instanceName)
+    createInstance(instanceName)
       .then(instanceObj => {
         ctx.meta.instance = instanceObj.name
         _class = new Server(ctx)._class
@@ -28,7 +34,7 @@ describe('Class', function () {
   })
 
   after(function (done) {
-    deleteTestInstance(instanceName)
+    deleteInstance(instanceName)
       .then(() => {
         done()
       })
