@@ -13,3 +13,4 @@ coverage.lcov
 .vscode
 *.log
 .changelog
+packages/tests/e2e-tests
