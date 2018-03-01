@@ -61,10 +61,8 @@ See the [Server Lib Reference](/server-lib-reference/installation) for more info
 A very lightweight front-end library that was created to call the endpoints which expose the Syncano Core API endpoints. Configuration is amazingly simple. To use it, add these couple of lines to your front end (js) code:
 
 ```javascript
-<script src="https://unpkg.com/syncano-client"></script>
+<script src="https://unpkg.com/@syncano/client"></script>
 <script>
-  import Syncano from ' @syncano/client';
-
   const s = new SyncanoClient('MY_INSTANCE_NAME')
 
   s.get('my/endpoint')
