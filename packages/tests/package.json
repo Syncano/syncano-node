@@ -1,6 +1,6 @@
 {
   "name": "tests",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "private": true,
   "description": "Syncano Tests",
   "author": "Maciej Kucharz",
@@ -14,8 +14,12 @@
   },
   "engineStrict": true,
   "dependencies": {
-    "@syncano/core": "0.9.3",
-    "@syncano/test-tools": "0.9.3",
+    "@syncano/core": "0.10.0",
+    "@syncano/schema": "0.10.0",
+    "@syncano/test-tools": "0.10.0",
+    "@syncano/validate": "0.10.0",
+    "ajv": "^6.2.0",
+    "ajv-keywords": "^3.1.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dynamic-import-node": "^1.0.2",
@@ -39,13 +43,13 @@
     "mocha": "^5.0.0",
     "mock-fs": "^4.4.2",
     "npm-cli-login": "^0.0.10",
+    "npm-run-all": "^4.1.2",
     "prettier": "^1.7.4",
     "replace": "^0.3.0",
     "rimraf": "^2.6.2",
     "sinon": "^4.1.3",
     "sinon-test": "^2.1.2",
-    "standard": "^10.0.3",
-    "npm-run-all": "^4.1.2"
+    "standard": "^10.0.3"
   },
   "scripts": {
     "precommit": "npm run lint",
@@ -66,6 +70,8 @@
     "test:e2e:core:users": "npm run test:e2e-single e2e/core/users.js",
     "test:e2e:validate": "npm-run-all test:e2e:validate:*",
     "test:e2e:validate:main": "npm run test:e2e-single e2e/validate/main.js",
+    "test:e2e:schema": "npm-run-all test:e2e:schema:*",
+    "test:e2e:schema:main": "npm run test:e2e-single e2e/schema/main.js",
     "test:e2e:cli": "npm-run-all test:e2e:cli:*",
     "test:e2e:cli:init": "npm run test:e2e-single e2e/cli/init.test-e2e.js",
     "test:e2e:cli:anonymous": "npm run test:e2e-single e2e/cli/anonymous.test-e2e.js",
@@ -78,7 +84,7 @@
     "test:e2e-single": "npx mocha --require babel-register --timeout 100000 --slow 8000",
     "test:e2e:client": "npm-run-all test:e2e:client:*",
     "test:e2e:client:main": "npm run test:e2e-single e2e/client/main.js",
-    "lint": "standard --fix --env mocha",
+    "lint": "standard --fix --env mocha e2e",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
   },
   "publishConfig": {

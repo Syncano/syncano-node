@@ -53,8 +53,7 @@ describe('[E2E] CLI Socket', function () {
   it('can list single installed socket with docs', function (done) {
     testNixt()
       .run(`${cliLocation} list hello`)
-      .stdout(/input:/)
-      .stdout(/output:/)
+      .stdout(/endpoint:/)
       .end(done)
   })
 

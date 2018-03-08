@@ -1,4 +1,18 @@
+import isEmpty from 'lodash.isempty'
 import Ajv from 'ajv'
+import installKeywords from 'ajv-keywords'
+import installErrors from 'ajv-errors'
+import {socketSchema} from '@syncano/schema'
+
+function normalise (errors) {
+  return errors.reduce(
+    function (acc, e) {
+      acc[e.dataPath.slice(1)] = [e.message.toUpperCase()[0] + e.message.slice(1)]
+      return acc
+    },
+    {}
+  )
+}
 
 export default class Validator {
   constructor (ctx) {
@@ -8,49 +22,70 @@ export default class Validator {
     this.ctx = ctx
     this.requestData = ctx.args
     this.endpointDefinition = ctx.meta.metadata
-    this.endpointRequestSchema = this.endpointDefinition.parameters
+    this.endpointRequestSchema = this.endpointDefinition.inputs
+  }
+
+  static validateMainSchema (schemaToTest) {
+    const ajv = new Ajv({coerceTypes: true})
+    installKeywords(ajv, ['prohibited', 'switch'])
+
+    // Verify only if we can compile schema
+    if (schemaToTest.endpoints) {
+      Object.keys(schemaToTest.endpoints).forEach(endpoint => {
+        if (schemaToTest.endpoints[endpoint].inputs) {
+          ajv.compile(schemaToTest.endpoints[endpoint].inputs)
+        }
+        if (schemaToTest.endpoints[endpoint].outputs) {
+          ajv.compile(schemaToTest.endpoints[endpoint].outputs)
+        }
+      })
+    }
+
+    Validator.validate(socketSchema, schemaToTest)
   }
 
   static validate (schema, data) {
-    const ajv = new Ajv()
+    const ajv = new Ajv({
+      coerceTypes: true,
+      $data: true,
+      allErrors: true,
+      jsonPointers: true
+    })
+    installKeywords(ajv)
+    installErrors(ajv)
+
     const validate = ajv.compile(schema)
     const valid = validate(data)
 
     if (!valid) {
       const detailsMsg = validate.errors.map(err => {
-        return `     - ${err.message} (${JSON.stringify(err.params)})`
+        return `     - ${err.dataPath} - ${err.message} (${JSON.stringify(err.params)})`
       }).join('\n')
 
       const error = new Error(`\n\n    Validation error:\n${detailsMsg}\n`)
       error.details = validate.errors
+      error.messages = normalise(validate.errors)
       throw error
     }
     return true
   }
 
   async validateRequest () {
-    // if (!this.endpointRequestSchema || !_.isEmpty(this.endpointRequestSchema)) {
-    //   return true
-    // }
-
-    const schema = {
-      type: 'object',
-      properties: this.endpointRequestSchema,
-      additionalProperties: false
+    if (!this.endpointRequestSchema || isEmpty(this.endpointRequestSchema)) {
+      return true
     }
 
-    return Validator.validate(schema, this.requestData)
+    return Validator.validate(this.endpointRequestSchema, this.requestData)
   }
 
   async validateResponse (responseType, response) {
     if (!responseType || !response) {
       throw new Error('You have to specify responseType and response argument!')
     }
-    const responseDefinition = this.endpointDefinition.response[responseType]
-    const responseDefinitionParameters = responseDefinition.parameters
+    const responseSchema = this.endpointDefinition.outputs[responseType]
 
-    const desiredExitCode = responseDefinition.exit_code || 200
-    const desiredMimetype = responseDefinition.mimetype || this.endpointDefinition.response.mimetype || 'application/json'
+    const desiredExitCode = responseSchema.exit_code || 200
+    const desiredMimetype = responseSchema.mimetype || this.endpointDefinition.outputs.mimetype || 'application/json'
 
     // We are not validating non-json repsonses
     if (desiredMimetype !== 'application/json') {
@@ -58,9 +93,9 @@ export default class Validator {
     }
 
     // Should we validate empty schema?
-    // if (!responseDefinitionParameters || !_.isEmpty(responseDefinitionParameters)) {
-    //   return true
-    // }
+    if (!responseSchema || !isEmpty(responseSchema)) {
+      return true
+    }
 
     if (response.code !== desiredExitCode) {
       throw new Error(`Wrong exit code! Desired code is ${desiredExitCode}, got: ${response.code}`)
@@ -70,13 +105,7 @@ export default class Validator {
       throw new Error(`Wrong mimetype! Desired mimetype is ${desiredMimetype}, got: ${response.mimetype}`)
     }
 
-    const schema = {
-      type: 'object',
-      properties: responseDefinitionParameters,
-      additionalProperties: false
-    }
-
-    Validator.validate(schema, response.data)
+    Validator.validate(responseSchema, response.data)
     return response
   }
 }

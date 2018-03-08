@@ -48,7 +48,6 @@ class Attach {
 
     if (!instanceName) {
       instance = await this.createNewInstance()
-      console.log("XXX", instance)
       instanceName = instance.name
     }
 

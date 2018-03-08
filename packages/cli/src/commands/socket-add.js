@@ -7,7 +7,7 @@ import SocketDeployCmd from './socket-deploy'
 
 const { debug } = logger('cmd-socket-install')
 
-export default class SocketInstall {
+export default class SocketAdd {
   constructor (context) {
     this.context = context
     this.session = context.session

@@ -1,0 +1,15 @@
+{
+  "name": "@syncano/template-socket-es6-validate",
+  "description": "ES6 Syncano Socket with arguments validation Template",
+  "version": "0.10.0",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "template"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "templateShortDesc": "es6-validate",
+  "templateLongDesc": "ES6 Socket + validation"
+}

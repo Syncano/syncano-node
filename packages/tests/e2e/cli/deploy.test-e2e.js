@@ -54,7 +54,7 @@ describe('[E2E] CLI Deploy', function () {
       .end(done)
   })
 
-  it('can call hello socket endpoint', function (done) {
+  it.skip('can call hello socket endpoint', function (done) {
     testNixt()
       .run(`${cliLocation} call hello/hello`)
       .on(/Type in value for "firstname" parameter/)

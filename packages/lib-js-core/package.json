@@ -1,6 +1,6 @@
 {
   "name": "@syncano/core",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "description": "A library to intereact with the Syncano API on a server side.",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
@@ -20,13 +20,6 @@
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
   },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint",
-      "npm run format",
-      "git add"
-    ]
-  },
   "dependencies": {
     "debug": "^3.1.0",
     "form-data": "^2.3.1",
@@ -36,7 +29,6 @@
     "node-fetch": "2.0.0-alpha.9"
   },
   "devDependencies": {
-    "@syncano/test-tools": "0.9.3",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-plugin-add-module-exports": "^0.2.1",

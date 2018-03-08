@@ -1,6 +1,6 @@
 {
   "name": "@syncano/client",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "description": "Interact with your Syncano Sockets.",
   "main": "lib/index.js",
   "unpkg": "dist/syncano-client.min.js",
@@ -16,7 +16,6 @@
   "scripts": {
     "prepublish": "npm run build",
     "prebuild": "npm run clean",
-    "precommit": "lint-staged",
     "build": "npx webpack && npx babel src --out-dir lib",
     "build:watch": "npx babel src --watch --out-dir lib",
     "clean": "rm -rf ./dist && rm -rf ./lib",
@@ -30,18 +29,11 @@
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
     "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc"
   },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint",
-      "npm run format",
-      "git add"
-    ]
-  },
   "dependencies": {
     "axios": "^0.17.1"
   },
   "devDependencies": {
-    "@syncano/test-tools": "0.9.3",
+    "@syncano/test-tools": "0.10.0",
     "axios-mock-adapter": "^1.9.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",

@@ -147,7 +147,6 @@ export default class SocketDeployCmd {
         SocketDeployCmd.bail()
       }
       updateEnds()
-      spinner.stop()
     }
   }
 

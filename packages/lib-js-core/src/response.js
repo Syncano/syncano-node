@@ -35,7 +35,7 @@ export default config => {
   const response = (content, status, mimetype, headers) =>
     new Response(config, content, status, mimetype, headers)
 
-  const responses = get(config, 'meta.metadata.response', {})
+  const responses = get(config, 'meta.metadata.outputs', {})
 
   mapYamlResponsesToMethods(response, responses, config)
 

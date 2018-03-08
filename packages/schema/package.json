@@ -1,0 +1,38 @@
+{
+  "name": "@syncano/schema",
+  "description": "Syncano JSON Schema Definitions",
+  "version": "0.10.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "prebuild": "rimraf ./lib",
+    "build": "npx babel src --out-dir lib --copy-files",
+    "build:watch": "babel src --out-dir lib -w --copy-files",
+    "lint": "standard --fix --env mocha"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "rimraf": "^2.6.2",
+    "standard": "^10.0.3"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "8"
+          }
+        }
+      ]
+    ]
+  }
+}

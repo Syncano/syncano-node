@@ -1,0 +1,9 @@
+name: test
+description: Description of test
+version: 0.0.1
+runtime: nodejs_v8
+
+classes:
+  book:
+    - name: test
+      type: relation

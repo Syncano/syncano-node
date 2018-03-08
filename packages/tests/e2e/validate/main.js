@@ -1,7 +1,7 @@
 /* global describe it */
 import {assert} from 'chai'
 import Validator from '../../../lib-js-validate/src'
-import {generateContext, generateResponse} from './utils'
+import {generateContext, generateResponse} from '@syncano/test-tools'
 
 describe('Validator', function () {
   const goodResponseData = {
@@ -22,143 +22,108 @@ describe('Validator', function () {
     }
   })
 
-  it('init with context', function (done) {
+  it('init with context', async () => {
     const ctx = generateContext()
     const validator = new Validator(ctx) // eslint-disable-line no-unused-vars
-    done()
   })
 
   describe('validateRequest', function () {
-    it('validate request with additional arg', function (done) {
-      const ctx = generateContext()
-      ctx.args = {test: 123}
-      const validator = new Validator(ctx)
-
-      validator.validateRequest()
-        .catch(err => {
-          assert(err.details[0]['keyword'] === 'additionalProperties')
-          done()
-        })
-    })
-
-    it('validate request with wrong arg type', function (done) {
+    it('validate request with wrong arg type', async () => {
       const ctx = generateContext()
       ctx.args = {postcode: 'string'}
       const validator = new Validator(ctx)
 
-      validator.validateRequest()
-        .catch(err => {
-          assert(err.details[0]['message'] === 'should be integer')
-          done()
-        })
+      try {
+        await validator.validateRequest()
+      } catch (err) {
+        assert(err.details[0]['message'] === 'should be integer')
+      }
     })
 
-    it('validate request without schema', function (done) {
+    it('validate request without schema', async () => {
       const ctx = generateContext()
-
-      ctx.args = {postcode: 'string'}
-      ctx.meta.metadata.parameters = {}
+      ctx.meta.metadata.inputs = {}
 
       const validator = new Validator(ctx)
-
-      validator.validateRequest()
-        .catch(err => {
-          assert(err.details[0]['keyword'] === 'additionalProperties')
-          done()
-        })
+      await validator.validateRequest()
     })
   })
 
   describe('validateResponse', function () {
-    it('validate response without necessery args', function (done) {
+    it('validate response without necessery args', async () => {
       const ctx = generateContext()
       const validator = new Validator(ctx)
 
-      validator.validateResponse()
-        .catch(err => {
-          assert(err.message, 'You have to specify responseType and response argument')
-          done()
-        })
+      try {
+        await validator.validateResponse()
+      } catch (err) {
+        assert(err.message, 'You have to specify responseType and response argument')
+      }
     })
 
-    it('validate success response with right arguments', function (done) {
+    it('validate success response with right arguments', async () => {
       const ctx = generateContext()
       const validator = new Validator(ctx)
 
-      validator.validateResponse('success', generateResponse(goodResponseData))
-        .then(resp => {
-          assert(resp, true)
-          done()
-        })
+      await validator.validateResponse('success', generateResponse(goodResponseData))
     })
 
-    it('validate success response with right arguments but wrong code', function (done) {
+    it('validate success response with right arguments but wrong code', async () => {
       const ctx = generateContext()
       const responseData = generateResponse(goodResponseData)
       responseData.code = '400'
       const validator = new Validator(ctx)
 
-      validator.validateResponse('success', responseData)
-        .catch(err => {
-          assert.propertyVal(err, 'message', 'Wrong exit code! Desired code is 200, got: 400')
-          done()
-        })
+      try {
+        await validator.validateResponse('success', responseData)
+      } catch (err) {
+        assert.propertyVal(err, 'message', 'Wrong exit code! Desired code is 200, got: 400')
+      }
     })
 
-    it('validate success response with right arguments but wrong mimetype', function (done) {
+    it('validate success response with right arguments but wrong mimetype', async () => {
       const ctx = generateContext()
       const responseData = generateResponse(goodResponseData)
       responseData.mimetype = 'text/plain'
       const validator = new Validator(ctx)
 
-      validator.validateResponse('success', responseData)
-        .catch(err => {
-          assert.propertyVal(err, 'message', 'Wrong mimetype! Desired mimetype is application/json, got: text/plain')
-          done()
-        })
+      try {
+        await validator.validateResponse('success', responseData)
+      } catch (err) {
+        assert.propertyVal(err, 'message', 'Wrong mimetype! Desired mimetype is application/json, got: text/plain')
+      }
     })
 
-    it('validate success response with redundant arg', function (done) {
+    it('validate success response with redundant arg', async () => {
       const ctx = generateContext()
       const responseData = generateResponse({data: {test: 123}})
       const validator = new Validator(ctx)
 
-      validator.validateResponse('success', responseData)
-        .catch(err => {
-          assert(err.details[0]['keyword'] === 'additionalProperties')
-          done()
-        })
+      await validator.validateResponse('success', responseData)
     })
 
-    it('validate success response with non-json mimetype', function (done) {
+    it('validate success response with non-json mimetype', async () => {
       const ctx = generateContext()
 
       // non-json mimetype
-      ctx.meta.metadata.response.mimetype = 'application/pdf'
+      ctx.meta.metadata.outputs.mimetype = 'application/pdf'
 
       const responseData = generateResponse({data: {test: 123}})
       const validator = new Validator(ctx)
 
-      validator.validateResponse('success', responseData)
-      .then(resp => {
-        done()
-      })
+      await validator.validateResponse('success', responseData)
     })
 
-    it('validate success response without definition', function (done) {
+    it('validate success response without definition', async () => {
       const ctx = generateContext()
 
       // empty schema
-      ctx.meta.metadata.response.success = {}
+      ctx.meta.metadata.outputs.success = {}
 
       const responseData = generateResponse({data: {test: 123}})
       const validator = new Validator(ctx)
 
-      validator.validateResponse('success', responseData)
-        .catch(err => {
-          assert(err.details[0]['keyword'] === 'additionalProperties')
-          done()
-        })
+      await validator.validateResponse('success', responseData)
     })
   })
 })

@@ -18,6 +18,7 @@ import template from 'es6-template-strings'
 import _ from 'lodash'
 import SourceMap from 'source-map'
 import WebSocket from 'ws'
+import Validator from '@syncano/validate'
 
 import logger from '../debug'
 import session from '../session'
@@ -383,15 +384,19 @@ class Socket {
     })
   }
 
-  verify () {
-    return new Promise((resolve, reject) => {
-      if (!(this.isDependencySocket || this.isProjectRegistryDependency)) {
-        if (!fs.existsSync(this.getSrcFolder())) {
-          reject(new Error('No src folder!'))
-        }
+  verifySchema () {
+    // Reload local settings
+    if (this.settings.load) this.settings.load()
+    return Validator.validateMainSchema(this.settings.attributes)
+  }
+
+  async verify () {
+    if (!(this.isDependencySocket || this.isProjectRegistryDependency)) {
+      if (!fs.existsSync(this.getSrcFolder())) {
+        throw new Error('No src folder!')
       }
-      resolve()
-    })
+      this.verifySchema()
+    }
   }
 
   getFullConfig () {
@@ -749,8 +754,28 @@ class Socket {
 
       archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
       archive.file(path.join(this.getSocketPath(), 'package.json'), { name: 'package.json' })
-      archive.directory(this.getSrcFolder(), 'src')
-      archive.directory(path.join(this.getSocketPath(), 'bin'), 'bin')
+
+      const files = glob.sync(`**`, {
+        cwd: this.getSrcFolder(),
+        follow: true,
+        nodir: true
+      })
+
+      files.forEach(file => {
+        archive.file(path.join(this.getSrcFolder(), file), {name: path.join('src', file)})
+      })
+
+      const binFolder = path.join(this.getSocketPath(), 'bin')
+      const binFiles = glob.sync(`**`, {
+        cwd: binFolder,
+        follow: true,
+        nodir: true
+      })
+
+      binFiles.forEach(file => {
+        archive.file(path.join(binFolder, file), {name: path.join('bin', file)})
+      })
+
       archive.finalize()
 
       output.on('close', () => {
@@ -775,7 +800,15 @@ class Socket {
       archive.pipe(output)
       archive.on('error', reject)
 
-      archive.directory(envFolder, 'node_modules')
+      const files = glob.sync(`**`, {
+        cwd: envFolder,
+        follow: true,
+        nodir: true
+      })
+
+      files.forEach(file => {
+        archive.file(path.join(envFolder, file), {name: path.join('node_modules', file)})
+      })
 
       archive.finalize()
       output.on('close', () => {

@@ -42,7 +42,7 @@ describe('Client', function(){
       .end(done)
   })
 
-  it('can deploy hello socket', function(done) {
+  it('can deploy hello socket', function (done) {
     testNixt()
       .run(`${cliLocation} deploy hello`)
       .stdout(/socket synced:/)

@@ -1,0 +1,10 @@
+name: test
+description: Description of test
+version: 0.0.1
+runtime: nodejs_v8
+
+classes:
+  book:
+    test:
+      - name: book_title
+        type: string

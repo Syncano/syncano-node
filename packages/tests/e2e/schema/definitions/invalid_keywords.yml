@@ -1,0 +1,11 @@
+name: test
+description: Description of test
+version: 0.1.1
+runtime: nodejs_v8
+
+keywords:
+  - keyword1keyword1keyword1
+  - keyword2
+  - keyword3
+  - keyword4
+  - keyword5

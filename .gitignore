@@ -2,7 +2,7 @@ node_modules
 coverage
 .DS_Store
 .idea
-/lib
+*/**/lib/
 /dist
 /example
 npm-debug.log

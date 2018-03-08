@@ -8,7 +8,7 @@ describe('Response', () => {
     instanceName: 'testInstance',
     meta: {
       metadata: {
-        response: {
+        outputs: {
           success: {
             exit_code: 200
           },

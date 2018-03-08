@@ -1,0 +1,44 @@
+name: test
+description: Description of test
+version: 0.0.1
+runtime: nodejs_v8
+
+endpoints:
+  hello:
+    description: Hello world!
+    inputs:
+      type: object
+      required:
+        - firstname
+        - lastname
+      properties:
+        firstname:
+          type: string
+          description: First name of the person you want to greet
+          example: Tyler
+        lastname:
+          type: string
+          description: Last name of the person you want to greet
+          example: Durden
+    outputs:
+      success:
+        description: Success
+        type: object
+        properties:
+          message:
+            description: Hello message
+            example: |
+              {
+                "message": "Hello Tyler Durden!"
+              }
+      fail:
+        description: Failed
+        type: object
+        exit_code: 400
+        properties:
+          message:
+            description: Error message
+            example: |
+              {
+                "message": "You have to send "firstname" and "lastname" arguments!"
+              }

@@ -149,7 +149,7 @@ const setup = async () => {
       session.hasProject()
       await session.checkConnection()
       echo()
-      new commands.SocketInstall(context).run(options)
+      new commands.SocketAdd(context).run(options)
     })
 
   program
