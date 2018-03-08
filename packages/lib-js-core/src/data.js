@@ -268,7 +268,21 @@ class Data extends QueryBuilder {
 
   _mapFieldsForSingleItem (item, fields) {
     return Object.keys(fields).reduce(
-      (all, key) => set(all, fields[key] || key, get(item, key)),
+      (all, key) => {
+        const itemFieldKey = key.split('.').shift()
+        const itemField = get(item, itemFieldKey)
+
+        if (Array.isArray(itemField)) {
+          itemField.forEach((arrItem, i) => {
+            const path = `${itemFieldKey}.[${i}].${key.split('.').slice(1)}`
+            set(all, path, get(item, path))
+          })
+        } else {
+          set(all, fields[key] || key, get(item, key))
+        }
+
+        return all
+      },
       {}
     )
   }
