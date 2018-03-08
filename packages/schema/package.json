@@ -4,9 +4,6 @@
   "version": "0.10.0",
   "main": "lib/index.js",
   "license": "MIT",
-  "files": [
-    "src"
-  ],
   "publishConfig": {
     "access": "public"
   },
