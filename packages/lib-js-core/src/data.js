@@ -272,10 +272,12 @@ class Data extends QueryBuilder {
         const itemFieldKey = key.split('.').shift()
         const itemField = get(item, itemFieldKey)
 
-        if (Array.isArray(itemField)) {
+        if (Array.isArray(itemField) && typeof itemField[0] === 'object' && itemField[0] !== null) {
           itemField.forEach((arrItem, i) => {
             const path = `${itemFieldKey}.[${i}].${key.split('.').slice(1)}`
-            set(all, path, get(item, path))
+            const mappedPath = `${itemFieldKey}.[${i}].${(fields[key] || key).split('.').slice(1)}`
+
+            set(all, mappedPath, get(item, path))
           })
         } else {
           set(all, fields[key] || key, get(item, key))

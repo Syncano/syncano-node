@@ -825,6 +825,43 @@ describe('Data', () => {
         .should.become([{author: 'John', views: 100}])
     })
 
+    it('should work with nested array of objects', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {objects: [
+          {
+            name: 'John',
+            views: 100,
+            id: 2,
+            tags: ['css', 'html'],
+            documents: [
+              {
+                id: 10,
+                name: 'Test document'
+              }
+            ]
+          }
+        ]})
+
+      return data.users
+        .fields([
+          'name as author',
+          'views',
+          'tags',
+          'documents.id',
+          'documents.name as documents.title'
+        ])
+        .list()
+        .should.become([{
+          tags: ['css', 'html'],
+          documents: [
+            {id: 10, title: 'Test document'}
+          ],
+          author: 'John',
+          views: 100
+        }])
+    })
+
     it('should work with create method', () => {
       api
         .post(`/v2/instances/${instanceName}/classes/posts/objects/`)
