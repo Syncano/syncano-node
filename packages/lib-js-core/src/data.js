@@ -119,7 +119,7 @@ class Data extends QueryBuilder {
       const load = new Data(this.instance)
       let ids = references.map(item => item.value)
 
-      ids = Array.isArray(ids[0]) ? ids[0] : ids
+      ids = Array.isArray(ids[0]) ? [].concat.apply([], ids) : ids
 
       if (target === 'user') {
         load._url = `${this._getInstanceURL(

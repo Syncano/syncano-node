@@ -510,7 +510,15 @@ describe('Data', () => {
             {
               title: 'Awesome post',
               comments: {
-                value: [1, 2],
+                value: [1],
+                type: 'relation',
+                target: 'comment'
+              }
+            },
+            {
+              title: 'Awesome post 2',
+              comments: {
+                value: [2],
                 type: 'relation',
                 target: 'comment'
               }
@@ -531,7 +539,11 @@ describe('Data', () => {
         .should.become([
           {
             title: 'Awesome post',
-            comments: [{id: 1, content: 'Hello'}, {id: 2, content: 'World'}]
+            comments: [{id: 1, content: 'Hello'}]
+          },
+          {
+            title: 'Awesome post 2',
+            comments: [{id: 2, content: 'World'}]
           }
         ])
     })
