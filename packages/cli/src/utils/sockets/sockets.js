@@ -557,6 +557,11 @@ class Socket {
     return path.join(session.getDistPath(), `${this.name}.env.zip`)
   }
 
+  isEmptyEnv () {
+    debug('isEmptyEnv', !fs.existsSync(this.getSocketEnvZip()))
+    return !fs.existsSync(this.getSocketEnvZip())
+  }
+
   getSocketNodeModulesChecksum () {
     debug('getSocketNodeModulesChecksum')
     return hashdirectory.sync(path.join(this.socketPath, '.dist', 'node_modules'))
@@ -797,6 +802,8 @@ class Socket {
         mkdirp.sync(envFolder)
       }
 
+      let filesInZip = 0
+
       archive.pipe(output)
       archive.on('error', reject)
 
@@ -808,9 +815,16 @@ class Socket {
 
       files.forEach(file => {
         archive.file(path.join(envFolder, file), {name: path.join('node_modules', file)})
+        filesInZip += 1
       })
 
-      archive.finalize()
+      if (filesInZip) {
+        archive.finalize()
+      } else {
+        fs.unlinkSync(this.getSocketEnvZip())
+        resolve()
+      }
+
       output.on('close', () => {
         resolve()
       })
@@ -818,6 +832,7 @@ class Socket {
   }
 
   updateEnvCall (method) {
+    debug('updateEnvCall')
     return new Promise((resolve, reject) => {
       const form = new FormData()
 
@@ -876,7 +891,9 @@ class Socket {
     const resp = await this.socketEnvShouldBeUpdated()
     if (resp) {
       await this.createEnvZip()
-      return this.updateEnvCall(resp)
+      if (!this.isEmptyEnv()) {
+        return this.updateEnvCall(resp)
+      }
     }
     return 'No need to update'
   }
@@ -910,7 +927,13 @@ class Socket {
       const form = new FormData()
 
       form.append('name', this.name)
-      form.append('environment', this.name)
+
+      if (this.isEmptyEnv()) {
+        debug('environment is null')
+        form.append('environment', '')
+      } else {
+        form.append('environment', this.name)
+      }
 
       if (config) {
         form.append('config', JSON.stringify(config))
