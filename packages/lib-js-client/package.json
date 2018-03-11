@@ -71,15 +71,6 @@
       "transform-async-to-generator",
       "transform-object-rest-spread"
     ],
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "node": "8"
-          }
-        }
-      ]
-    ]
+    "presets": ["env"]
   }
 }
