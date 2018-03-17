@@ -12,7 +12,7 @@ import {
 
 import {cliLocation, projectTestTemplate, configTestTemplate} from '../utils'
 
-describe('[E2E] CLI Config', function () {
+describe('CLI Config', function () {
   let testInstance = uniqueInstance()
 
   const moveTestSocket = (template) => {
@@ -34,18 +34,21 @@ describe('[E2E] CLI Config', function () {
       })
       .run(`${cliLocation} deploy hello-config`)
       .stdout(/socket synced:/)
+      .code(0)
       .end(done)
   })
 
   it('can set first config option', function (done) {
     testNixt()
       .run(`${cliLocation} config-set hello-config TEST1 test1_value`)
+      .code(0)
       .end(done)
   })
 
   it('can set second config option', function (done) {
     testNixt()
       .run(`${cliLocation} config-set hello-config TEST2 test2_value`)
+      .code(0)
       .end(done)
   })
 
@@ -53,12 +56,14 @@ describe('[E2E] CLI Config', function () {
     testNixt()
       .run(`${cliLocation} config-show hello-config`)
       .stdout(/value: test2_value/)
+      .code(0)
       .end(done)
   })
 
   it('can change first config option of the socket', function (done) {
     testNixt()
       .run(`${cliLocation} config-set hello-config TEST1 test1_value_new`)
+      .code(0)
       .end(done)
   })
 
@@ -66,6 +71,7 @@ describe('[E2E] CLI Config', function () {
     testNixt()
       .run(`${cliLocation} config-show hello-config`)
       .stdout(/value: test1_value_new/)
+      .code(0)
       .end(done)
   })
 
@@ -78,6 +84,7 @@ describe('[E2E] CLI Config', function () {
       .respond('test2\n')
       .on(/TEST3/)
       .respond('test2\n')
+      .code(0)
       .end(done)
   })
 
@@ -85,6 +92,7 @@ describe('[E2E] CLI Config', function () {
     testNixt()
       .run(`${cliLocation} call hello-config/hello`)
       .stdout(/test1 test2/)
+      .code(0)
       .end(done)
   })
 })

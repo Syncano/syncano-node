@@ -14,7 +14,7 @@ import {
 
 import {cliLocation, projectTestTemplate} from '../utils'
 
-describe('[E2E] CLI Registry', function () {
+describe('CLI Registry', function () {
   let testInstance = uniqueInstance()
 
   const testNixt = () => nixt()
@@ -29,6 +29,7 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .run(`${cliLocation} search ${getRandomString()}`)
       .stdout(/No sockets found/)
+      .code(0)
       .end(done)
   })
 
@@ -45,6 +46,7 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .run(`${cliLocation} submit ${createdSocketName}`)
       .stdout(/to make it available for everyone/)
+      .code(0)
       .end(done)
   })
 
@@ -52,6 +54,7 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .run(`${cliLocation} submit ${createdSocketName} -b minor`)
       .stdout(/\(0\.1\.0\)\.\.\. Done/)
+      .code(0)
       .end(done)
   })
 
@@ -68,6 +71,7 @@ describe('[E2E] CLI Registry', function () {
       })
       .run(`${cliLocation} submit ${createdSocketName}`)
       .stdout(/is not comaptible with this Syncano environment/)
+      .code(1)
       .end(done)
   })
 
@@ -75,6 +79,7 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .run(`${cliLocation} publish ${createdSocketName}`)
       .stdout(/now publicly available/)
+      .code(0)
       .end(done)
   })
 
@@ -82,6 +87,7 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .run(`${cliLocation} publish ${createdSocketName}`)
       .stdout(/This socket is not private/)
+      .code(1)
       .end(done)
   })
 
@@ -89,6 +95,7 @@ describe('[E2E] CLI Registry', function () {
     testNixt()
       .run(`${cliLocation} search ${createdSocketName}`)
       .stdout(/socket\(s\) found/)
+      .code(0)
       .end(done)
   })
 
@@ -107,6 +114,7 @@ describe('[E2E] CLI Registry', function () {
       .on(/Type in value:/)
       .respond(`${randomKey}\n`)
       .stdout(/socket synced:/)
+      .code(0)
       .end(done)
   })
 })

@@ -8,7 +8,7 @@ import {
 
 import {cliLocation} from '../utils'
 
-describe('[E2E] CLI Instance', function () {
+describe('CLI Instance', function () {
   const testNixt = () => nixt()
     .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
 
@@ -20,6 +20,7 @@ describe('[E2E] CLI Instance', function () {
       .after(() => deleteInstance(testInstance))
       .run(`${cliLocation} instance create ${testInstance}`)
       .stdout(/Instance already exist!/)
+      .code(1)
       .end(done)
   })
 
@@ -30,6 +31,7 @@ describe('[E2E] CLI Instance', function () {
       .after(() => deleteInstance(testInstance))
       .run(`${cliLocation} instance create ${testInstance}`)
       .stdout(/has been created/)
+      .code(0)
       .end(done)
   })
 
@@ -37,6 +39,7 @@ describe('[E2E] CLI Instance', function () {
     testNixt()
       .run(`${cliLocation} instance list`)
       .stdout(/You don't have any instances!/)
+      .code(0)
       .end(done)
   })
 
@@ -57,6 +60,7 @@ describe('[E2E] CLI Instance', function () {
       .stdout(/Instances:/)
       .stdout(new RegExp(testInstance1))
       .stdout(new RegExp(testInstance2))
+      .code(0)
       .end(done)
   })
 
@@ -69,6 +73,7 @@ describe('[E2E] CLI Instance', function () {
       })
       .run(`${cliLocation} instance delete ${testInstance}`)
       .stdout(/Instance was deleted successfully!/)
+      .code(0)
       .end(done)
   })
 })

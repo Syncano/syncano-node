@@ -42,6 +42,7 @@ class SocketCreate {
     } catch (err) {
       debug(err)
       error(err.message)
+      process.exit(1)
     }
   }
 }

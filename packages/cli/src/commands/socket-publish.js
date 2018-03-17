@@ -23,6 +23,7 @@ export default class SocketPublishCmd {
         error(4)(err.message)
         echo()
       }
+      process.exit(1)
     }
   }
 }

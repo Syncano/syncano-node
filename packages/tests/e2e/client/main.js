@@ -15,7 +15,7 @@ import Syncano from '../../../lib-js-client/src/index.js'
 const cliLocation = path.join(process.cwd(), '../cli/lib/cli.js')
 const projectTestTemplate = path.join(__dirname, '../../assets/project/empty/')
 
-describe('Client', function(){
+describe('Client', function () {
   let testInstance = uniqueInstance()
   let client = null
 

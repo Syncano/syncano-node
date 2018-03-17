@@ -18,7 +18,7 @@ const { email, password, syncanoYmlPath } = returnTestGlobals()
 const tempPass = Date.now()
 const tempEmail = createTempEmail(process.env.E2E_CLI_TEMP_EMAIL, tempPass)
 
-describe('[E2E] CLI User', function () {
+describe('CLI User', function () {
   let testInstance = uniqueInstance()
 
   before(cleanUpAccount)
@@ -50,6 +50,7 @@ describe('[E2E] CLI User', function () {
       .stdout(/Project has been created from/)
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
+      .code(0)
       .end(done)
   })
 
@@ -59,6 +60,7 @@ describe('[E2E] CLI User', function () {
       .run(`${cliLocation} logout`)
       .stdout(/You have been logged out/)
       .unlink(syncanoYmlPath)
+      .code(0)
       .end(done)
   })
   // This is end of tests dependency
@@ -79,6 +81,7 @@ describe('[E2E] CLI User', function () {
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, new RegExp(testInstance))
       .unlink(syncanoYmlPath)
+      .code(0)
       .end(done)
   })
 
@@ -99,6 +102,7 @@ describe('[E2E] CLI User', function () {
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
       .unlink(syncanoYmlPath)
+      .code(0)
       .end(done)
   })
 
@@ -117,6 +121,7 @@ describe('[E2E] CLI User', function () {
       .match(syncanoYmlPath, /auth_key/)
       .match(syncanoYmlPath, /instance/)
       .unlink(syncanoYmlPath)
+      .code(0)
       .end(done)
   })
 })

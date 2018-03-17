@@ -13,7 +13,7 @@ import {
 
 import {cliLocation, projectTestTemplate} from '../utils'
 
-describe('[E2E] CLI Deploy', function () {
+describe('CLI Deploy', function () {
   let testInstance = uniqueInstance()
 
   const testNixt = () => nixt()
@@ -28,6 +28,7 @@ describe('[E2E] CLI Deploy', function () {
     testNixt()
       .run(`${cliLocation} list`)
       .stdout(/No Socket was found on server nor in config!/)
+      .code(0)
       .end(done)
   })
 
@@ -35,6 +36,7 @@ describe('[E2E] CLI Deploy', function () {
     testNixt()
       .run(`${cliLocation} list ${getRandomString()}`)
       .stdout(/No Socket was found on server nor in config!/)
+      .code(1)
       .end(done)
   })
 
@@ -51,6 +53,7 @@ describe('[E2E] CLI Deploy', function () {
     testNixt()
       .run(`${cliLocation} deploy hello`)
       .stdout(/socket synced:/)
+      .code(0)
       .end(done)
   })
 
@@ -61,8 +64,8 @@ describe('[E2E] CLI Deploy', function () {
       .respond('TEST\n')
       .on(/Type in value for "lastname" parameter/)
       .respond('CLI\n')
-      .code(0)
       .stdout(/Hello TEST CLI/)
+      .code(0)
       .end(done)
   })
 
@@ -82,6 +85,7 @@ describe('[E2E] CLI Deploy', function () {
       .after(() => deleteInstance(testInstance))
       .run(`${cliLocation} deploy --create-instance ${testInstance}`)
       .stdout(/project synced:/)
+      .code(0)
       .end(done)
   })
 
@@ -104,6 +108,7 @@ describe('[E2E] CLI Deploy', function () {
       .after(() => deleteInstance(testInstance))
       .run(`${cliLocation} deploy --create-instance ${testInstance}`)
       .stdout(/Instance already exist!/)
+      .code(1)
       .end(done)
   })
 })
