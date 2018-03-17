@@ -1,24 +1,34 @@
 # Creating objects in a database
 
-- Preparation: **1 minute**
+- Preparation: **5 minutes**
 - Requirements:
   - Initiated Syncano project
 
 ### Problem to solve
 
-You want to create two object of different classes.
+A very common requirement for an application is to have a persistent storage of data. Syncano Provides this capability with a concept of Data Classes, which define the schema (type) of data you would like to store and Data Objects which store the data. This cookbook entry will walk you through a simple data set up.
 
 ### Solution
 
-Create empty `hello-world` Socket and `hello` endpoint, use `data` from `@syncano/core` library.
+We will create a Data Class - the "container" for your data, and learn how to create Data Objects in that class.
 
-#### Create Socket
+#### Create a new Socket
+
+We will start with creating an empty Socket. You can skip this step, if you have an existing Socket you'd like to expand.
 
 ```sh
-npx syncano-cli create hello-world --template example
+npx s create hello-world
+
+?   Choose template for your Socket
+      Vanilla JS Socket - (@syncano/template-socket-vanilla)
+❯     ES6 Socket - (@syncano/template-socket-es6)
+
+✔   Your Socket configuration is stored at ...
 ```
 
-#### Add data class
+
+#### Add a Data Class
+
 
 Add `book` class to the `syncano/hello-world/socket.yml` file:
 
@@ -28,11 +38,17 @@ classes:
     - name: title
       type: string
     - name: pages
-      type: ineger
+      type: integer
 ```
 
-#### Edit endpoint file
+Save the `.yml` file and update your remote Socket:
+```sh
+npx s deploy hello-world
+```
 
+> See Docs on [Data Classes](https://0-docs.syncano.io/#/building-sockets/data-classes?id=overview) for more info on available data types
+
+#### Edit Socket Endpoint file
 
 Edit file `syncano/hello-world/src/hello.js` and change its content to:
 
@@ -40,29 +56,46 @@ Edit file `syncano/hello-world/src/hello.js` and change its content to:
 import Syncano from '@syncano/core'
 
 export default (ctx) => {
-  const {data, response} = Syncano(ctx)
+  const { data, response } = new Syncano(ctx)
+  const { title, pages } = ctx.args
 
-  data.book.create({
-    title: 'Peter Pan',
-    pages: 334
-  })
-  .then(bookObj => {
-    response.json({msg: `Book with ID ${bookObj.id} created!`})
-  })
+  data.book.create({ title, pages })
+    .then(bookObj => {
+      response.json({msg: `Book with ID ${bookObj.id} created!`})
+    }).catch(({ data, status }) => response.json(data, status))
 }
 ```
 
-### How it works?
+We've imported `data` and `response` modules from the Syncano Core library. `data` is the one you will use for data operations (list, create update, delete and so on).
 
-Now you can call URL for `hello` endpoint using browser:
+We also destructure `title` and `pages` from `ctx.args` object. This data will come from the client side.
 
-```
-https://<your_instance_name>.syncano.space/hello-world/hello/
-```
-> You can find URL for `hello` endpoint by typing `npx syncano-cli list hello-world`
+Once you are finished editing the `hello.js` file, run `npx s deploy hello-world` to apply the changes to the script.
 
-You will get a response JSON response like this one:
+> Pro tip: use `npx s hot hello-world` to watch for changes and continuous deployment
+
+### Client Side
+
+The server side is ready so now the only thing left to do, is adding a client side implementation. Create an index.html file, add the code below, and save:
+
+> Remember to change 'YOUR_INSTANCE' into the instance attached to your project. Run `npx s` in the project folder to have it printed out in your terminal.
 
 ```js
-{"msg": "Book with ID 123 created!"}
+<script src="https://unpkg.com/@syncano/client"></script>
+<script>
+  const s = new SyncanoClient('YOUR_INSTANCE')
+
+  s.post('hello-world/hello', { title: 'PeterPan', pages: 334 })
+   .then(res => {
+     console.log(res.msg)
+   })
+</script>
 ```
+
+Now, when you open the `index.html` file and look in the browser console, you will see a log similar to this one:
+
+```js
+'Book with ID 3 created!'
+```
+
+Now you can retrieve it from Syncano by running `data.book.find(objectId)` with the core library.
