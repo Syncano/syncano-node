@@ -20,6 +20,7 @@ describe('CLI Anonymous User', function () {
     testNixt()
       .run(`${cliLocation} list`)
       .stdout(/You are not logged in!/)
+      .code(1)
       .end(done)
   })
 
@@ -27,6 +28,7 @@ describe('CLI Anonymous User', function () {
     testNixt()
       .run(`${cliLocation} list`)
       .stdout(/You are not logged in!/)
+      .code(1)
       .end(done)
   })
 })

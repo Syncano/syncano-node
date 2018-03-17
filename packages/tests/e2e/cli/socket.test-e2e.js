@@ -1,5 +1,4 @@
 /* global describe it before after */
-import replace from 'replace'
 import path from 'path'
 import {
   nixt,
@@ -13,23 +12,13 @@ import {
 
 import {cliLocation, projectTestTemplate} from '../utils'
 
-describe('[E2E] CLI Socket', function () {
+describe('CLI Socket', function () {
   let testInstance = uniqueInstance()
 
   const testNixt = () => nixt()
     .env('SYNCANO_PROJECT_INSTANCE', testInstance)
     .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
     .cwd(path.join(testsLocation, testInstance))
-
-  const linkSyncanoPackages = () => {
-    replace({
-      regex: '"@syncano/build-es6": "0.4.1"',
-      replacement: `"@syncano/build-es6": "${path.join(__dirname, '../../../../build-es6')}"`,
-      paths: [path.join(testsLocation, testInstance)],
-      recursive: true,
-      silent: true
-    })
-  }
 
   before(async () => createProject(testInstance, projectTestTemplate))
   after(async () => deleteInstance(testInstance))
@@ -47,6 +36,7 @@ describe('[E2E] CLI Socket', function () {
     testNixt()
       .run(`${cliLocation} list`)
       .stdout(/Description of hello/)
+      .code(0)
       .end(done)
   })
 
@@ -54,6 +44,7 @@ describe('[E2E] CLI Socket', function () {
     testNixt()
       .run(`${cliLocation} list hello`)
       .stdout(/endpoint:/)
+      .code(0)
       .end(done)
   })
 
@@ -61,21 +52,22 @@ describe('[E2E] CLI Socket', function () {
     testNixt()
       .run(`${cliLocation} list ${getRandomString()}`)
       .stdout(/No Socket was found on server nor in config!/)
+      .code(1)
       .end(done)
   })
 
   it('can deploy hello socket', function (done) {
     testNixt()
-      .before(linkSyncanoPackages)
-      .env('DEBUG', '*')
       .run(`${cliLocation} deploy hello`)
       .stdout(/socket synced:/)
+      .code(0)
       .end(done)
   })
 
   it('can set config of socket', function (done) {
     testNixt()
       .run(`${cliLocation} config-set hello name test`)
+      .code(0)
       .end(done)
   })
 
@@ -94,6 +86,7 @@ describe('[E2E] CLI Socket', function () {
       .on(/Choose template for your Socket/)
       .respond('\n')
       .stdout(/Socket with given name already exist!/)
+      .code(1)
       .end(done)
   })
 })

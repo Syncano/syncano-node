@@ -11,7 +11,7 @@ import {
 
 import {cliLocation, projectTestTemplate, hostingAssets} from '../utils'
 
-describe('[E2E] CLI Hosting', function () {
+describe('CLI Hosting', function () {
   let testInstance = uniqueInstance()
   const hostingName = 'tests'
   const hostingName2 = 'tests2'
@@ -41,6 +41,7 @@ describe('[E2E] CLI Hosting', function () {
       .on(/sync files now/)
       .respond('\n')
       .stdout(/sync files use: syncano-cli hosting sync/)
+      .code(0)
       .end(done)
   })
 
@@ -56,6 +57,7 @@ describe('[E2E] CLI Hosting', function () {
       .on(/sync files now/)
       .respond('\n')
       .stdout(/sync files use: syncano-cli hosting sync/)
+      .code(0)
       .end(done)
   })
 
@@ -65,6 +67,7 @@ describe('[E2E] CLI Hosting', function () {
       .on(/Choose socket for which you you want to list hostings/)
       .respond('\n')
       .stdout(/name: tests/)
+      .code(0)
       .end(done)
   })
 
@@ -74,6 +77,7 @@ describe('[E2E] CLI Hosting', function () {
       .on(/Choose a socket which hosting files you want to see/)
       .respond('\n')
       .stdout(/You have 1 files/)
+      .code(0)
       .end(done)
   })
 
@@ -81,6 +85,7 @@ describe('[E2E] CLI Hosting', function () {
     testNixt()
       .run(`${cliLocation} hosting sync ${hostingName}`)
       .stdout(/files synchronized/)
+      .code(0)
       .end(done)
   })
 
@@ -88,6 +93,7 @@ describe('[E2E] CLI Hosting', function () {
     testNixt()
       .run(`${cliLocation} hosting sync ${hostingName}`)
       .stdout(/files synchronized/)
+      .code(0)
       .end(done)
   })
 
@@ -100,6 +106,7 @@ describe('[E2E] CLI Hosting', function () {
       .respond('Y\n')
       .stdout(/CNAME: http:\/\/my.dom.ain/)
       .stdout(/BrowserRouter: ✓/)
+      .code(0)
       .end(done)
   })
 
@@ -108,6 +115,7 @@ describe('[E2E] CLI Hosting', function () {
       .run(`${cliLocation} hosting config ${hostingName} --browser-router false --remove-cname my.dom.ain`)
       .stdout(/^((?!CNAME: http:\/\/my.dom.ain)[\s\S])*$/)
       .stdout(/BrowserRouter: x/)
+      .code(0)
       .end(done)
   })
 
@@ -117,6 +125,7 @@ describe('[E2E] CLI Hosting', function () {
       .on(/Are you sure you/)
       .respond('Y\n')
       .stdout(/has been successfully deleted!/)
+      .code(0)
       .end(done)
   })
 
@@ -126,6 +135,7 @@ describe('[E2E] CLI Hosting', function () {
     .on(/Are you sure you/)
     .respond('Y\n')
     .stdout(/has been successfully deleted!/)
+    .code(0)
     .end(done)
   })
 
@@ -133,6 +143,7 @@ describe('[E2E] CLI Hosting', function () {
     testNixt()
       .run(`${cliLocation} hosting list`)
       .stdout(/You don't have any hostings/)
+      .code(0)
       .end(done)
   })
 })
