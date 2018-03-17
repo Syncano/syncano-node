@@ -1,7 +1,7 @@
 {
   "name": "@syncano/schema",
   "description": "Syncano JSON Schema Definitions",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "main": "lib/index.js",
   "license": "MIT",
   "publishConfig": {

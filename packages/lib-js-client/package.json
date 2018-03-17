@@ -1,6 +1,6 @@
 {
   "name": "@syncano/client",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Interact with your Syncano Sockets.",
   "main": "lib/index.js",
   "unpkg": "dist/syncano-client.min.js",
@@ -33,7 +33,7 @@
     "axios": "^0.17.1"
   },
   "devDependencies": {
-    "@syncano/test-tools": "0.10.0",
+    "@syncano/test-tools": "0.11.0",
     "axios-mock-adapter": "^1.9.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -71,6 +71,8 @@
       "transform-async-to-generator",
       "transform-object-rest-spread"
     ],
-    "presets": ["env"]
+    "presets": [
+      "env"
+    ]
   }
 }

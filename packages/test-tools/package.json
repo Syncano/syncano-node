@@ -1,14 +1,14 @@
 {
   "name": "@syncano/test-tools",
   "description": "Testing tools for Syncano Sockets",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "license": "MIT",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@syncano/core": "0.10.0",
+    "@syncano/core": "0.11.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",

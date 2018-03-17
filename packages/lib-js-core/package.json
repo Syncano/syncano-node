@@ -1,6 +1,6 @@
 {
   "name": "@syncano/core",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "A library to intereact with the Syncano API on a server side.",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
