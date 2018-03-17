@@ -18,6 +18,7 @@ import template from 'es6-template-strings'
 import _ from 'lodash'
 import SourceMap from 'source-map'
 import WebSocket from 'ws'
+import Validator from '@syncano/validate'
 
 import logger from '../debug'
 import session from '../session'
@@ -383,15 +384,19 @@ class Socket {
     })
   }
 
-  verify () {
-    return new Promise((resolve, reject) => {
-      if (!(this.isDependencySocket || this.isProjectRegistryDependency)) {
-        if (!fs.existsSync(this.getSrcFolder())) {
-          reject(new Error('No src folder!'))
-        }
+  verifySchema () {
+    // Reload local settings
+    if (this.settings.load) this.settings.load()
+    return Validator.validateMainSchema(this.settings.attributes)
+  }
+
+  async verify () {
+    if (!(this.isDependencySocket || this.isProjectRegistryDependency)) {
+      if (!fs.existsSync(this.getSrcFolder())) {
+        throw new Error('No src folder!')
       }
-      resolve()
-    })
+      this.verifySchema()
+    }
   }
 
   getFullConfig () {
@@ -550,6 +555,11 @@ class Socket {
   getSocketEnvZip () {
     debug('getSocketEnvZip')
     return path.join(session.getDistPath(), `${this.name}.env.zip`)
+  }
+
+  isEmptyEnv () {
+    debug('isEmptyEnv', !fs.existsSync(this.getSocketEnvZip()))
+    return !fs.existsSync(this.getSocketEnvZip())
   }
 
   getSocketNodeModulesChecksum () {
@@ -749,8 +759,28 @@ class Socket {
 
       archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
       archive.file(path.join(this.getSocketPath(), 'package.json'), { name: 'package.json' })
-      archive.directory(this.getSrcFolder(), 'src')
-      archive.directory(path.join(this.getSocketPath(), 'bin'), 'bin')
+
+      const files = glob.sync(`**`, {
+        cwd: this.getSrcFolder(),
+        follow: true,
+        nodir: true
+      })
+
+      files.forEach(file => {
+        archive.file(path.join(this.getSrcFolder(), file), {name: path.join('src', file)})
+      })
+
+      const binFolder = path.join(this.getSocketPath(), 'bin')
+      const binFiles = glob.sync(`**`, {
+        cwd: binFolder,
+        follow: true,
+        nodir: true
+      })
+
+      binFiles.forEach(file => {
+        archive.file(path.join(binFolder, file), {name: path.join('bin', file)})
+      })
+
       archive.finalize()
 
       output.on('close', () => {
@@ -772,12 +802,29 @@ class Socket {
         mkdirp.sync(envFolder)
       }
 
+      let filesInZip = 0
+
       archive.pipe(output)
       archive.on('error', reject)
 
-      archive.directory(envFolder, 'node_modules')
+      const files = glob.sync(`**`, {
+        cwd: envFolder,
+        follow: true,
+        nodir: true
+      })
 
-      archive.finalize()
+      files.forEach(file => {
+        archive.file(path.join(envFolder, file), {name: path.join('node_modules', file)})
+        filesInZip += 1
+      })
+
+      if (filesInZip) {
+        archive.finalize()
+      } else {
+        fs.unlinkSync(this.getSocketEnvZip())
+        resolve()
+      }
+
       output.on('close', () => {
         resolve()
       })
@@ -785,6 +832,7 @@ class Socket {
   }
 
   updateEnvCall (method) {
+    debug('updateEnvCall')
     return new Promise((resolve, reject) => {
       const form = new FormData()
 
@@ -843,7 +891,9 @@ class Socket {
     const resp = await this.socketEnvShouldBeUpdated()
     if (resp) {
       await this.createEnvZip()
-      return this.updateEnvCall(resp)
+      if (!this.isEmptyEnv()) {
+        return this.updateEnvCall(resp)
+      }
     }
     return 'No need to update'
   }
@@ -877,7 +927,13 @@ class Socket {
       const form = new FormData()
 
       form.append('name', this.name)
-      form.append('environment', this.name)
+
+      if (this.isEmptyEnv()) {
+        debug('environment is null')
+        form.append('environment', '')
+      } else {
+        form.append('environment', this.name)
+      }
 
       if (config) {
         form.append('config', JSON.stringify(config))

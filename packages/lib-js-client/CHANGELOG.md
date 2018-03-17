@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.11.0"></a>
+# [0.11.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.11.0) (2018-03-17)
+
+
+### Bug Fixes
+
+* client tests ([1ba9571](https://github.com/Syncano/syncano-node/commit/1ba9571))
+* **client:** build for node was invalid ([#189](https://github.com/Syncano/syncano-node/issues/189)) ([4f8885a](https://github.com/Syncano/syncano-node/commit/4f8885a))
+
+
+
+
+<a name="0.10.0"></a>
+# [0.10.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.10.0) (2018-03-08)
+
+
+### Bug Fixes
+
+* client tests ([1ba9571](https://github.com/Syncano/syncano-node/commit/1ba9571))
+* style ([1f25934](https://github.com/Syncano/syncano-node/commit/1f25934))
+
+
+
+
 <a name="0.9.3"></a>
 ## [0.9.3](https://github.com/Syncano/syncano-node/compare/v0.9.1...v0.9.3) (2018-02-19)
 

@@ -1,4 +1,4 @@
-# File upload using data objects
+# File upload using Data Objects
 
 * Preparation: **5 minutes**
 * Requirements:
@@ -6,26 +6,25 @@
 
 ### Problem to solve
 
-You want to upload file to the database.
+You want to upload a file to Syncano.
 
 ### Solution
 
-You'll have to create form with upload field and socket to handle it.
+You'll have to create a form with an upload field and a Socket to handle it.
 
+#### Create a Socket and update the socket.yml
 
-#### Create socket
-
-At first you need to create a socket. Go to your project's directory with initiated syncano project and type:
+First you need to create a Socket. Go to your project's directory with an initiated project and type:
 
 ```sh
-npx s create application
+npx s create documents-socket
 ```
 
-Syncano has `file` type created for storage. You have to create a data class with this type in your `syncano/application/socket.yml` file.
+Syncano Data Classes have a `file` type schema property that is suitable for file storage. You have to create a class with this type in your `syncano/documents-socket/socket.yml` file. You'll also need to define an `upload` endpoint that will handle writing files to the `files` class.
 
 ```
-name: application
-description: Description of application
+name: documents-socket
+description: An example of file uploads on Syncano
 version: 0.0.1
 runtime: nodejs_v8
 
@@ -35,29 +34,34 @@ classes:
       type: file
 
 endpoints:
-  upload: 
-    description: add new file
-    parameters: 
-      file: 
+  upload:
+    description: Endpoint to upload new files
+    parameters:
+      file:
         type: file
-        description: application info
+        description: Document that will be uploaded to the 'files' class
     response:
-      success: 
-        description: Success
-        example:
-          {
-            "msg": "uploaded ok"
-          }
-      fail:
-        exit_code: 400
-        description: Failed
-        parameters:
-          message:
-            description: Error message
+      examples:
+        -
+          exit_code: 200
+          description: Success
+          example: |
+            {
+              "message": "Upload successful"
+            }
+        -
+          exit_code: 400
+          description: Failure
+          example: |
+            {
+              "message": "Upload failed"
+            }
 
 ```
 
-Next you need to install `form-data` package using `npm install -D form-data` inside of your socket directory. After that, in your endpoint (`upload.js`) you can to handle the file using it.
+#### Add Syncano server-side code
+
+Next, you need to install `form-data` package using `npm install -D form-data` inside your socket directory. After that you can handle the file upload in your `src/upload.js` script.
 
 ```js
 import Syncano from '@syncano/core'
@@ -65,23 +69,20 @@ import FormData from 'form-data'
 
 export default (ctx) => {
   const {data, response} = new Syncano(ctx)
+  const {file, filename, filetype} = ctx.args
+  const form = new FormData()
 
-  if (ctx.args.file) {
-    const form = new FormData() 
-    form.append('file', ctx.args.file, {
-      filename: ctx.args.filename,
-      filetype: ctx.args.filetype
-    })
-    
-    data.files.create(form).then( (res) => { 
-      response.json({
-        message: `File uploaded`
+  if (file) {
+    form.append('file', file, {filename, filetype})
+    data.files.create(form)
+      .then((res) => {
+        return response.json({message: `Upload successful`})
       })
-    })
+      .catch(({ error, statusCode = 400 }) => {
+        return response.json(error, statusCode)
+      })
   } else {
-    response.json({
-      message: 'Something went wrong'
-    }, 400)
+    return response.json({message: 'Upload failed'}, 400)
   }
 }
 
@@ -89,42 +90,45 @@ export default (ctx) => {
 
 #### Create client-side code
 
-Let's assume that you have a simple form in HTML:
+Let's assume that you have a simple HTML form:
 
 ```html
   <form enctype="multipart/form-data">
     <div>
       <input type="file" id="upload"/>
-    </div> 
+    </div>
     <div>
       <button class="submit--js">upload</button>
-    </div> 
+    </div>
   </form>
 
 ```
 
-You have to handle form submit with javascript:
+You'll have to handle the form submission with javascript:
 
-```js
-  import Syncano from '@syncano/client'
+```html
+<script src="https://unpkg.com/@syncano/client"></script>
+<script>
+window.addEventListener('load', function () {
+  const s = new SyncanoClient('late-mountain-7516')
+  const submit = document.querySelector('.submit--js')
 
-  let s = new Syncano("your-instance");
+  submit.addEventListener('click', e => {
+    e.preventDefault()
+    const file = document.querySelector('#upload').files[0]
+    const formData = new FormData()
 
-  const submit = document.querySelector(".submit--js");
-
-  submit.addEventListener("click", e => {
-    e.preventDefault();
-    const file = document.querySelector("#upload").files[0];
-    let formData = new FormData(); 
-    formData.append("file", file);
-    formData.append("filetype", file.filetype);
-    formData.append("filename", file.name);
-    console.log(formData)
-    s.post("application/upload", formData).then(res => {
-      console.log(res);
-    });
-  });
-
+    formData.append('file', file)
+    formData.append('filetype', file.filetype)
+    formData.append('filename', file.name)
+    s.post('new-sockit/upload', formData)
+      .then(res => { console.log(res) })
+      .catch(err => { console.error(err) })
+  })
+})
+</script>
 ```
 
-After submitting the file, data object will store link to your file hosted on the S3. File size limit is 6MB.
+After submitting a file, the Data Object will store a url to this file.
+
+> File size limit is 6MB.

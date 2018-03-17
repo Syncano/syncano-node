@@ -27,7 +27,8 @@ function getTemplate (templateName) {
 
 const builtInSocketTemplates = [
   '@syncano/template-socket-vanilla',
-  '@syncano/template-socket-es6'
+  '@syncano/template-socket-es6',
+  '@syncano/template-socket-es6-validate'
 ]
 
 const builtInProjectTemplates = [

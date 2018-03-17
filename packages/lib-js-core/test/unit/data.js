@@ -510,7 +510,15 @@ describe('Data', () => {
             {
               title: 'Awesome post',
               comments: {
-                value: [1, 2],
+                value: [1],
+                type: 'relation',
+                target: 'comment'
+              }
+            },
+            {
+              title: 'Awesome post 2',
+              comments: {
+                value: [2],
                 type: 'relation',
                 target: 'comment'
               }
@@ -531,7 +539,11 @@ describe('Data', () => {
         .should.become([
           {
             title: 'Awesome post',
-            comments: [{id: 1, content: 'Hello'}, {id: 2, content: 'World'}]
+            comments: [{id: 1, content: 'Hello'}]
+          },
+          {
+            title: 'Awesome post 2',
+            comments: [{id: 2, content: 'World'}]
           }
         ])
     })
@@ -823,6 +835,43 @@ describe('Data', () => {
         .fields(['name as author', 'views'])
         .list()
         .should.become([{author: 'John', views: 100}])
+    })
+
+    it('should work with nested array of objects', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {objects: [
+          {
+            name: 'John',
+            views: 100,
+            id: 2,
+            tags: ['css', 'html'],
+            documents: [
+              {
+                id: 10,
+                name: 'Test document'
+              }
+            ]
+          }
+        ]})
+
+      return data.users
+        .fields([
+          'name as author',
+          'views',
+          'tags',
+          'documents.id',
+          'documents.name as documents.title'
+        ])
+        .list()
+        .should.become([{
+          tags: ['css', 'html'],
+          documents: [
+            {id: 10, title: 'Test document'}
+          ],
+          author: 'John',
+          views: 100
+        }])
     })
 
     it('should work with create method', () => {

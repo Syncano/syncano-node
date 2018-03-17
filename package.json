@@ -7,7 +7,6 @@
     "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test npx nyc npx lerna run test:unit",
     "test:e2e": "npx lerna run test:e2e --stream",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "precommit": "lint-staged",
     "changelog": "npx lerna-changelog",
     "publish": "npx lerna publish --conventional-commits",
     "deploy": "npm run deploy:cookbook && yarn run deploy:cheatsheet",
@@ -19,17 +18,11 @@
     "node": ">= 8.4.0",
     "npm": ">= 2.x <= 5.x"
   },
-  "lint-staged": {
-    "packages/**/src/**/*.js": [
-      "npm run lint"
-    ]
-  },
   "dependencies": {
-    "@syncano/cli": "0.8.0",
+    "@syncano/cli": "0.10.0",
     "babel-eslint": "^8.0.1",
     "chalk": "^2.3.0",
     "git-branch": "^1.0.0",
-    "husky": "^0.14.3",
     "lerna": "^2.5.1",
     "lerna-changelog": "^0.7.0",
     "lint-staged": "^6.1.0",

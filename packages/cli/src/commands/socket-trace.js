@@ -4,7 +4,7 @@ import stackTrace from 'stack-trace'
 
 import { GlobalSpinner, SimpleSpinner } from './helpers/spinner'
 import logger from '../utils/debug'
-import { p, error, echo, printSourceCode } from '../utils/print-tools'
+import { p, error, warning, echo, printSourceCode } from '../utils/print-tools'
 import { currentTime } from '../utils/date-utils'
 
 const { debug } = logger('cmd-trace')
@@ -73,9 +73,16 @@ export default class SocketTrace {
 
     ws.on('message', async (data) => {
       debug('ws message')
-      this.mainSpinner.stop()
-      await this.printTrace(socket, JSON.parse(data))
-      this.mainSpinner.start()
+
+      const receivedData = JSON.parse(data)
+      if (!receivedData.payload && receivedData.detail) {
+        this.mainSpinner.stop()
+        warning(5)(receivedData.detail)
+      } else {
+        this.mainSpinner.stop()
+        await this.printTrace(socket, JSON.parse(data))
+        this.mainSpinner.start()
+      }
     })
   }
 

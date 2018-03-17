@@ -1,15 +1,19 @@
 {
   "name": "@syncano/validate",
   "description": "Validating Syncanao request/responses and more",
-  "version": "0.9.3",
+  "version": "0.11.0",
   "license": "MIT",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "ajv": "^5.2.3",
-    "faker": "^4.1.0"
+    "@syncano/schema": "0.11.0",
+    "ajv": "^6.2.0",
+    "ajv-error-messages": "^1.0.0",
+    "ajv-errors": "^1.0.0",
+    "ajv-keywords": "^3.1.0",
+    "lodash.isempty": "^4.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -26,9 +30,6 @@
     "prebuild": "npm run clean",
     "build": "babel src --out-dir lib",
     "build:watch": "npm run build -- --watch",
-    "test": "npm run lint && npm run test:e2e",
-    "test:e2e-single": "NODE_ENV=test mocha -s 1800 --reporter spec --require babel-register --timeout 10000",
-    "test:e2e": "npm run test:e2e-single",
     "lint": "standard --fix --env mocha"
   },
   "babel": {
@@ -37,7 +38,7 @@
         "env",
         {
           "targets": {
-            "node": "7"
+            "node": "8"
           }
         }
       ]

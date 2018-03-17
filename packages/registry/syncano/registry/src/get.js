@@ -46,11 +46,11 @@ export default function run (ctx) {
         return response.json(responseObj)
       })
       .catch(err => {
-        debug('Error:', err.message)
-        if (err.message === 'No results for given query.') {
-          return response({message: 'No such socket!'}, 404)
+        debug('Error:', [err.message])
+        if (err.message.match(/No results for given query/)) {
+          return response.json({message: 'No such socket!'}, 404)
         } else if (err.message) {
-          response.json({message: err.message}, 400)
+          return response.json({message: err.message}, 400)
         }
       })
   }

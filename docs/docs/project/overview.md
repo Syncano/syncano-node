@@ -25,8 +25,8 @@ my-project/.gitignore
 my-project/syncano
 my-project/syncano/hello
 my-project/syncano/hello/package.json
-my-project/syncano/hello/scripts
-my-project/syncano/hello/scripts/hello.js
+my-project/syncano/hello/src
+my-project/syncano/hello/src/hello.js
 my_project/syncano/hello/socket.yml
 my_project/syncano/package.json
 my_project/syncano/syncano.yml

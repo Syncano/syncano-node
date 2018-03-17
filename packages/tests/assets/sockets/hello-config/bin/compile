@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+mkdir -p .dist
+npx babel src --out-dir .dist/src --copy-files

@@ -1,0 +1,19 @@
+name: test
+description: Description of test
+version: 0.0.1
+runtime: nodejs_v8
+
+endpoints:
+  hello:
+    description: Hello world!
+    inputs:
+      type: object
+      format: test
+      required:
+        - firstname
+        - lastname
+      properties:
+        lastname:
+          type: string
+          description: Last name of the person you want to greet
+          example: Durden

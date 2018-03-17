@@ -1,0 +1,27 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "@syncano/core": "latest"
+  },
+  "scripts": {
+    "build": "npm install && npm run build:src && npm run build:env",
+    "build:src": "sh ./bin/compile",
+    "build:env": "sh ./bin/compile-env"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "8"
+          }
+        }
+      ]
+    ]
+  }
+}

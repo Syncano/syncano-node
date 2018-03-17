@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.11.0"></a>
+# [0.11.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.11.0) (2018-03-17)
+
+
+### Bug Fixes
+
+* client tests ([1ba9571](https://github.com/Syncano/syncano-node/commit/1ba9571))
+
+
+
+
+<a name="0.10.0"></a>
+# [0.10.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.10.0) (2018-03-08)
+
+
+### Bug Fixes
+
+* client tests ([1ba9571](https://github.com/Syncano/syncano-node/commit/1ba9571))
+* missing file ([6b6932e](https://github.com/Syncano/syncano-node/commit/6b6932e))
+
+
+### Features
+
+* **schema:** adding schema validation ([7bf5b9e](https://github.com/Syncano/syncano-node/commit/7bf5b9e))
+
+
+
+
 <a name="0.9.3"></a>
 ## [0.9.3](https://github.com/Syncano/syncano-node/compare/v0.9.1...v0.9.3) (2018-02-19)
 

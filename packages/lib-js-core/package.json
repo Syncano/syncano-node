@@ -1,6 +1,6 @@
 {
   "name": "@syncano/core",
-  "version": "0.9.3",
+  "version": "0.11.0",
   "description": "A library to intereact with the Syncano API on a server side.",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
@@ -17,16 +17,8 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:base": "cross-env NODE_ENV=test mocha --reporter spec --require babel-register",
     "test:unit": "npm run test:base -- test/unit/**/*.js",
-    "test:e2e": "npm run test:base -- --timeout 30000 --slow 8000 test/e2e/*.js",
     "lint": "standard --fix --env mocha",
     "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
-  },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint",
-      "npm run format",
-      "git add"
-    ]
   },
   "dependencies": {
     "debug": "^3.1.0",
@@ -37,7 +29,6 @@
     "node-fetch": "2.0.0-alpha.9"
   },
   "devDependencies": {
-    "@syncano/test-tools": "0.9.3",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-plugin-add-module-exports": "^0.2.1",

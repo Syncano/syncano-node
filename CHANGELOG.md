@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.11.0"></a>
+# [0.11.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.11.0) (2018-03-17)
+
+
+### Bug Fixes
+
+* client tests ([1ba9571](https://github.com/Syncano/syncano-node/commit/1ba9571))
+* missing schema files ([370a2cc](https://github.com/Syncano/syncano-node/commit/370a2cc))
+* small fixes ([a802431](https://github.com/Syncano/syncano-node/commit/a802431))
+* small fixes ([9d4d0d9](https://github.com/Syncano/syncano-node/commit/9d4d0d9))
+* tools version ([ee3476b](https://github.com/Syncano/syncano-node/commit/ee3476b))
+* **client:** build for node was invalid ([#189](https://github.com/Syncano/syncano-node/issues/189)) ([4f8885a](https://github.com/Syncano/syncano-node/commit/4f8885a))
+* **core:** with method broken for relations ([#187](https://github.com/Syncano/syncano-node/issues/187)) ([a3f645e](https://github.com/Syncano/syncano-node/commit/a3f645e))
+* **registry:** no packages in registry ([50ef86f](https://github.com/Syncano/syncano-node/commit/50ef86f))
+* **tests:** adding missing files ([a070e6d](https://github.com/Syncano/syncano-node/commit/a070e6d))
+* **tests:** removing yarn ([8d01cc7](https://github.com/Syncano/syncano-node/commit/8d01cc7))
+
+
+### Features
+
+* handle mapped name in nested arrays ([#185](https://github.com/Syncano/syncano-node/issues/185)) ([6f49966](https://github.com/Syncano/syncano-node/commit/6f49966))
+* support arrays in fields method ([cf8ad30](https://github.com/Syncano/syncano-node/commit/cf8ad30))
+
+
+
+
+<a name="0.10.0"></a>
+# [0.10.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.10.0) (2018-03-08)
+
+
+### Bug Fixes
+
+* client tests ([1ba9571](https://github.com/Syncano/syncano-node/commit/1ba9571))
+* **tests:** adding missing files ([a070e6d](https://github.com/Syncano/syncano-node/commit/a070e6d))
+* missing file ([6b6932e](https://github.com/Syncano/syncano-node/commit/6b6932e))
+* small fixes ([a802431](https://github.com/Syncano/syncano-node/commit/a802431))
+* small fixes ([9d4d0d9](https://github.com/Syncano/syncano-node/commit/9d4d0d9))
+* style ([1f25934](https://github.com/Syncano/syncano-node/commit/1f25934))
+* tools version ([ee3476b](https://github.com/Syncano/syncano-node/commit/ee3476b))
+
+
+### Features
+
+* **schema:** adding schema validation ([7bf5b9e](https://github.com/Syncano/syncano-node/commit/7bf5b9e))
+
+
+
+
 <a name="0.9.3"></a>
 ## [0.9.3](https://github.com/Syncano/syncano-node/compare/v0.9.1...v0.9.3) (2018-02-19)
 

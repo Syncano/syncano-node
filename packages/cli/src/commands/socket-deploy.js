@@ -34,6 +34,7 @@ export default class SocketDeployCmd {
     if (cmd.createInstance) {
       await createInstance(cmd.createInstance)
       await this.init.addConfigFiles({ instance: cmd.createInstance })
+      echo(4)(`Your project is attached to ${format.green(cmd.createInstance)} instance now!`)
     } else {
       // If not, we have to check if we have a project attached to any instance
       this.session.hasProject()

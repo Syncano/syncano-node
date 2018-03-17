@@ -119,7 +119,7 @@ class Data extends QueryBuilder {
       const load = new Data(this.instance)
       let ids = references.map(item => item.value)
 
-      ids = Array.isArray(ids[0]) ? ids[0] : ids
+      ids = Array.isArray(ids[0]) ? [].concat.apply([], ids) : ids
 
       if (target === 'user') {
         load._url = `${this._getInstanceURL(
@@ -268,7 +268,23 @@ class Data extends QueryBuilder {
 
   _mapFieldsForSingleItem (item, fields) {
     return Object.keys(fields).reduce(
-      (all, key) => set(all, fields[key] || key, get(item, key)),
+      (all, key) => {
+        const itemFieldKey = key.split('.').shift()
+        const itemField = get(item, itemFieldKey)
+
+        if (Array.isArray(itemField) && typeof itemField[0] === 'object' && itemField[0] !== null) {
+          itemField.forEach((arrItem, i) => {
+            const path = `${itemFieldKey}.[${i}].${key.split('.').slice(1)}`
+            const mappedPath = `${itemFieldKey}.[${i}].${(fields[key] || key).split('.').slice(1)}`
+
+            set(all, mappedPath, get(item, path))
+          })
+        } else {
+          set(all, fields[key] || key, get(item, key))
+        }
+
+        return all
+      },
       {}
     )
   }

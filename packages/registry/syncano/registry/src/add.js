@@ -19,7 +19,7 @@ export default async (ctx) => {
     const {getKeywords} = require('./helpers/keyword').default(ctx, syncano)
 
     const { name, description, version, icon, url, config } = ctx.args
-    const keywords = JSON.parse(ctx.args.keywords || '[]')
+    const keywords = JSON.parse(ctx.args.keywords || [])
 
     const user = await authUser()
     const socketObj = await getSocketLastVersion()

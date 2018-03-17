@@ -1,30 +1,30 @@
 {
   "name": "@syncano/registry-organization-socket",
   "license": "MIT",
-	"scripts": {
-		"build": "yarn && yarn run build:src && yarn run build:env",
-		"build:src": "sh ./bin/compile",
-		"build:env": "sh ./bin/compile-env"
-	},
-	"dependencies": {
-		"@syncano/core": "0.7.0",
-		"lodash": "^4.17.4",
-		"semver": "^5.4.1"
-	},
-	"devDependencies": {
-		"babel-cli": "^6.26.0",
-		"babel-preset-env": "^1.6.1"
-	},
-	"babel": {
-		"presets": [
-			[
-				"env",
-				{
-					"targets": {
-						"node": "8"
-					}
-				}
-			]
-		]
-	}
+  "scripts": {
+    "build": "npm install && npm run build:src && npm run build:env",
+    "build:src": "sh ./bin/compile",
+    "build:env": "sh ./bin/compile-env"
+  },
+  "dependencies": {
+    "@syncano/core": "0.11.0",
+    "lodash": "^4.17.4",
+    "semver": "^5.4.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "8"
+          }
+        }
+      ]
+    ]
+  }
 }

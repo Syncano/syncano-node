@@ -101,6 +101,12 @@ s.get('countries/get', {name: 'Poland'})</code></pre>
     'Content-Type': 'application/json'
   }
 })</code></pre>
+      <h4>Cache</h4>
+      <pre data-type="socket"><code class="lang-yaml">endpoints:
+  list:
+    cache: 30</code></pre>
+      <pre><code class="lang-js">// skip cache set in the socket.yml
+s.get('countries/list', {__skip_cache: 1})</code></pre>
     </section>
     <!--
 
@@ -590,7 +596,7 @@ s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code><
     </section>
     <!--
 
-      ====
+      ==== SOCKET 1
 
 --><section data-tag="socket" class="c-column">
     <h3>Basics</h3>
@@ -614,7 +620,11 @@ version: 0.0.1
       title:
         type: string
       author:
-        type: integer</code></pre>
+        type: integer
+    # cache a GET request for 5 seconds
+    cache: 5
+    # restrict access to admin only
+    private: true</code></pre>
         <h4>Define real-time endpoints</h4>
         <div>
           To learn about Channels, view <a data-tab="server" href="#server">Server Cheatsheet</a>
@@ -667,7 +677,7 @@ version: 0.0.1
       API keys section at (https://home.openweathermap.org/api_keys).
     required: true</code></pre>
       </section><!--
-
+    === SOCKET 2
 --><section data-tag="socket" class="c-column">
     <h3>Data Classes</h3>
     <h4>Define class</h4>

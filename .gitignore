@@ -2,7 +2,7 @@ node_modules
 coverage
 .DS_Store
 .idea
-/lib
+*/**/lib/
 /dist
 /example
 npm-debug.log
@@ -12,3 +12,5 @@ coverage.lcov
 .envrc
 .vscode
 *.log
+.changelog
+packages/tests/e2e-tests

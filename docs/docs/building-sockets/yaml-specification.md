@@ -63,7 +63,7 @@ While the `source` method is great for one-liners, it might get cumbersome with 
 ```yaml
 endpoints:
   get_obj:
-    file: ./scripts/get_obj.js
+    file: ./src/get_obj.js
 ```
 
 `file` value is a relative path to the file containing the script code. The`socket.yml` location is the root.
@@ -76,9 +76,9 @@ By default, an endpoint will execute the same script on any type of HTTP request
 endpoints:  
   endpoint_separate_by_http_method:
     GET:
-      file: ./scripts/get_obj.js
+      file: ./src/get_obj.js
     POST:
-    	file: ./scripts/create_object.js
+    	file: ./src/create_object.js
 ```
 
 ### Endpoint documentation
@@ -87,7 +87,7 @@ Since the yml file will accept any property, you can add your own notes to any p
 ```yaml
 endpoints:
   send_email:
-    file: ./scripts/send_email.js
+    file: ./src/send_email.js
     parameters:
       email:
         type: string

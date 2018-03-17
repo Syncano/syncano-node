@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.11.0"></a>
+# [0.11.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.11.0) (2018-03-17)
+
+
+### Bug Fixes
+
+* **core:** with method broken for relations ([#187](https://github.com/Syncano/syncano-node/issues/187)) ([a3f645e](https://github.com/Syncano/syncano-node/commit/a3f645e))
+
+
+### Features
+
+* handle mapped name in nested arrays ([#185](https://github.com/Syncano/syncano-node/issues/185)) ([6f49966](https://github.com/Syncano/syncano-node/commit/6f49966))
+* support arrays in fields method ([cf8ad30](https://github.com/Syncano/syncano-node/commit/cf8ad30))
+
+
+
+
+<a name="0.10.0"></a>
+# [0.10.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.10.0) (2018-03-08)
+
+
+
+
+**Note:** Version bump only for package @syncano/core
+
 <a name="0.9.3"></a>
 ## [0.9.3](https://github.com/Syncano/syncano-node/compare/v0.9.1...v0.9.3) (2018-02-19)
 
