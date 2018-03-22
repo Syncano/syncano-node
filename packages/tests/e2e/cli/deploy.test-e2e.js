@@ -57,6 +57,14 @@ describe('CLI Deploy', function () {
       .end(done)
   })
 
+  it('can\'t deploy non existing socket', function (done) {
+    testNixt()
+      .run(`${cliLocation} deploy nope`)
+      .stdout(/error: nope socket does not exist./)
+      .code(1)
+      .end(done)
+  })
+
   it.skip('can call hello socket endpoint', function (done) {
     testNixt()
       .run(`${cliLocation} call hello/hello`)
