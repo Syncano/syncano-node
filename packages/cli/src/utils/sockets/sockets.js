@@ -19,6 +19,7 @@ import _ from 'lodash'
 import SourceMap from 'source-map'
 import WebSocket from 'ws'
 import Validator from '@syncano/validate'
+import format from 'chalk'
 
 import logger from '../debug'
 import session from '../session'
@@ -306,9 +307,14 @@ class Socket {
     }
 
     if (socketName) {
-      const socket = await Socket.get(socketName)
-      addToList(socket)
-      return sockets
+      try {
+        const socket = await Socket.get(socketName)
+        addToList(socket)
+        return sockets
+      } catch (err) {
+        echo(format.red(`\n\n error: ${socketName} socket does not exist.`))
+        process.exit(1)
+      }
     }
 
     // All Sockets
