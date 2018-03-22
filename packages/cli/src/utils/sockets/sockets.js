@@ -1032,7 +1032,7 @@ class Socket {
               // Build registry socket.
               try {
                 await this.build()
-              } catch(e) {
+              } catch (e) {
                 return reject(e)
               }
               return resolve()
