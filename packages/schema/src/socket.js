@@ -53,8 +53,7 @@ export default {
             outputs: {
               type: 'object'
             }
-          },
-          required: [ 'description' ]
+          }
         }
       }
     },
