@@ -30,7 +30,7 @@ export default {
       uniqueItems: true,
       items: {
         type: 'string',
-        maxLength: 12
+        maxLength: 32
       }
     },
     runtime: {
