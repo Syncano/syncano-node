@@ -26,11 +26,11 @@ export default class SocketAdd {
       if (cmd.socket) {
         // Socket dependency
         this.socket = await this.Socket.get(cmd.socket)
-        return this.socket.addDependency(socketFromRegistry)
+        await this.socket.addDependency(socketFromRegistry)
+      } else {
+        // Project dependency
+        await this.Socket.add(socketFromRegistry)
       }
-
-      // Project dependency
-      await this.Socket.add(socketFromRegistry)
 
       const status = format.grey('socket added:')
       const name = format.cyan(this.socketFromRegistry.name)
@@ -61,7 +61,11 @@ export default class SocketAdd {
         }
       } else {
         echo()
-        echo(`${format.red(err)}\n`)
+        if(err.message) {
+          echo(`${format.red(err.message)}\n`)
+        } else {
+          echo(`${format.red(err)}\n`)
+        }
         echo()
       }
     }
