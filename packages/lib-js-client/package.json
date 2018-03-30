@@ -30,7 +30,8 @@
     "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc"
   },
   "dependencies": {
-    "axios": "^0.17.1"
+    "axios": "^0.17.1",
+    "form-data": "^2.3.2"
   },
   "devDependencies": {
     "@syncano/test-tools": "0.11.0",
