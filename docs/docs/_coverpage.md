@@ -36,7 +36,7 @@
         $<input aria-readonly="true" readonly data-autoselect value="npm i @syncano/cli" />
       </div>
       <div>
-        $<input aria-readonly="true" readonly data-autoselect value="npx s" />
+        $<input aria-readonly="true" readonly data-autoselect value="npx s init" />
       </div>
     </div>
     <div class="links">
