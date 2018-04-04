@@ -8,6 +8,7 @@
     - [Update your socket to 0.8+ version](/basics/update)
   - Database
     - [Creating objects](/database/creating-objects)
+    - [Data Object Relations](/database/object-relations)
   - Users & Groups
     - [Creating user account](/users-groups/creating-user-account)
     <!-- - [Creating user group](/users-groups/creating-user-group) -->
