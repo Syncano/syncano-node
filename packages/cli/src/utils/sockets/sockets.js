@@ -160,6 +160,7 @@ class Socket {
     this.isProjectRegistryDependency = null
     this.dependencies = []
     this.dependencyOf = []
+    this.envIsNull = false
 
     // that looks stupid
     this.remote = {
@@ -329,11 +330,10 @@ class Socket {
     debug(`Getting Socket: ${socketName}`)
     const socket = Socket.getLocal(socketName)
     const loadedSocket = await socket.loadRemote()
-    await loadedSocket.getDepsRegistrySockets()
-
     if (!socket.existLocally) {
       await socket.loadFromRegistry()
     }
+    await loadedSocket.getDepsRegistrySockets()
     return socket
   }
 
@@ -558,13 +558,13 @@ class Socket {
   }
 
   isEmptyEnv () {
-    debug('isEmptyEnv', !fs.existsSync(this.getSocketEnvZip()))
-    return !fs.existsSync(this.getSocketEnvZip())
+    debug('isEmptyEnv', this.envIsNull)
+    return this.envIsNull
   }
 
   getSocketNodeModulesChecksum () {
     debug('getSocketNodeModulesChecksum')
-    return hashdirectory.sync(path.join(this.socketPath, '.dist', 'node_modules'))
+    return hashdirectory.sync(path.join(this.getSocketPath(), '.dist', 'node_modules'))
   }
 
   getSocketConfigFile () {
@@ -822,11 +822,11 @@ class Socket {
         archive.finalize()
       } else {
         fs.unlinkSync(this.getSocketEnvZip())
-        resolve()
+        resolve(false)
       }
 
       output.on('close', () => {
-        resolve()
+        resolve(true)
       })
     })
   }
@@ -890,9 +890,11 @@ class Socket {
     debug('updateEnv')
     const resp = await this.socketEnvShouldBeUpdated()
     if (resp) {
-      await this.createEnvZip()
-      if (!this.isEmptyEnv()) {
+      const zip = await this.createEnvZip()
+      if (zip) {
         return this.updateEnvCall(resp)
+      } else {
+        this.envIsNull = true
       }
     }
     return 'No need to update'
@@ -1021,9 +1023,16 @@ class Socket {
         await new Promise((resolve, reject) => {
           fs.createReadStream(fileName)
             .pipe(unzip.Extract({ path: this.getSocketPath() }))
-            .on('close', () => {
+            .on('close', async () => {
               debug('Unzip finished')
-              resolve()
+
+              // Build registry socket.
+              try {
+                await this.build()
+              } catch (e) {
+                return reject(e)
+              }
+              return resolve()
             })
         })
       }
@@ -1043,7 +1052,7 @@ class Socket {
         args.split(' '),
         {
           cwd: this.getSocketPath(),
-          maxBuffer: 2048 * 1024,
+          maxBuffer: 2048 * 4096,
           stdio: [process.stdio, 'pipe', 'pipe']
         }
       )

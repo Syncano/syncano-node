@@ -13,68 +13,68 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v8-dependencies-{{ checksum "package.json" }}
-          - v8-dependencies
+          - v9-dependencies-{{ checksum "package.json" }}
+          - v9-dependencies
 
       - restore_cache:
           keys:
-          - v8-dependencies-cli-{{ checksum "packages/cli/package.json" }}
-          - v8-dependencies-cli
+          - v9-dependencies-cli-{{ checksum "packages/cli/package.json" }}
+          - v9-dependencies-cli
 
       - restore_cache:
           keys:
-          - v8-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
-          - v8-dependencies-core
+          - v9-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
+          - v9-dependencies-core
 
       - restore_cache:
           keys:
-          - v8-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
-          - v8-dependencies-client
+          - v9-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
+          - v9-dependencies-client
 
       - restore_cache:
           keys:
-          - v8-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
-          - v8-dependencies-validate
+          - v9-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
+          - v9-dependencies-validate
 
       - restore_cache:
           keys:
-          - v8-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
-          - v8-dependencies-test
+          - v9-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
+          - v9-dependencies-test
 
       - restore_cache:
           keys:
-          - v8-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
-          - v8-dependencies-template-project-empty
+          - v9-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+          - v9-dependencies-template-project-empty
 
       - restore_cache:
           keys:
-          - v8-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
-          - v8-dependencies-template-project-hello
+          - v9-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
+          - v9-dependencies-template-project-hello
 
       - restore_cache:
           keys:
-          - v8-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
-          - v8-dependencies-template-socket-es6
+          - v9-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
+          - v9-dependencies-template-socket-es6
 
       - restore_cache:
           keys:
-          - v8-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
-          - v8-dependencies-registry-organization
+          - v9-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
+          - v9-dependencies-registry-organization
 
       - restore_cache:
           keys:
-          - v8-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
-          - v8-dependencies-registry-registry
+          - v9-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
+          - v9-dependencies-registry-registry
 
       - restore_cache:
           keys:
-          - v8-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
-          - v8-dependencies-test-tools
+          - v9-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
+          - v9-dependencies-test-tools
 
       - restore_cache:
           keys:
-          - v8-dependencies-registry-{{ checksum "packages/registry/package.json" }}
-          - v8-dependencies-registry
+          - v9-dependencies-registry-{{ checksum "packages/registry/package.json" }}
+          - v9-dependencies-registry
 
       - run: npm install
       - run: npm run bootstrap
@@ -82,70 +82,70 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v8-dependencies-{{ checksum "package.json" }}
+          key: v9-dependencies-{{ checksum "package.json" }}
 
       - save_cache:
           paths:
             - packages/cli/node_modules
-          key: v8-dependencies-cli-{{ checksum "packages/cli/package.json" }}
+          key: v9-dependencies-cli-{{ checksum "packages/cli/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-core/node_modules
-          key: v8-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
+          key: v9-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-client/node_modules
-          key: v8-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
+          key: v9-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-validate/node_modules
-          key: v8-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
+          key: v9-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-test/node_modules
-          key: v8-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
+          key: v9-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-project-empty/node_modules
-          key: v8-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+          key: v9-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-project-hello/node_modules
-          key: v8-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
+          key: v9-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-socket-es6/node_modules
-          key: v8-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
+          key: v9-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
 
       - save_cache:
           paths:
             - packages/registry/syncano/organization/node_modules
-          key: v8-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
+          key: v9-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
 
       - save_cache:
           paths:
             - packages/registry/syncano/registry/node_modules
-          key: v8-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
+          key: v9-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
 
       - save_cache:
           paths:
             - packages/registry/node_modules
-          key: v8-dependencies-registry-{{ checksum "packages/registry/package.json" }}
+          key: v9-dependencies-registry-{{ checksum "packages/registry/package.json" }}
 
       - save_cache:
           paths:
             - packages/test-tools/node_modules
-          key: v8-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
+          key: v9-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
 
       - save_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo
 
@@ -158,7 +158,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:unit
       - run: npm run report:coverage
 
@@ -171,7 +171,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e
 
   test_e2e_validate:
@@ -183,7 +183,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:validate
 
   test_e2e_core:
@@ -195,7 +195,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:core
 
   test_e2e_client:
@@ -207,7 +207,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:client
 
   test_e2e_registry:
@@ -219,7 +219,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} npm run test:e2e:cli:registry
 
   test_e2e_hosting:
@@ -231,7 +231,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:hosting
 
   # test_e2e_init:
@@ -243,7 +243,7 @@ jobs:
   #
   #   steps:
   #     - restore_cache:
-  #         key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+  #         key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
   #     - run: npm run test:e2e:cli:init
 
   test_e2e_socket:
@@ -255,7 +255,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:socket
 
   test_e2e_anonymous:
@@ -267,7 +267,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:anonymous
 
   test_e2e_instance:
@@ -279,7 +279,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:instance
 
   test_e2e_deploy:
@@ -291,7 +291,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:deploy
 
   test_e2e_config:
@@ -303,7 +303,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:config
 
   test_e2e_schema:
@@ -315,7 +315,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:schema
 
   test_lint:
@@ -327,7 +327,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run lint
 
   deploy_docs:
@@ -339,7 +339,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo 'export SYNCANO_HOST=${PRODUCTION_SYNCANO_HOST}' >> $BASH_ENV
       - run: echo 'export SYNCANO_AUTH_KEY=${PRODUCTION_SYNCANO_AUTH_KEY}' >> $BASH_ENV
       - run: echo 'export SYNCANO_PROJECT_INSTANCE=syncano-docs-${CIRCLE_BRANCH}' >> $BASH_ENV
@@ -360,7 +360,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo 'export REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}' >> $BASH_ENV
       - run: sh ./bin/deploy-staging
 
@@ -373,7 +373,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: sh ./bin/deploy
 
   delete_registry:
@@ -385,7 +385,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: SYNCANO_AUTH_KEY=${REGISTRY_TEST_SYNCANO_AUTH_KEY} ../cli/lib/cli.js instance delete ${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}
 
   deploy_canary_registry:
@@ -397,7 +397,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: sh ./bin/deploy-canary
 
   publish:
@@ -409,7 +409,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
       - run: npm run changelog
       - run: npx lerna publish --canary --yes
@@ -423,7 +423,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: v8-repo-units-{{ .Environment.CIRCLE_SHA1 }}
+          key: v9-repo-units-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run report:coverage
 
 workflows:

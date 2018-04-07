@@ -95,7 +95,7 @@ describe('Schema', function () {
         Validator.validateMainSchema(getSchema('invalid_keywords'))
         assert()
       } catch (err) {
-        assert(err.details[0].message.match(/should NOT be longer than 12 character/))
+        assert(err.details[0].message.match(/should NOT be longer than 32 character/))
       }
     })
 
