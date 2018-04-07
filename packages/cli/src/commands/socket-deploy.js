@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import format from 'chalk'
 import Promise from 'bluebird'
 

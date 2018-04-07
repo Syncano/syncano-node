@@ -27,6 +27,9 @@ const getTemplatesChoices = () => socketTemplates().map(socketTemplate =>
     `${socketTemplate.description} - ${format.grey(`(${socketTemplate.name})`)}`)
 
 const searchForSockets = (socketsPath) => {
+  if (!fs.existsSync(socketsPath)) {
+    return []
+  }
   const sockets = []
 
   const options = {
@@ -42,16 +45,6 @@ const searchForSockets = (socketsPath) => {
       sockets.push([path, socket])
     }
   })
-
-  // const dirs = (p) => fs.readdirSync(p).filter((f) => fs.statSync(path.join(p, f)).isDirectory())
-  //
-  // dirs(socketsPath).forEach((dir) => {
-  //   const socketFile = path.join(socketsPath, dir, 'socket.yml')
-  //   if (fs.existsSync(socketFile)) {
-  //     const socket = YAML.load(fs.readFileSync(socketFile, 'utf8')) || {}
-  //     sockets.push([socketFile, socket])
-  //   }
-  // })
 
   return sockets
 }
@@ -103,7 +96,6 @@ const listLocal = () => {
 
   const nodeModPath = path.join(session.projectPath, 'node_modules')
   const nodeModSockets = searchForSockets(nodeModPath).map(([file, socket]) => socket.name)
-  console.log("XXX", nodeModSockets)
 
   return localSockets.concat(nodeModSockets)
 }
