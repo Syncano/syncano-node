@@ -283,7 +283,8 @@ class Socket {
   static async list () {
     debug('list()')
     // Local Socket defined in folders and in project deps
-    const localSocketsList = utils.listLocal().concat(Socket.listDeps())
+    const localSocketsList = utils.listLocal()
+    // .concat(Socket.listDeps())
     return Promise.all(localSocketsList.map((socketName) => Socket.get(socketName)))
   }
 

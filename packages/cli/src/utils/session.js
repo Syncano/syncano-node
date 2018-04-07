@@ -136,40 +136,41 @@ export class Session {
   }
 
   static findProjectPath () {
-    return new Promise((resolve, reject) => {
-      if (fs.existsSync('syncano.yml')) {
-        return resolve(process.cwd())
-      }
-      if (fs.existsSync('syncano/syncano.yml')) {
-        return resolve(path.join(process.cwd(), 'syncano'))
-      }
-
-      const searchInPath = (pathToCheck) => {
-        if (pathToCheck === process.env.HOME || pathToCheck === '/') {
-          return reject(new Error('No more folders to check'))
-        }
-
-        let files = null
-        try {
-          files = fs.readdirSync(pathToCheck)
-        } catch (err) {
-          return reject(new Error(`Path ${pathToCheck} can not be read`))
-        }
-
-        if (_.includes(files, 'syncano.yml')) {
-          return resolve(pathToCheck)
-        }
-
-        const nextFolder = path.parse(pathToCheck)
-        if (nextFolder.name) {
-          searchInPath(nextFolder.dir)
-        } else {
-          return reject(new Error('No more folders to check'))
-        }
-      }
-
-      searchInPath(process.cwd())
-    })
+    return process.cwd()
+    // return new Promise((resolve, reject) => {
+    //   if (fs.existsSync('syncano.yml')) {
+    //     return resolve(process.cwd())
+    //   }
+    //   if (fs.existsSync('syncano/syncano.yml')) {
+    //     return resolve(path.join(process.cwd(), 'syncano'))
+    //   }
+    //
+    //   const searchInPath = (pathToCheck) => {
+    //     if (pathToCheck === process.env.HOME || pathToCheck === '/') {
+    //       return reject(new Error('No more folders to check'))
+    //     }
+    //
+    //     let files = null
+    //     try {
+    //       files = fs.readdirSync(pathToCheck)
+    //     } catch (err) {
+    //       return reject(new Error(`Path ${pathToCheck} can not be read`))
+    //     }
+    //
+    //     if (_.includes(files, 'syncano.yml')) {
+    //       return resolve(pathToCheck)
+    //     }
+    //
+    //     const nextFolder = path.parse(pathToCheck)
+    //     if (nextFolder.name) {
+    //       searchInPath(nextFolder.dir)
+    //     } else {
+    //       return reject(new Error('No more folders to check'))
+    //     }
+    //   }
+    //
+    //   searchInPath(process.cwd())
+    // })
   }
 
   async load () {

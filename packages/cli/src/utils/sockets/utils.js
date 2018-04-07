@@ -2,6 +2,7 @@ import fs from 'fs'
 import YAML from 'js-yaml'
 import path from 'path'
 import format from 'chalk'
+import walkdir from 'walkdir'
 
 import logger from '../debug'
 import session from '../session'
@@ -25,18 +26,32 @@ const socketTemplates = () => {
 const getTemplatesChoices = () => socketTemplates().map(socketTemplate =>
     `${socketTemplate.description} - ${format.grey(`(${socketTemplate.name})`)}`)
 
-const searchForSockets = (projectPath) => {
+const searchForSockets = (socketsPath) => {
   const sockets = []
 
-  const dirs = (p) => fs.readdirSync(p).filter((f) => fs.statSync(path.join(p, f)).isDirectory())
+  const options = {
+    'follow_symlinks': true,
+    'max_depth': 3
+  }
 
-  dirs(projectPath).forEach((dir) => {
-    const socketFile = path.join(projectPath, dir, 'socket.yml')
-    if (fs.existsSync(socketFile)) {
-      const socket = YAML.load(fs.readFileSync(socketFile, 'utf8')) || {}
-      sockets.push([socketFile, socket])
+  // TODO: optimize only diging deeper scoped modues
+  walkdir.sync(socketsPath, options, (path, stat) => {
+    if (path.match(/socket.yml$/)) {
+      console.log('found: ', path)
+      const socket = YAML.load(fs.readFileSync(path, 'utf8')) || {}
+      sockets.push([path, socket])
     }
   })
+
+  // const dirs = (p) => fs.readdirSync(p).filter((f) => fs.statSync(path.join(p, f)).isDirectory())
+  //
+  // dirs(socketsPath).forEach((dir) => {
+  //   const socketFile = path.join(socketsPath, dir, 'socket.yml')
+  //   if (fs.existsSync(socketFile)) {
+  //     const socket = YAML.load(fs.readFileSync(socketFile, 'utf8')) || {}
+  //     sockets.push([socketFile, socket])
+  //   }
+  // })
 
   return sockets
 }
@@ -58,11 +73,22 @@ const findLocalPath = (socketName) => {
     }
   }
 
-  searchForSockets(projectPath).forEach(([file, socket]) => {
+  // Search for syncano folder
+  const socketsPath = path.join(session.projectPath, 'syncano')
+  searchForSockets(socketsPath).forEach(([file, socket]) => {
     if (socket.name === socketName) {
       socketPath = path.dirname(file)
     }
   })
+
+  if (!socketPath) {
+    const nodeModPath = path.join(session.projectPath, 'node_modules')
+    searchForSockets(nodeModPath).forEach(([file, socket]) => {
+      if (socket.name === socketName) {
+        socketPath = path.dirname(file)
+      }
+    })
+  }
 
   return socketPath
 }
@@ -70,8 +96,16 @@ const findLocalPath = (socketName) => {
 // Listing sockets
 // list sockets based on project path
 const listLocal = () => {
-  debug('listLocal')
-  return searchForSockets(session.projectPath).map(([file, socket]) => socket.name)
+  debug('listLocal', session.projectPath)
+
+  const localPath = path.join(session.projectPath, 'syncano')
+  const localSockets = searchForSockets(localPath).map(([file, socket]) => socket.name)
+
+  const nodeModPath = path.join(session.projectPath, 'node_modules')
+  const nodeModSockets = searchForSockets(nodeModPath).map(([file, socket]) => socket.name)
+  console.log("XXX", nodeModSockets)
+
+  return localSockets.concat(nodeModSockets)
 }
 
 const getOrigFilePath = (origFileLine) => {
