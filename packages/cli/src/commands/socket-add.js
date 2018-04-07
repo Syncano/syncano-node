@@ -61,7 +61,7 @@ export default class SocketAdd {
         }
       } else {
         echo()
-        if(err.message) {
+        if (err.message) {
           echo(`${format.red(err.message)}\n`)
         } else {
           echo(`${format.red(err)}\n`)
