@@ -30,7 +30,7 @@ class SocketListCmd {
         process.exit(1)
       }
     } else {
-      const sockets = cmd.withDeps ? await this.Socket.flatList() : await this.Socket.list()
+      const sockets = await this.Socket.list()
       this.printSockets(sockets)
     }
   }

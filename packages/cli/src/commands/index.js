@@ -15,11 +15,7 @@ import SocketConfig from './socket-config'
 import SocketConfigSet from './socket-config-set'
 import SocketConfigShow from './socket-config-show'
 import SocketEndpointCall from './socket-call'
-import SocketSearch from './socket-search'
-import SocketSubmit from './socket-submit'
-import SocketPublish from './socket-publish'
 import SocketTrace from './socket-trace'
-import SocketAdd from './socket-add'
 import SocketCreate from './socket-create'
 import SocketUninstall from './socket-uninstall'
 import ComponentList from './component-list'
@@ -46,11 +42,7 @@ export default {
   SocketConfigShow,
   SocketList,
   SocketEndpointCall,
-  SocketSearch,
-  SocketPublish,
-  SocketSubmit,
   SocketTrace,
-  SocketAdd,
   SocketCreate,
   SocketUninstall,
   ComponentList,

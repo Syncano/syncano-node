@@ -128,7 +128,6 @@ const setup = async () => {
     .group('Sockets')
     .description('List the installed Sockets')
     .option('-f, --full', 'Print the detailed information (including parameters and response)')
-    .option('-d, --with-deps', 'Print also Sockets which are dependencies of other Sockets')
     .action(async (...options) => {
       trackAndDebug(options)
       session.isAuthenticated()
@@ -228,34 +227,6 @@ const setup = async () => {
       }
       echo()
       new commands.SocketSearch(context).run(options)
-    })
-
-  program
-    .command('submit <socket_name>')
-    .group('Registry')
-    .description('Submit a Socket to Socket Registry')
-    .option(
-      '-b, --bump <release type>',
-      'Bump version of the socket (major, premajor, minor, preminor, patch, prepatch, or prerelease)'
-    )
-    .action(async(...options) => {
-      const [name] = options
-      trackAndDebug(options, { socketName: name })
-      new commands.SocketSubmit(context).run(options)
-    })
-
-  program
-    .command('publish <socket_name>')
-    .group('Registry')
-    .description('Publish a Socket in a Socket Registry')
-    .option(
-      '-v, --version <socket version>',
-      'Version of the Socket you want to publish'
-    )
-    .action(async(...options) => {
-      const [name] = options
-      trackAndDebug(options, { socketName: name })
-      new commands.SocketPublish(context).run(options)
     })
 
   program

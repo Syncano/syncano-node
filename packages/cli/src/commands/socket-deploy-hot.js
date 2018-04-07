@@ -37,11 +37,11 @@ export default class SocketDeployCmd {
       debug(`Deploying Socket: ${socketName}`)
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.flatList(socketName)
+      this.socketList = await this.Socket.list(socketName)
       const socket = _.find(this.socketList, { name: socketName })
       spinner.stop()
 
-      if (!(socket.existLocally || socket.isProjectRegistryDependency || socket.isDependencySocket)) {
+      if (!(socket.existLocally)) {
         echo()
         error(4)(`Socket ${format.cyan(socketName)} cannot be found!`)
         echo()
@@ -50,7 +50,7 @@ export default class SocketDeployCmd {
     } else {
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.flatList()
+      this.socketList = await this.Socket.list()
       spinner.stop()
     }
 

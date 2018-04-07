@@ -21,17 +21,6 @@ export default class ProjectSettings extends Settings {
     return this.attributes.plugins
   }
 
-  installSocket (socket) {
-    debug('installSocket()')
-    const dependencies = this.attributes.dependencies || { sockets: {} }
-    const sockets = dependencies.sockets
-
-    sockets[socket.name] = socket.version ? { version: socket.version } : { src: `./${socket.name}` }
-    this.attributes.dependencies = dependencies
-
-    this.save()
-  }
-
   getAllSocketsYmlPath () {
     return new Promise((resolve, reject) => {
       const paths = []
@@ -66,40 +55,11 @@ export default class ProjectSettings extends Settings {
     return socketAttributes
   }
 
-  uninstallSocket (socketName) {
-    debug('uninstallSocket')
-    const dependencies = this.attributes.dependencies || { sockets: {} }
-    const sockets = dependencies.sockets
-
-    delete sockets[socketName]
-    this.save()
-  }
-
-  getSocket (socketName) {
-    return this.attributes.dependencies.sockets[socketName]
-  }
-
   getSocketTemplates () {
     try {
       return this.attributes.templates.sockets
     } catch (err) {
       return []
-    }
-  }
-
-  getDependSockets () {
-    try {
-      return this.attributes.dependencies.sockets
-    } catch (err) {
-      return {}
-    }
-  }
-
-  getDependSocket (socketName) {
-    try {
-      return this.attributes.dependencies.sockets[socketName]
-    } catch (err) {
-      return null
     }
   }
 

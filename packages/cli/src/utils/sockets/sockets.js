@@ -38,7 +38,6 @@ class MetadataObject {
     this.socketName = socketName
     this.existRemotely = null
     this.existLocally = null
-    this.isProjectRegistryDependency = null
   }
   getStatus () {
     if (this.existLocally && this.existRemotely) {
@@ -157,9 +156,6 @@ class Socket {
 
     this.existRemotely = null
     this.existLocally = null
-    this.isProjectRegistryDependency = null
-    this.dependencies = []
-    this.dependencyOf = []
 
     // that looks stupid
     this.remote = {
@@ -182,66 +178,14 @@ class Socket {
     }
 
     this.loadLocal()
-
-    // SocketPath for non-local sockets
-    if (this.isDependencySocket || this.isProjectRegistryDependency) {
-      this.socketPath = path.join(session.getBuildPath(), this.name)
-    }
   }
 
   static getTemplatesChoices () {
     return utils.getTemplatesChoices()
   }
 
-  // Install / Uninstall
-  static add (registrySocket) {
-    debug('add()')
-    session.settings.project.installSocket(registrySocket)
-  }
-
-  // Install / Uninstall
-  static async install (registrySocket, config) {
-    debug('install()')
-
-    const socketName = registrySocket.name
-    session.settings.project.installSocket(registrySocket)
-
-    const socketFolder = path.join(session.getBuildPath(), socketName)
-    mkdirp.sync(socketFolder)
-
-    debug('Getting socket from registry')
-    await Registry.getSocket(registrySocket, config)
-
-    debug('Registry socket:', registrySocket)
-    const fileName = path.join(session.getBuildPath(), `${socketName}.zip`)
-
-    return new Promise((resolve, reject) => {
-      fs.createReadStream(fileName)
-        .pipe(unzip.Extract({ path: socketFolder }))
-        .on('close', async () => {
-          debug('Unzip finished')
-          try {
-            const newSocket = new Socket(socketName, socketFolder)
-            await Socket.updateSocketNPMDeps(socketFolder)
-            await newSocket.loadRemote()
-
-            const updateStatus = await newSocket.update({ config })
-            debug('updateStatus', updateStatus)
-            newSocket.updateStatus = updateStatus
-            resolve(newSocket)
-          } catch (err) {
-            reject(err)
-          }
-        })
-    })
-  }
-
   static uninstall (socket = {}) {
     debug('uninstall', socket.name)
-
-    if (socket.isProjectRegistryDependency) {
-      session.settings.project.uninstallSocket(socket.name)
-    }
 
     if (socket.existLocally && socket.localPath) {
       Socket.uninstallLocal(socket)
@@ -274,50 +218,12 @@ class Socket {
     return session.connection.socket.list()
   }
 
-  static listDeps () {
-    // List project dependencies
-    return Object.keys(session.settings.project.getDependSockets())
-  }
-
   // list all sockets (mix of locally definde and installed on server)
   static async list () {
     debug('list()')
     // Local Socket defined in folders and in project deps
     const localSocketsList = utils.listLocal()
-    // .concat(Socket.listDeps())
     return Promise.all(localSocketsList.map((socketName) => Socket.get(socketName)))
-  }
-
-  static async flatList (socketName) {
-    debug('flatList()')
-    const sockets = []
-
-    const addToList = (socket) => {
-      const duplicated = _.find(sockets, (s) => s.name === socket.name)
-      if (duplicated) {
-        if (!_.includes(duplicated.dependencyOf, socket.name)) {
-          duplicated.dependencyOf.concat(socket.dependencyOf)
-        }
-      } else {
-        sockets.push(socket)
-        socket.dependencies.forEach((dep) => {
-          addToList(dep)
-        })
-      }
-    }
-
-    if (socketName) {
-      const socket = await Socket.get(socketName)
-      addToList(socket)
-      return sockets
-    }
-
-    // All Sockets
-    const allSockets = await Socket.list()
-    allSockets.forEach((socket) => {
-      addToList(socket)
-    })
-    return sockets
   }
 
   // Creating Socket simple object
@@ -329,11 +235,7 @@ class Socket {
   static async get (socketName) {
     debug(`Getting Socket: ${socketName}`)
     const socket = Socket.getLocal(socketName)
-    const loadedSocket = await socket.loadRemote()
-    if (!socket.existLocally) {
-      await socket.loadFromRegistry()
-    }
-    await loadedSocket.getDepsRegistrySockets()
+    await socket.loadRemote()
     return socket
   }
 
@@ -391,12 +293,10 @@ class Socket {
   }
 
   async verify () {
-    if (!(this.isDependencySocket || this.isProjectRegistryDependency)) {
-      if (!fs.existsSync(this.getSrcFolder())) {
-        throw new Error('No src folder!')
-      }
-      this.verifySchema()
+    if (!fs.existsSync(this.getSrcFolder())) {
+      throw new Error('No src folder!')
     }
+    this.verifySchema()
   }
 
   getFullConfig () {
@@ -452,27 +352,12 @@ class Socket {
     return this
   }
 
-  async loadFromRegistry () {
-    debug(`loadFromRegistry: ${this.name}`)
-    const registry = new Registry()
-    const registrySocket = await registry.searchSocketByName(this.name)
-
-    if (registrySocket.config) {
-      this.spec = registrySocket.config
-    }
-    this.url = registrySocket.url
-  }
-
   loadLocal () {
     debug('loadLocal()')
     if (this.settings.loaded) {
       this.existLocally = true
       this.localPath = this.settings.baseDir
       this.spec = this.settings.getFull()
-    } else if (_.includes(Socket.listDeps(), this.name)) {
-      this.isProjectRegistryDependency = true
-      this.existLocally = false
-      this.spec.version = session.settings.project.getDependSocket(this.name).version
     }
   }
 
@@ -483,17 +368,12 @@ class Socket {
 
   getRawStatus () {
     return {
-      isProjectRegistryDependency: this.isProjectRegistryDependency,
       existRemotely: this.existRemotely,
       existLocally: this.existLocally
     }
   }
 
   getStatus () {
-    if (this.isProjectRegistryDependency && !this.existRemotely) {
-      return { status: 'not synced', type: 'warn' }
-    }
-
     if (this.existLocally && !this.existRemotely) {
       return { status: 'not synced', type: 'warn' }
     }
@@ -512,14 +392,6 @@ class Socket {
   }
 
   getType () {
-    if (this.isProjectRegistryDependency) {
-      return { msg: 'project dependency', type: 'ok' }
-    }
-
-    if (this.isDependencySocket) {
-      return { msg: `dependency of ${this.dependencyOf.join(', ')}`, type: 'ok' }
-    }
-
     if (this.existLocally) {
       return { msg: 'local Socket', type: 'ok' }
     }
@@ -983,11 +855,6 @@ class Socket {
   }
 
   getSocketPath () {
-    if (this.isDependencySocket || this.isProjectRegistryDependency) {
-      const socketFolder = path.join(session.getBuildPath(), this.name)
-      mkdirp.sync(socketFolder)
-      return socketFolder
-    }
     return this.socketPath
   }
 
@@ -995,46 +862,11 @@ class Socket {
     return path.join(this.getSocketPath(), 'socket.yml')
   }
 
-  // async preCompileRegistrySocket () {
-  //   await Registry.getSocket(this)
-  //   const fileName = path.join(session.getBuildPath(), `${this.name}.zip`)
-  //
-  //   return new Promise((resolve, reject) => {
-  //     fs.createReadStream(fileName)
-  //       .pipe(unzip.Extract({ path: this.getSocketPath() }))
-  //       .on('close', () => {
-  //         debug('Unzip finished')
-  //         resolve(this.compile())
-  //       })
-  //   })
-  // }
-
   compile (params = { updateSocketNPMDeps: false }) {
     debug(`compile: ${this.name}`)
     debug(`compile socketPath: ${this.getSocketPath()}`)
 
     return new Promise(async (resolve, reject) => {
-      if (this.isDependencySocket || this.isProjectRegistryDependency) {
-        await Registry.getSocket(this)
-        const fileName = path.join(session.getBuildPath(), `${this.name}.zip`)
-
-        await new Promise((resolve, reject) => {
-          fs.createReadStream(fileName)
-            .pipe(unzip.Extract({ path: this.getSocketPath() }))
-            .on('close', async () => {
-              debug('Unzip finished')
-
-              // Build registry socket.
-              try {
-                await this.build()
-              } catch(e) {
-                return reject(e)
-              }
-              return resolve()
-            })
-        })
-      }
-
       const command = 'npm'
       let args = null
 
@@ -1061,22 +893,6 @@ class Socket {
         resolve()
       }
     })
-    // let compilation = null
-    // if (params.updateSocketNPMDeps) {
-    //   if (this.isDependencySocket || this.isProjectRegistryDependency) {
-    //     compilation = this.preCompileRegistrySocket()
-    //   } else {
-    //     compilation = utils.updateSocketNPMDeps(this.getSocketPath())
-    //   }
-    // } else {
-    //   compilation = Promise.resolve()
-    // }
-    //
-    // return compilation
-    //   .then((updateSocketDepsStatus) => {
-    //     debug('updateSocketDepsStatus', updateSocketDepsStatus)
-    //     return compile([this], params.withSourceMaps)
-    //   })
   }
 
   build () {
@@ -1313,21 +1129,6 @@ class Socket {
 
     const options = {}
 
-    if (this.isDependencySocket || this.isProjectRegistryDependency) {
-      if (this.remote.status === 'ok') {
-        return options
-      }
-
-      Object.keys(this.spec.config).forEach((optionName) => {
-        const envValue = this.getConfigOptionFromEnv(optionName)
-        const option = this.spec.config[optionName]
-        if (option.required && !envValue) {
-          options[optionName] = option
-        }
-      })
-      return options
-    }
-
     if (this.existLocally) {
       Object.keys(this.spec.config).forEach((optionName) => {
         const envValue = this.getConfigOptionFromEnv(optionName)
@@ -1354,55 +1155,6 @@ class Socket {
     this.isCompatible()
     const registry = new Registry()
     return registry.submitSocket(this)
-  }
-
-  // Socket dependencies
-  getDeps () {
-    return this.settings.getDependencies()
-  }
-
-  async getDepsRegistrySockets () {
-    debug(`getDepsRegistrySockets for: ${this.name}`)
-    const registry = new Registry()
-
-    const getDeepDeps = (deps, socketToAdd) => {
-      debug('getDeepDeps', deps)
-      const sockets = []
-      if (socketToAdd) {
-        sockets.push(socketToAdd)
-      }
-      return Promise.all(sockets.concat(Object.keys(deps).map(async (dependencyName) => {
-        debug(`processing dependency: ${dependencyName}`)
-        const socket = await registry.searchSocketByName(dependencyName, deps[dependencyName].version)
-        socket.dependencyOf = socketToAdd ? socketToAdd.name : this.name
-
-        if (!_.isEmpty(socket.config.dependencies)) {
-          return getDeepDeps(socket.config.dependencies, socket)
-        }
-        debug(`returning socket without dependencies ${socket.name}`)
-        return Promise.resolve(socket)
-      })))
-    }
-
-    debug(`Defined dependencies of "${this.name}" to follow: ${this.spec.dependencies}`)
-    if (this.spec.dependencies) {
-      const arr = await getDeepDeps(this.spec.dependencies)
-      const depsObjects = await Promise.all(_.flatten(arr).map(async socket => {
-        const createdSocket = await Socket.get(socket.name)
-        createdSocket.isDependencySocket = true
-        createdSocket.dependencyOf = [socket.dependencyOf]
-        return createdSocket
-      }))
-      this.dependencies = depsObjects
-    }
-
-    return Promise.resolve()
-  }
-
-  async addDependency (socketFromRegistry) {
-    const socketName = socketFromRegistry.name
-    const socketVersion = socketFromRegistry.version
-    this.settings.addDependency(socketName, socketVersion)
   }
 
   async socketEnvShouldBeUpdated () {
@@ -1470,16 +1222,6 @@ class Socket {
       })
     } else if (!this.existRemotely) {
       return true
-    } else if (this.isDependencySocket || this.isProjectRegistryDependency) {
-      if (this.remote.status !== 'ok') {
-        return false
-      }
-
-      debug(`Spec version: ${this.spec.version}`)
-      debug(`Remote version: ${this.getVersion()}`)
-      if (this.spec.version === this.getVersion()) {
-        return false
-      }
     }
   }
 }

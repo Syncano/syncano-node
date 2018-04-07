@@ -44,20 +44,20 @@ export default class SocketDeployCmd {
       debug(`Deploying Socket: ${socketName}`)
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.flatList(socketName)
-      const socket = _.find(this.socketList, { name: socketName })
+      const socket = await this.Socket.get(socketName)
       spinner.stop()
 
-      if (!(socket.existLocally || socket.isProjectRegistryDependency || socket.isDependencySocket)) {
+      if (!socket.existLocally) {
         echo()
         error(4)(`Socket ${format.cyan(socketName)} cannot be found!`)
         echo()
         process.exit(1)
       }
+      this.socketList = [socket]
     } else {
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.flatList()
+      this.socketList = await this.Socket.list()
       spinner.stop()
     }
 
