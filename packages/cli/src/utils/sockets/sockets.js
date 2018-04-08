@@ -155,6 +155,7 @@ class Socket {
 
     this.existRemotely = null
     this.existLocally = null
+    this.envIsNull = false
 
     // that looks stupid
     this.remote = {
@@ -429,8 +430,8 @@ class Socket {
   }
 
   isEmptyEnv () {
-    debug('isEmptyEnv', !fs.existsSync(this.getSocketEnvZip()))
-    return !fs.existsSync(this.getSocketEnvZip())
+    debug('isEmptyEnv', this.envIsNull)
+    return this.envIsNull
   }
 
   getSocketNodeModulesChecksum () {
@@ -693,11 +694,11 @@ class Socket {
         archive.finalize()
       } else {
         fs.unlinkSync(this.getSocketEnvZip())
-        resolve()
+        resolve(false)
       }
 
       output.on('close', () => {
-        resolve()
+        resolve(true)
       })
     })
   }
@@ -761,9 +762,11 @@ class Socket {
     debug('updateEnv')
     const resp = await this.socketEnvShouldBeUpdated()
     if (resp) {
-      await this.createEnvZip()
-      if (!this.isEmptyEnv()) {
+      const zip = await this.createEnvZip()
+      if (zip) {
         return this.updateEnvCall(resp)
+      } else {
+        this.envIsNull = true
       }
     }
     return 'No need to update'
@@ -881,7 +884,7 @@ class Socket {
         args.split(' '),
         {
           cwd: this.getSocketPath(),
-          maxBuffer: 2048 * 1024,
+          maxBuffer: 2048 * 4096,
           stdio: [process.stdio, 'pipe', 'pipe']
         }
       )
