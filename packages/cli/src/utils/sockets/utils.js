@@ -40,7 +40,6 @@ const searchForSockets = (socketsPath) => {
   // TODO: optimize only diging deeper scoped modues
   walkdir.sync(socketsPath, options, (path, stat) => {
     if (path.match(/socket.yml$/)) {
-      console.log('found: ', path)
       const socket = YAML.load(fs.readFileSync(path, 'utf8')) || {}
       sockets.push([path, socket])
     }
