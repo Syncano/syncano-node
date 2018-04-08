@@ -1,6 +1,6 @@
 {
   "name": "tests",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "private": true,
   "description": "Syncano Tests",
   "author": "Maciej Kucharz",
@@ -15,9 +15,9 @@
   "engineStrict": true,
   "dependencies": {
     "@syncano/core": "0.11.0",
-    "@syncano/schema": "0.11.1",
+    "@syncano/schema": "0.12.0",
     "@syncano/test-tools": "0.11.0",
-    "@syncano/validate": "0.11.1",
+    "@syncano/validate": "0.12.0",
     "ajv": "^6.2.0",
     "ajv-keywords": "^3.1.0",
     "babel-cli": "^6.26.0",
