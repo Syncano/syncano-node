@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/Syncano/syncano-node/compare/v0.11.0...v0.12.0) (2018-04-08)
+
+
+
+
+**Note:** Version bump only for package @syncano/schema
+
 <a name="0.11.1"></a>
 ## [0.11.1](https://github.com/Syncano/syncano-node/compare/v0.11.0...v0.11.1) (2018-04-07)
 
