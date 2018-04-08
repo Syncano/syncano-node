@@ -240,7 +240,7 @@ class Socket {
 
   static create (socketName, templateName) {
     debug('create socket', socketName, templateName)
-    const newSocketPath = path.join(session.projectPath, socketName)
+    const newSocketPath = path.join(session.projectPath, 'syncano', socketName)
     const socket = new Socket(socketName, newSocketPath)
     if (socket.existLocally) {
       return Promise.reject(new Error('Socket with given name already exist!'))
