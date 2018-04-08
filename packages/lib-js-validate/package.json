@@ -1,14 +1,14 @@
 {
   "name": "@syncano/validate",
   "description": "Validating Syncanao request/responses and more",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "license": "MIT",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@syncano/schema": "0.12.0",
+    "@syncano/schema": "0.12.1",
     "ajv": "^6.2.0",
     "ajv-error-messages": "^1.0.0",
     "ajv-errors": "^1.0.0",
