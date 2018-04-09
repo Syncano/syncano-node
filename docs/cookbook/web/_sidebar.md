@@ -9,6 +9,7 @@
   - Database
     - [Creating objects](/database/creating-objects)
     - [Data Object Relations](/database/object-relations)
+    - [Geopoints](/database/geopoints)
   - Users & Groups
     - [Creating user account](/users-groups/creating-user-account)
     <!-- - [Creating user group](/users-groups/creating-user-group) -->
