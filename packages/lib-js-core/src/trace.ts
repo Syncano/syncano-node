@@ -7,15 +7,7 @@ import QueryBuilder from './query-builder'
  * const mytrace = await trace.get('my-socket', 'my-endpoint', 1234)
  */
 export default class Trace extends QueryBuilder {
-  url (socketName, endpointName, traceId) {
-    const {instanceName} = this.instance
-    if (traceId) {
-      return `${this._getSyncanoURL()}/instances/${instanceName}/endpoints/sockets/${socketName}/${endpointName}/traces/${traceId}`
-    }
-    return `${this._getSyncanoURL()}/instances/${instanceName}/endpoints/sockets/${socketName}/${endpointName}/traces/`
-  }
-
-  get (socketName, endpointName, traceId) {
+  public get (socketName: string, endpointName: string, traceId: string) {
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -26,7 +18,7 @@ export default class Trace extends QueryBuilder {
     })
   }
 
-  list (socketName, endpointName) {
+  public list (socketName: string, endpointName: string) {
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -35,5 +27,16 @@ export default class Trace extends QueryBuilder {
         .then(resolve)
         .catch(reject)
     })
+  }
+
+  private url (socketName: string, endpointName: string, traceId?: string) {
+    const {instanceName} = this.instance
+    const instanceUrl = `${this._getSyncanoURL()}/instances/${instanceName}`
+
+    if (traceId) {
+      return `${instanceUrl}/endpoints/sockets/${socketName}/${endpointName}/traces/${traceId}`
+    }
+
+    return `${this._getSyncanoURL()}/instances/${instanceName}/endpoints/sockets/${socketName}/${endpointName}/traces/`
   }
 }

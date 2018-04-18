@@ -5,7 +5,7 @@ import QueryBuilder from './query-builder'
  * @property {Function}
  */
 class Class extends QueryBuilder {
-  url (className) {
+  public url (className?: string) {
     const {instanceName} = this.instance
     const baseUrl = `${this._getInstanceURL(instanceName)}/classes/`
 
@@ -20,13 +20,13 @@ class Class extends QueryBuilder {
    * @example {@lang javascript}
    * const instance = await class.create({name: 'class_name'})
    */
-  create (params) {
+  public create (params: object): Promise<any> {
     const fetch = this.fetch.bind(this)
 
     return new Promise((resolve, reject) => {
       const options = {
-        method: 'POST',
-        body: JSON.stringify(params)
+        body: JSON.stringify(params),
+        method: 'POST'
       }
 
       fetch(this.url(), options)
@@ -38,12 +38,10 @@ class Class extends QueryBuilder {
   /**
    * Delete Syncano class
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * await syncanoClass.delete('class_name')
    */
-  delete (className) {
+  public delete (className: string): Promise<any> {
     const fetch = this.fetch.bind(this)
 
     return new Promise((resolve, reject) => {

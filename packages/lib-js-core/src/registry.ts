@@ -1,7 +1,7 @@
-import fs from 'fs'
-import https from 'https'
-import FormData from 'form-data'
 import logger from 'debug'
+import FormData from 'form-data'
+import fs, { WriteStream } from 'fs'
+import https from 'https'
 import QueryBuilder from './query-builder'
 
 const debug = logger('core:registry')
@@ -13,69 +13,66 @@ const debug = logger('core:registry')
  * const socketList = await registry.searchSocketsByAll('facebook')
  */
 export default class Socket extends QueryBuilder {
-  url (registryEndpoint) {
-    return `${this._getSyncanoRegistryURL()}/${registryEndpoint}/`
-  }
-
-  async searchSocketsByAll (keyword) {
+  public async searchSocketsByAll (keyword: string) {
     debug(`searchSocketsByAll: ${keyword}`)
     const headers = {
       'X-Syncano-Account-Key': this.instance.accountKey
     }
     const options = {
-      method: 'POST',
-      body: JSON.stringify({ keyword })
+      body: JSON.stringify({ keyword }),
+      method: 'POST'
     }
 
     return this.nonInstanceFetch(this.url('registry/search'), options, headers)
   }
 
-  async searchSocketByName (name, version) {
+  public async searchSocketByName (name: string, version: string) {
     debug(`searchSocketByName: ${name} (${version})`)
 
     const headers = {
       'X-Syncano-Account-Key': this.instance.accountKey
     }
     const options = {
-      method: 'POST',
       body: JSON.stringify({
         name,
         version
-      })
+      }),
+      method: 'POST'
     }
 
     return this.nonInstanceFetch(this.url('registry/get'), options, headers)
   }
 
-  async publishSocket (socketName, version) {
+  public async publishSocket (socketName: string, version: string) {
     debug('publishSocket', socketName)
     const headers = {
       'X-Syncano-Account-Key': this.instance.accountKey
     }
     const options = {
-      method: 'POST',
       body: JSON.stringify({
         name: socketName,
         version
-      })
+      }),
+      method: 'POST'
     }
     return this.nonInstanceFetch(this.url('registry/publish'), options, headers)
   }
 
-  async getSocket (url, fileDescriptor) {
+  public async getSocket (url: string, fileDescriptor: WriteStream) {
     debug('getSocket', url)
     return new Promise((resolve, reject) => {
       https.get(url, (response) => {
         response.pipe(fileDescriptor)
         fileDescriptor.on('finish', () => {
           debug('Socket zip downloaded')
-          fileDescriptor.close(resolve)
+          fileDescriptor.close()
+          resolve()
         })
       })
     })
   }
 
-  async submitSocket (socketSpec, socketConfig, socketZipPath) {
+  public async submitSocket (socketSpec: any, socketConfig: any, socketZipPath: string) {
     debug('submitSocket', socketZipPath)
 
     const form = new FormData()
@@ -90,10 +87,14 @@ export default class Socket extends QueryBuilder {
     headers['X-Syncano-Account-Key'] = this.instance.accountKey
 
     const options = {
-      method: 'POST',
-      body: form
+      body: form,
+      method: 'POST'
     }
 
     return this.nonInstanceFetch(this.url('registry/add'), options, headers)
+  }
+
+  private url (registryEndpoint: string) {
+    return `${this._getSyncanoRegistryURL()}/${registryEndpoint}/`
   }
 }

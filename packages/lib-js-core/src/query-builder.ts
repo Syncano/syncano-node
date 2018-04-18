@@ -1,35 +1,51 @@
-import http from 'https'
 import logger from 'debug'
-import pjson from '../package.json'
+import http from 'https'
 import nodeFetch from 'node-fetch'
+// tslint:disable-next-line:no-var-requires
+const pjson = require('../package.json')
 import {checkStatus, parseJSON} from './utils'
 
 const debug = logger('core:query-builder')
 
 const generalOptions = {
-  compress: true,
   agent: new http.Agent({
-    protocol: 'https',
     keepAlive: true,
     keepAliveMsecs: 5000,
     maxSockets: 60
-  })
+  }),
+  compress: true
 }
 
 export default class QueryBuilder {
-  constructor (instance) {
+  // tslint:disable-next-line:variable-name
+  public _mappedFields: any[] = []
+  // tslint:disable-next-line:variable-name
+  public _relationships: any[] = []
+  // tslint:disable-next-line:variable-name
+  public _queries: any[] = []
+  // tslint:disable-next-line:variable-name
+  public _query: {
+    [x: string]: any
+  } = {}
+  public registryHost: string = ''
+  public instance: any
+  public baseUrl: string
+  public result: any[]
+
+  // TODO: Specify instance type
+  constructor (instance: any) {
     this.instance = instance
     this.baseUrl = `https://${instance.host}`
     this.result = []
   }
 
-  _getSyncanoURL () {
+  public _getSyncanoURL () {
     const {apiVersion, host} = this.instance
 
     return `https://${host}/${apiVersion}`
   }
 
-  _getSyncanoRegistryURL () {
+  public _getSyncanoRegistryURL () {
     const {host} = this.instance
     const endpointHost = host === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
     const majorVersion = pjson.version.split('.')[0]
@@ -39,11 +55,11 @@ export default class QueryBuilder {
     return `https://${this.registryHost}`
   }
 
-  _getInstanceURL (instanceName) {
+  public _getInstanceURL (instanceName: string) {
     return `${this._getSyncanoURL()}/instances/${instanceName}`
   }
 
-  fetch (url, options = {}, headers = {}) {
+  public fetch (url: string, options = {}, headers = {}): Promise<any> {
     const headersToSend = Object.assign(
       {
         'content-type': 'application/json',
@@ -51,8 +67,8 @@ export default class QueryBuilder {
       },
       headers
     )
-
     const fetchOptions = Object.assign({}, generalOptions, options)
+
     return nodeFetch(url, {
       headers: headersToSend,
       ...fetchOptions
@@ -61,8 +77,9 @@ export default class QueryBuilder {
       .then(checkStatus)
   }
 
-  nonInstanceFetch (url, options = {}, headers) {
+  public nonInstanceFetch (url: string, options = {}, headers = {}) {
     const fetchOptions = Object.assign({}, generalOptions, options)
+
     return nodeFetch(url, {
       headers: {
         'content-type': 'application/json',
@@ -74,11 +91,14 @@ export default class QueryBuilder {
       .then(checkStatus)
   }
 
-  get query () {
+  get query (): {
+    page_size?: number
+    [x: string]: any
+  } {
     return this._query || {}
   }
 
-  get queries () {
+  get queries (): any[] {
     return this._queries || []
   }
 
@@ -90,20 +110,20 @@ export default class QueryBuilder {
     return this._mappedFields || []
   }
 
-  withQuery (query) {
+  public withQuery (query: object) {
     debug('withQuery', query)
     this._query = Object.assign({}, this.query, query)
 
     return this
   }
 
-  withRelationships (relationships) {
+  public withRelationships (relationships: any[]) {
     this._relationships = this.relationships.concat(relationships)
 
     return this
   }
 
-  withMappedFields (fields) {
+  public withMappedFields (fields: any[]) {
     this._mappedFields = Object.assign({}, this.mappedFields, ...fields)
 
     return this

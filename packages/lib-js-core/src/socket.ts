@@ -2,20 +2,12 @@ import QueryBuilder from './query-builder'
 
 /**
  * Connection between Sockets.
- * @property {Function}
+ *
  * @example {@lang javascript}
  * const socket = await socket.get('socketName')
  */
 export default class Socket extends QueryBuilder {
-  url (socketName) {
-    const {instanceName} = this.instance
-    if (socketName) {
-      return `${this._getSyncanoURL()}/instances/${instanceName}/sockets/${socketName}/`
-    }
-    return `${this._getSyncanoURL()}/instances/${instanceName}/sockets/`
-  }
-
-  get (socketName) {
+  public get (socketName: string) {
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -26,7 +18,7 @@ export default class Socket extends QueryBuilder {
     })
   }
 
-  delete (socketName) {
+  public delete (socketName: string) {
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -40,7 +32,7 @@ export default class Socket extends QueryBuilder {
     })
   }
 
-  list () {
+  public list () {
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -49,5 +41,15 @@ export default class Socket extends QueryBuilder {
         .then(resolve)
         .catch(reject)
     })
+  }
+
+  private url (socketName?: string) {
+    const {instanceName} = this.instance
+
+    if (socketName) {
+      return `${this._getSyncanoURL()}/instances/${instanceName}/sockets/${socketName}/`
+    }
+
+    return `${this._getSyncanoURL()}/instances/${instanceName}/sockets/`
   }
 }

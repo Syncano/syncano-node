@@ -10,23 +10,7 @@ const debug = logger('core:hosting')
  * const mytrace = await trace.get('my-socket', 'my-endpoint', 1234)
  */
 export default class Hosting extends QueryBuilder {
-  url (hostingId) {
-    const {instanceName} = this.instance
-    if (hostingId) {
-      return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/`
-    }
-    return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/`
-  }
-
-  urlFiles (hostingId, fileId) {
-    const {instanceName} = this.instance
-    if (fileId) {
-      return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/files/${fileId}/`
-    }
-    return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/files/`
-  }
-
-  getFile (hostingId, fileId) {
+  public getFile (hostingId: string, fileId: string) {
     debug('getFile')
     return new Promise((resolve, reject) => {
       const headers = {
@@ -38,21 +22,19 @@ export default class Hosting extends QueryBuilder {
     })
   }
 
-  listFiles (hostingId) {
+  public listFiles (hostingId: string) {
     debug('listFiles')
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
       }
       this.fetch(this.urlFiles(hostingId), {}, headers)
-        .then(resp => {
-          resolve(resp.objects)
-        })
+        .then((res) => resolve(res.objects))
         .catch(reject)
     })
   }
 
-  get (hostingId) {
+  public get (hostingId: string) {
     debug('get')
     return new Promise((resolve, reject) => {
       const headers = {
@@ -64,15 +46,15 @@ export default class Hosting extends QueryBuilder {
     })
   }
 
-  updateFile (hostingId, fileId, payload) {
+  public updateFile (hostingId: string, fileId: string, payload: any) {
     debug('updateFile')
     return new Promise((resolve, reject) => {
       const headers = payload.getHeaders()
       headers['X-API-KEY'] = this.instance.accountKey
 
       const options = {
-        method: 'PATCH',
-        body: payload
+        body: payload,
+        method: 'PATCH'
       }
 
       this.fetch(this.urlFiles(hostingId, fileId), options, headers)
@@ -81,7 +63,7 @@ export default class Hosting extends QueryBuilder {
     })
   }
 
-  deleteFile (hostingId, fileId) {
+  public deleteFile (hostingId: string, fileId: string) {
     debug('deleteFile')
     return new Promise((resolve, reject) => {
       const headers = {
@@ -95,20 +77,40 @@ export default class Hosting extends QueryBuilder {
     })
   }
 
-  uploadFile (hostingId, payload) {
+  public uploadFile (hostingId: string, payload: any) {
     debug('uploadFile')
     return new Promise((resolve, reject) => {
       const headers = payload.getHeaders()
       headers['X-API-KEY'] = this.instance.accountKey
 
       const options = {
-        method: 'POST',
-        body: payload
+        body: payload,
+        method: 'POST'
       }
 
       this.fetch(this.urlFiles(hostingId), options, headers)
         .then(resolve)
         .catch(reject)
     })
+  }
+
+  private urlFiles (hostingId: string, fileId?: string) {
+    const {instanceName} = this.instance
+
+    if (fileId) {
+      return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/files/${fileId}/`
+    }
+
+    return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/files/`
+  }
+
+  private url (hostingId: string) {
+    const {instanceName} = this.instance
+
+    if (hostingId) {
+      return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/`
+    }
+
+    return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/`
   }
 }

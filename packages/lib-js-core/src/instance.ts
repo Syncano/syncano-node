@@ -5,20 +5,16 @@ import QueryBuilder from './query-builder'
  * @property {Function}
  */
 class Instance extends QueryBuilder {
-  url (instanceName) {
-    const baseUrl = `${this._getSyncanoURL()}/instances/`
-    return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
-  }
-
   /**
    * Create Syncano instance
-   *
-   * @returns {Promise}
    *
    * @example {@lang javascript}
    * const instance = await instance.create({name: 'new-instance', description: 'description'})
    */
-  create (params) {
+  public create (params: {
+    name: string,
+    description?: string
+  }): Promise<any> {
     const fetch = this.nonInstanceFetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -26,8 +22,8 @@ class Instance extends QueryBuilder {
         'X-API-KEY': this.instance.accountKey
       }
       const options = {
-        method: 'POST',
-        body: JSON.stringify(params)
+        body: JSON.stringify(params),
+        method: 'POST'
       }
       fetch(this.url(), options, headers)
         .then(resolve)
@@ -37,12 +33,10 @@ class Instance extends QueryBuilder {
   /**
    * Get Syncano instance details
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * const instance = await instance.get('instance-name')
    */
-  get (instanceName) {
+  public get (instanceName: string): Promise<any> {
     const fetch = this.nonInstanceFetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -58,12 +52,10 @@ class Instance extends QueryBuilder {
   /**
    * List Syncano instances
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * const instance = await instance.list()
    */
-  list () {
+  public list (): Promise<any> {
     const fetch = this.nonInstanceFetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -71,9 +63,7 @@ class Instance extends QueryBuilder {
         'X-API-KEY': this.instance.accountKey
       }
       fetch(this.url(), {}, headers)
-        .then(response => {
-          resolve(response.objects)
-        })
+        .then((res: any) => resolve(res.objects))
         .catch(reject)
     })
   }
@@ -81,12 +71,10 @@ class Instance extends QueryBuilder {
   /**
    * Delete Syncano instance
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * await instance.delete('new-instance')
    */
-  delete (instanceName) {
+  public delete (instanceName: string): Promise<any> {
     const fetch = this.nonInstanceFetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -100,6 +88,11 @@ class Instance extends QueryBuilder {
         .then(resolve)
         .catch(reject)
     })
+  }
+
+  private url (instanceName?: string) {
+    const baseUrl = `${this._getSyncanoURL()}/instances/`
+    return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
   }
 }
 

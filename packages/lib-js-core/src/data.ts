@@ -1,12 +1,12 @@
 import logger from 'debug'
-import querystring from 'querystring'
 import FormData from 'form-data'
-import set from 'lodash.set'
 import get from 'lodash.get'
 import merge from 'lodash.merge'
-import QueryBuilder from './query-builder'
+import set from 'lodash.set'
+import querystring from 'querystring'
 import {NotFoundError} from './errors'
-
+import QueryBuilder from './query-builder'
+export type ArrayOrObject<T> = T extends Array<{}> ? Array<{}> : object
 const debug = logger('core:data')
 
 const MAX_BATCH_SIZE = 50
@@ -16,22 +16,10 @@ const MAX_BATCH_SIZE = 50
  * @property {Function} query Instance of syncano DataObject
  */
 class Data extends QueryBuilder {
-  url (id) {
-    debug('url', id)
-    const {instanceName, className} = this.instance
-    let url = `${this._getInstanceURL(
-      instanceName
-    )}/classes/${className}/objects/${id ? id + '/' : ''}`
+  // tslint:disable-next-line:variable-name
+  private _url?: string
 
-    if (this._url !== undefined) {
-      url = this._url
-    }
-
-    const query = querystring.stringify(this.query)
-    return query ? `${url}?${query}` : url
-  }
-
-  _batchBodyBuilder (body) {
+  public _batchBodyBuilder (body: any[]) {
     const {apiVersion} = this.instance
     const path = `/${apiVersion}${this.url()
       .split(apiVersion)[1]
@@ -39,7 +27,11 @@ class Data extends QueryBuilder {
 
     return body.reduce(
       (data, item) => {
-        const singleRequest = {
+        const singleRequest: {
+          method: string
+          path: string
+          body?: object | any[] | string
+        } = {
           method: 'POST',
           path
         }
@@ -63,17 +55,17 @@ class Data extends QueryBuilder {
     )
   }
 
-  _batchFetchObject (body, options) {
+  public _batchFetchObject (body: any[]) {
     const {instanceName} = this.instance
 
     return {
-      url: `${this._getInstanceURL(instanceName)}/batch/`,
+      body: JSON.stringify(this._batchBodyBuilder(body)),
       method: 'POST',
-      body: JSON.stringify(this._batchBodyBuilder(body))
+      url: `${this._getInstanceURL(instanceName)}/batch/`
     }
   }
 
-  async resolveRelatedModels (result) {
+  public async resolveRelatedModels (result: any) {
     debug('resolveRelatedModels')
     let resultsToProcess = result
     if (!Array.isArray(result)) {
@@ -84,10 +76,10 @@ class Data extends QueryBuilder {
       return result
     }
 
-    const resolvers = this.relationships.map(async reference => {
+    const resolvers = this.relationships.map(async (reference) => {
       const empty = {
-        target: reference,
-        items: []
+        items: [],
+        target: reference
       }
 
       if (resultsToProcess[0] === undefined) {
@@ -100,8 +92,8 @@ class Data extends QueryBuilder {
 
       // Search for rows with references
       const references = resultsToProcess
-        .filter(row => row[reference])
-        .map(row => {
+        .filter((row: object) => row[reference])
+        .map((row: object) => {
           return row[reference]
         })
 
@@ -117,7 +109,7 @@ class Data extends QueryBuilder {
       }
 
       const load = new Data(this.instance)
-      let ids = references.map(item => item.value)
+      let ids = references.map((item: any) => item.value)
 
       ids = Array.isArray(ids[0]) ? [].concat.apply([], ids) : ids
 
@@ -135,7 +127,7 @@ class Data extends QueryBuilder {
     })
 
     const models = await Promise.all(resolvers)
-    const processedResult = resultsToProcess.map(item => {
+    const processedResult = resultsToProcess.map((item: any) => {
       models.forEach(({target, items}) => {
         const related = this._getRelatedObjects(item[target], items)
         item[target] = related || item[target]
@@ -149,14 +141,14 @@ class Data extends QueryBuilder {
     return processedResult
   }
 
-  resolveIfFinished (result) {
+  public resolveIfFinished (result: any[]) {
     if (this.query.page_size !== 0) {
       return result.slice(0, this.query.page_size)
     }
     return result
   }
 
-  async loadNextPage (response, objects) {
+  public async loadNextPage (response: any, objects: any[]) {
     debug('loadNextPage')
     const pageSize = this.query.page_size || 0
     const hasNextPageMeta = response.next
@@ -175,10 +167,10 @@ class Data extends QueryBuilder {
     return objects
   }
 
-  async request (url) {
+  public async request (url: string) {
     debug('request')
     try {
-      let result = await this.fetch(url)
+      const result = await this.fetch(url)
       let objects = result.objects
       objects = await this.loadNextPage(result, objects)
       objects = await this.resolveIfFinished(objects)
@@ -192,8 +184,6 @@ class Data extends QueryBuilder {
   /**
    * List objects matching query.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * // Get all posts
    * const posts = await data.posts.list()
@@ -201,30 +191,35 @@ class Data extends QueryBuilder {
    * // Get 10 posts
    * const posts = await data.posts.take(10).list()
    */
-  async list () {
+  public async list (): Promise<any> {
     debug('list')
     const self = this
-    const urls = [this.url()].concat(this.queries.map(query =>
-      (this._query.query = query) && this.url()
-    ))
+    const urls = [this.url()].concat(this.queries.map((query) => {
+      this._query.query = query
+      return this.url()
+    }))
     debug('urls', urls)
-    const uniqueIds = []
+    const uniqueIds: any[] = []
 
-    const fetches = urls.map(async url => self.request(url))
+    const fetches = urls.map(async (url) => self.request(url))
 
     let results = await Promise.all(fetches)
     results = [].concat.apply([], results)
     results = await self.resolveRelatedModels(results)
     results = await self._replaceCustomTypesWithValue(results)
     results = await self._mapFields(results)
-    results.filter(({id}) => uniqueIds.includes(id) ? false : uniqueIds.push(id))
+
+    results.filter(({id}) =>
+      uniqueIds.includes(id) ? false : uniqueIds.push(id)
+    )
 
     return results
   }
 
-  _replaceCustomTypesWithValue (items) {
+  // FIXME: Add better types
+  public _replaceCustomTypesWithValue<T> (items: any): any  {
     if (Array.isArray(items)) {
-      return items.map(item =>
+      return items.map((item) =>
         Object.keys(item).reduce((all, key) => ({
           ...all,
           [key]: this._replaceCustomType(key, item)
@@ -238,7 +233,7 @@ class Data extends QueryBuilder {
     }), {})
   }
 
-  _replaceCustomType (key, item) {
+  public _replaceCustomType (key: string, item: object) {
     const value = item[key]
     const isObject = value instanceof Object && !Array.isArray(value)
     const hasType = isObject && value.type !== undefined
@@ -252,7 +247,7 @@ class Data extends QueryBuilder {
     return value
   }
 
-  _mapFields (items) {
+  public _mapFields (items: any[] | {}): any {
     const fields = this.mappedFields
 
     if (fields.length === 0) {
@@ -260,16 +255,16 @@ class Data extends QueryBuilder {
     }
 
     if (Array.isArray(items)) {
-      return items.map(item => this._mapFieldsForSingleItem(item, fields))
+      return items.map((item) => this._mapFieldsForSingleItem(item, fields))
     }
 
     return this._mapFieldsForSingleItem(items, fields)
   }
 
-  _mapFieldsForSingleItem (item, fields) {
+  public _mapFieldsForSingleItem (item: object, fields: object) {
     return Object.keys(fields).reduce(
       (all, key) => {
-        const itemFieldKey = key.split('.').shift()
+        const itemFieldKey = key.split('.').shift() || ''
         const itemField = get(item, itemFieldKey)
 
         if (Array.isArray(itemField) && typeof itemField[0] === 'object' && itemField[0] !== null) {
@@ -289,16 +284,16 @@ class Data extends QueryBuilder {
     )
   }
 
-  _getRelatedObjects (reference, items) {
+  public _getRelatedObjects (reference: any, items: any[]) {
     if (!reference) {
       return null
     }
 
     if (Array.isArray(reference.value)) {
-      return items.filter(obj => reference.value.indexOf(obj.id) >= 0)
+      return items.filter((obj) => reference.value.indexOf(obj.id) >= 0)
     }
 
-    return items.find(obj => obj.id === reference.value)
+    return items.find((obj) => obj.id === reference.value)
   }
 
   /**
@@ -309,7 +304,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const postsCount = await data.posts.count()
    */
-  async count () {
+  public async count () {
     this.withQuery({page_size: 0, include_count: 1})
 
     const res = await this.fetch(this.url())
@@ -324,7 +319,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.where('status', 'published').first()
    */
-  async first () {
+  public async first () {
     const response = await this.take(1).list()
     return response[0] || null
   }
@@ -335,7 +330,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.where('status', 'published').firstOrFail()
    */
-  async firstOrFail () {
+  public async firstOrFail () {
     let object
     try {
       object = await this.first()
@@ -355,7 +350,7 @@ class Data extends QueryBuilder {
    * const post = await data.posts
    *   .firstOrCreate({name: 'value to match'}, {content: 'value to update'})
    */
-  firstOrCreate (attributes, values = {}) {
+  public firstOrCreate (attributes: object, values = {}) {
     const query = this._toWhereArray(attributes)
 
     return this.where(query)
@@ -370,7 +365,7 @@ class Data extends QueryBuilder {
    * const post = await data.posts
    *   .updateOrCreate({name: 'value to match'}, {content: 'value to update'})
    */
-  async updateOrCreate (attributes, values = {}) {
+  public async updateOrCreate (attributes: object, values = {}) {
     const query = this._toWhereArray(attributes)
 
     try {
@@ -381,21 +376,19 @@ class Data extends QueryBuilder {
     }
   }
 
-  _toWhereArray (attributes) {
-    return Object.keys(attributes).map(key => [key, 'eq', attributes[key]])
+  public _toWhereArray (attributes: object) {
+    return Object.keys(attributes).map((key) => [key, 'eq', attributes[key]])
   }
 
   /**
    * Get single object by id or objects list if ids passed as array.
-   *
-   * @returns {Promise}
    *
    * @example {@lang javascript}
    * const posts = await data.posts.find(4)
    * @example {@lang javascript}
    * const posts = await data.posts.find([20, 99, 125])
    */
-  async find (ids) {
+  public async find (ids: number | number[]): Promise<any> {
     debug('find', ids)
     if (Array.isArray(ids)) {
       return this.where('id', 'in', ids).list()
@@ -407,8 +400,6 @@ class Data extends QueryBuilder {
   /**
    * Same as #find method but throws error for no results.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * const posts = await data.posts.findOrFail(4)
    * @example {@lang javascript}
@@ -417,7 +408,7 @@ class Data extends QueryBuilder {
    * // Will throw error if at lest one of records was not found
    * const posts = await data.posts.findOrFail([20, 99, 125], true)
    */
-  async findOrFail (ids) {
+  public async findOrFail (ids: number | number[]): Promise<any> {
     try {
       const response = await this.find(ids)
       const shouldThrow = Array.isArray(ids)
@@ -436,24 +427,20 @@ class Data extends QueryBuilder {
   /**
    * Number of objects to get.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * const posts = await data.posts.take(500).list()
    */
-  take (count) {
-    return this.withQuery({page_size: count}) // eslint-disable-line camelcase
+  public take (count: number) {
+    return this.withQuery({page_size: count})
   }
 
   /**
    * Set order of fetched objects.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * const posts = await data.posts.orderBy('created_at', 'DESC').list()
    */
-  orderBy (column, direction = 'asc') {
+  public orderBy (column: string, direction = 'asc') {
     direction = direction.toLowerCase()
     direction = direction === 'desc' ? '-' : ''
 
@@ -464,8 +451,6 @@ class Data extends QueryBuilder {
 
   /**
    * Filter rows.
-   *
-   * @returns {Promise}
    *
    * @example {@lang javascript}
    * const posts = await data.posts.where('status', 'in', ['draft', 'published']).list()
@@ -478,7 +463,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.where('user.full_name', 'contains', 'John').list()
    */
-  where (column, operator, value) {
+  public where (column: string | any[], operator?: any, value?: any) {
     debug('where', column, operator, value)
     if (Array.isArray(column)) {
       column.map(([itemColumn, itemOperator, itemValue]) =>
@@ -493,15 +478,12 @@ class Data extends QueryBuilder {
     const isEqualNull = operator === '_eq' && value === null
     const lookingForNull = secondParamIsNull || isEqualNull
 
-    let whereOperator
-    let whereValue
+    let whereOperator = value !== undefined ? `_${operator}` : '_eq'
+    let whereValue = value === undefined ? operator : value
 
     if (lookingForNull) {
       whereOperator = '_exists'
       whereValue = false
-    } else {
-      whereOperator = value !== undefined ? `_${operator}` : '_eq'
-      whereValue = value === undefined ? operator : value
     }
 
     const currentQuery = JSON.parse(this.query.query || '{}')
@@ -509,63 +491,55 @@ class Data extends QueryBuilder {
     const nextQuery = column
       .split('.')
       .reverse()
-      .reduce(
-        (child, item) => ({
-          [item]:
-            child === null
-              ? {
-                [whereOperator]: whereValue
-              }
-              : {
-                _is: child
-              }
-        }),
-        null
-      )
+      .reduce((child, item) => ({
+        [item]: Object.keys(child).length === 0
+          ? {[whereOperator]: whereValue}
+          : {_is: child}
+      }), {})
     const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
   }
 
-  orWhere (column, operator, value) {
-    this._queries = [].concat(this.queries, this._query.query)
+  public orWhere (column: string | any[], operator?: any, value?: any) {
+    this._queries = [].concat(this.queries as [never], this._query.query)
     this._query.query = null
 
     return this.where(column, operator, value)
   }
 
-  whereNotNull (column) {
+  public whereNotNull (column: string) {
     return this.where(column, 'exists', true)
   }
 
-  whereIn (column, arr) {
+  public whereIn (column: string, arr: string[] | number[]) {
     return this.where(column, 'in', arr)
   }
 
-  whereNotIn (column, arr) {
+  public whereNotIn (column: string, arr: string[] | number[]) {
     return this.where(column, 'nin', arr)
   }
 
-  whereNull (column) {
+  public whereNull (column: string) {
     return this.where(column, null)
   }
 
-  whereBetween (column, min, max) {
+  public whereBetween (column: string, min: number, max: number) {
     return this.where([
       [column, 'gte', min],
       [column, 'lte', max]
     ])
   }
 
-  _normalizeWhereOperator (operator) {
+  public _normalizeWhereOperator (operator: string) {
     const operators = {
+      '!=': 'neq',
       '<': 'lt',
       '<=': 'lte',
-      '>': 'gt',
-      '>=': 'gte',
+      '<>': 'neq',
       '=': 'eq',
-      '!=': 'neq',
-      '<>': 'neq'
+      '>': 'gt',
+      '>=': 'gte'
     }
 
     return operators[operator] || operator
@@ -574,17 +548,15 @@ class Data extends QueryBuilder {
   /**
    * Whitelist returned keys.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * const posts = await data.users.fields('name', 'email as username')->list()
    */
-  fields (...fields) {
+  public fields (...fields: any[]) {
     if (Array.isArray(fields[0])) {
       fields = fields[0]
     }
 
-    const fieldsToMap = fields.map(field => {
+    const fieldsToMap = fields.map((field) => {
       const [, from, , to] = field.match(/([\w_\-.]*)(\sas\s)?(.*)?/)
 
       return {[from]: to}
@@ -598,14 +570,12 @@ class Data extends QueryBuilder {
   /**
    * Expand references and relationships.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * data.posts.with('author').list()
    * @example {@lang javascript}
    * data.posts.with(['author', 'last_editor']).list()
    */
-  with (...models) {
+  public with (...models: any[]) {
     const relationships = Array.isArray(models[0]) ? models[0] : models
 
     return this.withRelationships(relationships)
@@ -614,57 +584,53 @@ class Data extends QueryBuilder {
   /**
    * Get values of single column.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * data.posts.where('id', 10).pluck('title')
    */
-  async pluck (column) {
+  public async pluck (column: string): Promise<any> {
     const items = await this.list()
-    return items.map(item => item[column])
+    return items.map((item: any) => item[column])
   }
 
   /**
    * Get value of single record column field.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * data.posts.where('id', 10).value('title')
    */
-  async value (column) {
+  public async value (column: string): Promise<any> {
     const item = await this.first()
     return item[column]
   }
 
-  _chunk (items, size) {
+  public _chunk (items: any[], size: number): any[] {
     return items
       .map((e, i) => (i % size === 0 ? items.slice(i, i + size) : null))
       .filter(Boolean)
   }
 
-  async _batch (body, headers) {
+  public async _batch (body: any, headers?: object) {
     const type = Array.isArray(body[0])
       ? 'PATCH'
       : isNaN(body[0]) === false ? 'DELETE' : 'POST'
-    const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
+    const requests = this._chunk(body, MAX_BATCH_SIZE).map((chunk) => () => {
       const fetchObject = this._batchFetchObject(chunk)
 
       return this.fetch(fetchObject.url, fetchObject, headers)
     })
 
     return new Promise((resolve, reject) => {
-      let resolves = []
+      let resolves: any[] = []
       let i = 0
 
-      async function next () {
+      async function next() {
         const request = requests[i++]
 
         try {
           if (request) {
             const data = await request()
             const items = data.map(
-              item => (item.content ? item.content : item)
+              (item: any) => (item.content ? item.content : item)
             )
             resolves = resolves.concat(items)
             next() // eslint-disable-line promise/no-callback-in-promise
@@ -683,8 +649,6 @@ class Data extends QueryBuilder {
   /**
    * Create new object.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * const posts = await data.posts.create({
    *   title: 'Example post title',
@@ -695,18 +659,22 @@ class Data extends QueryBuilder {
    *  { content: 'More lorem ipsum!' }
    * ])
    */
-  create (body) {
-    let headers = null
-    const fetchObject = {
-      url: this.url(),
-      method: 'POST'
+  public create (body: object): Promise<any> {
+    let headers
+    const fetchObject: {
+      method: string
+      url: string
+      body?: any
+    } = {
+      method: 'POST',
+      url: this.url()
     }
 
     if (body instanceof FormData) {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
-      return this._batch(body, headers)
+      return this._batch(body)
         .then(this._replaceCustomTypesWithValue.bind(this))
         .then(this._mapFields.bind(this))
     } else {
@@ -722,8 +690,6 @@ class Data extends QueryBuilder {
   /**
    * Update object in database.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * data.posts.update(55, { content: 'No more lorem ipsum!' })
    * data.posts.update([
@@ -736,24 +702,29 @@ class Data extends QueryBuilder {
    *   .where('destination', 'Warsaw')
    *   .update({delayed: 1})
    */
-  update (id, body) {
-    let headers = null
+  public update (id: number | object, body?: object): Promise<any> {
+    let headers
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)
-    const fetchObject = {
-      url: this.url(id),
-      method: 'PATCH'
-    }
 
     if (isQueryUpdate) {
-      return this.list().then(items => {
-        const ids = items.map(item => [item.id, id])
+      return this.list().then((items) => {
+        const ids = items.map((item: any) => [item.id, id])
 
         return this._batch(ids)
           .then(this.resolveRelatedModels.bind(this))
           .then(this._replaceCustomTypesWithValue.bind(this))
           .then(this._mapFields.bind(this))
       })
+    }
+
+    const fetchObject: {
+      method: string
+      url: string
+      body?: any
+    } = {
+      method: 'PATCH',
+      url: this.url(id as number)
     }
 
     if (body instanceof FormData) {
@@ -779,24 +750,22 @@ class Data extends QueryBuilder {
   /**
    * Remove object from database.
    *
-   * @returns {Promise}
-   *
    * @example {@lang javascript}
    * data.posts.delete(55)
    * data.posts.delete([55, 56, 57])
    * data.posts.delete()
    * data.posts.where('draft', 1).delete()
    */
-  async delete (id) {
+  public async delete (id: number): Promise<any> {
     const isQueryDelete = id === undefined
     const fetchObject = {
-      url: this.url(id),
-      method: 'DELETE'
+      method: 'DELETE',
+      url: this.url(id)
     }
 
     if (isQueryDelete) {
       const items = await this.list()
-      const ids = items.map(item => item.id)
+      const ids = items.map((item: any) => item.id)
       return this._batch(ids)
     }
 
@@ -805,6 +774,21 @@ class Data extends QueryBuilder {
     }
 
     return this.fetch(fetchObject.url, fetchObject)
+  }
+
+  protected url (id?: number): string {
+    debug('url', id)
+    const {instanceName, className} = this.instance
+    let url = `${this._getInstanceURL(
+      instanceName
+    )}/classes/${className}/objects/${id ? id + '/' : ''}`
+
+    if (this._url !== undefined) {
+      url = this._url
+    }
+
+    const query = querystring.stringify(this.query)
+    return query ? `${url}?${query}` : url
   }
 }
 
