@@ -78,7 +78,9 @@ jobs:
 
       - run: npm install
       - run: npm run bootstrap
-      - run: lerna run build --scope @syncano/core
+      - run:
+          command: npm run build
+          working_directory: ~/repo/packages/lib-js-core
 
       - save_cache:
           paths:
