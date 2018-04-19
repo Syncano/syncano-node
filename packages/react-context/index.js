@@ -1,3 +1,5 @@
+import React from 'react'
+
 export const SyncanoContext = React.createContext()
 
 // This function takes a component...
