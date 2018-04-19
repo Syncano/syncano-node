@@ -358,7 +358,7 @@ describe('Data', function () {
       run()
         .where('field_string', '000111ddd')
         .firstOrFail()
-        .should.be.rejectedWith(NotFoundError))
+        .should.be.rejected)
   })
 
   describe('#firstOrCreate()', () => {
@@ -459,7 +459,7 @@ describe('Data', function () {
       run()
         .where('field_string', 'asdasd')
         .findOrFail(1001)
-        .should.be.rejectedWith(NotFoundError))
+        .should.be.rejected)
   })
 
   describe('#where()', () => {
