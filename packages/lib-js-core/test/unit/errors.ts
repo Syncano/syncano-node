@@ -1,4 +1,4 @@
-import should from 'should/as-function'
+import * as should from 'should/as-function'
 import {NotFoundError, SyncanoError} from '../../src/errors'
 
 describe('SyncanoError', () => {

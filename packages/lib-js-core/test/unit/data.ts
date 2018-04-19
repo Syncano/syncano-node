@@ -1,9 +1,8 @@
-/* global it describe beforeEach */
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-import FormData from 'form-data'
-import nock from 'nock'
-import should from 'should/as-function'
+import * as chai from 'chai'
+import * as chaiAsPromised from 'chai-as-promised'
+import * as FormData from 'form-data'
+import * as nock from 'nock'
+import * as should from 'should/as-function'
 import Server from '../../src/server'
 
 import {NotFoundError} from '../../src/errors'
