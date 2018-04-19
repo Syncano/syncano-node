@@ -1,7 +1,7 @@
-import nock from 'nock'
-import Server from '../../src'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import nock from 'nock'
+import Server from '../../src'
 
 chai.use(chaiAsPromised)
 chai.should()

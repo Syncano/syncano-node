@@ -36,16 +36,16 @@ export class Response {
   }
 }
 
-export type ResponseFn = (content: any, status: number, mimetype: string, headers: any) => Response
+export type ResponseFn = (content?: any, status?: number, mimetype?: string, headers?: any) => Response
 export interface CustomResponse extends ResponseFn {
   headers?: {}
   header?: (key: string, value: string) => CustomResponse
-  json?: (content: any, status?: 200) => Response
+  json?: (content?: any, status?: 200) => Response
   [x: string]: any
 }
 
 export default (config: any) => {
-  const response: CustomResponse = (content: any, status: number, mimetype: string, headers: any) =>
+  const response: CustomResponse = (content?: any, status?: number, mimetype?: string, headers?: any) =>
     new Response(config, content, status, mimetype, headers)
 
   const responses = get(config, 'meta.metadata.outputs', {})

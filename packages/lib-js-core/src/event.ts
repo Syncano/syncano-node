@@ -5,7 +5,7 @@ import QueryBuilder from './query-builder'
  * @property {Function}
  */
 class Event extends QueryBuilder {
-  private static _splitSignal (signalString: string) {
+  public static splitSignal (signalString: string) {
     const splited = signalString.split('.')
     if (splited.length === 1) {
       return {signal: splited[0]}
@@ -24,7 +24,7 @@ class Event extends QueryBuilder {
    */
   public emit (signalString: string, payload: any): Promise<any> {
     const fetch = this.fetch.bind(this)
-    const {socket, signal} = Event._splitSignal(signalString)
+    const {socket, signal} = Event.splitSignal(signalString)
 
     const signalParams: string[] = []
 

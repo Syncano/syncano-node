@@ -56,7 +56,9 @@ export class Logger {
     const str = args.map(this.parseArg).join(' ')
 
     if (this.config !== false) {
-      console.log(`${level}:`, time, this.scope, str, diff, 'ms')
+      if (process.env.NODE_ENV !== 'test') {
+        console.log(`${level}:`, time, this.scope, str, diff, 'ms')
+      }
     }
 
     return now
@@ -96,27 +98,28 @@ export interface ExtendedLogger {
 
 export type LoggerType = (event: string) => Logger
 export interface ExtendedLoggerType extends LoggerType {
-  levels?: (userLevels: string[]) => void
+  callback?: (event: any) => void
+  levels?: string[]
+  setLevels?: (userLevels: string[]) => void
   listen?: (userCallback: ((event: any) => void)) => void
 }
 
 export default (instance: any) => {
-  let levels: string[] = []
-  let callback: (event: any) => void
-
-  const logger: ExtendedLoggerType = (scope: string) =>
-    new Logger(instance, {
-      callback,
-      levels: levels || LEVELS,
+  // tslint:disable-next-line:only-arrow-functions
+  const logger: ExtendedLoggerType = function (scope: string) {
+    return new Logger(instance, {
+      callback: logger.callback,
+      levels: logger.levels || LEVELS,
       scope
     })
+  }
 
-  logger.levels = (userLevels: string[]) => {
+  logger.setLevels = (userLevels: string[]) => {
     if (!Array.isArray(userLevels)) {
       throw new TypeError('Levels must be array of strings.')
     }
 
-    levels = userLevels
+    logger.levels = userLevels
   }
 
   logger.listen = (userCallback: (event: any) => void) => {
@@ -124,7 +127,7 @@ export default (instance: any) => {
       throw new TypeError('Callback must be a function.')
     }
 
-    callback = userCallback
+    logger.callback = userCallback
   }
 
   return logger

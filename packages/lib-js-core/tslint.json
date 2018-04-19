@@ -12,6 +12,7 @@
     "max-classes-per-file": false,
     "quotemark": [ true, "single", "avoid-escape" ],
     "semicolon": [ true, "never" ],
+    "object-literal-sort-keys": false,
     "trailing-comma": [ true, { "multiline": "never", "singleline": "never" } ],
     "space-before-function-paren": [ true, { "anonymous": "always", "named": "never", "asyncArrow": "always" } ],
     "indent": [ true, "spaces", 2 ],

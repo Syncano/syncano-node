@@ -19,16 +19,16 @@ describe('Logger', () => {
     should(log).not.throw()
   })
 
-  it('has _start property set to Date', () => {
-    should(log).have.property('_start', null)
+  it('has start property set to Date', () => {
+    should(log).have.property('start').which.is.instanceOf(Date)
   })
 
-  it('has _callback property set to undefined', () => {
-    should(log).have.property('_callback', undefined)
+  it('has callback property set to undefined', () => {
+    should(log).have.property('callback', undefined)
   })
 
   describe('#log.warn', () => {
-    it('execute without error', done => {
+    it('execute without error', (done) => {
       try {
         log.warn('test')
         done()
@@ -37,7 +37,7 @@ describe('Logger', () => {
       }
     })
 
-    it('can log object', done => {
+    it('can log object', (done) => {
       try {
         log.warn({name: 'John'})
         done()
@@ -59,14 +59,16 @@ describe('Logger', () => {
     })
 
     it('should save callback', () => {
-      logger.listen(() => {})
+      logger.listen(() => {
+        //
+      })
 
       should(logger)
-        .have.property('_callback')
+        .have.property('callback')
         .which.is.Function()
     })
 
-    it('should execute callback', done => {
+    it('should execute callback', (done) => {
       logger.listen(() => {
         done()
       })
@@ -75,21 +77,21 @@ describe('Logger', () => {
     })
   })
 
-  describe('#levels()', () => {
+  describe('#setLevels()', () => {
     it('should be a method of the model', () => {
       should(logger)
-        .have.property('levels')
+        .have.property('setLevels')
         .which.is.Function()
     })
 
     it('should throw when array was not passed', () => {
-      should(logger.levels).throw(/Levels must be array of strings\./)
+      should(logger.setLevels).throw(/Levels must be array of strings\./)
     })
 
     it('should set levels', () => {
-      logger.levels(['info', 'custom'])
+      logger.setLevels(['info', 'custom'])
 
-      should(logger._levels).be.deepEqual(['info', 'custom'])
+      should(logger.levels).be.deepEqual(['info', 'custom'])
     })
   })
 

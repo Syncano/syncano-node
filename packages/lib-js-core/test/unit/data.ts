@@ -1,10 +1,10 @@
 /* global it describe beforeEach */
-import nock from 'nock'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import FormData from 'form-data'
+import nock from 'nock'
 import should from 'should/as-function'
 import Server from '../../src/server'
-import FormData from 'form-data'
 
 import {NotFoundError} from '../../src/errors'
 
@@ -51,7 +51,7 @@ describe('Data', () => {
       return data.users
         .take(10)
         .list()
-        .then(objects => {
+        .then((objects) => {
           should(objects)
             .be.Array()
             .length(1)
@@ -73,7 +73,7 @@ describe('Data', () => {
       return data.users
         .take(5)
         .list()
-        .then(objects => {
+        .then((objects) => {
           should(objects)
             .be.Array()
             .empty()
@@ -183,7 +183,7 @@ describe('Data', () => {
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(404)
 
-      return data.users.firstOrFail().should.rejectedWith(NotFoundError)
+      return data.users.firstOrFail().should.be.rejected
     })
   })
 
@@ -374,7 +374,7 @@ describe('Data', () => {
         })
         .reply(404)
 
-      return data.users.findOrFail(5).should.be.rejectedWith(NotFoundError)
+      return data.users.findOrFail(5).should.be.rejected
     })
   })
 
@@ -617,7 +617,7 @@ describe('Data', () => {
       user.append('name', 'John')
 
       api
-        .post('/v2/instances/testInstance/classes/users/objects/', body =>
+        .post('/v2/instances/testInstance/classes/users/objects/', (body) =>
           body.includes('name')
         )
         .reply(200, {name: 'John'})
@@ -717,7 +717,7 @@ describe('Data', () => {
       user.append('name', 'John')
 
       api
-        .patch('/v2/instances/testInstance/classes/users/objects/1/', body =>
+        .patch('/v2/instances/testInstance/classes/users/objects/1/', (body) =>
           body.includes('name')
         )
         .reply(200, {name: 'John'})

@@ -1,4 +1,3 @@
-/* global it describe beforeEach */
 import should from 'should/as-function'
 import Server from '../../src/server'
 
@@ -31,31 +30,31 @@ describe('Response', () => {
     should(res).not.throw()
   })
 
-  it('has _content property set to null', () => {
+  it('has content property set to null', () => {
     should(res)
-      .have.property('_content')
+      .have.property('content')
       .which.is.null()
   })
 
-  it('has _status property set to 200', () => {
+  it('has status property set to 200', () => {
     should(res)
-      .have.property('_status')
+      .have.property('status')
       .which.is.equal(200)
   })
 
-  it('has _mimetype property set to text/plain', () => {
+  it('has mimetype property set to text/plain', () => {
     should(res)
-      .have.property('_mimetype')
+      .have.property('mimetype')
       .which.is.equal('text/plain')
   })
 
-  it('has _headers property set to {}', () => {
+  it('has headers property set to {}', () => {
     should(res)
-      .have.property('_headers')
+      .have.property('headers')
       .which.is.Object()
   })
 
-  it('should use setResponse to return response', done => {
+  it('should use setResponse to return response', (done) => {
     class HttpResponse {}
 
     const {response: r} = new Server({
@@ -75,11 +74,11 @@ describe('Response', () => {
         .which.is.Function()
     })
 
-    it('should add X-TEST to _headers', () => {
+    it('should add X-TEST to headers', () => {
       response.header('X-TEST', 'Hello World')
 
       should(response)
-        .have.property('_headers')
+        .have.property('headers')
         .which.is.deepEqual({
           'X-TEST': 'Hello World'
         })
@@ -87,15 +86,15 @@ describe('Response', () => {
 
     it('should handle methods defined in yaml', () => {
       should(response.success({hello: 'World'})).properties({
-        _status: 200,
-        _mimetype: 'application/json',
-        _content: '{"hello":"World"}'
+        status: 200,
+        mimetype: 'application/json',
+        content: '{"hello":"World"}'
       })
 
       should(response.fail('Bad request')).properties({
-        _status: 400,
-        _mimetype: 'plain/text',
-        _content: 'Bad request'
+        status: 400,
+        mimetype: 'plain/text',
+        content: 'Bad request'
       })
     })
   })
@@ -109,13 +108,13 @@ describe('Response', () => {
 
     it('should change mimetype to application/json', () => {
       should(response.json())
-        .have.property('_mimetype')
+        .have.property('mimetype')
         .which.is.equal('application/json')
     })
 
     it('should parse content to json', () => {
       should(response.json({hello: 'World'}))
-        .have.property('_content')
+        .have.property('content')
         .which.is.equal('{"hello":"World"}')
     })
   })

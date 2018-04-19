@@ -1,5 +1,5 @@
 import should from 'should/as-function'
-import {SyncanoError, NotFoundError} from '../../src/errors'
+import {NotFoundError, SyncanoError} from '../../src/errors'
 
 describe('SyncanoError', () => {
   let error = null
@@ -33,7 +33,7 @@ describe('SyncanoError', () => {
   })
 
   it('has defaults', () => {
-    should(new SyncanoError())
+    should(new SyncanoError(''))
       .have.property('message')
       .which.is.String()
       .equal('')

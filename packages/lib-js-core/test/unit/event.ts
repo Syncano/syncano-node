@@ -1,8 +1,8 @@
-import nock from 'nock'
-import Server from '../../src'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import nock from 'nock'
 import should from 'should/as-function'
+import Server from '../../src'
 import Event from '../../src/event'
 import {getRandomString} from '../utils'
 
@@ -46,18 +46,18 @@ describe('Event', () => {
     })
   })
 
-  describe('_splitSignal', () => {
+  describe('splitSignal', () => {
     const socketName = getRandomString()
     const signalName = getRandomString()
 
-    it('_splitSignal properly spliting signalString with socket', () => {
-      const {socket, signal} = Event._splitSignal(`${socketName}.${signalName}`)
+    it('splitSignal properly spliting signalString with socket', () => {
+      const {socket, signal} = Event.splitSignal(`${socketName}.${signalName}`)
       should(socket).be.equal(socketName)
       should(signal).be.equal(signalName)
     })
 
-    it('_splitSignal properly spliting signalString without socket', () => {
-      const {socket, signal} = Event._splitSignal(`${signalName}`)
+    it('splitSignal properly spliting signalString without socket', () => {
+      const {socket, signal} = Event.splitSignal(`${signalName}`)
       should(socket).be.undefined()
       should(signal).be.equal(signalName)
     })
