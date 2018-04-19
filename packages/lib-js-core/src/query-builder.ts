@@ -1,5 +1,5 @@
 import logger from 'debug'
-import http from 'https'
+import {Agent} from 'https'
 import nodeFetch from 'node-fetch'
 // tslint:disable-next-line:no-var-requires
 const pjson = require('../package.json')
@@ -8,7 +8,7 @@ import {checkStatus, parseJSON} from './utils'
 const debug = logger('core:query-builder')
 
 const generalOptions = {
-  agent: new http.Agent({
+  agent: new Agent({
     keepAlive: true,
     keepAliveMsecs: 5000,
     maxSockets: 60
