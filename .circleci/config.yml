@@ -78,6 +78,7 @@ jobs:
 
       - run: npm install
       - run: npm run bootstrap
+      - run: lerna run build --scope @syncano/core
 
       - save_cache:
           paths:

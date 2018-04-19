@@ -1,4 +1,4 @@
-import logger from 'debug'
+import * as logger from 'debug'
 import QueryBuilder from './query-builder'
 
 const debug = logger('core:hosting')

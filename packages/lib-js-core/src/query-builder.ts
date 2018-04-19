@@ -1,9 +1,8 @@
-import logger from 'debug'
+import * as logger from 'debug'
 import {Agent} from 'https'
 import nodeFetch from 'node-fetch'
-// tslint:disable-next-line:no-var-requires
-const pjson = require('../package.json')
 import {checkStatus, parseJSON} from './utils'
+const pjson = require('../package.json')
 
 const debug = logger('core:query-builder')
 

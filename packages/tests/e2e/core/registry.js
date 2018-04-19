@@ -2,7 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 import {expect} from 'chai'
-import Server from '../../../lib-js-core/src'
+import Server from '../../../lib-js-core/lib'
 
 import {projectTestTemplate} from '../utils'
 

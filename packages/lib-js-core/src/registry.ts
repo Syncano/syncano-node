@@ -1,7 +1,7 @@
-import logger from 'debug'
-import FormData from 'form-data'
-import fs, { WriteStream } from 'fs'
-import https from 'https'
+import * as logger from 'debug'
+import * as FormData from 'form-data'
+import * as fs from 'fs'
+import * as https from 'https'
 import QueryBuilder from './query-builder'
 
 const debug = logger('core:registry')
@@ -58,7 +58,7 @@ export default class Socket extends QueryBuilder {
     return this.nonInstanceFetch(this.url('registry/publish'), options, headers)
   }
 
-  public async getSocket (url: string, fileDescriptor: WriteStream) {
+  public async getSocket (url: string, fileDescriptor: fs.WriteStream) {
     debug('getSocket', url)
     return new Promise((resolve, reject) => {
       https.get(url, (response) => {

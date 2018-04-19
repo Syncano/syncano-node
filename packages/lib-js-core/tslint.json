@@ -9,6 +9,7 @@
     "import-spacing": true,
     "object-curly-spacing": [true, "never"],
     "no-console": [ false, "error" ],
+    "no-var-requires": false,
     "max-classes-per-file": false,
     "quotemark": [ true, "single", "avoid-escape" ],
     "semicolon": [ true, "never" ],

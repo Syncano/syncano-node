@@ -5,8 +5,8 @@ import FormData from 'form-data'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 
-import Server from '../../../lib-js-core/src'
-import {NotFoundError} from '../../../lib-js-core/src/errors'
+import Server from '../../../lib-js-core/lib'
+import {NotFoundError} from '../../../lib-js-core/lib/errors'
 import {
   uniqueInstance,
   getRandomString,

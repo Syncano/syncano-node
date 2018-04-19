@@ -6,8 +6,8 @@ import fetch from 'node-fetch'
 import chai, {expect} from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 
-import Server from '../../../lib-js-core/src'
-import {parseJSON, checkStatus} from '../../../lib-js-core/src/utils'
+import Server from '../../../lib-js-core/lib'
+import {parseJSON, checkStatus} from '../../../lib-js-core/lib/utils'
 
 import {
   getRandomString,

@@ -1,12 +1,12 @@
-import logger from 'debug'
-import FormData from 'form-data'
-import get from 'lodash.get'
-import merge from 'lodash.merge'
-import set from 'lodash.set'
-import querystring from 'querystring'
+import * as logger from 'debug'
+import * as FormData from 'form-data'
+import * as querystring from 'querystring'
 import {NotFoundError} from './errors'
 import QueryBuilder from './query-builder'
 export type ArrayOrObject<T> = T extends Array<{}> ? Array<{}> : object
+const get = require('lodash.get')
+const merge = require('lodash.merge')
+const set = require('lodash.set')
 const debug = logger('core:data')
 
 const MAX_BATCH_SIZE = 50
