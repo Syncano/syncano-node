@@ -18,12 +18,12 @@
 - Complete solutions
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
-  - Syncano Components
-    - [Login Form](/solutions/login-form-component)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
   - [Creating project template](/deployment/create-project-template)
   - [Using multiple Syncano accounts](/deployment/multiple-accounts)
+- Syncano Components
+  - [Login Form](/solutions/login-form-component)
 - [Support](/common/support)
 - [License](/common/license)
 - [Changelog](/common/changelog)

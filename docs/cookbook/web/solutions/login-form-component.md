@@ -1,9 +1,9 @@
-# Facebook Weather Bot
+# Login Form
 
 - Preparation: **6 minutes**
 - Requirements:
   - Initiated Syncano project
-- Source on: [GitHub](https://github.com/Syncano/syncano-cookbook-recepies/tree/master/component-login-form)
+- Source on: [GitHub](https://github.com/Syncano/syncano-cookbook-recipes/tree/master/component-login-form)
 - Components:
   - [login-form](https://github.com/Syncano/react-components/tree/master/components/login-form)
 
@@ -51,7 +51,7 @@ npx s deploy user-auth
 
 #### Add login form to project
 
-First, we need to import all required packages. Open `/src/App.js` and add imports at top:
+First, we need to import all required packages. Open `/src/App.js` and add imports at the top:
 
 ```js
 import Syncano from '@syncano/client'
@@ -99,4 +99,4 @@ In this step, we've also added `ConnectedLoginForm` to render method.
 
 ### Testing functionality
 
-To test it, run `npm start` in project folder. It will open browser at [http://localhost:3000](http://localhost:3000). Whole example is available [here](https://github.com/Syncano/syncano-cookbook-recepies/tree/master/component-login-form)
+To test it, run `npm start` in project folder. It will open browser at [http://localhost:3000](http://localhost:3000). Whole example is available [here](https://github.com/Syncano/syncano-cookbook-recipes/tree/master/component-login-form)
