@@ -96,7 +96,7 @@ export class LoggerClass {
   }
 }
 
-export type LoggerType = (event: string) => LoggerClass
+export type LoggerType = (scope: string) => LoggerClass
 export interface Logger extends LoggerType {
   callback?: (event: any) => void
   levels?: string[]
