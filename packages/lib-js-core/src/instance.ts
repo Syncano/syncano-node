@@ -1,17 +1,48 @@
 import QueryBuilder from './query-builder'
 
-/**
- * Syncano account query builder
- * @property {Function}
- */
-class Instance extends QueryBuilder {
+export interface InstanceOwner {
+  id: number,
+  email: string,
+  first_name: string,
+  last_name: string,
+  is_active: boolean,
+  has_password: boolean,
+  metadata: InstanceMetadata
+}
+
+export interface InstanceMetadata {
+  icon?: string
+  color?: string
+  [x: string]: any
+}
+
+export interface Instance {
+  name: string,
+  description: string,
+  owner: InstanceOwner,
+  created_at: string,
+  updated_at: string,
+  role: string,
+  metadata: InstanceMetadata,
+  links: {
+    [x: string]: string
+  }
+}
+
+class InstanceClass extends QueryBuilder {
   /**
    * Create Syncano instance
+   *
+   * @param params.name Name of Syncano instance
+   * @param params.description Description of Syncano instance
+   * @param params.metadata Instance metadata. `icon` and `color` properties are used in Syncano Dashboard for Instance
+   *                        looks customisation. You can add your own properties too.
    */
   public create (params: {
     name: string,
     description?: string
-  }): Promise<any> {
+    metadata?: InstanceMetadata
+  }): Promise<Instance> {
     const fetch = this.nonInstanceFetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -29,8 +60,10 @@ class Instance extends QueryBuilder {
   }
   /**
    * Get Syncano instance details
+   *
+   * @param instanceName Name of instance to fetch.
    */
-  public get (instanceName: string): Promise<any> {
+  public get (instanceName: string): Promise<Instance> {
     const fetch = this.nonInstanceFetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -46,7 +79,11 @@ class Instance extends QueryBuilder {
   /**
    * List Syncano instances
    */
-  public list (): Promise<any> {
+  public list (): Promise<{
+    next: string|null
+    prev: string|null
+    objects: Instance[]
+  }> {
     const fetch = this.nonInstanceFetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -61,8 +98,10 @@ class Instance extends QueryBuilder {
 
   /**
    * Delete Syncano instance
+   *
+   * @param instanceName Name of instance to delete.
    */
-  public delete (instanceName: string): Promise<any> {
+  public delete (instanceName: string): Promise<void> {
     const fetch = this.nonInstanceFetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -84,4 +123,4 @@ class Instance extends QueryBuilder {
   }
 }
 
-export default Instance
+export default InstanceClass
