@@ -13,6 +13,7 @@ export interface ChannelResponse<T> {
   },
   payload: T,
   links: {
+    self: string
     [x: string]: string
   }
 }

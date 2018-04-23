@@ -1,11 +1,6 @@
 import * as querystring from 'querystring'
 import Data from './data'
-
-export interface ACL {
-  [className: string]: {
-    [id: string]: string[]
-  }
-}
+import {ACL} from './types'
 
 export interface Group {
   id: number
@@ -21,7 +16,7 @@ export interface User {
   created_at: string
   updated_at: string
   revision: number
-  acl: ACL[]
+  acl: ACL
   channel: string|null
   channel_room: string|null
   username: string
@@ -31,6 +26,7 @@ export interface User {
     self: string
     groups: string
     'reset-key': string
+    [x: string]: string
   }
   [fieldName: string]: any
 }

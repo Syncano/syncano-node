@@ -25,6 +25,33 @@ export interface Instance {
   role: string,
   metadata: InstanceMetadata,
   links: {
+    self: string
+    admins: string
+    snippets: string
+    endpoints: string
+    push_notification: string
+    classes: string
+    invitations: string
+    api_keys: string
+    triggers: string
+    schedules: string
+    users: string
+    groups: string
+    channels: string
+    batch: string
+    rename: string
+    backups: string
+    restores: string
+    hosting: string
+    'classes-acl': string
+    'channels-acl': string
+    'script-endpoints-acl': string
+    'groups-acl': string
+    'users-schema': string
+    'triggers-emit': string
+    sockets: string
+    'sockets-install': string
+    environments: string
     [x: string]: string
   }
 }

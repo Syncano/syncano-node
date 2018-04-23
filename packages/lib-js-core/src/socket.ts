@@ -45,6 +45,7 @@ export interface Socket {
     endpoints: string
     handlers: string
     zip_file: string
+    [x: string]: string
   }
 }
 

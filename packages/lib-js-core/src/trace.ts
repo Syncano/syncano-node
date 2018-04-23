@@ -20,6 +20,7 @@ export interface Trace {
   duration: number,
   links: {
     self: string
+    [x: string]: string
   }
 }
 

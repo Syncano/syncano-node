@@ -1,19 +1,21 @@
 import QueryBuilder from './query-builder'
+import {ACL} from './types'
 
 export interface ClassResponse {
   name: string
   description: string
-  schema: any[]
+  schema: SchemaObject[]
   status: string
   created_at: string
   updated_at: string
   objects_count: number
   revision: number
-  acl: {
-    [x: string]: string[]
-  }
+  acl: ACL
   metadata: object
   links: {
+    self: string
+    objects: string
+    'endpoint-acl': string
     [x: string]: string
   }
 }
