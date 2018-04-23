@@ -35,12 +35,7 @@ export interface User {
   [fieldName: string]: any
 }
 
-/**
- * Syncano users query builder
- * @property {Function}
- */
 class Users extends Data {
-  // tslint:disable-next-line:variable-name
   /**
    * Login Syncano user
    *
