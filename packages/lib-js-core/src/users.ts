@@ -1,14 +1,57 @@
 import * as querystring from 'querystring'
 import Data from './data'
 
+export interface ACL {
+  [className: string]: {
+    [id: string]: string[]
+  }
+}
+
+export interface Group {
+  id: number
+  label: string
+  links: {
+      self: string
+      users: string
+  }
+}
+
+export interface User {
+  id: number
+  created_at: string
+  updated_at: string
+  revision: number
+  acl: ACL[]
+  channel: string|null
+  channel_room: string|null
+  username: string
+  groups: Group[]
+  user_key: string
+  links: {
+    self: string
+    groups: string
+    'reset-key': string
+  }
+  [fieldName: string]: any
+}
+
 /**
  * Syncano users query builder
  * @property {Function}
  */
 class Users extends Data {
   // tslint:disable-next-line:variable-name
-  public login ({username, password}: {username: string, password: string}) {
+  /**
+   * Login Syncano user
+   *
+   * @param param.username
+   * @param param.password
+   */
+  public login (
+    {username, password}: {username: string, password: string}
+  ): Promise<User> {
     const fetch = this.fetch.bind(this)
+
     return new Promise((resolve, reject) => {
       const options = {
         body: JSON.stringify({ username, password }),
