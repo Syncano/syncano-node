@@ -1,19 +1,38 @@
 import QueryBuilder from './query-builder'
 
-/**
- * Syncano account query builder
- * @property {Function}
- */
+export interface ChannelResponse<T> {
+  id: number,
+  room: string,
+  created_at: string,
+  action: string,
+  author: {
+    admin: number
+  },
+  metadata: {
+    type: string
+  },
+  payload: T,
+  links: {
+    [x: string]: string
+  }
+}
+
 class Channel extends QueryBuilder {
   /**
-   * Publish any payload to channel room
+   * Publish any payload to channel
+   *
+   * @param channelName A string value used as channel name. Channel types:
+   *                    - Public channels: `messages`
+   *                    - User private channel: `messages.${username}`
+   *                    - Channel room: `messages.${room}`
+   * @param payload Value published to channel
    */
-  public publish (room: string, payload: any): Promise<any> {
+  public publish<T> (channelName: string, payload: T): Promise<ChannelResponse<T>> {
     const fetch = this.fetch.bind(this)
 
     return new Promise((resolve, reject) => {
       const options = {
-        body: JSON.stringify({room, payload}),
+        body: JSON.stringify({room: channelName, payload}),
         method: 'POST'
       }
       fetch(this.url(), options)
