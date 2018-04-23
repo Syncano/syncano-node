@@ -1,8 +1,32 @@
 import QueryBuilder from './query-builder'
 
-/**
- * Syncano account query builder
- */
+export interface ClassResponse {
+  name: string
+  description: string
+  schema: any[]
+  status: string
+  created_at: string
+  updated_at: string
+  objects_count: number
+  revision: number
+  acl: {
+    [x: string]: string[]
+  }
+  metadata: object
+  links: {
+    [x: string]: string
+  }
+}
+
+export interface SchemaObject {
+  name: string
+  type: 'reference'|'relation'|'text'|'string'|'file'|'object'|'array'|'geopoint'|'integer'|'float'|'boolean'|'datetime'
+  order_index?: boolean
+  filter_index?: boolean
+  unique?: boolean
+  target?: string
+}
+
 class Class extends QueryBuilder {
   public url (className?: string) {
     const {instanceName} = this.instance
@@ -12,9 +36,22 @@ class Class extends QueryBuilder {
   }
 
   /**
-   * Create Syncano class
+   * Create Syncano Class
+   *
+   * @param params.name Data Class name - max 64 characters.
+   * @param params.description Data Class description
+   * @param params.metadata Additional JSON metadata associated with the Class
+   * @param params.schema Data Class schema. It defines the Data Objects that
+   *                      will be created within the Data Class. `type` (i.e. string)
+   *                      and `name` are required fields. The very basic schema would
+   *                      look like this: [{"type": "string", "name": "parameter_name"}]
    */
-  public create (params: object): Promise<any> {
+  public create (params: {
+    name: string
+    description?: string
+    schema?: SchemaObject[]
+    metadata?: object
+  }): Promise<ClassResponse> {
     const fetch = this.fetch.bind(this)
 
     return new Promise((resolve, reject) => {
@@ -30,9 +67,9 @@ class Class extends QueryBuilder {
   }
 
   /**
-   * Delete Syncano class
+   * Delete Syncano Class
    */
-  public delete (className: string): Promise<any> {
+  public delete (className: string): Promise<void> {
     const fetch = this.fetch.bind(this)
 
     return new Promise((resolve, reject) => {
