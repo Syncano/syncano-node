@@ -1,8 +1,5 @@
 import QueryBuilder from './query-builder'
 
-/**
- * Syncano account query builder
- */
 class Event extends QueryBuilder {
   public static splitSignal (signalString: string) {
     const splited = signalString.split('.')
@@ -16,11 +13,15 @@ class Event extends QueryBuilder {
   }
 
   /**
-   * Emit event
+   * Emit global events, to which other sockets can subscribe.
+   *
+   * @param eventName Name of emitted event. Sockets published to Syncano Registry should follow this naming convention
+   *                  `socket-name.event-name`. Custom sockets should follow `event-name` naming.
+   * @param payload Additional data passed along with event
    */
-  public emit (signalString: string, payload: any): Promise<any> {
+  public emit (eventName: string, payload: any): Promise<void> {
     const fetch = this.fetch.bind(this)
-    const {socket, signal} = Event.splitSignal(signalString)
+    const {socket, signal} = Event.splitSignal(eventName)
 
     const signalParams: string[] = []
 
