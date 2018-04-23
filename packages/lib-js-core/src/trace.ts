@@ -1,10 +1,37 @@
 import QueryBuilder from './query-builder'
 
-/**
- * Socket endpoints traces.
- */
-export default class Trace extends QueryBuilder {
-  public get (socketName: string, endpointName: string, traceId: string) {
+export interface Trace {
+  meta: {
+    REQUEST_METHOD: string
+    PATH_INFO: string
+    HTTP_HOST: string
+    HTTP_CONNECTION: string
+    HTTP_UPGRADE_INSECURE_REQUESTS: string
+    HTTP_USER_AGENT: string
+    HTTP_ACCEPT: string
+    HTTP_ACCEPT_ENCODING: string
+    HTTP_ACCEPT_LANGUAGE: string
+    HTTP_COOKIE: string
+    REMOTE_ADDR: string
+  },
+  id: number,
+  status: string,
+  executed_at: string,
+  duration: number,
+  links: {
+    self: string
+  }
+}
+
+export default class TraceClass extends QueryBuilder {
+  /**
+   * Get single endpoint trace object.
+   *
+   * @param socketName Name of traced socket
+   * @param endpointName Name of traced endpoint
+   * @param traceId Id of trace object
+   */
+  public get (socketName: string, endpointName: string, traceId: string): Promise<Trace> {
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
@@ -15,7 +42,17 @@ export default class Trace extends QueryBuilder {
     })
   }
 
-  public list (socketName: string, endpointName: string) {
+  /**
+   * Get single endpoint trace object.
+   *
+   * @param socketName Name of traced socket
+   * @param endpointName Name of traced endpoint
+   */
+  public list (socketName: string, endpointName: string): Promise<{
+    next: string|null
+    prev: string|null
+    objects: Trace[]
+  }> {
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': this.instance.accountKey
