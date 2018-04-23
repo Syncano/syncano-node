@@ -2,7 +2,6 @@ import QueryBuilder from './query-builder'
 
 /**
  * Syncano account query builder
- * @property {Function}
  */
 class Event extends QueryBuilder {
   public static splitSignal (signalString: string) {
@@ -18,9 +17,6 @@ class Event extends QueryBuilder {
 
   /**
    * Emit event
-   *
-   * @example {@lang javascript}
-   * const instance = await event.emit('signal_name', payload={})
    */
   public emit (signalString: string, payload: any): Promise<any> {
     const fetch = this.fetch.bind(this)
@@ -55,7 +51,7 @@ class Event extends QueryBuilder {
   private url () {
     const {instanceName} = this.instance
 
-    return `${this._getInstanceURL(instanceName)}/triggers/emit/`
+    return `${this.getInstanceURL(instanceName)}/triggers/emit/`
   }
 }
 

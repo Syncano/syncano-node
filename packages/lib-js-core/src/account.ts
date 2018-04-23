@@ -2,22 +2,29 @@ import { ResponseError } from './errors'
 import QueryBuilder from './query-builder'
 import { JSONResponse } from './utils'
 
+export interface AccountData {
+  id: number
+  email: string
+  first_name: string
+  last_name: string
+  is_active: boolean
+  has_password: boolean
+  metadata: object
+}
+
+export interface LoginData extends AccountData {
+  account_key: string
+}
+
 /**
  * Syncano account query builder
  * @property {Function}
  */
 class Account extends QueryBuilder {
-  public url () {
-    return `${this._getSyncanoURL()}/account/`
-  }
-
   /**
    * Get details of Syncano account
-   *
-   * @example {@lang javascript}
-   * const account = await account.get('0aad29dd0be2bcebb741525b9c5901e55cf43e98')
    */
-  public get (authKey: string): Promise<any> {
+  public get (authKey: string): Promise<AccountData> {
     const fetch = this.nonInstanceFetch.bind(this)
     return new Promise((resolve, reject) => {
       const headers = {
@@ -25,12 +32,14 @@ class Account extends QueryBuilder {
       }
 
       fetch(this.url(), {}, headers)
-        .then((res: JSONResponse)  => resolve(res))
+        .then((res: AccountData)  => resolve(res))
         .catch((err: ResponseError) => reject(err))
     })
   }
 
-  public login ({email, password}: {email: string, password: string}) {
+  public login (
+    {email, password}: {email: string, password: string}
+  ): Promise<LoginData> {
     const fetch = this.nonInstanceFetch.bind(this)
     return new Promise((resolve, reject) => {
       const options = {
@@ -38,12 +47,14 @@ class Account extends QueryBuilder {
         method: 'POST'
       }
       fetch(`${this.url()}auth/`, options)
-        .then((res: JSONResponse) => resolve(res))
+        .then((res: LoginData) => resolve(res))
         .catch((err: ResponseError) => reject(err))
     })
   }
 
-  public register ({email, password}: {email: string, password: string}) {
+  public register (
+    {email, password}: {email: string, password: string}
+  ): Promise<LoginData> {
     const fetch = this.nonInstanceFetch.bind(this)
     return new Promise((resolve, reject) => {
       const options = {
@@ -52,9 +63,13 @@ class Account extends QueryBuilder {
       }
 
       fetch(`${this.url()}register/`, options)
-        .then((res: JSONResponse) => resolve(res))
+        .then((res: LoginData) => resolve(res))
         .catch((err: ResponseError) => reject(err))
     })
+  }
+
+  private url () {
+    return `${this.getSyncanoURL()}/account/`
   }
 }
 

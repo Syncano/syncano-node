@@ -8,7 +8,7 @@ import Endpoint from './endpoint'
 import Event from './event'
 import Hosting from './hosting'
 import Instance from './instance'
-import Logger, { ExtendedLoggerType } from './logger'
+import Log, { Logger } from './logger'
 import Registry from './registry'
 import Response, { CustomResponse } from './response'
 import Settings from './settings'
@@ -16,9 +16,11 @@ import Socket from './socket'
 import Trace from './trace'
 import Users from './users'
 
+export interface DataInterface<T> {
+  [x: string]: T
+}
+
 class Server {
-  public version: any
-  public majorVersion: any
   // tslint:disable-next-line:variable-name
   public _class: Class
   public event: Event
@@ -30,10 +32,12 @@ class Server {
   public response: CustomResponse
   public account: Account
   public instance: Instance
-  public logger: ExtendedLoggerType
+  public logger: Logger
   public users: Users
   public registry: Registry
-  public data: Data
+  public data: DataInterface<Data>
+  protected version: any
+  protected majorVersion: any
 
   constructor (ctx: any = {}) {
     const settings = Settings(ctx)
@@ -53,7 +57,7 @@ class Server {
     this.response = Response(config)
     this.account = new Account(config)
     this.instance = new Instance(config)
-    this.logger = Logger(config)
+    this.logger = Log(config)
     this.users = new Users(config)
     this.registry = new Registry(config)
     this.data = new Proxy(new Data(settings), {

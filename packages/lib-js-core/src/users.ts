@@ -22,7 +22,7 @@ class Users extends Data {
 
   protected url (id?: number): string {
     const {instanceName} = this.instance
-    const url = `${this._getInstanceURL(instanceName)}/users/${id
+    const url = `${this.getInstanceURL(instanceName)}/users/${id
       ? id + '/'
       : ''}`
     const query = querystring.stringify(this.query)

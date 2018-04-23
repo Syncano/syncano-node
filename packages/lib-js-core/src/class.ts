@@ -2,23 +2,17 @@ import QueryBuilder from './query-builder'
 
 /**
  * Syncano account query builder
- * @property {Function}
  */
 class Class extends QueryBuilder {
   public url (className?: string) {
     const {instanceName} = this.instance
-    const baseUrl = `${this._getInstanceURL(instanceName)}/classes/`
+    const baseUrl = `${this.getInstanceURL(instanceName)}/classes/`
 
     return className ? `${baseUrl}${className}/` : baseUrl
   }
 
   /**
    * Create Syncano class
-   *
-   * @returns {Promise}
-   *
-   * @example {@lang javascript}
-   * const instance = await class.create({name: 'class_name'})
    */
   public create (params: object): Promise<any> {
     const fetch = this.fetch.bind(this)
@@ -37,9 +31,6 @@ class Class extends QueryBuilder {
 
   /**
    * Delete Syncano class
-   *
-   * @example {@lang javascript}
-   * await syncanoClass.delete('class_name')
    */
   public delete (className: string): Promise<any> {
     const fetch = this.fetch.bind(this)

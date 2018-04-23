@@ -8,9 +8,6 @@ const debug = logger('core:registry')
 
 /**
  * Connection with Syncano Registry.
- * @property {Function}
- * @example {@lang javascript}
- * const socketList = await registry.searchSocketsByAll('facebook')
  */
 export default class Socket extends QueryBuilder {
   public async searchSocketsByAll (keyword: string) {
@@ -95,6 +92,6 @@ export default class Socket extends QueryBuilder {
   }
 
   private url (registryEndpoint: string) {
-    return `${this._getSyncanoRegistryURL()}/${registryEndpoint}/`
+    return `${this.getSyncanoRegistryURL()}/${registryEndpoint}/`
   }
 }

@@ -5,9 +5,6 @@ const debug = logger('core:hosting')
 
 /**
  * Hosting related operations.
- * @property {Function}
- * @example {@lang javascript}
- * const mytrace = await trace.get('my-socket', 'my-endpoint', 1234)
  */
 export default class Hosting extends QueryBuilder {
   public getFile (hostingId: string, fileId: string) {
@@ -98,19 +95,19 @@ export default class Hosting extends QueryBuilder {
     const {instanceName} = this.instance
 
     if (fileId) {
-      return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/files/${fileId}/`
+      return `${this.getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/files/${fileId}/`
     }
 
-    return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/files/`
+    return `${this.getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/files/`
   }
 
   private url (hostingId: string) {
     const {instanceName} = this.instance
 
     if (hostingId) {
-      return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/`
+      return `${this.getSyncanoURL()}/instances/${instanceName}/hosting/${hostingId}/`
     }
 
-    return `${this._getSyncanoURL()}/instances/${instanceName}/hosting/`
+    return `${this.getSyncanoURL()}/instances/${instanceName}/hosting/`
   }
 }

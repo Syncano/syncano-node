@@ -2,9 +2,6 @@ import QueryBuilder from './query-builder'
 
 /**
  * Connection between Sockets.
- *
- * @example {@lang javascript}
- * const socket = await socket.get('socketName')
  */
 export default class Socket extends QueryBuilder {
   public get (socketName: string) {
@@ -47,9 +44,9 @@ export default class Socket extends QueryBuilder {
     const {instanceName} = this.instance
 
     if (socketName) {
-      return `${this._getSyncanoURL()}/instances/${instanceName}/sockets/${socketName}/`
+      return `${this.getSyncanoURL()}/instances/${instanceName}/sockets/${socketName}/`
     }
 
-    return `${this._getSyncanoURL()}/instances/${instanceName}/sockets/`
+    return `${this.getSyncanoURL()}/instances/${instanceName}/sockets/`
   }
 }

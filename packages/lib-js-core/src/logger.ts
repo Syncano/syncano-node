@@ -5,8 +5,12 @@
 
 const LEVELS = ['error', 'warn', 'info', 'debug']
 
-export class Logger {
-  public callback: ((event: any) => void) | undefined
+export class LoggerClass {
+  public warn?: (...args: any[]) => void
+  public info?: (...args: any[]) => void
+  public error?: (...args: any[]) => void
+  public debug?: (...args: any[]) => void
+  private callback?: ((event: any) => void)
   private level: string | null = null
   private config: any
   private scope?: string
@@ -92,12 +96,8 @@ export class Logger {
   }
 }
 
-export interface ExtendedLogger {
-  callback?: (event: any) => void
-}
-
-export type LoggerType = (event: string) => Logger
-export interface ExtendedLoggerType extends LoggerType {
+export type LoggerType = (event: string) => LoggerClass
+export interface Logger extends LoggerType {
   callback?: (event: any) => void
   levels?: string[]
   setLevels?: (userLevels: string[]) => void
@@ -106,8 +106,8 @@ export interface ExtendedLoggerType extends LoggerType {
 
 export default (instance: any) => {
   // tslint:disable-next-line:only-arrow-functions
-  const logger: ExtendedLoggerType = function (scope: string) {
-    return new Logger(instance, {
+  const logger: Logger = function (scope: string) {
+    return new LoggerClass(instance, {
       callback: logger.callback,
       levels: logger.levels || LEVELS,
       scope

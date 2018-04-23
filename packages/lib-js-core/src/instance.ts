@@ -7,9 +7,6 @@ import QueryBuilder from './query-builder'
 class Instance extends QueryBuilder {
   /**
    * Create Syncano instance
-   *
-   * @example {@lang javascript}
-   * const instance = await instance.create({name: 'new-instance', description: 'description'})
    */
   public create (params: {
     name: string,
@@ -32,9 +29,6 @@ class Instance extends QueryBuilder {
   }
   /**
    * Get Syncano instance details
-   *
-   * @example {@lang javascript}
-   * const instance = await instance.get('instance-name')
    */
   public get (instanceName: string): Promise<any> {
     const fetch = this.nonInstanceFetch.bind(this)
@@ -51,9 +45,6 @@ class Instance extends QueryBuilder {
 
   /**
    * List Syncano instances
-   *
-   * @example {@lang javascript}
-   * const instance = await instance.list()
    */
   public list (): Promise<any> {
     const fetch = this.nonInstanceFetch.bind(this)
@@ -70,9 +61,6 @@ class Instance extends QueryBuilder {
 
   /**
    * Delete Syncano instance
-   *
-   * @example {@lang javascript}
-   * await instance.delete('new-instance')
    */
   public delete (instanceName: string): Promise<any> {
     const fetch = this.nonInstanceFetch.bind(this)
@@ -91,7 +79,7 @@ class Instance extends QueryBuilder {
   }
 
   private url (instanceName?: string) {
-    const baseUrl = `${this._getSyncanoURL()}/instances/`
+    const baseUrl = `${this.getSyncanoURL()}/instances/`
     return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
   }
 }

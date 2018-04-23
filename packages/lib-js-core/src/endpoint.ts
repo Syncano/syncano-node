@@ -2,10 +2,6 @@ import QueryBuilder from './query-builder'
 
 /**
  * Running endpoints.
- * @property {Function}
- * @example {@lang javascript}
- * const latestTags = await socket.get('tags/list', { sort: 'latest' })
- * const createdTag = await socket.post('tags/create', { name: 'nature' })
  */
 export default class Endpoint extends QueryBuilder {
   public post (endpoint: string, body = {}, options = {}) {

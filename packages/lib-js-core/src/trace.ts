@@ -2,9 +2,6 @@ import QueryBuilder from './query-builder'
 
 /**
  * Socket endpoints traces.
- * @property {Function}
- * @example {@lang javascript}
- * const mytrace = await trace.get('my-socket', 'my-endpoint', 1234)
  */
 export default class Trace extends QueryBuilder {
   public get (socketName: string, endpointName: string, traceId: string) {
@@ -31,12 +28,12 @@ export default class Trace extends QueryBuilder {
 
   private url (socketName: string, endpointName: string, traceId?: string) {
     const {instanceName} = this.instance
-    const instanceUrl = `${this._getSyncanoURL()}/instances/${instanceName}`
+    const instanceUrl = `${this.getSyncanoURL()}/instances/${instanceName}`
 
     if (traceId) {
       return `${instanceUrl}/endpoints/sockets/${socketName}/${endpointName}/traces/${traceId}`
     }
 
-    return `${this._getSyncanoURL()}/instances/${instanceName}/endpoints/sockets/${socketName}/${endpointName}/traces/`
+    return `${this.getSyncanoURL()}/instances/${instanceName}/endpoints/sockets/${socketName}/${endpointName}/traces/`
   }
 }

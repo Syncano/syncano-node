@@ -17,19 +17,19 @@ const generalOptions = {
 
 export default class QueryBuilder {
   // tslint:disable-next-line:variable-name
-  public _mappedFields: any[] = []
+  protected _mappedFields: any[] = []
   // tslint:disable-next-line:variable-name
-  public _relationships: any[] = []
+  protected _relationships: any[] = []
   // tslint:disable-next-line:variable-name
-  public _queries: any[] = []
+  protected _queries: any[] = []
   // tslint:disable-next-line:variable-name
-  public _query: {
+  protected _query: {
     [x: string]: any
   } = {}
-  public registryHost: string = ''
-  public instance: any
-  public baseUrl: string
-  public result: any[]
+  protected registryHost: string = ''
+  protected instance: any
+  protected baseUrl: string
+  protected result: any[]
 
   // TODO: Specify instance type
   constructor (instance: any) {
@@ -38,27 +38,7 @@ export default class QueryBuilder {
     this.result = []
   }
 
-  public _getSyncanoURL () {
-    const {apiVersion, host} = this.instance
-
-    return `https://${host}/${apiVersion}`
-  }
-
-  public _getSyncanoRegistryURL () {
-    const {host} = this.instance
-    const endpointHost = host === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
-    const majorVersion = pjson.version.split('.')[0]
-    const registryInstance = process.env.SYNCANO_SOCKET_REGISTRY_INSTANCE || `registry-${majorVersion}`
-    this.registryHost = `${registryInstance}.${endpointHost}`
-    debug('registryHost', this.registryHost)
-    return `https://${this.registryHost}`
-  }
-
-  public _getInstanceURL (instanceName: string) {
-    return `${this._getSyncanoURL()}/instances/${instanceName}`
-  }
-
-  public fetch (url: string, options = {}, headers = {}): Promise<any> {
+  protected fetch (url: string, options = {}, headers = {}): Promise<any> {
     const headersToSend = Object.assign(
       {
         'content-type': 'application/json',
@@ -76,7 +56,7 @@ export default class QueryBuilder {
       .then(checkStatus)
   }
 
-  public nonInstanceFetch (url: string, options = {}, headers = {}) {
+  protected nonInstanceFetch (url: string, options = {}, headers = {}) {
     const fetchOptions = Object.assign({}, generalOptions, options)
 
     return nodeFetch(url, {
@@ -90,41 +70,61 @@ export default class QueryBuilder {
       .then(checkStatus)
   }
 
-  get query (): {
+  protected get query (): {
     page_size?: number
     [x: string]: any
   } {
     return this._query || {}
   }
 
-  get queries (): any[] {
+  protected get queries (): any[] {
     return this._queries || []
   }
 
-  get relationships () {
+  protected get relationships () {
     return this._relationships || []
   }
 
-  get mappedFields () {
+  protected get mappedFields () {
     return this._mappedFields || []
   }
 
-  public withQuery (query: object) {
+  protected withQuery (query: object) {
     debug('withQuery', query)
     this._query = Object.assign({}, this.query, query)
 
     return this
   }
 
-  public withRelationships (relationships: any[]) {
+  protected withRelationships (relationships: any[]) {
     this._relationships = this.relationships.concat(relationships)
 
     return this
   }
 
-  public withMappedFields (fields: any[]) {
+  protected withMappedFields (fields: any[]) {
     this._mappedFields = Object.assign({}, this.mappedFields, ...fields)
 
     return this
+  }
+
+  protected getSyncanoURL () {
+    const {apiVersion, host} = this.instance
+
+    return `https://${host}/${apiVersion}`
+  }
+
+  protected getSyncanoRegistryURL () {
+    const {host} = this.instance
+    const endpointHost = host === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
+    const majorVersion = pjson.version.split('.')[0]
+    const registryInstance = process.env.SYNCANO_SOCKET_REGISTRY_INSTANCE || `registry-${majorVersion}`
+    this.registryHost = `${registryInstance}.${endpointHost}`
+    debug('registryHost', this.registryHost)
+    return `https://${this.registryHost}`
+  }
+
+  protected getInstanceURL (instanceName: string) {
+    return `${this.getSyncanoURL()}/instances/${instanceName}`
   }
 }

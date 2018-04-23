@@ -5,17 +5,8 @@ import QueryBuilder from './query-builder'
  * @property {Function}
  */
 class Channel extends QueryBuilder {
-  public url () {
-    const {instanceName} = this.instance
-
-    return `${this._getInstanceURL(instanceName)}/channels/default/publish/`
-  }
-
   /**
-   * Publish to channel
-   *
-   * @example {@lang javascript}
-   * const instance = await channel.publish('room_name', payload={})
+   * Publish any payload to channel room
    */
   public publish (room: string, payload: any): Promise<any> {
     const fetch = this.fetch.bind(this)
@@ -29,6 +20,12 @@ class Channel extends QueryBuilder {
         .then(resolve)
         .catch(reject)
     })
+  }
+
+  private url () {
+    const {instanceName} = this.instance
+
+    return `${this.getInstanceURL(instanceName)}/channels/default/publish/`
   }
 }
 

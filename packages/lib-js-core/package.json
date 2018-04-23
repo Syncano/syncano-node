@@ -3,7 +3,7 @@
   "version": "0.12.1",
   "description": "A library to intereact with the Syncano API on a server side.",
   "main": "./lib/index.js",
-  "types": "./lib/main.d.ts",
+  "types": "./lib/syncano-core.d.ts",
   "author": "Syncano Inc.",
   "license": "MIT",
   "repository": "https://github.com/syncano/syncano-node/tree/master/packages/lib-js-core",
@@ -21,7 +21,7 @@
     "prebuild": "rimraf ./lib",
     "build": "npm run build:ts && npm run build:dts",
     "build:ts": "npx tsc",
-    "build:dts": "dts-bundle --name main --main ./lib/index.d.ts",
+    "build:dts": "dts-bundle --name '@syncano/core' --main ./lib/index.d.ts --out syncano-core.d.ts",
     "test": "jest",
     "lint": "tslint {src,test}/**/*.ts"
   },
