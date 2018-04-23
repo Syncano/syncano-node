@@ -1,6 +1,5 @@
 import { ResponseError } from './errors'
 import QueryBuilder from './query-builder'
-import { JSONResponse } from './utils'
 
 export interface AccountData {
   id: number
