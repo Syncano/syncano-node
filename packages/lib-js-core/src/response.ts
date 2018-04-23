@@ -1,12 +1,10 @@
 const get = require('lodash.get')
 
-/**
- * Unified response helper
- * @property {Function}
- */
+// tslint:disable-next-line:max-line-length
+export type HTTPStatus = 100|101|102|200|201|202|203|204|205|206|207|208|226|300|301|302|303|304|305|307|308|400|401|402|403|404|405|406|407|408|409|410|411|412|413|414|415|416|417|418|421|422|423|424|426|428|429|431|444|451|499|500|501|502|503|504|505|506|507|508|510|511|599
 
 export class Response {
-  private headers: {}
+  private headers: {[x: string]: string}
   private mimetype: string
   private status: number
   private content: any
@@ -14,7 +12,7 @@ export class Response {
   constructor (
     instance: any,
     content: any = null,
-    status = 200,
+    status: HTTPStatus = 200,
     mimetype = 'text/plain',
     headers = {}
   ) {
@@ -36,16 +34,26 @@ export class Response {
   }
 }
 
-export type ResponseFn = (content?: any, status?: number, mimetype?: string, headers?: any) => Response
+export type ResponseFn = (
+  content?: any,
+  status?: HTTPStatus,
+  mimetype?: string,
+  headers?: {[x: string]: string}
+) => Response
+
 export interface CustomResponse extends ResponseFn {
-  headers?: {}
   header?: (key: string, value: string) => CustomResponse
   json?: (content?: any, status?: 200) => Response
   [x: string]: any
 }
 
 export default (config: any) => {
-  const response: CustomResponse = (content?: any, status?: number, mimetype?: string, headers?: any) =>
+  const response: CustomResponse = (
+    content?: any,
+    status?: HTTPStatus,
+    mimetype?: string,
+    headers?: {[x: string]: string}
+  ) =>
     new Response(config, content, status, mimetype, headers)
 
   const responses = get(config, 'meta.metadata.outputs', {})
