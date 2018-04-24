@@ -3,6 +3,7 @@ import * as FormData from 'form-data'
 import * as querystring from 'querystring'
 import {NotFoundError} from './errors'
 import QueryBuilder from './query-builder'
+import {ACL} from './types'
 export type ArrayOrObject<T> = T extends Array<{}> ? Array<{}> : object
 const get = require('lodash.get')
 const merge = require('lodash.merge')
@@ -11,9 +12,21 @@ const debug = logger('core:data')
 
 const MAX_BATCH_SIZE = 50
 
-/**
- * Syncano server
- */
+export interface ClassObject {
+  id: number
+  created_at: string
+  updated_at: string
+  revision: number
+  acl: ACL
+  channel: null
+  channel_room: null
+  links: {
+    self: string
+    [x: string]: string
+  }
+  [x: string]: any
+}
+
 class Data extends QueryBuilder {
   // tslint:disable-next-line:variable-name
   private _url?: string
@@ -50,8 +63,12 @@ class Data extends QueryBuilder {
 
   /**
    * Get number of objects matching given query.
+   *
+   * @example
+   * data.posts.count()
+   * data.posts.where('likes', '>', 100).count()
    */
-  public async count () {
+  public async count (): Promise<number> {
     this.withQuery({page_size: 0, include_count: 1})
 
     const res = await this.fetch(this.url())
@@ -60,9 +77,14 @@ class Data extends QueryBuilder {
 
   /**
    * Get first element matching query or return null.
+   *
+   * @example
+   * data.posts.first()
+   * data.posts.where('likes', '>', 100).first()
    */
-  public async first () {
+  public async first (): Promise<ClassObject|null> {
     const response = await this.take(1).list()
+
     return response[0] || null
   }
 
@@ -108,10 +130,17 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Get single object by id or objects list if ids passed as array.
+   * Get single or list of objects.
+   *
+   * @param ids Single object ID or array of IDs
+   * @example
+   * data.posts.find(1) // returns single object
+   * data.posts.find([1, 2]) // returns array of objects
    */
-  public async find (ids: number | number[]): Promise<any> {
+  // tslint:disable-next-line:max-line-length
+  public async find<T> (ids: T&number|T&number[]): Promise<T extends any[] ? ClassObject[] : ClassObject> {
     debug('find', ids)
+
     if (Array.isArray(ids)) {
       return this.where('id', 'in', ids).list()
     }
@@ -120,12 +149,17 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Same as #find method but throws error for no results.
+   * Same as `find` method but throws error for no results.
+   *
+   * @param ids Single object ID or array of IDs
+   * @example
+   * data.posts.findOrFail(1) // returns single object
+   * data.posts.findOrFail([1, 2]) // returns array of objects
    */
-  public async findOrFail (ids: number | number[]): Promise<any> {
+  public async findOrFail<T> (ids: T&number|T&number[]): Promise<T extends any[] ? ClassObject[] : ClassObject> {
     try {
-      const response = await this.find(ids)
-      const shouldThrow = Array.isArray(ids)
+      const response  = await this.find(ids)
+      const shouldThrow = Array.isArray(response) && Array.isArray(ids)
         ? response.length !== ids.length
         : response === null
 
@@ -229,6 +263,7 @@ class Data extends QueryBuilder {
     ])
   }
 
+  // TODO: Add types
   /**
    * Whitelist returned keys.
    */
@@ -275,8 +310,16 @@ class Data extends QueryBuilder {
 
   /**
    * Create new object.
+   *
+   * @param body Object or array of objects to create.
+   * @example
+   *  data.posts.create({title: 'Lorem ipsum'})
+   *  data.posts.create([
+   *    {title: 'Lorem ipsum'},
+   *    {title: 'Dolor sit amet'}
+   *  ])
    */
-  public create (body: object): Promise<any> {
+  public create<T> (body: T): Promise<T extends any[] ? Array<ClassObject & T[0]> : ClassObject & T> {
     let headers
     const fetchObject: {
       method: string
@@ -291,9 +334,10 @@ class Data extends QueryBuilder {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
-      return this.batch(body)
-        .then(this.replaceCustomTypesWithValue.bind(this))
-        .then(this.mapFields.bind(this))
+      // return new Promise((resolve, reject): Promise<any> => resolve(body))
+      // return this.batch(body)
+      //   .then(this.replaceCustomTypesWithValue.bind(this))
+      //   .then(this.mapFields.bind(this))
     } else {
       fetchObject.body = JSON.stringify(body)
     }
@@ -354,17 +398,16 @@ class Data extends QueryBuilder {
 
   /**
    * Remove object from database.
+   *
+   * @param id Single ID or array of IDs to delete from database. Leave empty to remove all objects matching query!
    */
-  public async delete (id: number): Promise<any> {
+  public async delete (id?: number | number[]): Promise<any> {
     const isQueryDelete = id === undefined
-    const fetchObject = {
-      method: 'DELETE',
-      url: this.url(id)
-    }
 
     if (isQueryDelete) {
       const items = await this.list()
-      const ids = items.map((item: any) => item.id)
+      const ids = items.map((item: ClassObject) => item.id)
+
       return this.batch(ids)
     }
 
@@ -372,7 +415,7 @@ class Data extends QueryBuilder {
       return this.batch(id)
     }
 
-    return this.fetch(fetchObject.url, fetchObject)
+    return this.fetch(this.url(id), {method: 'DELETE'})
   }
 
   protected get() {

@@ -16,10 +16,6 @@ import Socket from './socket'
 import Trace from './trace'
 import Users from './users'
 
-export interface DataInterface<T> {
-  [x: string]: T
-}
-
 class Server {
   // tslint:disable-next-line:variable-name
   public _class: Class
@@ -35,7 +31,9 @@ class Server {
   public logger: Logger
   public users: Users
   public registry: Registry
-  public data: DataInterface<Data>
+  public data: {
+    [className: string]: Data
+  }
   protected version: any
   protected majorVersion: any
 
