@@ -18,6 +18,8 @@
 - Complete solutions
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
+  - AWS
+    - [Photo Rekogniton](/solutions/aws-photo-rekognition)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
   - [Creating project template](/deployment/create-project-template)
