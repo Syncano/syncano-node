@@ -27,5 +27,5 @@ parsers:
 ignore:
   - test
   - lib
-  - jest.config.js
-  - webpack.config.js
+  - packages/**/jest.config.js
+  - packages/**/webpack.config.js
