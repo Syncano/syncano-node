@@ -19,6 +19,7 @@
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
   - AWS
+    - [Photo Rekogniton](/solutions/aws-photo-rekognition)
     - [Polly](/solutions/aws-polly)
   - Payments
     - [Stripe](/solutions/stripe-payment)
