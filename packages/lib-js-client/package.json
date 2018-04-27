@@ -19,6 +19,7 @@
     "prepublish": "npm run build",
     "build": "npx tsc && npx webpack",
     "test": "jest",
+    "test:unit": "jest",
     "lint": "tslint src/**/*.ts",
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
     "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc"

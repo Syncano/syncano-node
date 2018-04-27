@@ -4,7 +4,7 @@
     "declaration": true,
     "target": "es6",
     "strict": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "allowJs": false,
     "moduleResolution": "node",
     "rootDir": "./src",
