@@ -19,7 +19,11 @@
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
   - AWS
-    - [Photo Rekogniton](/solutions/aws-photo-rekognition)
+    - [Polly](/solutions/aws-polly)
+  - Payments
+    - [Stripe](/solutions/stripe-payment)
+  - Scraping
+    - [Simple Web Scraper](/solutions/simple-web-scraper)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
   - [Creating project template](/deployment/create-project-template)
