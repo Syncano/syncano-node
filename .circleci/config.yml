@@ -78,6 +78,9 @@ jobs:
 
       - run: npm install
       - run: npm run bootstrap
+      - run:
+          command: npm run build
+          working_directory: ~/repo/packages/lib-js-client
 
       - save_cache:
           paths:
