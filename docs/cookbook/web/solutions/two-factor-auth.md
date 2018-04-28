@@ -63,7 +63,7 @@ const s = new SyncanoClient("MY_INSTANCE_NAME");
 
 ##### Register a new user on your platform by sending a request to `user-auth/register` endpoint
   
-Sample script to register user
+*Sample script to register user*
 
 ```javascript
 const args = {
@@ -79,7 +79,7 @@ s.post('user-auth/register', args)
 
 ##### Proceed to send a request to `two-factor-auth/setup-two-factor` with the user's username and token to setup two factor authentication for user account
 
-Sample script to setup user account for two factor authentication
+*Sample script to setup user account for two factor authentication*
 
 ```javascript
 const args = {
@@ -120,9 +120,9 @@ Scan the QR code with a two-factor auth app like
 
 `two_factor_token=[string]` - One-time passcode from two factor app like [Google Authenticator](https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en)
 
-*This process is essential to verify a two-factor token before enabling two-factor authentication on a user account to prevent locking the user.*
+> This process is essential to verify a two-factor token before enabling two-factor authentication on a user account to prevent locking the user.*
 
-Sample script to verify two-factor app token before enabling two factor authentication on user account
+*Sample script to verify two-factor app token before enabling two factor authentication on user account*
 ```javascript
 s.post('two-factor-auth/verify-token', { username, token, two_factor_token })
   .then((res) => {
@@ -142,7 +142,7 @@ with parameters
 
 `two_factor_token=[string]` - One-time-passcode (Not required for user's without two factor authentication enabled on their account)
 
-**_Using syncano-client library_**
+*Script to login a user*
 
 ```javascript
 s.post('two-factor-auth/login', { username, token, two_factor_token })
@@ -161,7 +161,7 @@ with parameters
 
 `two_factor_token=[string]` - One-time-passcode from two factor app
 
-**_Using syncano-client library_**
+*Script to disable two factor auth on user account*
 
 ```javascript
 s.post('two-factor-auth/disable-two-factor', { username, token, two_factor_token })
