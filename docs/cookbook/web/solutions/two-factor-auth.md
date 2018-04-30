@@ -9,7 +9,7 @@
 
 ### Problem to solve
 
-You have an online platform where you want to have registered users have the option of using two factor authentication to login.
+You have an online platform where you want the registered users have an option of using two factor authentication to login.
 
 ### Solution
 
@@ -59,7 +59,7 @@ const s = new SyncanoClient("MY_INSTANCE_NAME");
 </script>
 ```
 
-> Remember to change 'YOUR-INSTANCE' into the instance attached to your project. Run `npx s` in the project folder to have it printed out in your terminal.
+> Remember to change 'MY_INSTANCE_NAME' into the instance attached to your project. Run `npx s` in the project folder to have it printed out in your terminal.
 
 ##### Register a new user on your platform by sending a request to `user-auth/register` endpoint
   
