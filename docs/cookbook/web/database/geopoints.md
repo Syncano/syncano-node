@@ -7,12 +7,12 @@
 ### Problem to solve
 
 Example problems that can be solved with the usage of geopoints:
-- A feature that measures and updates the distance between two users.
+- Measuring and updating the distance between two users.
 - Listing places (restaurants, cinemas) within a given radius
 
 ### Solution
 
-Create a Data Class with a GeoPoint schema field type along with two endpoints - one for saving the geolocation data and one for querying it.
+Create a Data Class with a GeoPoint schema field type along with two endpoints: one for saving the geolocation data and one for querying it.
 
 #### Creating a Data Class with a GeoPoint field
 
