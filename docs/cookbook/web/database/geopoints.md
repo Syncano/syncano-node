@@ -1,8 +1,20 @@
 # GeoPoints
 
-Syncano allows for storing geographic coordinates. Thanks to geopoints you can, for instance, compare the distance between two users. You can also find out if a given place (e.g. restaurant) is within a range (5 miles) of a user.
+- Preparation: **20 minutes**
+- Requirements:
+  - Initiated Syncano project
 
-## Creating a Data Class with a GeoPoint field
+### Problem to solve
+
+Example problems that can be solved with the usage of geopoints:
+- A feature that measures and updates the distance between two users.
+- Listing places (restaurants, cinemas) within a given radius
+
+### Solution
+
+Create a Data Class with a GeoPoint schema field type along with two endpoints - one for saving the geolocation data and one for querying it.
+
+#### Creating a Data Class with a GeoPoint field
 
 In order to be able to use the GeoPoints functionality, you'll need a Data Class with a GeoPoint schema field type. You'll also need to add a filtering index to this field if you'd like to make GeoPoint based queries. You can add one filtering index to GeoPoint fields per Data Class.
 
@@ -69,7 +81,7 @@ The geopoint schema field is an object that contains three properties - `type`, 
   }
 ```
 
-## Creating Data Objects with a GeoPoint fields
+#### Creating Data Objects with GeoPoint fields
 
 Once you have added the GeoPoint field type to your Data Class, you can start creating Data Objects with geolocation data. If you named your GeoPoint field as `coordinates`, the `save-location.js` script file would look like this:
 
@@ -82,9 +94,9 @@ export default async (ctx) => {
   const user = ctx.meta.user.id
 
   try {
-  // To store only one geolocation Data Object per user, you can use `updateOrCreate`
-  // method. To keep all the past info we would simply `create` a new object
-  // each time a user sends his geolocation data
+    // To store only one geolocation Data Object per user, you can use `updateOrCreate`
+    // method. To keep all the past info we would simply `create` a new object
+    // each time a user sends his geolocation data
     const { status } = await data.geolocation.updateOrCreate({ user }, {
       coordinates: { latitude, longitude },
       user
@@ -102,16 +114,16 @@ export default async (ctx) => {
 - Latitude: -89 to 89
 - Longitude -179 to 179
 
->You can create coordinates with a 13 digit precision after decimal point.
+> You can create coordinates with a 13 digit precision after decimal point.
 
 
 That's it when it comes to creating Data Objects with GeoPoint fields. What you would probably like to know is how to make all those cool coordinate queries, so here it is.
 
-## Making GeoPoint queries
+#### Making GeoPoint queries
 
-There are two ways of filtering the results based on spacial coordinates. You can query if objects are `near` a given range or wether a geopoint data `exists` for a paricular key.
+There are two ways of filtering the results based on spacial coordinates. You can query if objects are `near` a given range or wether a geopoint data `exists` for a particular key.
 
-### The `near` query
+##### The `near` query
 
 Making a near query will return all the objects that are within the given range.
 
@@ -149,7 +161,7 @@ data.geolocation.where('coordinates', 'near', {
 }).list()
 ```
 
-### The `exists` query
+##### The `exists` query
 
 You can also check if the specified geopoint field has any coordinates data. This is how such a lookup would look like:
 
