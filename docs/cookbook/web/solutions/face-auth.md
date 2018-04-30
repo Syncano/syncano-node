@@ -72,7 +72,7 @@ const s = new SyncanoClient("MY_INSTANCE_NAME");
 </script>
 ```
 
-> Remember to change 'YOUR-INSTANCE' into the instance attached to your project. Run `npx s` in the project folder to have it printed out in your terminal.
+> Remember to change 'MY_INSTANCE_NAME' into the instance attached to your project. Run `npx s` in the project folder to have it printed out in your terminal.
 
 ##### Create a collection to store face indexes if you haven't done that before and update the socket config for `COLLECTION_ID`
 
@@ -95,9 +95,9 @@ s.post('aws-face-auth/create-collection', { collectionId: 'face-auth-collection'
 
 `username=[string]` - user email
 
-`image=[string]` - Path to face image or an S3 object key of face image
+`image=[string]` - A base64-encoded bytes or an S3 object key (When sending a base64-encoded bytes take of the string sample 'data:image/png;base64,' from beginning of encoded string.)
 
-`bucketName=[string]` - A base64-encoded bytes or an S3 object key (When sending a base64-encoded bytes take of the string sample 'data:image/png;base64,' from beginning of encoded string.)
+`bucketName=[string]` - Name of s3 bucket. Leave empty if image not on s3 bucket
 
 `password=[string]` - User password. This is essential since its expected users approve request by confirming password
 
