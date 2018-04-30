@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/Syncano/syncano-node/compare/v0.11.0...v0.12.0) (2018-04-08)
+
+
+### Bug Fixes
+
+* new locks ([000fcc9](https://github.com/Syncano/syncano-node/commit/000fcc9))
+* **cli:deploy:** env deploy bug ([#206](https://github.com/Syncano/syncano-node/issues/206)) ([2a64d24](https://github.com/Syncano/syncano-node/commit/2a64d24))
+* **client:** missing dependency ([#202](https://github.com/Syncano/syncano-node/issues/202)) ([7c8a6d7](https://github.com/Syncano/syncano-node/commit/7c8a6d7))
+* **docs:** init command in docs ([03ec3e0](https://github.com/Syncano/syncano-node/commit/03ec3e0))
+* **registry:** build script ([0e86335](https://github.com/Syncano/syncano-node/commit/0e86335))
+* **tests:** invalid keyword length ([fbab34f](https://github.com/Syncano/syncano-node/commit/fbab34f))
+* **tests:schema:** keyword length ([cb34c83](https://github.com/Syncano/syncano-node/commit/cb34c83))
+
+
+### Features
+
+* **react-context:** add package ([a5ba834](https://github.com/Syncano/syncano-node/commit/a5ba834))
+
+
+
+
+<a name="0.11.1"></a>
+## [0.11.1](https://github.com/Syncano/syncano-node/compare/v0.11.0...v0.11.1) (2018-04-07)
+
+
+### Bug Fixes
+
+* new locks ([000fcc9](https://github.com/Syncano/syncano-node/commit/000fcc9))
+* **cli:deploy:** env deploy bug ([bd484cc](https://github.com/Syncano/syncano-node/commit/bd484cc))
+* **client:** missing dependency ([#202](https://github.com/Syncano/syncano-node/issues/202)) ([7c8a6d7](https://github.com/Syncano/syncano-node/commit/7c8a6d7))
+* **docs:** init command in docs ([03ec3e0](https://github.com/Syncano/syncano-node/commit/03ec3e0))
+* **registry:** build script ([0e86335](https://github.com/Syncano/syncano-node/commit/0e86335))
+* **tests:** invalid keyword length ([fbab34f](https://github.com/Syncano/syncano-node/commit/fbab34f))
+* **tests:schema:** keyword length ([cb34c83](https://github.com/Syncano/syncano-node/commit/cb34c83))
+
+
+
+
 <a name="0.11.0"></a>
 # [0.11.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.11.0) (2018-03-17)
 

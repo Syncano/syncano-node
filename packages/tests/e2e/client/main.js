@@ -10,7 +10,7 @@ import {
   getRandomString
 } from '@syncano/test-tools'
 
-import Syncano from '../../../lib-js-client/src/index.js'
+import Syncano from '../../../lib-js-client/lib'
 
 const cliLocation = path.join(process.cwd(), '../cli/lib/cli.js')
 const projectTestTemplate = path.join(__dirname, '../../assets/project/empty/')
@@ -27,7 +27,7 @@ describe('Client', function () {
 
   before(() => {
     client = new Syncano(testInstance, {host: 'syncano.link'})
-    assert.isFunction(client)
+    assert.isObject(client)
 
     return createProject(testInstance, projectTestTemplate)
   })
@@ -51,7 +51,7 @@ describe('Client', function () {
 
   it('init client', () => {
     const client = new Syncano(testInstance)
-    assert.isFunction(client)
+    assert.isObject(client)
   })
 
   it('post to endpoint without arguments', async () => {

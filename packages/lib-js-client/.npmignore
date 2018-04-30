@@ -14,3 +14,6 @@ webpack.config.js
 npm-debug.log
 yarn.lock
 *.sublime-*
+lib/*.spec.d.ts
+lib/*.spec.js
+lib/*.spec.js.map

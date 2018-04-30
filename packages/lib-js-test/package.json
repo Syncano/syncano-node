@@ -1,28 +1,12 @@
 {
   "name": "@syncano/test",
   "description": "Testing tools for Syncano Sockets",
-  "version": "0.11.0",
+  "repository": "https://github.com/syncano/syncano-node/tree/master/packages/lib-js-test",
+  "version": "0.12.1",
   "license": "MIT",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@syncano/validate": "0.11.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-register": "^6.26.0",
-    "bluebird": "^3.5.1",
-    "faker": "^4.1.0",
-    "js-yaml": "^3.10.0",
-    "lodash": "^4.17.4",
-    "lodash.merge": "^4.6.0",
-    "proxyquire": "^1.8.0"
-  },
-  "devDependencies": {
-    "rimraf": "^2.6.2",
-    "semver": "^5.4.1",
-    "standard": "^10.0.3"
   },
   "scripts": {
     "build": "babel src --out-dir lib",
@@ -31,6 +15,23 @@
     "prepublish": "npm run build",
     "prebuild": "npm run clean",
     "lint": "standard --fix --env mocha"
+  },
+  "dependencies": {
+    "@syncano/validate": "0.12.1",
+    "bluebird": "^3.5.1",
+    "faker": "^4.1.0",
+    "js-yaml": "^3.11.0",
+    "lodash": "^4.17.5",
+    "lodash.merge": "^4.6.1",
+    "proxyquire": "^1.8.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "rimraf": "^2.6.2",
+    "semver": "^5.5.0",
+    "standard": "^10.0.3"
   },
   "babel": {
     "presets": [

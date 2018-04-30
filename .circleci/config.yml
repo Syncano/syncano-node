@@ -78,6 +78,9 @@ jobs:
 
       - run: npm install
       - run: npm run bootstrap
+      - run:
+          command: npm run build
+          working_directory: ~/repo/packages/lib-js-client
 
       - save_cache:
           paths:
@@ -161,18 +164,6 @@ jobs:
           key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:unit
       - run: npm run report:coverage
-
-  test_e2e_client:
-    name: E2E Tests
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo/packages/lib-js-client/
-
-    steps:
-      - restore_cache:
-          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e
 
   test_e2e_validate:
     name: E2E Tests
