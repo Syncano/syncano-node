@@ -111,6 +111,16 @@ const setup = async () => {
     })
 
   program
+    .command('compile [socket_name]')
+    .group('Project')
+    .description('Compile Socket')
+    .action(async (...options) => {
+      trackAndDebug(options)
+      echo()
+      new commands.SocketCompile(context).run(options)
+    })
+
+  program
     .command('call <socket_name>/<endpoint>')
     .group('Project')
     .description("Call Socket's endpoint")
@@ -244,10 +254,6 @@ const setup = async () => {
 
   program
     .command('hosting', 'Manage your web assets and host them on Syncano')
-    .on('*', (commandsArr) => validateCommands(commandsArr))
-
-  program
-    .command('component', 'Manage your Socket components')
     .on('*', (commandsArr) => validateCommands(commandsArr))
 
   program

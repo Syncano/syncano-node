@@ -10,6 +10,7 @@ import HostingSync from './hosting-sync'
 import HostingConfig from './hosting-config'
 import SocketList from './socket-list'
 import SocketDeploy from './socket-deploy'
+import SocketCompile from './socket-compile'
 import SocketDeployHot from './socket-deploy-hot'
 import SocketConfig from './socket-config'
 import SocketConfigSet from './socket-config-set'
@@ -37,6 +38,8 @@ export default {
   SocketDeployHot,
   HostingConfig,
   SocketDeploy,
+  SocketCompile,
+  SocketCompile,
   SocketConfig,
   SocketConfigSet,
   SocketConfigShow,

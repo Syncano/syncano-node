@@ -26,7 +26,7 @@ const socketTemplates = () => {
 const getTemplatesChoices = () => socketTemplates().map(socketTemplate =>
     `${socketTemplate.description} - ${format.grey(`(${socketTemplate.name})`)}`)
 
-const searchForSockets = (socketsPath) => {
+const searchForSockets = (socketsPath, maxDepth=3) => {
   if (!fs.existsSync(socketsPath)) {
     return []
   }
@@ -34,7 +34,7 @@ const searchForSockets = (socketsPath) => {
 
   const options = {
     'follow_symlinks': true,
-    'max_depth': 3
+    'max_depth': maxDepth
   }
 
   // TODO: optimize only diging deeper scoped modues
@@ -90,13 +90,16 @@ const findLocalPath = (socketName) => {
 const listLocal = () => {
   debug('listLocal', session.projectPath)
 
+  const singleSocketPath = path.join(session.projectPath)
+  const singleSocket = searchForSockets(singleSocketPath, 1).map(([file, socket]) => socket.name)
+
   const localPath = path.join(session.projectPath, 'syncano')
   const localSockets = searchForSockets(localPath).map(([file, socket]) => socket.name)
 
   const nodeModPath = path.join(session.projectPath, 'node_modules')
   const nodeModSockets = searchForSockets(nodeModPath).map(([file, socket]) => socket.name)
 
-  return localSockets.concat(nodeModSockets)
+  return localSockets.concat(singleSocket, nodeModSockets)
 }
 
 const getOrigFilePath = (origFileLine) => {

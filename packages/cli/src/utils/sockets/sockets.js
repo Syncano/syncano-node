@@ -17,6 +17,7 @@ import template from 'es6-template-strings'
 import _ from 'lodash'
 import SourceMap from 'source-map'
 import WebSocket from 'ws'
+import yauzl from 'yauzl'
 import Validator from '@syncano/validate'
 
 import logger from '../debug'
@@ -155,7 +156,6 @@ class Socket {
 
     this.existRemotely = null
     this.existLocally = null
-    this.envIsNull = false
 
     // that looks stupid
     this.remote = {
@@ -178,6 +178,14 @@ class Socket {
     }
 
     this.loadLocal()
+  }
+
+  isDependency () {
+    debug('isDependency')
+    // TODO: better way to dermine that?
+    if (this.socketPath.match(/node_modules/)) {
+      return true
+    }
   }
 
   static getTemplatesChoices () {
@@ -419,24 +427,48 @@ class Socket {
     return folder
   }
 
+  getSocketZipPath () {
+    const folder = path.join(this.getSocketPath(), '.zip')
+    if (!fs.existsSync(folder)) {
+      mkdirp.sync(folder)
+    }
+    return folder
+  }
+
+
   getSocketZip () {
     debug('getSocketZip')
-    return path.join(session.getDistPath(), `${this.name}.zip`)
+    return path.join(this.getSocketZipPath(), 'src.zip')
   }
 
   getSocketEnvZip () {
     debug('getSocketEnvZip')
-    return path.join(session.getDistPath(), `${this.name}.env.zip`)
+    return path.join(this.getSocketZipPath(), 'env.zip')
   }
 
-  isEmptyEnv () {
-    debug('isEmptyEnv', this.envIsNull)
-    return this.envIsNull
+  async isEmptyEnv () {
+    debug('isEmptyEnv')
+    if (fs.existsSync(this.getSocketEnvZip())) {
+      const envZipFiles = await this.listZipFiles(this.getSocketEnvZip())
+      return !(envZipFiles.length > 0)
+    }
+    return true
   }
 
   getSocketNodeModulesChecksum () {
     debug('getSocketNodeModulesChecksum')
-    return hashdirectory.sync(path.join(this.getSocketPath(), '.dist', 'node_modules'))
+    if (fs.existsSync(this.getSocketEnvZip())) {
+      return md5(fs.readFileSync(this.getSocketEnvZip()))
+    }
+    return 'none'
+  }
+
+  getSocketSourcesZipChecksum () {
+    debug('getSocketSourcesZipChecksum')
+    if (fs.existsSync(this.getSocketEnvZip())) {
+      return md5(fs.readFileSync(this.getSocketZip()))
+    }
+    return 'none'
   }
 
   getSocketConfigFile () {
@@ -552,11 +584,41 @@ class Socket {
     return this.composeComponentsFromSpec('components', Component)
   }
 
-  async createZip () {
-    debug('createZip')
+  listZipFiles (zipPath) {
+    debug('listZipFiles', zipPath)
+    const files = []
+    if (!fs.existsSync(zipPath)) {
+      return files
+    }
+
     return new Promise((resolve, reject) => {
-      let numberOfFiles = 0
-      const allFilesList = []
+      yauzl.open(zipPath, {lazyEntries: true}, (err, zipfile) => {
+        if (err) {
+          reject(err)
+        }
+        zipfile.readEntry()
+        zipfile.on('end', entry => {
+          resolve(files)
+        })
+        zipfile.on('entry', entry => {
+          if (/\/$/.test(entry.fileName)) {
+            // Directory file names end with '/'.
+            // Note that entires for directories themselves are optional.
+            // An entry's fileName implicitly requires its parent directories to exist.
+            zipfile.readEntry()
+          } else {
+            // file entry
+            files.push(entry.fileName)
+            zipfile.readEntry()
+          }
+        })
+      })
+    })
+  }
+
+  async createZip (params = {partial: true}) {
+    debug('createZip', params.partial)
+    return new Promise((resolve, reject) => {
 
       const archive = archiver('zip', { zlib: { level: 9 } })
       const output = fs.createWriteStream(this.getSocketZip(), { mode: 0o700 })
@@ -570,14 +632,20 @@ class Socket {
         ? this.remote.files['socket.yml'].checksum
         : ''
 
-      debug('Processing: \'socket.yml\'')
-      if (remoteYMLChecksum !== localYMLChecksum) {
+      const addMetaFiles = () => {
         debug('Adding file to archive: \'socket.yml\'')
         archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
-        allFilesList.push('socket.yml')
-        numberOfFiles += 1
+      }
+
+      debug('Processing: \'socket.yml\'')
+      if (params.partial) {
+        if (remoteYMLChecksum !== localYMLChecksum) {
+          addMetaFiles()
+        } else {
+          debug('Ignoring file: socket.yml')
+        }
       } else {
-        debug('Ignoring file: socket.yml')
+        addMetaFiles()
       }
 
       // Ignore patterns from .syncanoignore file
@@ -599,7 +667,7 @@ class Socket {
         const fileNameWithPath = file.replace(`${this.getCompiledScriptsFolder()}`, '')
         const remoteFile = this.remote.files ? this.remote.files[fileNameWithPath] : null
 
-        if (remoteFile) {
+        if (remoteFile && params.partial) {
           if (remoteFile.checksum !== md5(fs.readFileSync(file))) {
             debug(`Adding file to archive: ${fileNameWithPath}`)
             archive.file(file, { name: fileNameWithPath })
@@ -609,54 +677,11 @@ class Socket {
         } else {
           archive.file(file, { name: fileNameWithPath })
         }
-        allFilesList.push(fileNameWithPath)
-        numberOfFiles += 1
+
       })
       archive.finalize()
 
       output.on('close', () => {
-        resolve({ numberOfFiles, allFilesList })
-      })
-    })
-  }
-
-  createPackageZip () {
-    debug('createPackageZip')
-    return new Promise((resolve, reject) => {
-      const archive = archiver('zip', { zlib: { level: 9 } })
-      const output = fs.createWriteStream(this.getSocketZip(), { mode: 0o700 })
-
-      archive.pipe(output)
-      archive.on('error', reject)
-
-      archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
-      archive.file(path.join(this.getSocketPath(), 'package.json'), { name: 'package.json' })
-
-      const files = glob.sync(`**`, {
-        cwd: this.getSrcFolder(),
-        follow: true,
-        nodir: true
-      })
-
-      files.forEach(file => {
-        archive.file(path.join(this.getSrcFolder(), file), {name: path.join('src', file)})
-      })
-
-      const binFolder = path.join(this.getSocketPath(), 'bin')
-      const binFiles = glob.sync(`**`, {
-        cwd: binFolder,
-        follow: true,
-        nodir: true
-      })
-
-      binFiles.forEach(file => {
-        archive.file(path.join(binFolder, file), {name: path.join('bin', file)})
-      })
-
-      archive.finalize()
-
-      output.on('close', () => {
-        debug('package zip created:', this.getSocketZip())
         resolve()
       })
     })
@@ -703,8 +728,12 @@ class Socket {
     })
   }
 
-  updateEnvCall (method) {
+  async updateEnvCall (method) {
     debug('updateEnvCall')
+    if (await this.isEmptyEnv()) {
+      return
+    }
+
     return new Promise((resolve, reject) => {
       const form = new FormData()
 
@@ -762,47 +791,37 @@ class Socket {
     debug('updateEnv')
     const resp = await this.socketEnvShouldBeUpdated()
     if (resp) {
-      const zip = await this.createEnvZip()
-      if (zip) {
-        return this.updateEnvCall(resp)
-      } else {
-        this.envIsNull = true
+      if (!this.isDependency()) {
+        await this.createEnvZip()
       }
+      return this.updateEnvCall(resp)
     }
     return 'No need to update'
   }
 
-  postSocketZip (config) {
-    debug('postSocketZip')
-    return this.zipCallback({ config, install: true })
-  }
-
-  patchSocketZip (config) {
-    debug('patchSocketZip')
-    return this.zipCallback({ config, install: false })
-  }
-
-  async zipCallback ({ config, install = false }) {
-    debug('zipCallback')
+  async updateSocketZip ({ config, install = false }) {
+    debug('updateSocketZip')
     let endpointPath = `/v2/instances/${session.project.instance}/sockets/`
 
     if (!install) {
       endpointPath += `${this.name}/`
     }
 
-    const { numberOfFiles, allFilesList } = await this.createZip()
-    if (numberOfFiles === 0 && this.isConfigSynced) {
+    const allFiles = await this.listZipFiles(this.getSocketZip())
+    const numberOfFiles = allFiles.length
+
+    if (numberOfFiles === 0 && this.isConfigSynced(config)) {
       debug('config is synced and nothing to update')
       return Promise.resolve()
     }
     debug('preparing update')
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const form = new FormData()
 
       form.append('name', this.name)
 
-      if (this.isEmptyEnv()) {
+      if (await this.isEmptyEnv()) {
         debug('environment is null')
         form.append('environment', '')
       } else {
@@ -813,10 +832,10 @@ class Socket {
         form.append('config', JSON.stringify(config))
       }
 
-      const metadata = Object.assign({}, this.remote.metadata, { sources: this.getSocketSrcChecksum() })
+      const metadata = Object.assign({}, this.remote.metadata)
       form.append('metadata', JSON.stringify(metadata))
 
-      form.append('zip_file_list', JSON.stringify(allFilesList))
+      form.append('zip_file_list', JSON.stringify(allFiles))
       if (numberOfFiles > 0) {
         form.append('zip_file', fs.createReadStream(this.getSocketZip()))
       }
@@ -862,6 +881,12 @@ class Socket {
 
   getSocketYMLFile () {
     return path.join(this.getSocketPath(), 'socket.yml')
+  }
+
+  async createAllZips() {
+    await this.compile({ updateSocketNPMDeps: true })
+    await this.createEnvZip()
+    await this.createZip({partial: false})
   }
 
   compile (params = { updateSocketNPMDeps: false }) {
@@ -958,16 +983,20 @@ class Socket {
     }
 
     await this.verify()
-    await this.compile({ updateSocketNPMDeps: params.updateSocketNPMDeps })
+    if (!this.isDependency()) {
+      await this.compile({ updateSocketNPMDeps: params.updateSocketNPMDeps })
+      await this.createZip()
+    }
+
     if (params.updateEnv) {
       await this.updateEnv()
     }
 
     let resp = null
     if (this.existRemotely) {
-      resp = await this.patchSocketZip(config)
+      resp = await this.updateSocketZip({ config, install: false })
     } else {
-      resp = await this.postSocketZip(config)
+      resp = await this.updateSocketZip({ config, install: true })
     }
 
     if (resp && resp.status !== 'ok') return this.waitForStatusInfo()
@@ -1019,52 +1048,6 @@ class Socket {
       srcFile,
       compiledFile
     }
-  }
-
-  getScriptsInSocket () {
-    debug('getScriptsInSocket')
-
-    return new Promise((resolve, reject) => {
-      function fileFilter (file) {
-        const fileWithLocalPath = file.fullPath.replace(`${this.getSocketPath()}${path.sep}`, '')
-        if (fileWithLocalPath.match(/test/)) { return false }
-        if (fileWithLocalPath.match(/tests/)) { return false }
-        if (fileWithLocalPath.match(/\.bundles/)) { return false }
-        if (fileWithLocalPath.match(/node_modules/)) { return false }
-        if (!fileWithLocalPath.match(/\.js$/)) { return false }
-        return true
-      }
-
-      const findFiles = readdirp({ root: this.getSrcFolder(), fileFilter: fileFilter.bind(this) })
-      const files = []
-      // Adding all files (besides those filtered out)
-      findFiles.on('data', (file) => {
-        files.push(this.getScriptObject(file.fullPath))
-      })
-
-      findFiles.on('end', () => {
-        resolve(files)
-      })
-    })
-  }
-
-  async getScriptsToCompile () {
-    debug('getScriptsToCompile')
-
-    const files = await this.getScriptsInSocket()
-    const filesToCompile = []
-    files.forEach((file) => {
-      const fileNameWithLocalPath = file.srcFile.replace(this.getSrcFolder(), '')
-      const localSrcChecksum = md5(fs.readFileSync(file.srcFile, 'utf8'))
-      const remoteSrcChecksum =
-        this.remote.metadata.sources ? this.remote.metadata.sources[fileNameWithLocalPath] : ''
-
-      debug(`Checksums for ${fileNameWithLocalPath}`, localSrcChecksum, remoteSrcChecksum)
-      if (localSrcChecksum !== remoteSrcChecksum) {
-        filesToCompile.push(file)
-      }
-    })
-    return filesToCompile
   }
 
   getFileForEndpoint (endpointName) {
@@ -1181,50 +1164,12 @@ class Socket {
     }
   }
 
-  getSocketSrcChecksum () {
-    const files = klawSync(this.getSrcFolder(), {nodir: true})
-    const checksums = {}
-    files.forEach((file) => {
-      const fileReltivePath = file.path.replace(this.getSrcFolder(), '')
-      checksums[fileReltivePath] = md5(fs.readFileSync(file.path, 'utf8'))
-    })
-    return checksums
-  }
-
   isCompatible () {
     const socketMajorVersion = this.spec.version.split('.')[0]
     if (socketMajorVersion !== session.majorVersion) {
       throw new CompatibilityError(socketMajorVersion, session.majorVersion)
     }
     return true
-  }
-
-  shouldBeUpdated () {
-    debug('shouldBeUpdated')
-    if (this.existLocally && this.existRemotely) {
-      const files = this.remote.files
-      return Object.keys(files).some((file) => {
-        let filePath
-
-        if (file === 'socket.yml') {
-          filePath = this.getSocketYMLFile()
-        } else if (file.endsWith('.js')) {
-          filePath = path.join(this.getCompiledScriptsFolder(), file)
-        } else {
-          filePath = path.join(this.getSrcFolder(), file)
-        }
-
-        const remoteChecksum = files[file].checksum
-        const localChecksum = md5(fs.readFileSync(filePath))
-
-        debug(file)
-        debug(localChecksum)
-        debug(remoteChecksum)
-        return localChecksum !== remoteChecksum
-      })
-    } else if (!this.existRemotely) {
-      return true
-    }
   }
 }
 
