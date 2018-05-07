@@ -13,7 +13,7 @@ chai.should()
 describe('Data', () => {
   const testUrl = `https://${process.env.SYNCANO_HOST || 'api.syncano.io'}`
   const instanceName = 'testInstance'
-  let data = null
+  let data: Server['data'] | null = null
   let api = null
 
   beforeEach(() => {
@@ -579,7 +579,7 @@ describe('Data', () => {
       const user = {name: 'John'}
 
       api
-        .post('/v2/instances/testInstance/classes/users/objects/', user)
+        .post(`/v2/instances/${instanceName}/classes/users/objects/`, user)
         .reply(200, user)
 
       return data.users.create(user).should.become({name: 'John'})

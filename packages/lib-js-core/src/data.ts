@@ -4,13 +4,16 @@ import * as querystring from 'querystring'
 import {NotFoundError} from './errors'
 import QueryBuilder from './query-builder'
 import {ACL} from './types'
-export type ArrayOrObject<T> = T extends Array<{}> ? Array<{}> : object
 const get = require('lodash.get')
 const merge = require('lodash.merge')
 const set = require('lodash.set')
 const debug = logger('core:data')
 
 const MAX_BATCH_SIZE = 50
+
+// export interface IsObject extends keyof Object {
+
+// }
 
 export interface ClassObject {
   id: number
@@ -33,8 +36,9 @@ class Data extends QueryBuilder {
 
   [x: string]: any
 
+  // TODO: Add better return type
   /**
-   * List objects matching query.
+   * List objects matching query
    */
   public async list (): Promise<any> {
     debug('list')
@@ -62,7 +66,7 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Get number of objects matching given query.
+   * Get number of objects matching given query
    *
    * @example
    * data.posts.count()
@@ -76,7 +80,7 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Get first element matching query or return null.
+   * Get first element matching query or return null
    *
    * @example
    * data.posts.first()
@@ -90,9 +94,18 @@ class Data extends QueryBuilder {
 
   /**
    * Get first element matching query or throw error
+   *
+   * @throws {NotFoundError} No results for given query
+   * @example
+   * try {
+   *   data.posts.firstOrFail()
+   * } catch (err) {
+   *   // Handle not found post
+   * }
    */
-  public async firstOrFail () {
+  public async firstOrFail (): Promise<ClassObject> {
     let object
+
     try {
       object = await this.first()
     } catch (err) {
@@ -101,22 +114,28 @@ class Data extends QueryBuilder {
     if (!object) {
       throw new NotFoundError()
     }
+
     return object
   }
 
   /**
-   * Get the first record matching the attributes or create it.
+   * Get the first record matching the attributes or create it
+   *
+   * @param {Object} attributes Parameteres used to find object
+   * @param values Parameters used to create object if not found
+   * @example
+   * data.tags.firstOrCreate({name: 'dogs'}, {firstUsedBy: 'authorID'})
    */
-  public firstOrCreate (attributes: object, values = {}) {
+  public firstOrCreate<T, I> (attributes: object&T, values?: object&I): Promise<T & I & ClassObject> {
     const query = this.toWhereArray(attributes)
 
     return this.where(query)
       .firstOrFail()
-      .catch(() => this.create(merge(attributes, values)))
+      .catch(() => this.create(merge(attributes, values || {})))
   }
 
   /**
-   * Create or update a record matching the attributes, and fill it with values.
+   * Create or update a record matching the attributes, and fill it with values
    */
   public async updateOrCreate (attributes: object, values = {}) {
     const query = this.toWhereArray(attributes)
@@ -129,34 +148,51 @@ class Data extends QueryBuilder {
     }
   }
 
+  // TODO: Add return type
   /**
-   * Get single or list of objects.
+   * Get single object by ID
    *
-   * @param ids Single object ID or array of IDs
+   * @param ids Single object ID
    * @example
-   * data.posts.find(1) // returns single object
-   * data.posts.find([1, 2]) // returns array of objects
+   * data.posts.find(1)
    */
-  // tslint:disable-next-line:max-line-length
-  public async find<T> (ids: T&number|T&number[]): Promise<T extends any[] ? ClassObject[] : ClassObject> {
-    debug('find', ids)
+  public async find (id: number|number[]) {
+    debug('find', id)
 
-    if (Array.isArray(ids)) {
-      return this.where('id', 'in', ids).list()
+    if (Array.isArray(id)) {
+      return this.findMany(id)
     }
 
-    return this.where('id', '=', ids).first()
+    return this.where('id', '=', id).first()
   }
 
   /**
-   * Same as `find` method but throws error for no results.
+   * Find multiple object by ID.
+   *
+   * @param ids Array of IDs
+   * @example
+   * data.posts.find([1, 2])
+   */
+  public async findMany (ids: number[]): Promise<ClassObject[]> {
+    debug('findMany', ids)
+
+    if (Array.from(ids).length === 0) {
+      return []
+    }
+
+    return this.where('id', 'in', ids).list()
+  }
+
+  /**
+   * Same as `find` method but throws error for no results
    *
    * @param ids Single object ID or array of IDs
+   * @throws {NotFoundError} No results for given query
    * @example
    * data.posts.findOrFail(1) // returns single object
    * data.posts.findOrFail([1, 2]) // returns array of objects
    */
-  public async findOrFail<T> (ids: T&number|T&number[]): Promise<T extends any[] ? ClassObject[] : ClassObject> {
+  public async findOrFail<T> (ids: T&number|T&number[]): Promise<ClassObject> {
     try {
       const response  = await this.find(ids)
       const shouldThrow = Array.isArray(response) && Array.isArray(ids)
@@ -166,35 +202,47 @@ class Data extends QueryBuilder {
       if (shouldThrow) {
         throw new NotFoundError()
       }
-      return response
+
+      return response as ClassObject
     } catch (err) {
       throw new NotFoundError()
     }
   }
 
   /**
-   * Number of objects to get.
+   * Set number of objects to get
+   *
+   * @param number Number of objects
    */
   public take (count: number) {
     return this.withQuery({page_size: count})
   }
 
   /**
-   * Set order of fetched objects.
+   * Set order of fetched objects
+   *
+   * @param {string} column Name of class column
+   * @param {string} direction Direction of order. Can be `ASC`(default) or `DESC`
    */
-  public orderBy (column: string, direction = 'asc') {
-    direction = direction.toLowerCase()
-    direction = direction === 'desc' ? '-' : ''
+  public orderBy (column: string, direction: 'ASC' | 'DESC' = 'ASC') {
+    const dir = direction.toUpperCase()
+    const sign = dir === 'DESC' ? '-' : ''
 
     return this.withQuery({
-      order_by: `${direction}${column}` // eslint-disable-line camelcase
+      order_by: `${sign}${column}`
     })
   }
 
   /**
-   * Filter rows.
+   * Filter objects
+   *
+   * @see https://cheatsheet.syncano.io/#server
+   * @example
+   * data.posts.where('id', 'in', [10, 20]).list()
+   * data.posts.where('id', 10).list()
+   * data.posts.where('id', '>=', 10).list()
    */
-  public where<A, B, C> (column: string | any[], operator?: any, value?: any) {
+  public where (column: string | any[], operator?: any, value?: any) {
     debug('where', column, operator, value)
     if (Array.isArray(column)) {
       column.map(([itemColumn, itemOperator, itemValue]) =>
@@ -233,6 +281,15 @@ class Data extends QueryBuilder {
     return this.withQuery({query: JSON.stringify(query)})
   }
 
+  // TODO: Add better argument types
+  /**
+   * Execute "or where" query
+   *
+   * @example
+   * data.posts
+   *   .where('likes', '<=', 100)
+   *   .orWhere('likes', '>=', 200).list()
+   */
   public orWhere (column: string | any[], operator?: any, value?: any) {
     this._queries = [].concat(this.queries as [never], this._query.query)
     this._query.query = null
@@ -240,22 +297,52 @@ class Data extends QueryBuilder {
     return this.where(column, operator, value)
   }
 
+  /**
+   * Get object with not null column value
+   *
+   * @example
+   * data.posts.whereNotNull('title').list()
+   */
   public whereNotNull (column: string) {
     return this.where(column, 'exists', true)
   }
 
+  /**
+   * Get objects where column value is a part of given array or string
+   *
+   * @example
+   * data.posts.whereIn('id', [100, 200]).list()
+   */
   public whereIn (column: string, arr: string[] | number[]) {
     return this.where(column, 'in', arr)
   }
 
+  /**
+   * Get objects where column value is not a part of given array or string
+   *
+   * @example
+   * data.posts.whereNotIn('id', [10, 20]).list()
+   */
   public whereNotIn (column: string, arr: string[] | number[]) {
     return this.where(column, 'nin', arr)
   }
 
+  /**
+   * Get objects where column value is null
+   *
+   * @example
+   * data.posts.whereNull('title').list()
+   */
   public whereNull (column: string) {
     return this.where(column, null)
   }
 
+  /**
+   * Get objects where column value is between given min and max
+   *
+   * @example
+   * data.posts.whereBetween('likes', 100, 200).list()
+   */
   public whereBetween (column: string, min: number, max: number) {
     return this.where([
       [column, 'gte', min],
@@ -265,7 +352,12 @@ class Data extends QueryBuilder {
 
   // TODO: Add types
   /**
-   * Whitelist returned keys.
+   * Whitelist returned keys
+   *
+   * @param fields Array of field names to whitelist. Can also be comma separated arguments
+   * @example
+   * data.posts.fields('title', 'created_at').list()
+   * data.posts.fields(['title', 'created_at']).list()
    */
   public fields (...fields: any[]) {
     if (Array.isArray(fields[0])) {
@@ -284,7 +376,10 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Expand references and relationships.
+   * Expand references and relationships
+   *
+   * @example
+   * data.posts.with('author').list()
    */
   public with (...models: any[]) {
     const relationships = Array.isArray(models[0]) ? models[0] : models
@@ -293,31 +388,37 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Get values of single column.
+   * Get values of single column
+   *
+   * @example
+   * data.posts.pluck('title') // returns array of values
    */
-  public async pluck (column: string): Promise<any> {
+  public async pluck (column: string): Promise<any[]> {
     const items = await this.list()
     return items.map((item: any) => item[column])
   }
 
   /**
-   * Get value of single record column field.
+   * Get value of single record column field
+   *
+   * @example
+   * data.posts.where('id', 1).value('created_at') // returns first created_at value
    */
   public async value (column: string): Promise<any> {
-    const item = await this.first()
+    const item = await this.firstOrFail()
     return item[column]
   }
 
   /**
-   * Create new object.
+   * Create new object
    *
-   * @param body Object or array of objects to create.
+   * @param body Object or array of objects to create
    * @example
-   *  data.posts.create({title: 'Lorem ipsum'})
-   *  data.posts.create([
-   *    {title: 'Lorem ipsum'},
-   *    {title: 'Dolor sit amet'}
-   *  ])
+   * data.posts.create({title: 'Lorem ipsum'})
+   * data.posts.create([
+   *   {title: 'Lorem ipsum'},
+   *   {title: 'Dolor sit amet'}
+   * ])
    */
   public create<T> (body: T): Promise<T extends any[] ? Array<ClassObject & T[0]> : ClassObject & T> {
     let headers
@@ -334,10 +435,9 @@ class Data extends QueryBuilder {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
-      // return new Promise((resolve, reject): Promise<any> => resolve(body))
-      // return this.batch(body)
-      //   .then(this.replaceCustomTypesWithValue.bind(this))
-      //   .then(this.mapFields.bind(this))
+      return this.batch(body)
+        .then(this.replaceCustomTypesWithValue.bind(this))
+        .then(this.mapFields.bind(this))
     } else {
       fetchObject.body = JSON.stringify(body)
     }
@@ -349,7 +449,15 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Update object in database.
+   * Update object in database
+   *
+   * @example
+   * data.posts.update(10, {title: 'Dolor sit amet'})
+   * data.posts.where('id', '<=', 10).update({title: 'Dolor sit amet'})
+   * data.posts.update([
+   *   [10, {title: 'Dolor sit amet'}],
+   *   [15, {title: 'Lorem ipsum'}]
+   * ])
    */
   public update (id: number | object, body?: object): Promise<any> {
     let headers
@@ -397,9 +505,14 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Remove object from database.
+   * Remove object from database
    *
    * @param id Single ID or array of IDs to delete from database. Leave empty to remove all objects matching query!
+   * @example
+   * data.posts.delete() // Remove all posts
+   * data.posts.where('status', 'draft').delete() // Remove all posts matching query
+   * data.posts.delete(1) // Remove post with id equal 1
+   * data.posts.delete([1, 2]) // Remove post with ids in given array
    */
   public async delete (id?: number | number[]): Promise<any> {
     const isQueryDelete = id === undefined
@@ -483,7 +596,7 @@ class Data extends QueryBuilder {
     }
   }
 
-  // FIXME: Add better types
+  // TODO: Add better types
   private replaceCustomTypesWithValue<T> (items: any): any  {
     if (Array.isArray(items)) {
       return items.map((item) =>
@@ -569,7 +682,7 @@ class Data extends QueryBuilder {
       .filter(Boolean)
   }
 
-  private async batch (body: any, headers?: object) {
+  private async batch (body: any, headers?: object): Promise<any> {
     const type = Array.isArray(body[0])
       ? 'PATCH'
       : isNaN(body[0]) === false ? 'DELETE' : 'POST'
@@ -593,7 +706,7 @@ class Data extends QueryBuilder {
               (item: any) => (item.content ? item.content : item)
             )
             resolves = resolves.concat(items)
-            next() // eslint-disable-line promise/no-callback-in-promise
+            next()
           } else {
             resolve(type === 'DELETE' ? body : resolves)
           }
@@ -620,7 +733,7 @@ class Data extends QueryBuilder {
     return operators[operator] || operator
   }
 
-  private toWhereArray (attributes: object) {
+  private toWhereArray<T> (attributes: T) {
     return Object.keys(attributes).map((key) => [key, 'eq', attributes[key]])
   }
 
