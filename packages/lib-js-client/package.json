@@ -3,6 +3,7 @@
   "version": "0.12.1",
   "description": "Interact with your Syncano Sockets.",
   "main": "lib/index.js",
+  "types": "lib/index.d.js",
   "unpkg": "dist/index.js",
   "author": "Syncano Inc.",
   "license": "MIT",
