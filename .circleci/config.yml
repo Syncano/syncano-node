@@ -155,7 +155,7 @@ jobs:
   test_unit:
     name: Unit Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -168,7 +168,7 @@ jobs:
   test_e2e_validate:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -180,7 +180,7 @@ jobs:
   test_e2e_core:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -192,7 +192,7 @@ jobs:
   test_e2e_client:
     name: E2E Client Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -204,7 +204,7 @@ jobs:
   test_e2e_registry:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -216,7 +216,7 @@ jobs:
   test_e2e_hosting:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -228,7 +228,7 @@ jobs:
   # test_e2e_init:
   #   name: E2E Tests
   #   docker:
-  #     - image: circleci/node:latest
+  #     - image: circleci/node:9.11.1
   #
   #   working_directory: ~/repo/packages/tests
   #
@@ -240,7 +240,7 @@ jobs:
   test_e2e_socket:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -252,7 +252,7 @@ jobs:
   test_e2e_anonymous:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -264,7 +264,7 @@ jobs:
   test_e2e_instance:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -276,7 +276,7 @@ jobs:
   test_e2e_deploy:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -288,7 +288,7 @@ jobs:
   test_e2e_config:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -300,7 +300,7 @@ jobs:
   test_e2e_schema:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -312,7 +312,7 @@ jobs:
   test_lint:
     name: Linter
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -324,7 +324,7 @@ jobs:
   deploy_docs:
     name: Deploying Docs
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -345,7 +345,7 @@ jobs:
   deploy_test_registry:
     name: Deploying Test Registry
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/registry
 
@@ -358,7 +358,7 @@ jobs:
   deploy_registry:
     name: Deploy Production Registry
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/registry
 
@@ -370,7 +370,7 @@ jobs:
   delete_registry:
     name: Delete Test Registry
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/registry
 
@@ -382,7 +382,7 @@ jobs:
   deploy_canary_registry:
     name: Deploy Test Registry
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/registry
 
@@ -394,7 +394,7 @@ jobs:
   publish:
     name: Publish packages to NPM
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -408,7 +408,7 @@ jobs:
   codecov:
     name: Send Codecov report
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
