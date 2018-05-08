@@ -3,7 +3,7 @@ jobs:
   build:
     name: Build
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
