@@ -4,10 +4,8 @@ import glob from 'glob'
 import child from 'child_process'
 import FindKey from 'find-key'
 import md5 from 'md5'
-import hashdirectory from 'hashdirectory'
 import YAML from 'js-yaml'
 import axios from 'axios'
-import readdirp from 'readdirp'
 import mkdirp from 'mkdirp'
 import path from 'path'
 import FormData from 'form-data'
@@ -435,7 +433,6 @@ class Socket {
     return folder
   }
 
-
   getSocketZip () {
     debug('getSocketZip')
     return path.join(this.getSocketZipPath(), 'src.zip')
@@ -619,7 +616,6 @@ class Socket {
   async createZip (params = {partial: true}) {
     debug('createZip', params.partial)
     return new Promise((resolve, reject) => {
-
       const archive = archiver('zip', { zlib: { level: 9 } })
       const output = fs.createWriteStream(this.getSocketZip(), { mode: 0o700 })
 
@@ -677,7 +673,6 @@ class Socket {
         } else {
           archive.file(file, { name: fileNameWithPath })
         }
-
       })
       archive.finalize()
 
@@ -883,7 +878,7 @@ class Socket {
     return path.join(this.getSocketPath(), 'socket.yml')
   }
 
-  async createAllZips() {
+  async createAllZips () {
     await this.compile({ updateSocketNPMDeps: true })
     await this.createEnvZip()
     await this.createZip({partial: false})

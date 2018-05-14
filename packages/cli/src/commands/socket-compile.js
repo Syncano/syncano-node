@@ -1,10 +1,7 @@
 import format from 'chalk'
-import Promise from 'bluebird'
 
 import logger from '../utils/debug'
 import { SimpleSpinner } from './helpers/spinner'
-import { createInstance } from './helpers/create-instance'
-import { askQuestions } from './helpers/socket'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
 import { CompileError } from '../utils/errors'
@@ -12,7 +9,6 @@ import { CompileError } from '../utils/errors'
 const { debug } = logger('cmd-socket-deploy')
 
 const pendingUpdates = {}
-const timer = new Timer()
 
 export default class SocketCompile {
   constructor (context) {
@@ -111,10 +107,6 @@ export default class SocketCompile {
           echo(2)(`${status} ${currentTime()} ${socketNameStr}`)
           error(err)
         }
-      }
-
-      if (this.cmd.bail) {
-        SocketDeployCmd.bail()
       }
     }
   }

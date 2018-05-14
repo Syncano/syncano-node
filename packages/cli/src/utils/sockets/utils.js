@@ -26,7 +26,7 @@ const socketTemplates = () => {
 const getTemplatesChoices = () => socketTemplates().map(socketTemplate =>
     `${socketTemplate.description} - ${format.grey(`(${socketTemplate.name})`)}`)
 
-const searchForSockets = (socketsPath, maxDepth=3) => {
+const searchForSockets = (socketsPath, maxDepth = 3) => {
   if (!fs.existsSync(socketsPath)) {
     return []
   }
