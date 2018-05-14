@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`throws error while calling endpoint without instance name 1`] = `"Syncano Client was initialized with invalid instance name: \\"\\""`;

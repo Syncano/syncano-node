@@ -2,6 +2,7 @@ node_modules
 example
 coverage
 tests
+docs
 src
 .npmignore
 .idea
@@ -11,6 +12,16 @@ src
 codecov.yml
 circle.yml
 webpack.config.js
+jest.config.js
 npm-debug.log
 yarn.lock
 *.sublime-*
+lib/*.spec.d.ts
+lib/*.spec.js
+lib/*.spec.js.map
+tsconfig.json
+tslint.json
+contributing.md
+readme.md
+CHANGELOG.md
+.gitattributes

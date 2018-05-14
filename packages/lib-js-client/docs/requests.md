@@ -21,7 +21,8 @@ Easy way to call Syncano Sockets.
 | string | **`instanceName`**  | undefined     | Syncano Instance name. You can create one using [Syncano CLI][cli] |
 | object | **`options`**       | {}            | Additional connection options                                      |
 | string | **`options.host`**  | syncano.space | Syncano host name.                                                 |
-| string | **`options.token`** | undefined     | Allows you to initialize authorized connection.                    | **** |
+| string | **`options.token`** | undefined     | Allows you to initialize authorized connection.                    |
+| string | **`options.transformResponse`** | undefined | Define custom response format. (EXPERIMENTAL)              |
 
 **Create connection**
 
@@ -29,18 +30,14 @@ Easy way to call Syncano Sockets.
 const s = new Syncano('INSTANCE_NAME')
 ```
 
-## `s(endpoint, data?, options?)`
-
-| Type            | Name                  | Default   | Description                                         |
-| --------------- | --------------------- | --------- | --------------------------------------------------- |
-| string          | **`endpoint`**        | undefined | Name of socket and endpoint joined with '/'         |
-| object/FormData | **`data`**            | {}        | Optional object send with request                   |
-| object          | **`options`**         | {}        | Optional request configuration, see `axios` options |
-| string          | **`options.headers`** | {}        | Request headers                                     |
-
-Alias of `s.post` method.
-
 ## `s.get(endpoint, data?, options?)`
+
+| Type            | Name                  | Default   | Description                                                |
+| --------------- | --------------------- | --------- | ---------------------------------------------------------- |
+| string          | **`endpoint`**        | undefined | Name of socket and endpoint joined with '/'                |
+| object/FormData | **`data`**            | {}        | Optional object send with request                          |
+| object          | **`options`**         | {}        | Optional request configuration, see [axios][axios] options |
+| string          | **`options.headers`** | {}        | Request headers                                            |
 
 Send `GET` request to Syncano Socket.
 
@@ -74,7 +71,7 @@ s.get('countries/list', {}, {
 })
 ```
 
-For more options, view [axios documentation](https://www.npmjs.com/package/axios)
+For more options, view [axios documentation][axios]
 
 ## `s.post(endpoint, data?, options?)`
 
@@ -93,3 +90,4 @@ Send `PUT` request to Syncano Socket. View `s.get` method for more info.
 Send `PATCH` request to Syncano Socket. View `s.get` method for more info.
 
 [cli]: https://github.com/Syncano/syncano-node/tree/master/packages/cli
+[axios]: https://github.com/axios/axios#request-config

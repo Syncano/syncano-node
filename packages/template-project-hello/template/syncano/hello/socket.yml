@@ -1,5 +1,5 @@
-name: ${socketName}
-description: ${socketDescription}
+name: hello
+description: Hello World Socket
 version: 0.0.1
 runtime: nodejs_v8
 keywords:

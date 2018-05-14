@@ -3,7 +3,7 @@ jobs:
   build:
     name: Build
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -78,6 +78,9 @@ jobs:
 
       - run: npm install
       - run: npm run bootstrap
+      - run:
+          command: npm run build
+          working_directory: ~/repo/packages/lib-js-client
 
       - save_cache:
           paths:
@@ -152,7 +155,7 @@ jobs:
   test_unit:
     name: Unit Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -162,22 +165,10 @@ jobs:
       - run: npm run test:unit
       - run: npm run report:coverage
 
-  test_e2e_client:
-    name: E2E Tests
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo/packages/lib-js-client/
-
-    steps:
-      - restore_cache:
-          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e
-
   test_e2e_validate:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -189,7 +180,7 @@ jobs:
   test_e2e_core:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -201,7 +192,7 @@ jobs:
   test_e2e_client:
     name: E2E Client Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -213,7 +204,7 @@ jobs:
   test_e2e_hosting:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -225,7 +216,7 @@ jobs:
   # test_e2e_init:
   #   name: E2E Tests
   #   docker:
-  #     - image: circleci/node:latest
+  #     - image: circleci/node:9.11.1
   #
   #   working_directory: ~/repo/packages/tests
   #
@@ -237,7 +228,7 @@ jobs:
   test_e2e_socket:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -249,7 +240,7 @@ jobs:
   test_e2e_anonymous:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -261,7 +252,7 @@ jobs:
   test_e2e_instance:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -273,7 +264,7 @@ jobs:
   test_e2e_deploy:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -285,7 +276,7 @@ jobs:
   test_e2e_config:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -297,7 +288,7 @@ jobs:
   test_e2e_schema:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -309,7 +300,7 @@ jobs:
   test_lint:
     name: Linter
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -321,7 +312,7 @@ jobs:
   deploy_docs:
     name: Deploying Docs
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -342,7 +333,7 @@ jobs:
   publish:
     name: Publish packages to NPM
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -356,7 +347,7 @@ jobs:
   codecov:
     name: Send Codecov report
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 

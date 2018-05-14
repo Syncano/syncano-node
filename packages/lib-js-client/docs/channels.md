@@ -6,20 +6,20 @@ Listen on Syncano Realtime Channels.
 
 | Name                                                      | Description                                  |
 | --------------------------------------------------------- | -------------------------------------------- |
-| [s.subscribe](#ssubscribeendpoint-data-callback)          | Listen on given channel                      |
-| [s.subscribe.once](#ssubscribeonceendpoint-data-callback) | Listen only for first event on given channel |
+| [s.listen](#slistenendpoint-params)                       | Listen on given channel                      |
 
-## `s.subscribe(endpoint, data?, callback)`
+## `s.listen(endpoint, params?)`
 
-Subscribe to given Syncano endpoint. Callback is fired each time something is pushed to channel bound to endpoint.
+Subscribe to given Syncano endpoint. `s.listen` returns instance of [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket).
 
 ```js
 // your-client-side-file.js
 // chat - socket name
 // poll-messages - endpoint name
-s.subscribe('chat/poll-messages', message => {
-  // Handle message
-})
+s.listen('chat/poll-messages')
+  .addEventListener('message', message => {
+    // Handle message
+  })
 ```
 
 **Public channels**
@@ -35,7 +35,7 @@ endpoints:
 
 ```js
 // chat/src/create-message.js
-import {data, channel} from 'syncano-server'
+import {data, channel} from '@syncano/core'
 
 data.messages
   .create({
@@ -60,7 +60,7 @@ endpoints:
 
 ```js
 // chat/src/create-message.js
-import {data, channel} from 'syncano-server'
+import {data, channel} from '@syncano/core'
 
 data.messages
   .create({
@@ -74,9 +74,10 @@ data.messages
 ```
 
 ```js
-s.subscribe('chat/private-messages', {room: 1}, message => {
-  // Handle message
-})
+s.listen('chat/private-messages', {room: 1})
+  .addEventListener('message', message => {
+    // Handle message
+  })
 ```
 
 **User channels**
@@ -95,9 +96,10 @@ endpoints:
 Then you can subscribe to channel by passing socket and endpoint name. User channels require `user_key` to be send in payload.
 
 ```js
-s.subscribe('notifications/get', {user_key: 'USER_KEY'}, notification => {
-  // Handle notification
-})
+s.listen('notifications/get', {user_key: 'USER_KEY'})
+  .addEventListener('message', notification => {
+    // Handle notification
+  })
 ```
 
 To publish to the user channel, you have to know it's `username`.
@@ -106,7 +108,7 @@ To publish to the user channel, you have to know it's `username`.
 
 ```js
 // notifications/src/notify.js
-import {data, channel} from 'syncano-server'
+import {data, channel} from '@syncano/core'
 
 data.notifications
   .create({
@@ -116,14 +118,4 @@ data.notifications
   .then(notification => {
     channel.publish(`notifications.${ARGS.username}`, notification)
   })
-```
-
-## `s.subscribe.once(endpoint, data?, callback)`
-
-Sometimes you want to listen only for one event and after that stop handling new events.
-
-```js
-s.subscribe.('user-auth/verify', isVerified => {
-  // Handle verification
-})
 ```
