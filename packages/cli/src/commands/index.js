@@ -39,7 +39,6 @@ export default {
   HostingConfig,
   SocketDeploy,
   SocketCompile,
-  SocketCompile,
   SocketConfig,
   SocketConfigSet,
   SocketConfigShow,
