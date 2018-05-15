@@ -18,6 +18,9 @@
 - Complete solutions
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
+  - AWS
+    - [Configuration](/solutions/aws-config)
+    - [Storage on S3](/solutions/aws-storage)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
   - [Creating project template](/deployment/create-project-template)
