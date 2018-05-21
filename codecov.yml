@@ -25,7 +25,11 @@ parsers:
   javascript:
     enable_partials: false
 ignore:
-  - test
-  - lib
+  - docs
+  - packages/tests
+  - packages/**/tests
+  - packages/**/lib
+  - packages/**/docs
+  - packages/**/test.js
   - packages/**/jest.config.js
   - packages/**/webpack.config.js
