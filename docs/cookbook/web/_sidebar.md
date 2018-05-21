@@ -18,6 +18,10 @@
 - Complete solutions
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
+  - AWS
+    - [Wordpress on Lightsail](/solutions/aws-wordpress)
+    - [NodeJS on Lightsail](/solutions/aws-node)
+    - [Ethereum on Lightsail](/solutions/aws-ethereum)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
   - [Creating project template](/deployment/create-project-template)
