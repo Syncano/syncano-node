@@ -8,8 +8,7 @@ import proxyquire from 'proxyquire'
 import Validator from '@syncano/validate'
 
 const socketFolder = process.cwd()
-const socketScriptsFolder = path.join(socketFolder, 'src')
-const compiledScriptsFolder = path.join(socketFolder, '.src')
+const compiledScriptsFolder = path.join(socketFolder, '.dist', 'src')
 const socketDefinition = YAML.load(fs.readFileSync('./socket.yml', 'utf8'))
 
 const generateMeta = (endpointName, metaUpdate) => {
