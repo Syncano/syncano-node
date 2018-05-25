@@ -30,7 +30,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "rimraf": "2.6.2",
-    "standard": "10.0.3"
+    "standard": "^10.0.3"
   },
   "babel": {
     "presets": [

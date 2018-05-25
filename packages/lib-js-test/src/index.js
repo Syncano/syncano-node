@@ -105,9 +105,9 @@ function run (endpoint, ctx = {}, params = {}) {
     try {
       let runFunc
       if (mocks) {
-        runFunc = proxyquire(path.join(socketScriptsFolder, `${endpoint}.js`), mocks).default
+        runFunc = proxyquire(path.join(compiledScriptsFolder, `${endpoint}.js`), mocks).default
       } else {
-        runFunc = require(path.join(socketScriptsFolder, `${endpoint}.js`)).default
+        runFunc = require(path.join(compiledScriptsFolder, `${endpoint}.js`)).default
       }
       output = runFunc({args, config, meta: socketMeta, HttpResponse, setResponse})
     } catch (err) {
