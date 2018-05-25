@@ -1,10 +1,7 @@
 import Syncano from '@syncano/core'
-import _ from 'lodash'
-import fs from 'fs'
 import format from 'chalk'
 import path from 'path'
 import mkdirp from 'mkdirp'
-import walkUp from 'node-walkup'
 import Promise from 'bluebird'
 
 import logger from './debug'
@@ -25,7 +22,6 @@ export class Session {
     this.projectPath = null
     this.project = null
     this.userId = null
-    this.walkup = Promise.promisify(walkUp)
 
     this.majorVersion = pjson.version.split('.')[0]
 
@@ -136,40 +132,7 @@ export class Session {
   }
 
   static findProjectPath () {
-    return new Promise((resolve, reject) => {
-      if (fs.existsSync('syncano.yml')) {
-        return resolve(process.cwd())
-      }
-      if (fs.existsSync('syncano/syncano.yml')) {
-        return resolve(path.join(process.cwd(), 'syncano'))
-      }
-
-      const searchInPath = (pathToCheck) => {
-        if (pathToCheck === process.env.HOME || pathToCheck === '/') {
-          return reject(new Error('No more folders to check'))
-        }
-
-        let files = null
-        try {
-          files = fs.readdirSync(pathToCheck)
-        } catch (err) {
-          return reject(new Error(`Path ${pathToCheck} can not be read`))
-        }
-
-        if (_.includes(files, 'syncano.yml')) {
-          return resolve(pathToCheck)
-        }
-
-        const nextFolder = path.parse(pathToCheck)
-        if (nextFolder.name) {
-          searchInPath(nextFolder.dir)
-        } else {
-          return reject(new Error('No more folders to check'))
-        }
-      }
-
-      searchInPath(process.cwd())
-    })
+    return process.cwd()
   }
 
   async load () {
