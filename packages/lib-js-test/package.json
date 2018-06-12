@@ -20,18 +20,17 @@
     "@syncano/validate": "0.12.1",
     "bluebird": "^3.5.1",
     "faker": "^4.1.0",
-    "js-yaml": "^3.11.0",
-    "lodash": "^4.17.5",
+    "js-yaml": "^3.12.0",
+    "lodash": "^4.17.10",
     "lodash.merge": "^4.6.1",
-    "proxyquire": "^1.8.0"
+    "proxyquire": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "rimraf": "^2.6.2",
-    "semver": "^5.5.0",
-    "standard": "^10.0.3"
+    "standard": "^11.0.1"
   },
   "babel": {
     "presets": [

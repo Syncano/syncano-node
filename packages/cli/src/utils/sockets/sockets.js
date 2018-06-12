@@ -701,6 +701,7 @@ class Socket {
 
       const files = glob.sync(`**`, {
         cwd: envFolder,
+        dot: true,
         follow: true,
         nodir: true
       })

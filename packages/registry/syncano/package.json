@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.10",
     "node-fetch": "^1.6.3",
     "semver": "^5.4.1",
     "syncano-middleware": "^0.1.2",
@@ -12,8 +12,8 @@
     "babel-preset-env": "^1.1.8",
     "babel-register": "^6.22.0",
     "chai": "^3.5.0",
-    "cross-env": "^3.1.4",
-    "faker": "^3.1.0",
+    "cross-env": "^5.1.4",
+    "faker": "^4.1.0",
     "mocha": "^3.2.0",
     "syncano-client": "beta",
     "xo": "^0.17.1"

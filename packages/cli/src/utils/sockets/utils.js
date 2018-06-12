@@ -38,10 +38,10 @@ const searchForSockets = (socketsPath, maxDepth = 3) => {
   }
 
   // TODO: optimize only diging deeper scoped modues
-  walkdir.sync(socketsPath, options, (path, stat) => {
-    if (path.match(/socket.yml$/)) {
-      const socket = YAML.load(fs.readFileSync(path, 'utf8')) || {}
-      sockets.push([path, socket])
+  walkdir.sync(socketsPath, options, (walkPath, stat) => {
+    if (walkPath.match(/socket.yml$/) && !path.dirname(walkPath).match(/\/\./)) {
+      const socket = YAML.load(fs.readFileSync(walkPath, 'utf8')) || {}
+      sockets.push([walkPath, socket])
     }
   })
 
