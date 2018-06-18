@@ -1,7 +1,0 @@
-{
-  "name": "@syncano/registry",
-  "private": true,
-  "dependencies": {
-    "@syncano/cli": "0.10.0"
-  }
-}

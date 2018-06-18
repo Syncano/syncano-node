@@ -1,3 +1,4 @@
+import path from 'path'
 import semver from 'semver'
 import FindKey from 'find-key'
 
@@ -13,6 +14,12 @@ class SocketSettings extends Settings {
     this.name = 'socket'
     this.baseDir = socketPath
     this.loaded = this.load()
+    this.attributes.version = this.readVersion()
+  }
+
+  readVersion () {
+    const pjson = require(`${path.join(this.baseDir, 'package.json')}`)
+    return pjson.version
   }
 
   getScripts () {

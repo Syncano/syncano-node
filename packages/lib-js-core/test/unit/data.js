@@ -64,6 +64,55 @@ describe('Data', () => {
         })
     })
 
+    it.only('should be able to fetch objects list', () => {
+
+      const objects = [...Array(302).keys()].map(key => {
+        return {name: 'John Doe', id: key}
+      })
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {
+          objects: objects.slice(0, 99),
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=99`
+        })
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=99`)
+        .reply(200, {
+          objects: objects.slice(99, 200),
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=200`
+        })
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=200`)
+        .reply(200, {
+          objects: objects.slice(200, 300),
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=300`
+        })
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=300`)
+        .reply(200, {
+          objects: objects.slice(300, 302),
+          next: null
+        })
+
+      return data.users
+        .list()
+        .then(objects => {
+          should(objects)
+            .be.Array()
+            .length(302)
+          should(objects)
+            .have.propertyByPath(0, 'name')
+            .which.is.String()
+          should(objects)
+            .have.propertyByPath(0, 'id')
+            .which.is.Number()
+        })
+    })
+
     it('should return [] when no objects were not found', () => {
       api
         .get(`/v2/instances/${instanceName}/classes/users/objects/`)
