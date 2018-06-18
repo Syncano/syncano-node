@@ -70,31 +70,38 @@ describe('Data', () => {
         return {name: 'John Doe', id: key}
       })
 
+      const first100 = objects.slice(0, 100)
+      const first100last = first100.slice(-1).pop().id
       api
         .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {
-          objects: objects.slice(0, 99),
-          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=99`
+          objects: first100,
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`
         })
 
+      const second100 = objects.slice(100, 200)
+      const second100last = second100.slice(-1).pop().id
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=99`)
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`)
         .reply(200, {
-          objects: objects.slice(99, 200),
-          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=200`
+          objects: second100,
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`
         })
 
+      const third100 = objects.slice(100, 200)
+      const third100last = third100.slice(-1).pop().id
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=200`)
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`)
         .reply(200, {
-          objects: objects.slice(200, 300),
-          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=300`
+          objects: third100,
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`
         })
 
+      const fourth100 = objects.slice(300, 302)
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=300`)
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`)
         .reply(200, {
-          objects: objects.slice(300, 302),
+          objects: fourth100,
           next: null
         })
 
