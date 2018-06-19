@@ -19,7 +19,6 @@ export default class SocketDeployCmd {
     this.context = context
     this.session = context.session
     this.Socket = context.Socket
-    this.registry = new context.Registry()
     this.init = new context.Init()
     this.firstRun = true
   }
@@ -109,6 +108,7 @@ export default class SocketDeployCmd {
     pendingUpdates[socket.name] += 1
     if (pendingUpdates[socket.name] > 1) {
       spinner.stop()
+      console.log("XXX", pendingUpdates)
       this.mainSpinner.start()
       debug(`not updating, update pending: ${pendingUpdates[socket.name]}`)
       return

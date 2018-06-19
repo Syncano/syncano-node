@@ -64,6 +64,62 @@ describe('Data', () => {
         })
     })
 
+    it.only('should be able to fetch objects list', () => {
+
+      const objects = [...Array(302).keys()].map(key => {
+        return {name: 'John Doe', id: key}
+      })
+
+      const first100 = objects.slice(0, 100)
+      const first100last = first100.slice(-1).pop().id
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {
+          objects: first100,
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`
+        })
+
+      const second100 = objects.slice(100, 200)
+      const second100last = second100.slice(-1).pop().id
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`)
+        .reply(200, {
+          objects: second100,
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`
+        })
+
+      const third100 = objects.slice(100, 200)
+      const third100last = third100.slice(-1).pop().id
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`)
+        .reply(200, {
+          objects: third100,
+          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`
+        })
+
+      const fourth100 = objects.slice(300, 302)
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`)
+        .reply(200, {
+          objects: fourth100,
+          next: null
+        })
+
+      return data.users
+        .list()
+        .then(objects => {
+          should(objects)
+            .be.Array()
+            .length(302)
+          should(objects)
+            .have.propertyByPath(0, 'name')
+            .which.is.String()
+          should(objects)
+            .have.propertyByPath(0, 'id')
+            .which.is.Number()
+        })
+    })
+
     it('should return [] when no objects were not found', () => {
       api
         .get(`/v2/instances/${instanceName}/classes/users/objects/`)

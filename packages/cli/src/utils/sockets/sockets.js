@@ -22,7 +22,6 @@ import logger from '../debug'
 import session from '../session'
 import utils from './utils'
 import Hosting from '../hosting'
-import Registry from '../registry'
 import { p, echo } from '../print-tools'
 import { getTemplate } from '../templates'
 import { CompileError, CompatibilityError } from '../errors'
@@ -154,6 +153,7 @@ class Socket {
 
     this.existRemotely = null
     this.existLocally = null
+    this.fromNPM = null
 
     // that looks stupid
     this.remote = {
@@ -253,12 +253,6 @@ class Socket {
       return Promise.reject(new Error('Socket with given name already exist!'))
     }
     return socket.init(templateName)
-  }
-
-  static publish (socketName, version) {
-    debug('publish')
-    const registry = new Registry()
-    return registry.publishSocket(socketName, version)
   }
 
   init (templateName) {
@@ -364,6 +358,9 @@ class Socket {
       this.existLocally = true
       this.localPath = this.settings.baseDir
       this.spec = this.settings.getFull()
+      if (this.localPath.indexOf('node_modules')) {
+        this.fromNPM = true
+      }
     }
   }
 
@@ -399,6 +396,9 @@ class Socket {
 
   getType () {
     if (this.existLocally) {
+      if (this.fromNPM) {
+        return { msg: 'installed via NPM', type: 'ok' }
+      }
       return { msg: 'local Socket', type: 'ok' }
     }
 
@@ -701,6 +701,7 @@ class Socket {
 
       const files = glob.sync(`**`, {
         cwd: envFolder,
+        dot: true,
         follow: true,
         nodir: true
       })
@@ -1121,20 +1122,6 @@ class Socket {
       })
       return options
     }
-  }
-
-  // Registry
-  bumpVersion (bumpType) {
-    const nextVersion = this.settings.bumpVersion(bumpType)
-    this.spec.version = nextVersion
-    return nextVersion
-  }
-
-  submit () {
-    debug('submit')
-    this.isCompatible()
-    const registry = new Registry()
-    return registry.submitSocket(this)
   }
 
   async socketEnvShouldBeUpdated () {

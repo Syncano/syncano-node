@@ -21,7 +21,6 @@ export default class SocketDeployCmd {
     this.context = context
     this.session = context.session
     this.Socket = context.Socket
-    this.registry = new context.Registry()
     this.firstRun = []
 
     this.mainSpinner = new GlobalSpinner(p(3)(`${format.grey('waiting...')}`))
