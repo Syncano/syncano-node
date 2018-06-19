@@ -18,8 +18,12 @@ class SocketSettings extends Settings {
   }
 
   readVersion () {
-    const pjson = require(`${path.join(this.baseDir, 'package.json')}`)
-    return pjson.version
+    try {
+      const pjson = require(`${path.join(this.baseDir, 'package.json')}`)
+      return pjson.version
+    } catch (err) {
+      return null
+    }
   }
 
   getScripts () {
