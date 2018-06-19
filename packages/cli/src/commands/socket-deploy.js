@@ -19,7 +19,6 @@ export default class SocketDeployCmd {
     this.context = context
     this.session = context.session
     this.Socket = context.Socket
-    this.registry = new context.Registry()
     this.init = new context.Init()
     this.firstRun = true
   }

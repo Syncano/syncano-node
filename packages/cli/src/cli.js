@@ -225,21 +225,6 @@ const setup = async () => {
     })
 
   program
-    .command('search [keyword]')
-    .group('Registry')
-    .description('Search for a specific Socket in the Sockets Registry')
-    .option('-l, --long', 'Display full descriptions')
-    .action((...options) => {
-      const [keyword] = options
-      trackAndDebug(options, { keyword })
-      if (!keyword) {
-        return program.outputHelp()
-      }
-      echo()
-      new commands.SocketSearch(context).run(options)
-    })
-
-  program
     .command('trace [socket_name]')
     .group('Project')
     .description('Trace Socket calls')
