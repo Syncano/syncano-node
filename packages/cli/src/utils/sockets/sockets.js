@@ -358,7 +358,7 @@ class Socket {
       this.existLocally = true
       this.localPath = this.settings.baseDir
       this.spec = this.settings.getFull()
-      if (this.localPath.indexOf('node_modules')) {
+      if (this.localPath.indexOf('node_modules') > -1) {
         this.fromNPM = true
       }
     }
