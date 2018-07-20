@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import format from 'chalk'
-import Table from 'cli-table2'
+import Table from 'cli-table3'
 import prettyBytes from 'pretty-bytes'
 import { echo, error, warning } from '../utils/print-tools'
 import Hosting from '../utils/hosting'
