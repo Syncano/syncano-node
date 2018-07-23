@@ -613,6 +613,26 @@ class Socket {
     })
   }
 
+  getAllFiles () {
+    // Ignore patterns from .syncanoignore file
+    let ignore = []
+    try {
+      ignore = fs.readFileSync(`${this.getCompiledScriptsFolder()}/.syncanoignore`, 'utf8').split('\n')
+    } catch (err) {}
+
+    return glob.sync(`**`, {
+      cwd: this.getCompiledScriptsFolder(),
+      ignore,
+      realpath: true,
+      nodir: true
+    }).map(file => {
+      return {
+        fullPath: file,
+        internalPath: file.replace(`${this.getCompiledScriptsFolder()}`, '')
+      }
+    })
+  }
+
   async createZip (params = {partial: true}) {
     debug('createZip', params.partial)
     return new Promise((resolve, reject) => {
@@ -644,34 +664,23 @@ class Socket {
         addMetaFiles()
       }
 
-      // Ignore patterns from .syncanoignore file
-      let ignore = []
-      try {
-        ignore = fs.readFileSync(`${this.getCompiledScriptsFolder()}/.syncanoignore`, 'utf8').split('\n')
-      } catch (err) {}
-
-      const files = glob.sync(`**`, {
-        cwd: this.getCompiledScriptsFolder(),
-        ignore,
-        realpath: true,
-        nodir: true
-      })
+      const files = this.getAllFiles()
 
       // Adding all files (besides those filtered out)
       files.forEach(file => {
         // with "internal" path
-        const fileNameWithPath = file.replace(`${this.getCompiledScriptsFolder()}`, '')
+        const fileNameWithPath = file.internalPath
         const remoteFile = this.remote.files ? this.remote.files[fileNameWithPath] : null
 
         if (remoteFile && params.partial) {
-          if (remoteFile.checksum !== md5(fs.readFileSync(file))) {
+          if (remoteFile.checksum !== md5(fs.readFileSync(file.fullPath))) {
             debug(`Adding file to archive: ${fileNameWithPath}`)
-            archive.file(file, { name: fileNameWithPath })
+            archive.file(file.fullPath, { name: fileNameWithPath })
           } else {
             debug(`Not adding file to archive (same checksum): ${fileNameWithPath}`)
           }
         } else {
-          archive.file(file, { name: fileNameWithPath })
+          archive.file(file.fullPath, { name: fileNameWithPath })
         }
       })
       archive.finalize()
@@ -803,8 +812,9 @@ class Socket {
       endpointPath += `${this.name}/`
     }
 
-    const allFiles = await this.listZipFiles(this.getSocketZip())
-    const numberOfFiles = allFiles.length
+    const zipFiles = await this.listZipFiles(this.getSocketZip())
+    const allFiles = await this.getAllFiles().map(file => file.internalPath)
+    const numberOfFiles = zipFiles.length
 
     if (numberOfFiles === 0 && this.isConfigSynced(config)) {
       debug('config is synced and nothing to update')
@@ -830,8 +840,8 @@ class Socket {
 
       const metadata = Object.assign({}, this.remote.metadata)
       form.append('metadata', JSON.stringify(metadata))
-
       form.append('zip_file_list', JSON.stringify(allFiles))
+
       if (numberOfFiles > 0) {
         form.append('zip_file', fs.createReadStream(this.getSocketZip()))
       }
