@@ -840,6 +840,8 @@ class Socket {
 
       const metadata = Object.assign({}, this.remote.metadata)
       form.append('metadata', JSON.stringify(metadata))
+
+      debug('zip_file_list', allFiles)
       form.append('zip_file_list', JSON.stringify(allFiles))
 
       if (numberOfFiles > 0) {
