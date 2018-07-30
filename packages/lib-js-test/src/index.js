@@ -70,9 +70,8 @@ function run (endpoint, ctx = {}, params = {}) {
     verifyRequest({args, config, meta: socketMeta})
   }
 
-  return new Promise(function (resolve, reject) {
-    let output = null
 
+  return new Promise((resolve, reject) => {
     const HttpResponse = function (code, data, mimetype) {
       let response = null
       if (mimetype === 'json/application') {
@@ -88,7 +87,8 @@ function run (endpoint, ctx = {}, params = {}) {
       return response
     }
 
-    const setResponse = function (response) {
+    const setResponse = (response) => {
+
       const processedResponse = response
       if (response.mimetype === 'application/json') {
         processedResponse.data = JSON.parse(response.data)
@@ -108,11 +108,9 @@ function run (endpoint, ctx = {}, params = {}) {
       } else {
         runFunc = require(path.join(compiledScriptsFolder, `${endpoint}.js`)).default
       }
-      output = runFunc({args, config, meta: socketMeta, HttpResponse, setResponse})
+      runFunc({args, config, meta: socketMeta, HttpResponse, setResponse})
     } catch (err) {
       reject(err)
-    } finally {
-      Promise.resolve(output).then(resolve)
     }
   })
 }
