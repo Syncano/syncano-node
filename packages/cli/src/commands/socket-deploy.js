@@ -78,6 +78,14 @@ export default class SocketDeployCmd {
     } catch (err) {
       if (err.response && err.response.data && err.response.data.detail) {
         error(4)(err.response.data.detail)
+      } else if (err.response && err.response.data && Array.isArray(err.response.data)) {
+        err.response.data.forEach((msg) => {
+          error(4)(msg)
+        })
+      } else if (err.response && err.response.data && typeof err.response.data === 'object') {
+        Object.keys(err.response.data).forEach(key => {
+          error(4)(`${key}: ${err.response.data[key][0]}`)
+        })
       } else {
         error(4)(err)
       }
