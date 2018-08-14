@@ -94,7 +94,7 @@ function run (socketEndpoint, ctx = {}, params = {}, callType = 'endpoint') {
   const mocks = params.mocks
 
   let socketMeta
-  switch(callType) {
+  switch (callType) {
     case 'endpoint':
       socketMeta = generateEndpointMeta(socketEndpoint, meta)
       break
@@ -117,14 +117,13 @@ function run (socketEndpoint, ctx = {}, params = {}, callType = 'endpoint') {
       }
       response.is = (responseType) => {
         if (run.verifyResponse !== false) {
-          return verifyResponse(endpoint, responseType, response)
+          return verifyResponse(socketEndpoint, responseType, response)
         }
       }
       return response
     }
 
     const setResponse = (response) => {
-
       const processedResponse = response
       if (response.mimetype === 'application/json') {
         processedResponse.data = JSON.parse(response.data)

@@ -209,18 +209,18 @@ describe('[commands] List Sockets', function () {
     describe('should print endpoint', function () {
       it('name', function () {
         sinon.assert.calledWith(interEcho,
-        `${format.white('endpoint')}: ${format.cyan(endpoint.getFullName())}`)
+          `${format.white('endpoint')}: ${format.cyan(endpoint.getFullName())}`)
       })
 
       it('description', function () {
         sinon.assert.calledWith(interEcho,
-        `${format.dim('description')}: ${endpoint.metadata.description || ''}`)
+          `${format.dim('description')}: ${endpoint.metadata.description || ''}`)
       })
 
       it('url', sinon.test(function () {
         const endpointUrl = `https://${instance}/${socketName}/${endpoint.name}/`
         sinon.assert.calledWith(interEcho,
-        `${format.dim('url')}: ${endpointUrl}`)
+          `${format.dim('url')}: ${endpointUrl}`)
       }))
     })
 
@@ -244,17 +244,17 @@ describe('[commands] List Sockets', function () {
 
       it('name', function () {
         sinon.assert.calledWith(interEcho,
-        `${format.dim('name')}: ${format.cyan(param) || ''}`)
+          `${format.dim('name')}: ${format.cyan(param) || ''}`)
       })
 
       it('description', function () {
         sinon.assert.calledWith(interEcho,
-        `${format.dim('description')}: ${endpoint.metadata.parameters[param].description || ''}`)
+          `${format.dim('description')}: ${endpoint.metadata.parameters[param].description || ''}`)
       })
 
       it('example', function () {
         sinon.assert.calledWith(interEcho,
-        `${format.dim('example')}: ${format.cyan.dim(endpoint.metadata.parameters[param].example)}`)
+          `${format.dim('example')}: ${format.cyan.dim(endpoint.metadata.parameters[param].example)}`)
       })
     })
   })

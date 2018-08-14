@@ -773,7 +773,7 @@ class Data extends QueryBuilder {
       .then(this.resolveRelatedModels.bind(this))
       .then(this._replaceCustomTypesWithValue.bind(this))
       .then(this._mapFields.bind(this)
-    )
+      )
   }
 
   /**

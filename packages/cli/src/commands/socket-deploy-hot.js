@@ -59,29 +59,29 @@ export default class SocketDeployCmd {
       .then((config) => {
         configs[socketFromList.name] = config
       }))
-    .then(() => this.deployProject())
-    .then((projectUpdateStatus) =>
-      Promise.all(this.socketList.map((socket) => this.deploySocket(socket, configs[socket.name])))
-    )
-    .then(() => {
-      debug('Starting stalker')
-      this.runStalker()
-      this.mainSpinner.queueSize += 1
-      this.mainSpinner.queueSize += this.socketList.length
-      this.mainSpinner.start()
+      .then(() => this.deployProject())
+      .then((projectUpdateStatus) =>
+        Promise.all(this.socketList.map((socket) => this.deploySocket(socket, configs[socket.name])))
+      )
+      .then(() => {
+        debug('Starting stalker')
+        this.runStalker()
+        this.mainSpinner.queueSize += 1
+        this.mainSpinner.queueSize += this.socketList.length
+        this.mainSpinner.start()
 
-      if (cmd.trace) {
-        const traces = new SocketTraceCmd(this.context, this.mainSpinner)
-        Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
-      }
-    })
-    .catch((err) => {
-      if (err.response && err.response.data && err.response.data.detail) {
-        error(4)(err.response.data.detail)
-      } else {
-        error(4)(err)
-      }
-    })
+        if (cmd.trace) {
+          const traces = new SocketTraceCmd(this.context, this.mainSpinner)
+          Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
+        }
+      })
+      .catch((err) => {
+        if (err.response && err.response.data && err.response.data.detail) {
+          error(4)(err.response.data.detail)
+        } else {
+          error(4)(err)
+        }
+      })
   }
 
   async deployProject () {

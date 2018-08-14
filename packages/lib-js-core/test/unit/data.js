@@ -65,7 +65,6 @@ describe('Data', () => {
     })
 
     it.only('should be able to fetch objects list', () => {
-
       const objects = [...Array(302).keys()].map(key => {
         return {name: 'John Doe', id: key}
       })

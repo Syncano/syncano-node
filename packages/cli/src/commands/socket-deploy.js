@@ -116,7 +116,7 @@ export default class SocketDeployCmd {
     pendingUpdates[socket.name] += 1
     if (pendingUpdates[socket.name] > 1) {
       spinner.stop()
-      console.log("XXX", pendingUpdates)
+      console.log('XXX', pendingUpdates)
       this.mainSpinner.start()
       debug(`not updating, update pending: ${pendingUpdates[socket.name]}`)
       return

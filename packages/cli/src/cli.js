@@ -35,7 +35,7 @@ const setup = async () => {
     .group('Basics')
     .description('Start a Syncano project in the current directory')
     .option('-i, --instance <name>',
-    'Instance you want to use for your project. If not provided, an Instance will be created')
+      'Instance you want to use for your project. If not provided, an Instance will be created')
     .action(async (...options) => {
       trackAndDebug(options)
       session.notAlreadyInitialized()
