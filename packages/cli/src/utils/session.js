@@ -160,7 +160,7 @@ export class Session {
     if (!this.settings.account.authenticated()) {
       echo()
       echo(4)('You are not logged in!')
-      echo(4)(`Type ${format.cyan('syncano-cli login')} for login to your account.`)
+      echo(4)(`Type ${format.cyan('npx s login')} for login to your account.`)
       echo()
       process.exit(1)
     }
@@ -188,7 +188,7 @@ export class Session {
 
         if (instanceName) return process.exit()
 
-        echo(4)(`Type ${format.cyan('syncano-cli attach')} to choose one of the existing instances.`)
+        echo(4)(`Type ${format.cyan('npx s attach')} to choose one of the existing instances.`)
         echo()
       }
       process.exit(1)
@@ -203,7 +203,7 @@ export class Session {
     if (!this.project) {
       echo()
       echo(4)('You have to attach this project to one of your instances.')
-      echo(4)(`Try ${format.cyan('syncano-cli attach')}.`)
+      echo(4)(`Try ${format.cyan('npx s attach')}.`)
       echo()
       process.exit()
     }
@@ -212,7 +212,7 @@ export class Session {
   hasProjectPath () {
     if (!this.projectPath) {
       echo()
-      echo(4)(`I don't see any project here. Try ${format.cyan('syncano-cli init')}.`)
+      echo(4)(`I don't see any project here. Try ${format.cyan('npx s init')}.`)
       echo()
       process.exit()
     }
@@ -223,7 +223,7 @@ export class Session {
     if (!socket.existLocally) {
       echo()
       echo(4)('File socket.yml was not found in a project directory!')
-      echo(4)(`Check your directory or try ${format.cyan('syncano-cli create')} to create a new Socket.`)
+      echo(4)(`Check your directory or try ${format.cyan('npx s create')} to create a new Socket.`)
       echo()
       process.exit()
     }

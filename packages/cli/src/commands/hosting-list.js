@@ -18,7 +18,7 @@ class HostingListCmd {
   static printNoHostingsInfo () {
     echo()
     echo(4)('You don\'t have any hostings!')
-    echo(4)(`Type ${format.cyan('syncano-cli hosting add')} to add hosting for your app!`)
+    echo(4)(`Type ${format.cyan('npx s hosting add')} to add hosting for your app!`)
     echo()
   }
 
@@ -56,7 +56,7 @@ class HostingListCmd {
 
     if (hosting.error) {
       const errorResponses = {
-        404: `Type ${format.green(`syncano-cli hosting sync ${hosting.name}`)} to sync your hosting with server.`
+        404: `Type ${format.green(`npx s hosting sync ${hosting.name}`)} to sync your hosting with server.`
       }
 
       echo()

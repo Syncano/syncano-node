@@ -144,7 +144,7 @@ describe('[commands] List Sockets', function () {
       socketList.printSockets([])
 
       sinon.assert.calledWith(interEcho, 'No Socket was found on server nor in config!')
-      sinon.assert.calledWith(interEcho, `Type ${format.cyan('syncano-cli create <name>')} to create new one.`)
+      sinon.assert.calledWith(interEcho, `Type ${format.cyan('npx s create <name>')} to create new one.`)
     })
 
     it('should call printSocket with proper parameter for each socket', function () {
