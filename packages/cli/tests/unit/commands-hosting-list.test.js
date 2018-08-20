@@ -144,7 +144,7 @@ describe('[commands] List Hosting', function () {
     it('should print proper responses', function () {
       HostingList.printNoHostingsInfo()
 
-      sinon.assert.calledWith(interEcho, `Type ${format.cyan('syncano-cli hosting add')} to add hosting for your app!`)
+      sinon.assert.calledWith(interEcho, `Type ${format.cyan('npx s hosting add')} to add hosting for your app!`)
     })
   })
 
@@ -241,7 +241,7 @@ describe('[commands] List Hosting', function () {
         HostingList.printHosting(hosting)
 
         sinon.assert.calledWith(interEcho,
-          `Type ${format.green(`syncano-cli hosting sync ${hosting.name}`)} to sync your hosting with server.`)
+          `Type ${format.green(`npx s hosting sync ${hosting.name}`)} to sync your hosting with server.`)
       })
     })
   })

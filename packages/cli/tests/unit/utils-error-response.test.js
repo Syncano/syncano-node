@@ -137,7 +137,7 @@ describe('[error-response]', function () {
         ErrorResponse.handleRequestError(err, 'This', 'thing')
 
         sinon.assert.calledTwice(echo)
-        sinon.assert.calledWith(echo, `Did you run ${format.green('syncano-cli deploy')} command?`)
+        sinon.assert.calledWith(echo, `Did you run ${format.green('npx s deploy')} command?`)
       }
     })
   })
