@@ -1,5 +1,5 @@
 const uniqueInstance = () => {
-    // Move it it some other store/utils?
+  // Move it it some other store/utils?
   const adjs = [
     'autumn', 'hidden', 'bitter', 'misty', 'silent', 'empty', 'dry', 'dark',
     'summer', 'icy', 'delicate', 'quiet', 'white', 'cool', 'spring', 'winter',

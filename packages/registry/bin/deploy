@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-export SYNCANO_AUTH_KEY=$PRODUCTION_SYNCANO_AUTH_KEY
-export SYNCANO_PROJECT_INSTANCE=registry-$CIRCLE_BRANCH
-../cli/lib/cli.js deploy
-
-exit $?

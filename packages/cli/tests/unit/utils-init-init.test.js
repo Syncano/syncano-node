@@ -38,7 +38,7 @@ describe('[commands] init', function () {
     it('should call add project method with proper parameters', async function () {
       await init.addConfigFiles(projectParams)
 
-      sinon.assert.calledWith(addProject, path.join(process.cwd(), 'syncano'), projectParams)
+      sinon.assert.calledWith(addProject, path.join(process.cwd()), projectParams)
     })
   })
 })

@@ -3,6 +3,7 @@
   "version": "0.12.1",
   "description": "Interact with your Syncano Sockets.",
   "main": "lib/index.js",
+  "types": "lib/index.d.js",
   "unpkg": "dist/index.js",
   "author": "Syncano Inc.",
   "license": "MIT",
@@ -30,17 +31,17 @@
   "devDependencies": {
     "@types/jest": "22.2.3",
     "@types/node": "9.6.7",
-    "axios-mock-adapter": "^1.15.0",
-    "cross-env": "5.1.4",
-    "isparta": "4.0.0",
+    "axios-mock-adapter": "1.15.0",
+    "cross-env": "^5.1.4",
+    "isparta": "^4.0.0",
     "jest": "22.4.3",
-    "jsdom": "11.9.0",
-    "should": "13.2.1",
-    "ts-jest": "22.4.4",
-    "tslint": "5.9.1",
-    "tslint-eslint-rules": "^5.1.0",
+    "jsdom": "11.10.0",
+    "should": "^13.2.1",
+    "ts-jest": "22.4.5",
+    "tslint": "5.10.0",
+    "tslint-eslint-rules": "5.2.0",
     "typescript": "2.8.3",
-    "webpack": "^4.6.0",
-    "webpack-cli": "^2.0.15"
+    "webpack": "4.8.1",
+    "webpack-cli": "2.1.3"
   }
 }

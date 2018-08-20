@@ -118,7 +118,6 @@ describe('[Class] Socket', function () {
 
   describe('local', function () {
     let removeDirectory = null
-    let uninstallSocket = null
     let uninstallRemote = null
 
     const socket = {
@@ -130,21 +129,12 @@ describe('[Class] Socket', function () {
 
     beforeEach(function () {
       removeDirectory = sinon.stub(socketUtils, 'deleteFolderRecursive')
-      uninstallSocket = sinon.stub(session.settings.project, 'uninstallSocket')
       uninstallRemote = sinon.stub(Sockets, 'uninstallRemote').returns(Promise.resolve({ name: socketName }))
     })
 
     afterEach(function () {
       socketUtils.deleteFolderRecursive.restore()
-      session.settings.project.uninstallSocket.restore()
       uninstallRemote.restore()
-    })
-
-    it('should call method to remove socket from local config', async function () {
-      socket.isProjectRegistryDependency = true
-      Sockets.uninstall(socket)
-
-      sinon.assert.calledWith(uninstallSocket, socketName)
     })
 
     it('should call method to remove socket folder', function () {
