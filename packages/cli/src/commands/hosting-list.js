@@ -37,6 +37,9 @@ class HostingListCmd {
     const cname = typeof hosting.getCnameURL === 'function' && hosting.getCnameURL()
     echo(11)(`${format.dim('name')}: ${format.cyan(hosting.name)}`)
 
+    echon(2)(`   ${format.dim('local path')}:`)
+    echo(` ${format.cyan(hosting.src)}`)
+
     if (hosting.existRemotely) {
       echo(12)(`${format.dim('URL')}: ${format.cyan(hosting.getURL())}`)
     }
