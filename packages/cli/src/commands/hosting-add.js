@@ -72,7 +72,7 @@ class HostingAdd {
 
     echo()
     if (!this.sync) {
-      echo(4)(`To sync files use: ${format.cyan(`syncano-cli hosting sync ${this.hostingName}`)}`)
+      echo(4)(`To sync files use: ${format.cyan(`npx s hosting sync ${this.hostingName}`)}`)
       echo()
       return process.exit()
     }
