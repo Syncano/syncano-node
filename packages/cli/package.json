@@ -6,7 +6,15 @@
   "license": "MIT",
   "keywords": [
     "syncano",
-    "baas"
+    "baas",
+    "frontend",
+    "frontend for react",
+    "javascript backend",
+    "backend as a service",
+    "serverless",
+    "serverless framework",
+    "serverless applications",
+    "serverless solutions"
   ],
   "engines": {
     "node": ">=8.9.0"
