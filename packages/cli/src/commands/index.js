@@ -24,6 +24,7 @@ import ComponentLink from './component-link'
 import InstanceList from './instance-list'
 import InstanceCreate from './instance-create'
 import InstanceDelete from './instance-delete'
+import SysInfo from './sysinfo'
 
 export default {
   Attach,
@@ -51,5 +52,6 @@ export default {
   ComponentLink,
   InstanceList,
   InstanceCreate,
-  InstanceDelete
+  InstanceDelete,
+  SysInfo
 }
