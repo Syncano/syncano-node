@@ -1,9 +1,9 @@
 import os from 'os'
-import child_process from 'child_process'
+import childProcess from 'child_process'
 import format from 'chalk'
 
 import logger from '../utils/debug'
-import { p, echo, echon } from '../utils/print-tools'
+import { echo, echon } from '../utils/print-tools'
 import pjson from '../../package.json'
 
 const { debug } = logger('cmd-sysinfo')
@@ -16,7 +16,7 @@ export default class SysInfoCmd {
   }
 
   async run ([cmd]) {
-    const npmVersion = child_process.spawnSync('npm', ['-v'])
+    const npmVersion = childProcess.spawnSync('npm', ['-v'])
       .stdout
       .toString()
       .trim()
