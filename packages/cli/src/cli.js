@@ -31,6 +31,15 @@ const setup = async () => {
     .version(pjson.version)
 
   program
+    .command('info')
+    .group('Basics')
+    .description('Info about current project/instance/user etc.')
+    .action(async (...options) => {
+      trackAndDebug(options)
+      new commands.Info(context).run(options)
+    })
+
+  program
     .command('init')
     .group('Basics')
     .description('Start a Syncano project in the current directory')
