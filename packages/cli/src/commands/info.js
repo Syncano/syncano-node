@@ -1,7 +1,7 @@
 import format from 'chalk'
 
 import logger from '../utils/debug'
-import { echo, echon, warning} from '../utils/print-tools'
+import { echo, echon, warning } from '../utils/print-tools'
 
 const { debug } = logger('cmd-info')
 

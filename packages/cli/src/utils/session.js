@@ -29,7 +29,7 @@ export class Session {
     this.ENDPOINT_HOST = this.HOST === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
   }
 
-  getFullName() {
+  getFullName () {
     return `${this.userFirstName} ${this.userLastName}`
   }
 
