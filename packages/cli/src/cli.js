@@ -78,6 +78,15 @@ const setup = async () => {
     })
 
   program
+    .command('sysinfo')
+    .group('Basics')
+    .description('Sys info for debug purpose')
+    .action((...options) => {
+      trackAndDebug(options)
+      new commands.SysInfo(context).run(options)
+    })
+
+  program
     .command('hot [socket_name]')
     .group('Project')
     .description('Hot deploy to make your project continuously synced to the Syncano cloud')
