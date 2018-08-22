@@ -29,6 +29,10 @@ export class Session {
     this.ENDPOINT_HOST = this.HOST === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
   }
 
+  getFullName() {
+    return `${this.userFirstName} ${this.userLastName}`
+  }
+
   getSpaceHost () {
     if (this.project && this.project.instance) {
       return `${this.project.instance}.${this.ENDPOINT_HOST}`
@@ -101,6 +105,9 @@ export class Session {
     try {
       const details = await this.connection.account.get(this.settings.account.getAuthKey())
       this.userId = details.id
+      this.userEmail = details.email
+      this.userFirstName = details.first_name
+      this.userLastName = details.last_name
     } catch (err) {}
   }
 

@@ -1,4 +1,5 @@
 import Attach from './attach'
+import Info from './info'
 import Init from './init'
 import Login from './login'
 import Logout from './logout'
@@ -28,6 +29,7 @@ import SysInfo from './sysinfo'
 
 export default {
   Attach,
+  Info,
   Init,
   Login,
   Logout,
