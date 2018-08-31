@@ -94,7 +94,7 @@ describe('Client', function () {
     const params = {firstname: getRandomString(), lastname: getRandomString()}
     const expectedResponse = `Hello ${params.firstname} ${params.lastname}!`
 
-    const fullUrl = `https://api.syncano.link/v2/instances/${testInstance}/endpoints/sockets/hello/hello/`
+    const fullUrl = `https://${process.env.E2E_SYNCANO_HOST}/v2/instances/${testInstance}/endpoints/sockets/hello/hello/`
     const resp = await client.post(fullUrl, params)
     assert(resp.message === expectedResponse)
   })
