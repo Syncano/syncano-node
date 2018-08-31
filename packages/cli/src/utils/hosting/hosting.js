@@ -143,7 +143,8 @@ class Hosting {
     const paramsToUpdate = {
       name: this.name,
       domains: this.domains,
-      config: this.config
+      config: this.config,
+      auth: this.auth
     }
 
     const response = await axios.request({
@@ -227,6 +228,7 @@ class Hosting {
       this.description = hosting.description
       this.domains = hosting.domains
       this.config.browser_router = hosting.config.browser_router || false
+      this.auth = hosting.auth
       this.isUpToDate = await this.areFilesUpToDate()
     } else {
       this.existRemotely = false
@@ -265,6 +267,7 @@ class Hosting {
       this.existLocally = true
       this.src = localHostingSettings.src
       this.cname = localHostingSettings.cname
+      this.auth = localHostingSettings.auth
       this.path = path.join(session.projectPath, this.src, path.sep)
       this.url = this.getURL(this.name)
 

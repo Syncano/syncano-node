@@ -51,7 +51,11 @@ export default class SyncanoClient {
   } = {
     protocol: 'https'
   }): string {
-    return buildURL(`${options.protocol}://${this.instanceName}.${this.host}/${path}/`, {
+    let baseURL = `${options.protocol}://${this.instanceName}.${this.host}/${path}/`
+    if (path.startsWith('http')) {
+      baseURL = path
+    }
+    return buildURL(baseURL, {
       user_key: this.token,
       ...params
     })

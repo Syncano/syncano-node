@@ -89,4 +89,13 @@ describe('Client', function () {
     const resp = await client.post('hello/hello', params)
     assert(resp.message === expectedResponse)
   })
+
+  it('post to "full url" endpoint with arguments', async () => {
+    const params = {firstname: getRandomString(), lastname: getRandomString()}
+    const expectedResponse = `Hello ${params.firstname} ${params.lastname}!`
+
+    const fullUrl = `https://api.syncano.link/v2/instances/${testInstance}/endpoints/sockets/hello/hello/`
+    const resp = await client.post(fullUrl, params)
+    assert(resp.message === expectedResponse)
+  })
 })
