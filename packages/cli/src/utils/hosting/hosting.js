@@ -107,11 +107,10 @@ class Hosting {
       }
     }
 
+    this.config.browser_router = params.browser_router
     const paramsToUpdate = {
       name: this.name,
-      config: {
-        browser_router: params.browser_router
-      },
+      config: this.config,
       domains
     }
 
@@ -227,6 +226,7 @@ class Hosting {
       this.name = hosting.name
       this.description = hosting.description
       this.domains = hosting.domains
+      this.config = hosting.config || {}
       this.config.browser_router = hosting.config.browser_router || false
       this.auth = hosting.auth
       this.isUpToDate = await this.areFilesUpToDate()
