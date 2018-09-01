@@ -5,8 +5,8 @@ import QueryBuilder from './query-builder'
  * @property {Function}
  */
 class Instance extends QueryBuilder {
-  url (instanceName) {
-    const baseUrl = `${this._getSyncanoURL()}/instances/`
+  url (instanceName, apiVersion) {
+    const baseUrl = `${this._getSyncanoURL(apiVersion)}/instances/`
     return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
   }
 
@@ -49,7 +49,7 @@ class Instance extends QueryBuilder {
       const headers = {
         'X-API-KEY': this.instance.accountKey
       }
-      fetch(this.url(instanceName), {}, headers)
+      fetch(this.url(instanceName, 'v3'), {}, headers)
         .then(resolve)
         .catch(reject)
     })
@@ -70,7 +70,7 @@ class Instance extends QueryBuilder {
       const headers = {
         'X-API-KEY': this.instance.accountKey
       }
-      fetch(this.url(), {}, headers)
+      fetch(this.url('', 'v3'), {}, headers)
         .then(response => {
           resolve(response.objects)
         })
