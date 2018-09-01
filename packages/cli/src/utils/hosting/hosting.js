@@ -36,11 +36,10 @@ class HostingFile {
 }
 
 class Hosting {
-  constructor (hostingName, socket) {
-    debug('Hosting.constructor', hostingName, socket)
+  constructor (hostingName) {
+    debug('Hosting.constructor', hostingName)
 
     this.name = hostingName
-    this.socket = socket || null
     this.path = null
 
     this.existRemotely = null
@@ -50,6 +49,9 @@ class Hosting {
     this.editHostingURL = `https://${session.getHost()}${this.hostingURL}${this.name}/`
     this.hostingHost = session.getHost() === 'api.syncano.rocks' ? 'syncano.ninja' : 'syncano.site'
     this.config = {}
+
+    // Remote state
+    this.remote = {}
 
     this.loadLocal()
   }
@@ -159,27 +161,21 @@ class Hosting {
   }
 
   async delete () {
-    if (!this.socket) {
-      await axios.request({
-        url: this.editHostingURL,
-        method: 'DELETE',
-        headers: {
-          'X-Api-Key': session.settings.account.getAuthKey()
-        }
-      })
-      session.settings.project.deleteHosting(this.name)
-      return this
-    }
+    await axios.request({
+      url: this.editHostingURL,
+      method: 'DELETE',
+      headers: {
+        'X-Api-Key': session.settings.account.getAuthKey()
+      }
+    })
+    session.settings.project.deleteHosting(this.name)
+    return this
   }
 
-  static get (hostingName, socket) {
+  static get (hostingName) {
     debug(`get ${hostingName}`)
-    const hosting = new Hosting(hostingName, socket)
+    const hosting = new Hosting(hostingName)
     return hosting.loadRemote()
-  }
-
-  static listLocal (socket) {
-    return socket.settings.listHosting()
   }
 
   static listFromProject () {
@@ -187,14 +183,11 @@ class Hosting {
   }
 
   // list all hostings (mix of locally definde and installed on server)
-  static async list (socket) {
+  static async list () {
     debug('list()')
-    if (!socket) {
-      const projectHostings = Hosting.listFromProject()
-      debug('projectHostings', projectHostings)
-      const promises = projectHostings.map((hosting) => Hosting.get(hosting.name))
-      return Promise.all(promises)
-    }
+    const projectHostings = Hosting.listFromProject()
+    debug('projectHostings', projectHostings)
+    return Promise.all(projectHostings.map((hosting) => Hosting.get(hosting.name)))
   }
 
   static getDirectories () {
@@ -223,12 +216,12 @@ class Hosting {
     debug('setRemoteState', hosting.name)
     if (hosting && typeof hosting === 'object') {
       this.existRemotely = true
-      this.name = hosting.name
-      this.description = hosting.description
-      this.domains = hosting.domains
-      this.config = hosting.config || {}
-      this.config.browser_router = hosting.config.browser_router || false
-      this.auth = hosting.auth
+      this.remote.name = hosting.name
+      this.remote.description = hosting.description
+      this.remote.domains = hosting.domains
+      this.remote.config = hosting.config || {}
+      this.remote.config.browser_router = hosting.config.browser_router || false
+      this.remote.auth = hosting.auth
       this.isUpToDate = await this.areFilesUpToDate()
     } else {
       this.existRemotely = false
@@ -250,28 +243,19 @@ class Hosting {
 
   loadLocal () {
     debug('loadLocal()')
-    let localHostingSettings = {}
-    if (this.socket) {
-      if (this.socket.settings.loaded) {
-        localHostingSettings = this.socket.settings.getHosting(this.name)
+    const localHostingSettings = session.settings.project.getHosting(this.name)
+
+    if (localHostingSettings) {
+      if (Object.keys(localHostingSettings).length > 0) {
+        this.existLocally = true
+        this.src = localHostingSettings.src
+        this.cname = localHostingSettings.cname
+        this.auth = localHostingSettings.auth
+        this.path = path.join(session.projectPath, this.src, path.sep)
+        this.url = this.getURL(this.name)
+
+        this.config = localHostingSettings.config || {}
       }
-    } else {
-      localHostingSettings = session.settings.project.getHosting(this.name)
-    }
-
-    if (!localHostingSettings) {
-      return
-    }
-
-    if (Object.keys(localHostingSettings).length > 0) {
-      this.existLocally = true
-      this.src = localHostingSettings.src
-      this.cname = localHostingSettings.cname
-      this.auth = localHostingSettings.auth
-      this.path = path.join(session.projectPath, this.src, path.sep)
-      this.url = this.getURL(this.name)
-
-      this.config = localHostingSettings.config || {}
     }
   }
 
