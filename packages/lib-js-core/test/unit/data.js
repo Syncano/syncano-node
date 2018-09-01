@@ -41,7 +41,7 @@ describe('Data', () => {
 
     it('should be able to fetch objects list', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 10}) // eslint-disable-line camelcase
         .reply(200, {
           objects: [{name: 'John Doe', id: 3}],
@@ -64,7 +64,7 @@ describe('Data', () => {
         })
     })
 
-    it.only('should be able to fetch objects list', () => {
+    it('should be able to fetch objects list', () => {
       const objects = [...Array(302).keys()].map(key => {
         return {name: 'John Doe', id: key}
       })
@@ -72,33 +72,33 @@ describe('Data', () => {
       const first100 = objects.slice(0, 100)
       const first100last = first100.slice(-1).pop().id
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {
           objects: first100,
-          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`
+          next: `/v3/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`
         })
 
       const second100 = objects.slice(100, 200)
       const second100last = second100.slice(-1).pop().id
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`)
         .reply(200, {
           objects: second100,
-          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`
+          next: `/v3/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`
         })
 
       const third100 = objects.slice(100, 200)
       const third100last = third100.slice(-1).pop().id
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`)
         .reply(200, {
           objects: third100,
-          next: `/v2/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`
+          next: `/v3/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`
         })
 
       const fourth100 = objects.slice(300, 302)
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`)
         .reply(200, {
           objects: fourth100,
           next: null
@@ -121,7 +121,7 @@ describe('Data', () => {
 
     it('should return [] when no objects were not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 5}) // eslint-disable-line camelcase
         .reply(200, {objects: [], next: null})
 
@@ -139,7 +139,7 @@ describe('Data', () => {
       const date = new Date().toISOString()
 
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {
           objects: [
             {
@@ -156,13 +156,13 @@ describe('Data', () => {
 
     it('should load next page', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 2}) // eslint-disable-line camelcase
         .reply(200, {
           objects: [{id: 1}],
-          next: `/v2/instances/${instanceName}/classes/users/objects/?page_size=2&last_pk=100`
+          next: `/v3/instances/${instanceName}/classes/users/objects/?page_size=2&last_pk=100`
         })
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 2, last_pk: 100}) // eslint-disable-line camelcase
         .reply(200, {objects: [{id: 2}], next: null})
 
@@ -199,7 +199,7 @@ describe('Data', () => {
 
     it('should be able to fetch single object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: [{name: 'John Doe', id: 3}]})
 
@@ -208,7 +208,7 @@ describe('Data', () => {
 
     it('should return null when object was not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: []})
 
@@ -225,7 +225,7 @@ describe('Data', () => {
 
     it('should be able to fetch single object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: [{name: 'John Doe', id: 3}]})
 
@@ -234,7 +234,7 @@ describe('Data', () => {
 
     it('should throw error when object was not found', async () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(404)
 
@@ -254,7 +254,7 @@ describe('Data', () => {
       const user = {name: 'John'}
 
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({username: {_eq: 'john.doe'}}),
           page_size: 1 // eslint-disable-line camelcase
@@ -271,7 +271,7 @@ describe('Data', () => {
       const user = {username: 'john.doe', name: 'John'}
 
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({query, page_size: 1})
         .reply(404)
         .post('/v2/instances/testInstance/classes/users/objects/', user)
@@ -296,7 +296,7 @@ describe('Data', () => {
       const user = {username: 'john.doe', name: 'John'}
 
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({query, page_size: 1})
         .reply(200, {objects: [{name: 'John Doe', id: 3}], next: null})
         .patch(`/v2/instances/${instanceName}/classes/users/objects/3/`)
@@ -313,7 +313,7 @@ describe('Data', () => {
       const user = {username: 'john.doe', name: 'John'}
 
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({query, page_size: 1})
         .reply(404)
         .post('/v2/instances/testInstance/classes/users/objects/', user)
@@ -335,7 +335,7 @@ describe('Data', () => {
 
     it('should be able to fetch single object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 7}}),
           page_size: 1 // eslint-disable-line camelcase
@@ -347,7 +347,7 @@ describe('Data', () => {
 
     it('should be able to fetch objects list', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
@@ -363,7 +363,7 @@ describe('Data', () => {
 
     it('should return null when object was not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 5}}),
           page_size: 1 // eslint-disable-line camelcase
@@ -375,7 +375,7 @@ describe('Data', () => {
 
     it('should return [] when no objects were found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
@@ -394,7 +394,7 @@ describe('Data', () => {
 
     it('should be able to fetch single object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 7}}),
           page_size: 1 // eslint-disable-line camelcase
@@ -406,7 +406,7 @@ describe('Data', () => {
 
     it('should be able to fetch objects list', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
@@ -422,7 +422,7 @@ describe('Data', () => {
 
     it('should throw error when object was not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           page_size: 1, // eslint-disable-line camelcase
           query: JSON.stringify({id: {_eq: 5}})
@@ -524,7 +524,7 @@ describe('Data', () => {
 
     it('should extend reference with object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
         .reply(200, {
           objects: [
             {
@@ -559,7 +559,7 @@ describe('Data', () => {
 
     it('should extend relation with array of objects', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
         .reply(200, {
           objects: [
             {
@@ -580,7 +580,7 @@ describe('Data', () => {
             }
           ]
         })
-        .get(`/v2/instances/${instanceName}/classes/comment/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/comment/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [1, 2]}})
         })
@@ -605,7 +605,7 @@ describe('Data', () => {
 
     it('should throw error when extended field has no target', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
         .reply(200, {
           objects: [
             {
@@ -744,7 +744,7 @@ describe('Data', () => {
 
     it('should be able to update objects by query', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({likes: {_gt: 100}})
         })
@@ -823,7 +823,7 @@ describe('Data', () => {
       const ids = [1, 4]
 
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({likes: {_gt: 100}})
         })
@@ -861,7 +861,7 @@ describe('Data', () => {
 
     it('should be able to whitelist fields', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {objects: [{name: 'John', id: 2}]})
 
       return data.users
@@ -872,7 +872,7 @@ describe('Data', () => {
 
     it('should be able to map field names', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {objects: [{name: 'John', id: 2}]})
 
       return data.users
@@ -883,7 +883,7 @@ describe('Data', () => {
 
     it('should be able to whitelist fields passed as array', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {objects: [{name: 'John', views: 100, id: 2}]})
 
       return data.users
@@ -894,7 +894,7 @@ describe('Data', () => {
 
     it('should work with nested array of objects', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {objects: [
           {
             name: 'John',
@@ -1015,7 +1015,7 @@ describe('Data', () => {
 
     it('should be able to take column values', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {objects: [{name: 'John', id: 2}, {name: 'Jane', id: 3}]})
 
       return data.users.pluck('name').should.become(['John', 'Jane'])
@@ -1031,7 +1031,7 @@ describe('Data', () => {
 
     it('should be able to take column value of single record', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1})
         .reply(200, {objects: [{name: 'John', id: 2}]})
 
