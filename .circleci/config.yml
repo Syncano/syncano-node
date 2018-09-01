@@ -58,23 +58,8 @@ jobs:
 
       - restore_cache:
           keys:
-          - v9-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
-          - v9-dependencies-registry-organization
-
-      - restore_cache:
-          keys:
-          - v9-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
-          - v9-dependencies-registry-registry
-
-      - restore_cache:
-          keys:
           - v9-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
           - v9-dependencies-test-tools
-
-      - restore_cache:
-          keys:
-          - v9-dependencies-registry-{{ checksum "packages/registry/package.json" }}
-          - v9-dependencies-registry
 
       - run: npm install
       - run: npm run bootstrap
@@ -126,21 +111,6 @@ jobs:
           paths:
             - packages/template-socket-es6/node_modules
           key: v9-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
-
-      - save_cache:
-          paths:
-            - packages/registry/syncano/organization/node_modules
-          key: v9-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
-
-      - save_cache:
-          paths:
-            - packages/registry/syncano/registry/node_modules
-          key: v9-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
-
-      - save_cache:
-          paths:
-            - packages/registry/node_modules
-          key: v9-dependencies-registry-{{ checksum "packages/registry/package.json" }}
 
       - save_cache:
           paths:
