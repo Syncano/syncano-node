@@ -51,7 +51,9 @@ class Hosting {
     this.config = {}
 
     // Remote state
-    this.remote = {}
+    this.remote = {
+      domains: []
+    }
 
     this.loadLocal()
   }
@@ -93,23 +95,42 @@ class Hosting {
   }
 
   hasCNAME (cname) {
-    return this.domains.indexOf(cname) > -1
+    return this.remote.domains.indexOf(cname) > -1
+  }
+
+  updateHosting () {
+    const params = {
+      src: this.src,
+      cname: this.cname,
+      config: {
+        browser_router: this.browser_router || false
+      }
+    }
+    if (!this.cname) {
+      delete params.cname
+    }
+    session.settings.project.updateHosting(this.name, params)
   }
 
   async configure (params) {
-    const domains = this.domains
-    if (params.cname && this.domains.indexOf(params.cname) < 0) {
+    const domains = this.remote.domains
+    if (params.cname && domains.indexOf(params.cname) < 0) {
       domains.push(params.cname)
     }
 
     if (params.removeCNAME) {
+      this.cname = null
       const cnameToRemoveIndex = domains.indexOf(params.removeCNAME)
       if (cnameToRemoveIndex > -1) {
         domains.splice(cnameToRemoveIndex, 1)
       }
     }
 
+    this.cname = params.cname
+    this.domains = domains
     this.config.browser_router = params.browser_router
+    this.updateHosting()
+
     const paramsToUpdate = {
       name: this.name,
       config: this.config,
@@ -124,7 +145,6 @@ class Hosting {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-
     return this.setRemoteState(response.data)
   }
 
@@ -453,7 +473,7 @@ class Hosting {
   }
 
   getCNAME () {
-    return _.find(this.domains, (domain) => domain.indexOf('.') !== -1)
+    return _.find(this.remote.domains, (domain) => domain.indexOf('.') !== -1)
   }
 
   getCnameURL () {

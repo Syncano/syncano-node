@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import readdirp from 'readdirp'
 import YAML from 'js-yaml'
 import fs from 'fs'
@@ -72,6 +73,12 @@ export default class ProjectSettings extends Settings {
   addHosting (hostingName, params) {
     if (!this.attributes.hosting) this.attributes.hosting = {}
     this.attributes.hosting[hostingName] = params
+    this.save()
+  }
+
+  updateHosting (hostingName, params) {
+    if (!this.attributes.hosting) this.attributes.hosting = {}
+    this.attributes.hosting[hostingName] = _.extend(this.attributes.hosting[hostingName], params)
     this.save()
   }
 
