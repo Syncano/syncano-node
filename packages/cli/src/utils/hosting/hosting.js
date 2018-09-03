@@ -145,7 +145,7 @@ class Hosting {
       name: this.name,
       domains: this.domains,
       config: this.config,
-      auth: this.auth
+      auth: this.auth || {}
     }
 
     const response = await axios.request({
