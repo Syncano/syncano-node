@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/Syncano/syncano-node/compare/v0.12.1...v0.13.0) (2018-09-06)
+
+
+### Bug Fixes
+
+* **ci:** no registry cache ([2b34ab7](https://github.com/Syncano/syncano-node/commit/2b34ab7))
+* **circleci:** change all node images to 9.11.1 ([eab4148](https://github.com/Syncano/syncano-node/commit/eab4148))
+* **circleci:** latest version breaks build ([871ae21](https://github.com/Syncano/syncano-node/commit/871ae21))
+* **circleci:** remove invalid test ([1dc96a1](https://github.com/Syncano/syncano-node/commit/1dc96a1))
+* **cli:** all socket files ([366a5b9](https://github.com/Syncano/syncano-node/commit/366a5b9))
+* **cli:** checking socket source ([4fd7a5a](https://github.com/Syncano/syncano-node/commit/4fd7a5a))
+* **cli:** configuring hosting ([951da2c](https://github.com/Syncano/syncano-node/commit/951da2c))
+* **cli:** double export ([c9db955](https://github.com/Syncano/syncano-node/commit/c9db955))
+* **cli:** hosting config ([bf1b50f](https://github.com/Syncano/syncano-node/commit/bf1b50f))
+* **cli:** imports ([583027c](https://github.com/Syncano/syncano-node/commit/583027c))
+* **cli:** lint ([a6dc753](https://github.com/Syncano/syncano-node/commit/a6dc753))
+* **cli:** loading package.json ([1c5fb60](https://github.com/Syncano/syncano-node/commit/1c5fb60))
+* **cli:** old imports ([6b603a6](https://github.com/Syncano/syncano-node/commit/6b603a6))
+* **cli:** removing registry ([830536a](https://github.com/Syncano/syncano-node/commit/830536a))
+* **cli:** removing registry tests ([5beba1e](https://github.com/Syncano/syncano-node/commit/5beba1e))
+* **cli:** style ([3626f89](https://github.com/Syncano/syncano-node/commit/3626f89))
+* **cli:** tests ([d88959a](https://github.com/Syncano/syncano-node/commit/d88959a))
+* **cli:** tests ([9d4b609](https://github.com/Syncano/syncano-node/commit/9d4b609))
+* **cli:** update hosting without loosing config ([f4705a9](https://github.com/Syncano/syncano-node/commit/f4705a9))
+* **cli:** wrong import ([c6a8530](https://github.com/Syncano/syncano-node/commit/c6a8530))
+* **cli:tests:** no more tests of registry ([3d4c5e2](https://github.com/Syncano/syncano-node/commit/3d4c5e2))
+* **client:** include src in npm package ([4d35211](https://github.com/Syncano/syncano-node/commit/4d35211))
+* **codecov:** exclude jest and webpack config ([8749f81](https://github.com/Syncano/syncano-node/commit/8749f81))
+* **core:** unit tests ([0abf9e7](https://github.com/Syncano/syncano-node/commit/0abf9e7))
+* **lib-js-client:** add missing types property ([cb3a3a3](https://github.com/Syncano/syncano-node/commit/cb3a3a3))
+* typo ([47de14f](https://github.com/Syncano/syncano-node/commit/47de14f))
+* **lib-js-client:** invalid ts-jest path ([8370376](https://github.com/Syncano/syncano-node/commit/8370376))
+* **lib-js-client:** invalid ts-jest path ([a8a79fa](https://github.com/Syncano/syncano-node/commit/a8a79fa))
+* **lib-js-client:** run unit tests, ignore spec files in npm package ([67c700b](https://github.com/Syncano/syncano-node/commit/67c700b))
+* **lib-test:** paths ([f6ea95d](https://github.com/Syncano/syncano-node/commit/f6ea95d))
+* **lib-test:** reading compiled files ([ad80095](https://github.com/Syncano/syncano-node/commit/ad80095))
+* **npmkeywords:** typo front/back ([c0439ce](https://github.com/Syncano/syncano-node/commit/c0439ce))
+* **react-context:** add react import ([#221](https://github.com/Syncano/syncano-node/issues/221)) ([28a27a7](https://github.com/Syncano/syncano-node/commit/28a27a7))
+* **template:** removed yarn from hello project template ([#262](https://github.com/Syncano/syncano-node/issues/262)) ([19e3d1e](https://github.com/Syncano/syncano-node/commit/19e3d1e))
+* hosting sync ([bdcdab6](https://github.com/Syncano/syncano-node/commit/bdcdab6))
+* no more registry in repo ([f5ef4e0](https://github.com/Syncano/syncano-node/commit/f5ef4e0))
+* paths ([b1bef4c](https://github.com/Syncano/syncano-node/commit/b1bef4c))
+* replaced old syncano-cli with npx s ([e0f1ab8](https://github.com/Syncano/syncano-node/commit/e0f1ab8))
+* replaced old syncano-cli with npx s ([#244](https://github.com/Syncano/syncano-node/issues/244)) ([0b08eac](https://github.com/Syncano/syncano-node/commit/0b08eac))
+
+
+### Features
+
+* **cli:** add info command ([e3637b5](https://github.com/Syncano/syncano-node/commit/e3637b5))
+* **cli:** add sysinfo command ([9dd7890](https://github.com/Syncano/syncano-node/commit/9dd7890))
+* **cli/hosting:** add path to listing [#246](https://github.com/Syncano/syncano-node/issues/246) ([4e791f7](https://github.com/Syncano/syncano-node/commit/4e791f7))
+* **react-context:** add withSyncano ([#218](https://github.com/Syncano/syncano-node/issues/218)) ([bf870b4](https://github.com/Syncano/syncano-node/commit/bf870b4))
+
+
+
+
 <a name="0.12.0"></a>
 # [0.12.0](https://github.com/Syncano/syncano-node/compare/v0.11.0...v0.12.0) (2018-04-08)
 
