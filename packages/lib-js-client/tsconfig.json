@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "target": "es6",
+    "strict": true,
+    "sourceMap": true,
+    "allowJs": false,
+    "moduleResolution": "node",
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "es2015",
+      "es2016",
+      "webworker"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules/**/*"
+  ]
+}

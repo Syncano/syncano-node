@@ -16,11 +16,11 @@ const MAX_BATCH_SIZE = 50
  * @property {Function} query Instance of syncano DataObject
  */
 class Data extends QueryBuilder {
-  url (id) {
+  url (id, apiVersion) {
     debug('url', id)
     const {instanceName, className} = this.instance
     let url = `${this._getInstanceURL(
-      instanceName
+      instanceName, apiVersion
     )}/classes/${className}/objects/${id ? id + '/' : ''}`
 
     if (this._url !== undefined) {
@@ -204,8 +204,8 @@ class Data extends QueryBuilder {
   async list () {
     debug('list')
     const self = this
-    const urls = [this.url()].concat(this.queries.map(query =>
-      (this._query.query = query) && this.url()
+    const urls = [this.url(null, 'v3')].concat(this.queries.map(query =>
+      (this._query.query = query) && this.url(null, 'v3')
     ))
     debug('urls', urls)
     const uniqueIds = []
@@ -773,7 +773,7 @@ class Data extends QueryBuilder {
       .then(this.resolveRelatedModels.bind(this))
       .then(this._replaceCustomTypesWithValue.bind(this))
       .then(this._mapFields.bind(this)
-    )
+      )
   }
 
   /**

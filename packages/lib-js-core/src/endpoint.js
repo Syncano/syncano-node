@@ -35,9 +35,9 @@ export default class Endpoint extends QueryBuilder {
   }
 
   _url (endpoint) {
-    const {instanceName, spaceHost} = this.instance
+    const {instanceName} = this.instance
 
-    return `https://${instanceName}.${spaceHost}/${endpoint}/`
+    return `${this._getInstanceURL(instanceName)}/endpoints/sockets/${endpoint}/`
   }
 
   _parseBody (body) {

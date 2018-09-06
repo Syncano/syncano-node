@@ -1,92 +1,15 @@
-const path = require('path')
-const webpack = require('webpack')
+const {resolve} = require('path')
 
-module.exports = [
-  {
-    entry: './src',
-    target: 'web',
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'syncano-client.js',
-      library: 'SyncanoClient'
-    },
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              babelrc: false,
-              plugins: [
-                require('babel-plugin-transform-object-rest-spread'),
-                require('babel-plugin-transform-class-properties'),
-                require('babel-plugin-add-module-exports')
-              ],
-              presets: ['env']
-            }
-          }
-        }
-      ]
-    },
-    plugins: [
-      new webpack.LoaderOptionsPlugin({
-        minimize: false,
-        debug: false
-      }),
-      new webpack.optimize.UglifyJsPlugin({
-        beautify: true,
-        mangle: {
-          screw_ie8: true, // eslint-disable-line camelcase
-          keep_fnames: true // eslint-disable-line camelcase
-        },
-        comments: false
-      })
-    ]
+module.exports = {
+  mode: 'production',
+  entry: './lib',
+  output: {
+    library: 'SyncanoClient',
+    libraryTarget: 'umd',
+    filename: 'index.js',
+    path: resolve(__dirname, 'dist')
   },
-  {
-    name: 'uglified',
-    entry: './src',
-    target: 'web',
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'syncano-client.min.js',
-      library: 'SyncanoClient'
-    },
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              babelrc: false,
-              plugins: [
-                require('babel-plugin-transform-object-rest-spread'),
-                require('babel-plugin-transform-class-properties'),
-                require('babel-plugin-add-module-exports')
-              ],
-              presets: ['env']
-            }
-          }
-        }
-      ]
-    },
-    plugins: [
-      new webpack.LoaderOptionsPlugin({
-        minimize: true,
-        debug: false
-      }),
-      new webpack.optimize.UglifyJsPlugin({
-        beautify: false,
-        mangle: {
-          screw_ie8: true, // eslint-disable-line camelcase
-          keep_fnames: true // eslint-disable-line camelcase
-        },
-        comments: false
-      })
-    ]
+  resolve: {
+    extensions: ['.ts', '.js']
   }
-]
+}

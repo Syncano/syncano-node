@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import readdirp from 'readdirp'
 import YAML from 'js-yaml'
 import fs from 'fs'
@@ -19,17 +20,6 @@ export default class ProjectSettings extends Settings {
 
   getPlugins () {
     return this.attributes.plugins
-  }
-
-  installSocket (socket) {
-    debug('installSocket()')
-    const dependencies = this.attributes.dependencies || { sockets: {} }
-    const sockets = dependencies.sockets
-
-    sockets[socket.name] = socket.version ? { version: socket.version } : { src: `./${socket.name}` }
-    this.attributes.dependencies = dependencies
-
-    this.save()
   }
 
   getAllSocketsYmlPath () {
@@ -66,40 +56,11 @@ export default class ProjectSettings extends Settings {
     return socketAttributes
   }
 
-  uninstallSocket (socketName) {
-    debug('uninstallSocket')
-    const dependencies = this.attributes.dependencies || { sockets: {} }
-    const sockets = dependencies.sockets
-
-    delete sockets[socketName]
-    this.save()
-  }
-
-  getSocket (socketName) {
-    return this.attributes.dependencies.sockets[socketName]
-  }
-
   getSocketTemplates () {
     try {
       return this.attributes.templates.sockets
     } catch (err) {
       return []
-    }
-  }
-
-  getDependSockets () {
-    try {
-      return this.attributes.dependencies.sockets
-    } catch (err) {
-      return {}
-    }
-  }
-
-  getDependSocket (socketName) {
-    try {
-      return this.attributes.dependencies.sockets[socketName]
-    } catch (err) {
-      return null
     }
   }
 
@@ -112,6 +73,12 @@ export default class ProjectSettings extends Settings {
   addHosting (hostingName, params) {
     if (!this.attributes.hosting) this.attributes.hosting = {}
     this.attributes.hosting[hostingName] = params
+    this.save()
+  }
+
+  updateHosting (hostingName, params) {
+    if (!this.attributes.hosting) this.attributes.hosting = {}
+    this.attributes.hosting[hostingName] = _.extend(this.attributes.hosting[hostingName], params)
     this.save()
   }
 

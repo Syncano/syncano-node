@@ -1,3 +1,4 @@
+import path from 'path'
 import semver from 'semver'
 import FindKey from 'find-key'
 
@@ -13,41 +14,16 @@ class SocketSettings extends Settings {
     this.name = 'socket'
     this.baseDir = socketPath
     this.loaded = this.load()
+    this.attributes.version = this.readVersion()
   }
 
-  getHosting (hostingName) {
-    debug('getHosting()')
-    return this.attributes.hosting ? this.attributes.hosting[hostingName] : null
-  }
-
-  addHosting (hostingName, params) {
-    if (!this.attributes.hosting) this.attributes.hosting = {}
-    this.attributes.hosting[hostingName] = params
-  }
-
-  deleteHosting (hostingName) {
-    if (this.attributes.hosting) {
-      delete this.attributes.hosting[hostingName]
+  readVersion () {
+    try {
+      const pjson = require(`${path.join(this.baseDir, 'package.json')}`)
+      return pjson.version
+    } catch (err) {
+      return null
     }
-
-    if (this.listHosting().length === 0) {
-      delete this.attributes.hosting
-    }
-  }
-
-  listHosting () {
-    debug('list()')
-    const hostings = this.attributes.hosting
-    const list = []
-    if (hostings) {
-      for (const key of Object.keys(hostings)) {
-        list.push({
-          name: key,
-          src: hostings[key].src
-        })
-      }
-    }
-    return list
   }
 
   getScripts () {
@@ -86,17 +62,6 @@ class SocketSettings extends Settings {
     debug('newVersion', this.getVersion(), bumpType, newVersion)
     this.set('version', newVersion, true)
     return this.getVersion()
-  }
-
-  getDependencies () {
-    return this.attributes.dependencies || {}
-  }
-
-  addDependency (name, version) {
-    const deps = this.attributes.dependencies || {}
-    deps[name] = { version }
-    this.attributes.dependencies = deps
-    this.save()
   }
 }
 

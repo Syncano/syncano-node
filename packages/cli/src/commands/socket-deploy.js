@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import format from 'chalk'
 import Promise from 'bluebird'
 
@@ -20,7 +19,6 @@ export default class SocketDeployCmd {
     this.context = context
     this.session = context.session
     this.Socket = context.Socket
-    this.registry = new context.Registry()
     this.init = new context.Init()
     this.firstRun = true
   }
@@ -44,20 +42,20 @@ export default class SocketDeployCmd {
       debug(`Deploying Socket: ${socketName}`)
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.flatList(socketName)
-      const socket = _.find(this.socketList, { name: socketName })
+      const socket = await this.Socket.get(socketName)
       spinner.stop()
 
-      if (!(socket.existLocally || socket.isProjectRegistryDependency || socket.isDependencySocket)) {
+      if (!socket.existLocally) {
         echo()
         error(4)(`Socket ${format.cyan(socketName)} cannot be found!`)
         echo()
         process.exit(1)
       }
+      this.socketList = [socket]
     } else {
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.flatList()
+      this.socketList = await this.Socket.list()
       spinner.stop()
     }
 
@@ -80,6 +78,14 @@ export default class SocketDeployCmd {
     } catch (err) {
       if (err.response && err.response.data && err.response.data.detail) {
         error(4)(err.response.data.detail)
+      } else if (err.response && err.response.data && Array.isArray(err.response.data)) {
+        err.response.data.forEach((msg) => {
+          error(4)(msg)
+        })
+      } else if (err.response && err.response.data && typeof err.response.data === 'object') {
+        Object.keys(err.response.data).forEach(key => {
+          error(4)(`${key}: ${err.response.data[key][0]}`)
+        })
       } else {
         error(4)(err)
       }
@@ -110,6 +116,7 @@ export default class SocketDeployCmd {
     pendingUpdates[socket.name] += 1
     if (pendingUpdates[socket.name] > 1) {
       spinner.stop()
+      console.log('XXX', pendingUpdates)
       this.mainSpinner.start()
       debug(`not updating, update pending: ${pendingUpdates[socket.name]}`)
       return

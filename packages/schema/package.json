@@ -1,7 +1,7 @@
 {
   "name": "@syncano/schema",
   "description": "Syncano JSON Schema Definitions",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "main": "lib/index.js",
   "license": "MIT",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "rimraf": "^2.6.2",
-    "standard": "^10.0.3"
+    "standard": "^11.0.1"
   },
   "babel": {
     "presets": [

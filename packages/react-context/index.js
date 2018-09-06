@@ -1,7 +1,17 @@
-'use strict'
+import React from 'react'
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
-})
+export const SyncanoContext = React.createContext()
 
-exports.SyncanoContext = require('react').createContext('syncano')
+// This function takes a component...
+export function withSyncano(Component) {
+  // ...and returns another component...
+  return function SyncanoComponent(props) {
+    // ... and renders the wrapped component with the context theme!
+    // Notice that we pass through any additional props as well
+    return (
+      <SyncanoContext.Consumer>
+        {syncano => <Component {...props} syncano={syncano} />}
+      </SyncanoContext.Consumer>
+    )
+  }
+}

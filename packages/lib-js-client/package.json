@@ -1,79 +1,47 @@
 {
   "name": "@syncano/client",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "description": "Interact with your Syncano Sockets.",
   "main": "lib/index.js",
-  "unpkg": "dist/syncano-client.min.js",
+  "types": "lib/index.d.js",
+  "unpkg": "dist/index.js",
   "author": "Syncano Inc.",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Syncano/syncano-node.git"
-  },
+  "repository": "https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client",
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "syncano",
+    "client",
+    "endpoint"
+  ],
   "scripts": {
     "prepublish": "npm run build",
-    "prebuild": "npm run clean",
-    "build": "npx webpack && npx babel src --out-dir lib",
-    "build:watch": "npx babel src --watch --out-dir lib",
-    "clean": "rm -rf ./dist && rm -rf ./lib",
-    "test": "npm run test:unit && npm run test:e2e",
-    "test:unit": "NODE_ENV=test mocha --reporter spec --require babel-register test/unit.js",
-    "test:watch": "mocha --watch test/**/*.js --compilers js:babel-register",
-    "test:e2e:main": "npm run test:e2e-single test/e2e/main.test.js",
-    "test:e2e-single": "npx mocha --require babel-register --timeout 100000 --slow 8000",
-    "lint": "standard --fix --env mocha",
-    "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js",
+    "build": "npx tsc && npx webpack",
+    "test": "jest",
+    "test:unit": "jest",
+    "lint": "tslint src/**/*.ts",
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
     "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc"
   },
   "dependencies": {
-    "axios": "^0.17.1",
-    "form-data": "^2.3.2"
+    "axios": "0.18.0"
   },
   "devDependencies": {
-    "@syncano/test-tools": "0.12.1",
-    "axios-mock-adapter": "^1.9.0",
-    "babel-cli": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-dynamic-import-node": "^1.0.2",
-    "babel-plugin-extensible-destructuring": "^4.1.0",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-plugin-syntax-async-functions": "^6.13.0",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-regenerator": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "cross-env": "^5.1.1",
-    "exports-loader": "^0.6.4",
-    "husky": "^0.14.3",
-    "imports-loader": "^0.7.1",
-    "jsdom": "7.0.2",
-    "lint-staged": "^6.1.0",
-    "mocha": "^5.0.0",
-    "mocha-jsdom": "^1.1.0",
-    "prettier": "^1.7.4",
-    "standard": "^10.0.3",
-    "webpack": "^3.6.0"
-  },
-  "babel": {
-    "plugins": [
-      "add-module-exports",
-      "transform-async-to-generator",
-      "transform-object-rest-spread"
-    ],
-    "presets": [
-      "env"
-    ]
+    "@types/jest": "22.2.3",
+    "@types/node": "9.6.7",
+    "axios-mock-adapter": "1.15.0",
+    "cross-env": "^5.1.4",
+    "isparta": "^4.0.0",
+    "jest": "22.4.3",
+    "jsdom": "11.10.0",
+    "should": "^13.2.1",
+    "ts-jest": "22.4.5",
+    "tslint": "5.10.0",
+    "tslint-eslint-rules": "5.2.0",
+    "typescript": "2.8.3",
+    "webpack": "4.8.1",
+    "webpack-cli": "2.1.3"
   }
 }

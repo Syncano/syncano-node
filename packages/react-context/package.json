@@ -1,9 +1,11 @@
 {
   "name": "@syncano/react-context",
   "description": "Syncano client react context",
-  "version": "0.12.1",
+  "repository": "https://github.com/syncano/syncano-node/tree/master/packages/react-context",
+  "version": "0.13.0",
   "license": "MIT",
-  "main": "index.js",
+  "main": "index.es5.js",
+  "esnext": "index.js",
   "publishConfig": {
     "access": "public"
   },

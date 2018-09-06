@@ -3,7 +3,7 @@ jobs:
   build:
     name: Build
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -58,26 +58,14 @@ jobs:
 
       - restore_cache:
           keys:
-          - v9-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
-          - v9-dependencies-registry-organization
-
-      - restore_cache:
-          keys:
-          - v9-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
-          - v9-dependencies-registry-registry
-
-      - restore_cache:
-          keys:
           - v9-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
           - v9-dependencies-test-tools
 
-      - restore_cache:
-          keys:
-          - v9-dependencies-registry-{{ checksum "packages/registry/package.json" }}
-          - v9-dependencies-registry
-
       - run: npm install
       - run: npm run bootstrap
+      - run:
+          command: npm run build
+          working_directory: ~/repo/packages/lib-js-client
 
       - save_cache:
           paths:
@@ -126,21 +114,6 @@ jobs:
 
       - save_cache:
           paths:
-            - packages/registry/syncano/organization/node_modules
-          key: v9-dependencies-registry-organization-{{ checksum "packages/registry/syncano/organization/package.json" }}
-
-      - save_cache:
-          paths:
-            - packages/registry/syncano/registry/node_modules
-          key: v9-dependencies-registry-registry-{{ checksum "packages/registry/syncano/registry/package.json" }}
-
-      - save_cache:
-          paths:
-            - packages/registry/node_modules
-          key: v9-dependencies-registry-{{ checksum "packages/registry/package.json" }}
-
-      - save_cache:
-          paths:
             - packages/test-tools/node_modules
           key: v9-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
 
@@ -152,7 +125,7 @@ jobs:
   test_unit:
     name: Unit Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -162,22 +135,10 @@ jobs:
       - run: npm run test:unit
       - run: npm run report:coverage
 
-  test_e2e_client:
-    name: E2E Tests
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo/packages/lib-js-client/
-
-    steps:
-      - restore_cache:
-          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:e2e
-
   test_e2e_validate:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -189,7 +150,7 @@ jobs:
   test_e2e_core:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -201,7 +162,7 @@ jobs:
   test_e2e_client:
     name: E2E Client Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests/
 
@@ -210,22 +171,10 @@ jobs:
           key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:client
 
-  test_e2e_registry:
-    name: E2E Tests
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo/packages/tests
-
-    steps:
-      - restore_cache:
-          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: SYNCANO_SOCKET_REGISTRY_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1} npm run test:e2e:cli:registry
-
   test_e2e_hosting:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -237,7 +186,7 @@ jobs:
   # test_e2e_init:
   #   name: E2E Tests
   #   docker:
-  #     - image: circleci/node:latest
+  #     - image: circleci/node:9.11.1
   #
   #   working_directory: ~/repo/packages/tests
   #
@@ -249,7 +198,7 @@ jobs:
   test_e2e_socket:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -261,7 +210,7 @@ jobs:
   test_e2e_anonymous:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -273,7 +222,7 @@ jobs:
   test_e2e_instance:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -285,7 +234,7 @@ jobs:
   test_e2e_deploy:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -297,7 +246,7 @@ jobs:
   test_e2e_config:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -309,7 +258,7 @@ jobs:
   test_e2e_schema:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo/packages/tests
 
@@ -321,7 +270,7 @@ jobs:
   test_lint:
     name: Linter
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -333,7 +282,7 @@ jobs:
   deploy_docs:
     name: Deploying Docs
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -351,59 +300,10 @@ jobs:
       - run: node packages/cli/lib/cli.js hosting sync cheatsheet
       - run: node packages/cli/lib/cli.js hosting config cheatsheet --cname ${CIRCLE_BRANCH}-cheatsheet.syncano.io
 
-  deploy_test_registry:
-    name: Deploying Test Registry
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo/packages/registry
-
-    steps:
-      - restore_cache:
-          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: echo 'export REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE=${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}' >> $BASH_ENV
-      - run: sh ./bin/deploy-staging
-
-  deploy_registry:
-    name: Deploy Production Registry
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo/packages/registry
-
-    steps:
-      - restore_cache:
-          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: sh ./bin/deploy
-
-  delete_registry:
-    name: Delete Test Registry
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo/packages/registry
-
-    steps:
-      - restore_cache:
-          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: SYNCANO_AUTH_KEY=${REGISTRY_TEST_SYNCANO_AUTH_KEY} ../cli/lib/cli.js instance delete ${REGISTRY_TEST_SYNCANO_PROJECT_INSTANCE}-${CIRCLE_SHA1}
-
-  deploy_canary_registry:
-    name: Deploy Test Registry
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo/packages/registry
-
-    steps:
-      - restore_cache:
-          key: v9-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: sh ./bin/deploy-canary
-
   publish:
     name: Publish packages to NPM
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -417,7 +317,7 @@ jobs:
   codecov:
     name: Send Codecov report
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:9.11.1
 
     working_directory: ~/repo
 
@@ -431,9 +331,6 @@ workflows:
   build-test-deploy:
     jobs:
       - build
-      - deploy_test_registry:
-          requires:
-            - build
       - test_lint:
           requires:
             - build
@@ -464,29 +361,18 @@ workflows:
       - test_e2e_socket:
           requires:
             - build
-      # - test_e2e_init:
-      #     requires:
-      #       - build
-      - test_e2e_registry:
-          requires:
-            - build
-            - deploy_test_registry
       - test_e2e_core:
           requires:
             - build
       - test_e2e_schema:
           requires:
             - build
-      - delete_registry:
-          requires:
-            - test_e2e_registry
       - deploy_docs:
           requires:
             - build
             - test_e2e_instance
             - test_e2e_validate
             - test_e2e_client
-            - test_e2e_registry
             - test_e2e_socket
             - test_e2e_hosting
             - test_e2e_core
@@ -506,35 +392,8 @@ workflows:
             - test_e2e_instance
             - test_e2e_validate
             - test_e2e_client
-            - test_e2e_registry
             - test_e2e_socket
             - test_e2e_hosting
-            # - test_e2e_init
-            - test_e2e_core
-            - test_e2e_anonymous
-            - test_e2e_config
-            - test_e2e_deploy
-            - test_e2e_schema
-            - test_lint
-            - test_unit
-          filters:
-            branches:
-              only: master
-      - deploy_registry:
-          requires:
-            - publish
-          filters:
-            branches:
-              only: /\d/
-      - deploy_canary_registry:
-          requires:
-            - test_e2e_instance
-            - test_e2e_validate
-            - test_e2e_client
-            - test_e2e_registry
-            - test_e2e_socket
-            - test_e2e_hosting
-            # - test_e2e_init
             - test_e2e_core
             - test_e2e_anonymous
             - test_e2e_config
