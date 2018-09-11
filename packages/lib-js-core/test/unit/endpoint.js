@@ -76,4 +76,14 @@ describe('Endpoint', () => {
         .fulfilled
     })
   })
+
+  describe('#invalidate', () => {
+    it('should send POST request', () => {
+      api
+        .post(`${testEndpoint}invalidate`)
+        .reply(200)
+
+      return endpoint.invalidate('socket/endpoint').should.be.fulfilled
+    })
+  })
 })
