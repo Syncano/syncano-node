@@ -35,7 +35,7 @@ export default class Endpoint extends QueryBuilder {
   }
 
   invalidate (endpoint) {
-    return this.fetch(`${this._url(endpoint)}invalidate`, {method: 'POST'})
+    return this.fetch(`${this._url(endpoint)}invalidate/`, {method: 'POST'})
   }
 
   _url (endpoint) {
