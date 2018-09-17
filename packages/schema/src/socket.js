@@ -165,5 +165,5 @@ export default {
       }
     }
   },
-  required: [ 'name', 'description' ]
+  required: [ 'name' ]
 }
