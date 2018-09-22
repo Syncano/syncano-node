@@ -1,7 +1,5 @@
 # Overview
-<img style="margin-left: 50px; float: right" src="img/instance.png" width="200">
-
-With Sockets you can create a sophisticated backend using reusable building blocks called `Syncano Sockets` without leaving your favorite development environment.
+With Sockets you can create a sophisticated backend using reusable building blocks called `Syncano Sockets` without leaving your favourite development environment.
 
 Main terms:
  - `Instance` - space on the **Syncano Cloud Platform** created for the project
@@ -21,26 +19,24 @@ If you will choose `hello` template, this file structure will be created:
 
 ```
 my-project/
+my_project/syncano.yml
 my-project/.gitignore
-my-project/syncano
 my-project/syncano/hello
-my-project/syncano/hello/package.json
-my-project/syncano/hello/src
-my-project/syncano/hello/src/hello.js
 my_project/syncano/hello/socket.yml
-my_project/syncano/package.json
-my_project/syncano/syncano.yml
+my-project/syncano/hello/package.json
+my-project/syncano/hello/src/hello.js
+my-project/syncano/hello/bin/compile
+my-project/syncano/hello/bin/compile-env
 ```
 
 Main `project` files:
-
-- `my-project/syncano` - folder where all the Syncano related files are stored
-- `my_project/syncano/syncano.yml` - main Syncano configuration file of your project
-- `my_project/syncano/package.json` - `package.json` for the whole project,
-   here you can add dependencies of you project directly from `npm` in traditional way
+- `my_project/syncano.yml` - main Syncano configuration file of your project
+- `my-project/syncano` - folder where Syncano sockets are stored
 
 `hello` Socket files:
 - `my-project/syncano/hello` - folder where all the `hello` Socket files are stored
+- `my-project/syncano/hello/src` - folder where all the `hello` Socket script files are stored
+- `my_project/syncano/hello/bin` - `hello` Socket build scripts
 - `my_project/syncano/hello/socket.yml` - `hello` Socket configuration file
 - `my-project/syncano/hello/package.json` - `hello` Socket `package.json`, here you can add
   dependencies of the `hello` Socket

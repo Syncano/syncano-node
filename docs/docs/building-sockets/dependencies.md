@@ -1,22 +1,15 @@
 # Dependencies
 Sockets can use libraries installed directly from `npm` or use other Sockets as a dependency.
 
-To add dependency from `npm` execute `yarn add` in socket folder:
+To add dependency from `npm` execute `npm install <package name>` in Socket folder:
 
 ```sh
 cd syncano/<socket_folder>
-yarn add <dependency name>
+npm install <dependency name>
 ```
 
 For example:
 ```sh
 cd syncano/hello-world
-yarn add lodash
+npm install lodash
 ```
-
-
-<!--  
-## `npm` dependencies
-
-## Sockets Registry dependencies
--->
