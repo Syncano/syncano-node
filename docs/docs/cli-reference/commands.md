@@ -168,12 +168,6 @@ description: Test Socket
          example: No first name or last name provided :(
 ```
 
-### add
-```sh
-npx syncano-cli add <name>
-```
-This command allows you to `add` a Syncano Socket from the Syncano Registry. It's a place where Syncano Sockets made by other developers are stored, so that you can use them in your own project. Some Sockets need a configuration (e.g. API keys, usernames etc.) - you will be asked to provide configuration options during `deploy`.
-
 #### Passing configuration as environment variables
 
 You can export configuration options as a variables using this syntax:
@@ -240,38 +234,6 @@ To remove the Syncano Socket from your configuration
 npx syncano-cli remove <socket_name>
 ```
 This command deletes your Socket only from local config. To apply changes you have to deploy your configuration.
-
-## Registry
-
-### search
-```sh
-npx syncano-cli search <keyword>
-```
-Sockets will be searched by name, description and tags, so you will find Sockets matching only your search term. When you find a Syncano Socket that interests you, you use its name to install it.
-
-### info (coming soon)
-Use Socket name and `info` command to print detailed information about it (from the Sockets Registry):
-```sh
-npx syncano-cli info <socket_name>
-```
-
-### submit
-
-If you want to submit your Socket to the `Syncano Sockets Registry` use:
-```sh
-npx syncano-cli submit <socket_name>
-```
-Where the `<socket_name>` is the name of your Socket available locally.
-
-!> By default, the submitted Syncano Socket is private (available only for you).
-
-### publish
-
-Publishing Socket mean to make it available for everyone. To do it use:
-```sh
-npx syncano-cli publish <socket_name>
-```
-Where the `<socket_name>` is the name of your Socket you already submitted to the Registry. You cannot reverse this action.
 
 ## Hosting
 

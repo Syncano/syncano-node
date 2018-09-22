@@ -1,20 +1,45 @@
+# Using Core API library
+
+The Core API library should be used in the **Syncano Sockets** (inside the scripts powering the Syncano Sockets) to communicate with the **Syncano Core Services** and 3rd party integrated platforms. Syncano provides various Core Services:
+- **Database (db)** - NoSQL database to store your application data
+- **Users Management (users)** - service to store and manage users and groups of your application
+- **Event Loop (events)** - service to emit events which can be caught by any Socket
+- **Realtime Channels (channels)** - implement publish/subscribe model for realtime communication
+
+Library is by default a Syncano Socket dependency, you can check `package.json` file of your Socket:
+
+```sh
+cat <my-project>/syncano/<my-socket-name>/package.json
+```
+
+```json
+{
+  "dependencies": {
+    "@syncano/core": "0.13.0"
+  }
+}
+```
+
+If `@syncano/core` is not listed there you can use `npm` to install it (you have to be inside Socket folder):
+```sh
+cd <my-project>/syncano/<my-socket-name>/package.json
+npm add @syncano/core
+```
+
 ## Library initialization
 
 To initialize library simply import it in a Socket script where library will be used:
-```js
-import { data, users, socket, response, event, logger } from '@syncano/core'
-```
 
-Library initiated that way will grab necessary information from the context of you Socket Script - it means that you don't need to provide additional information such as Instance name or authentication key (token) to your Instance.
+```javascript
+import Syncano from '@syncano/core'
 
-If you want to force the library to connect to specified instance type:
-```js
-import Server from '@syncano/core'
+export default (ctx) => {
+  const { data, users, endpoint, response, event, logger } = new Syncano(ctx)
 
-const { data, events } = new Server({
-  token: '9-12jdiasdnfo23nrokms',
-  instanceName: 'example-instance-name'
-})
+  // Now you can access easily the database, e.g.:
+  // const awesomeMovie = await data.movies.where('title', 'Fight Club').first()
+
+}
 ```
 
 ## Core API
@@ -63,7 +88,7 @@ data.tags.delete(7652)
 
 ```js
 // Get first user with given mail
-data.users
+users
   .where('email', 'john.doe@example.com')
   .first()
   .then(user => {
@@ -72,7 +97,7 @@ data.users
   })
 
 // Get first user with given mail, throws error if user was not found
-data.users
+users
   .where('email', 'john.doe@example.com')
   .firstOrFail()
   .then(user => {})
@@ -142,8 +167,6 @@ response
 ### Logging
 
 ```js
-import {logger} from '@syncano/core'
-
 // Listen for all events
 logger.listen(event => {
   // Handle event - save to db or send email

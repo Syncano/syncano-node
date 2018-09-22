@@ -1,4 +1,4 @@
-# Syncano Data Classes
+# Syncano Database
 
 ## Overview
 
