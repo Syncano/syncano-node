@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import dir from 'node-dir'
 import glob from 'glob'
 
 function getFiles (directory) {
