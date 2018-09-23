@@ -1,10 +1,7 @@
-// import Promise from 'bluebird'
 import fs from 'fs'
 import path from 'path'
 import dir from 'node-dir'
 import glob from 'glob'
-
-// const asyncDir = Promise.promisifyAll(dir)
 
 function getFiles (directory) {
   // Ignore patterns from .syncanoignore file
@@ -18,17 +15,12 @@ function getFiles (directory) {
     ignore,
     realpath: true,
     nodir: true
-  }).map(file => {
-    return {
-      fullPath: file,
-      internalPath: file.replace(`${directory}`, '')
-    }
-  })
-  // }
-  // return asyncDir.filesAsync(directory).catch((e) => e.code)
+  }).map(file => ({
+    fullPath: file,
+    internalPath: file.replace(`${directory}`, '')
+  }))
 }
 
 export default {
-  getFiles,
-  // asyncDir
+  getFiles
 }
