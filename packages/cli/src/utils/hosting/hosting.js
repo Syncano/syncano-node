@@ -284,11 +284,11 @@ class Hosting {
   }
 
   encodePath (pathToEncode) {
-    return pathToEncode.split(path.sep).map(part => encodeURIComponent(part)).join(path.sep)
+    return pathToEncode.split(path.sep).map(part => encodeURI(part)).join(path.sep)
   }
 
   decodePath (pathToEncode) {
-    return pathToEncode.split('/').map(part => decodeURIComponent(part)).join('/')
+    return pathToEncode.split('/').map(part => decodeURI(part)).join('/')
   }
 
   // Verify local file if it should be created or updated
@@ -441,15 +441,10 @@ class Hosting {
     const localHostingFiles = this.path ? await getFiles(this.path) : []
     if (!Array.isArray(localHostingFiles)) return localHostingFiles
 
-    const getLocalPath = (file) => {
-      if (!file) return null
-      return file.replace(this.path, '')
-    }
-
     return localHostingFiles ? localHostingFiles.map(file => {
       return new HostingFile().loadLocal({
-        localPath: file,
-        path: getLocalPath(file)
+        localPath: file.fullPath,
+        path: file.internalPath
       })
     }) : []
   }
