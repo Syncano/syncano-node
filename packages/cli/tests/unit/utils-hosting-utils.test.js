@@ -6,7 +6,7 @@ import sinonTestFactory from 'sinon-test'
 
 import { getRandomString } from '@syncano/test-tools'
 
-import { getFiles, asyncDir } from '../../src/utils/hosting/utils'
+import { getFiles } from '../../src/utils/hosting/utils'
 import glob from 'glob'
 
 sinon.test = sinonTestFactory(sinon)
