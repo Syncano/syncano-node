@@ -5,6 +5,9 @@
     "packages/*"
   ],
   "command": {
+    "bootstrap": {
+      "hoist": true
+    },
     "init": {
       "exact": true
     },
