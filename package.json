@@ -2,7 +2,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "bootstrap": "npx lerna bootstrap",
+    "bootstrap": "npx lerna bootstrap --hoist",
     "lint": "npx lerna run lint",
     "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test npx nyc npx lerna run test:unit",
     "test:e2e": "npx lerna run test:e2e --stream",
@@ -12,27 +12,25 @@
     "deploy": "npm run deploy:cookbook && yarn run deploy:cheatsheet",
     "deploy:cookbook": "node scripts/deploy cookbook",
     "deploy:cheatsheet": "node scripts/deploy cheatsheet",
-    "validate:circleci": "circleci config validate -c .circleci/config.yml",
-    "test": "snyk test"
+    "validate:circleci": "circleci config validate -c .circleci/config.yml"
   },
   "engines": {
-    "node": ">= 8.4.x",
-    "npm": ">= 5.x"
+    "node": ">= 8.4.0",
+    "npm": ">= 2.x <= 5.x"
   },
   "dependencies": {
     "@syncano/cli": "^0.13.0",
-    "babel-eslint": "^10.0.1",
-    "chalk": "^2.4.1",
+    "babel-eslint": "^8.0.1",
+    "chalk": "^2.3.0",
     "git-branch": "^1.0.0",
-    "lerna": "^3.0.0",
+    "lerna": "^2.5.1",
     "lerna-changelog": "^0.7.0",
-    "lint-staged": "^7.3.0",
-    "standard": "^12.0.1"
+    "lint-staged": "^6.1.0",
+    "standard": "^11.0.1"
   },
   "devDependencies": {
-    "codecov": "^3.1.0",
-    "nyc": "^13.0.1",
-    "snyk": "^1.99.1"
+    "codecov": "^3.0.0",
+    "nyc": "^11.4.1"
   },
   "nyc": {
     "exclude": [
