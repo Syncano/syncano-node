@@ -492,10 +492,6 @@ npm install @syncano/cli</code></pre>
 
 # init with given instance nam
 s init -i <new_or_existing_instance></code></pre>
-      <h4>Login to/register Syncano account</h4>
-      <pre><code class="lang-bash">npx s login</code></pre>
-      <h4>Logout (delete account keys from this computer)</h4>
-      <pre><code class="lang-bash">npx s logout</code></pre>
       <h4>Attach project to the chosen Instance</h4>
       <pre><code class="lang-bash">npx s attach --instance my_instance_name</code></pre>
 
@@ -536,9 +532,6 @@ s init -i <new_or_existing_instance></code></pre>
       <h4>Socket details</h4>
       <pre><code class="lang-bash">npx s list &lt;socket name&gt;</code></pre>
 
-      <h4>Adding socket from the Sockets Registry (last version)</h4>
-      <pre><code class="lang-bash">npx s add &lt;socket name&gt;</code></pre>
-
       <h4>Remove Socket</h4>
       <pre><code class="lang-bash">npx s remove &lt;socket name&gt;</code></pre>
 
@@ -559,19 +552,6 @@ s init -i <new_or_existing_instance></code></pre>
       <pre><code class="lang-bash">npx s config-set &lt;socket name&gt; &lt;option name&gt; &lt;value&gt;</code></pre>
     </section>
     <section data-tag="cli" class="c-column">
-      <h3>Registry</h3>
-
-      <h4>Search for Sockets</h4>
-      <pre><code class="lang-bash">npx s search &lt;keyword&gt;</code></pre>
-
-      <h4>Submit your Socket to the registry</h4>
-      <pre><code class="lang-bash">npx s submit  &lt;socket name&gt;
-
-# bump version of the Socket (e.g. major, minor, patch)
-s submit  &lt;socket name&gt; -b patch</code></pre>
-
-      <h4>Make you private Socket public</h4>
-      <pre><code class="lang-bash">npx s publish &lt;socket name&gt;</code></pre>
 
       <h3>Hosting</h3>
 
