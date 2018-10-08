@@ -17,7 +17,7 @@ A Syncano Socket has a clear purpose — whether it is sending an email, storing
 
 You can use Sockets that have already been created by other developers and stored in NPM.
 
-You can also create your own Socket using the Syncano CLI. For more information check [Sockets](/building-sockets/basics) section. You can publish it to the Syncano Registry, so that other developers could also use it. This will help to create the ecosystem that everybody can be a part of and bring us closer to our vision of the autonomous developer.
+You can also create your own Socket using the Syncano CLI. For more information check [Sockets](/building-sockets/basics) section.
 
 ## Exciting? Read more!
 

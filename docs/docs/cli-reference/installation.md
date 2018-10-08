@@ -41,12 +41,6 @@ npx syncano-cli
     config-set <socket_name> <option_name> <value>    Configure a config option of a given Socket
     config-show <socket_name>                         Show config options of a Socket
 
-  Registry:
-
-    search [options] [keyword]         Search for a specific Socket in the Sockets Registry
-    submit [options] <socket_name>     Submit a Socket to Socket Registry
-    publish [options] <socket_name>    Publish a Socket in a Socket Registry
-
   Other:
 
     hosting       Manage your web assets and host them on Syncano

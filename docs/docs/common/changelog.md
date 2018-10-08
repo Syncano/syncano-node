@@ -113,8 +113,6 @@ Changelog:
     * mainly CLI reference ([0c06600b](https://github.com/Syncano/syncano-node-cli/commit/0c06600b))
     * some new docs ([974d8674](https://github.com/Syncano/syncano-node-cli/commit/974d8674))
   * **install:** recursive finding dependencies ([0d4fe3fb](https://github.com/Syncano/syncano-node-cli/commit/0d4fe3fb))
-  * **registry:** publish, config ([6ea69ea5](https://github.com/Syncano/syncano-node-cli/commit/6ea69ea5))
-  * **registry install:** new way of installing sockets from registry ([9cb0a801](https://github.com/Syncano/syncano-node-cli/commit/9cb0a801))
   * **sentry:** refactoring of sentry reporting ([aed053dd](https://github.com/Syncano/syncano-node-cli/commit/aed053dd))
   * **settings:** new yaml parser ([ab9cda74](https://github.com/Syncano/syncano-node-cli/commit/ab9cda74))
   * **socket:** syncing sockets with deps ([54b9c5ac](https://github.com/Syncano/syncano-node-cli/commit/54b9c5ac))
