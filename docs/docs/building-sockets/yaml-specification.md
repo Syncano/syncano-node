@@ -106,7 +106,7 @@ Read the Real-Time Channels documentation to learn more about the real-time capa
 
 ## Classes
 
-Classes section allows you to specify the type of Data Objects you'd want to store within your Instance. In case you'd like to extend a Class with new properties, you can simply add them to a Class that was already configured in a `socket.yml`. Also, removing a Class from `socket.yml` will result in its deletion from an instance. Changes will be applied when running `syncano-cli deploy` command.
+Classes section allows you to specify the type of Data Objects you'd want to store within your Instance. In case you'd like to extend a Class with new properties, you can simply add them to a Class that was already configured in a `socket.yml`. Also, removing a Class from `socket.yml` will result in its deletion from an instance. Changes will be applied when running `npx s deploy` command.
 
 Example Class might be represented as follows:
 

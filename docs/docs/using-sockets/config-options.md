@@ -7,7 +7,7 @@ Every Syncano Socket can use configuration options, which will be exposed inside
 During the installation/synchronization of the Socket, you will be asked to fill in values for required config options. E.g. `openweathermap` Socket requires API key (`API_KEY`) config option:
 
 ```sh
-npx syncano-cli add openweathermap
+npx s add openweathermap
 ```
 
 ```
@@ -23,12 +23,12 @@ npx syncano-cli add openweathermap
 
 ## List config options
 ```sh
-npx syncano-cli config-show <socket name>
+npx s config-show <socket name>
 ```
 
 Example:
 ```sh
-npx syncano-cli config-show openweathermap
+npx s config-show openweathermap
 ```
 
 ```
@@ -41,10 +41,10 @@ npx syncano-cli config-show openweathermap
 
 To change the value of the config option type in:
 ```sh
-npx syncano-cli config-set <socket name> <config option name> <new value>
+npx s config-set <socket name> <config option name> <new value>
 ```
 
 For example:
 ```sh
-npx syncano-cli config-set openweathermap API_KEY bf0a7ccf140879bc9c98a85f3b8b2c94
+npx s config-set openweathermap API_KEY bf0a7ccf140879bc9c98a85f3b8b2c94
 ```
