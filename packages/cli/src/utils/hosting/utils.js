@@ -14,12 +14,12 @@ function getFiles (directory) {
     ignore,
     realpath: true,
     nodir: true
-  }).map(file => {
-    return {
-      fullPath: file,
-      internalPath: file.replace(`${directory}`, '')
-    }
-  })
+  }).map(file => ({
+    fullPath: file,
+    internalPath: file.replace(`${directory}`, '')
+  }))
 }
 
-export default { getFiles }
+export default {
+  getFiles
+}
