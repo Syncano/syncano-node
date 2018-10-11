@@ -1,10 +1,7 @@
-// import Promise from 'bluebird'
 import fs from 'fs'
 import path from 'path'
 import dir from 'node-dir'
 import glob from 'glob'
-
-// const asyncDir = Promise.promisifyAll(dir)
 
 function getFiles (directory) {
   // Ignore patterns from .syncanoignore file
@@ -24,11 +21,6 @@ function getFiles (directory) {
       internalPath: file.replace(`${directory}`, '')
     }
   })
-  // }
-  // return asyncDir.filesAsync(directory).catch((e) => e.code)
 }
 
-export default {
-  getFiles,
-  // asyncDir
-}
+export default { getFiles }
