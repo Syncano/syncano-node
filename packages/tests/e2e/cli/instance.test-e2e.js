@@ -16,8 +16,8 @@ describe('CLI Instance', function () {
     const testInstance = uniqueInstance()
 
     testNixt()
-      .before(() => createInstance(testInstance))
-      .after(() => deleteInstance(testInstance))
+      .before(async () => await createInstance(testInstance))
+      .after(async () => await deleteInstance(testInstance))
       .run(`${cliLocation} instance create ${testInstance}`)
       .stdout(/Instance already exist!/)
       .code(1)
@@ -28,7 +28,7 @@ describe('CLI Instance', function () {
     const testInstance = uniqueInstance()
 
     testNixt()
-      .after(() => deleteInstance(testInstance))
+      .after(async () => await deleteInstance(testInstance))
       .run(`${cliLocation} instance create ${testInstance}`)
       .stdout(/has been created/)
       .code(0)
