@@ -20,11 +20,11 @@ If you answer `yes` when prompted about syncing the files, they will be hosted f
 
 ## CLI Commands
 
-- `s hosting add`
-- `s hosting config`
-- `s hosting sync`
-- `s hosting files`
-- `s hosting delete`
+- `npx s hosting add`
+- `npx s hosting config`
+- `npx s hosting sync`
+- `npx s hosting files`
+- `npx s hosting delete`
 
 ### add
 ```sh
@@ -42,7 +42,15 @@ After proceeding with these prompts, hosting will be added to your configuration
 
 Thanks to the `config` command you can configure CNAME for the given hosting:
 ```sh
-npx s config <hosting_name> --cname <your_domain>
+npx s hosting config <hosting_name> --cname <your_domain>
+npx s hosting config <hosting name> --cname <domain name>
+npx s hosting config <hosting name> --remove-cname <domain name>
+
+# optional flags:
+-c, --cname <domain_name> add CNAME to hosting
+-d, --remove-cname <domain_name> removes CNAME from hosting
+-b, --browser-router <true|false> turn on/off the BrowserRouter support
+-h, --help  output usage information
 ```
 
 ### sync
