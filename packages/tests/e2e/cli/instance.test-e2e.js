@@ -43,15 +43,14 @@ describe('CLI Instance', function () {
       .end(done)
   })
 
-  it('can list instances', function (done) {
+  it.skip('can list instances', function (done) {
     const testInstance1 = uniqueInstance()
     const testInstance2 = uniqueInstance()
 
     testNixt()
       .before(async () => {
-        const testInstance1Obj = await createInstance(testInstance1)
-        const testInstance2Obj = await createInstance(testInstance2)
-        console.log('DEBUG', testInstance1Obj, testInstance2Obj)
+        await createInstance(testInstance1)
+        await createInstance(testInstance2)
       })
       .after(async () => {
         await deleteInstance(testInstance1)
