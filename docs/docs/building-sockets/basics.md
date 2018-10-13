@@ -31,7 +31,7 @@ hello
 
 > .dist folder
 >
-> When you run `npx syncano-cli deploy` command, one additional folder will be created:
+> When you run `npx s deploy` command, one additional folder will be created:
 > - .dist - contains zipped socket.yml files. syncano-cli is using these files to update your Instance configuration.
 
 ## Creating a Syncano Socket
@@ -111,7 +111,7 @@ Currently it has `not synced` status which means you should deploy this Socket b
 To deploy a socket type:
 
 ```sh
-npx syncano-cli deploy hello-world
+npx s deploy hello-world
 ```
 ```
     socket synced: 17:10:06 hello-world 3943 ms
@@ -128,5 +128,4 @@ npx s hot <socketname>
   🔥  Hot deploy started (Hit Ctrl-C to stop)
 
      project synced: 15:25:48 1 ms
-
 ```
