@@ -43,7 +43,7 @@ describe('CLI Instance', function () {
       .end(done)
   })
 
-  it('can list instances', function (done) {
+  it.skip('can list instances', function (done) {
     const testInstance1 = uniqueInstance()
     const testInstance2 = uniqueInstance()
 

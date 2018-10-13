@@ -17,9 +17,8 @@
     "serverless solutions"
   ],
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">= 8.9.0"
   },
-  "engineStrict": true,
   "main": "./lib/cli.js",
   "homepage": "http://syncano.com",
   "repository": {
