@@ -49,8 +49,9 @@ describe('CLI Instance', function () {
 
     testNixt()
       .before(async () => {
-        await createInstance(testInstance1)
-        await createInstance(testInstance2)
+        const testInstance1Obj = await createInstance(testInstance1)
+        const testInstance2Obj = await createInstance(testInstance2)
+        console.log('DEBUG', testInstance1Obj, testInstance2Obj)
       })
       .after(async () => {
         await deleteInstance(testInstance1)
