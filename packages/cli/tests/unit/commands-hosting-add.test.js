@@ -172,7 +172,7 @@ describe('[commands] Add Hosting', function () {
         type: 'confirm',
         name: 'confirm',
         message: p(2)('Do you want to sync files now?'),
-        default: false
+        default: true
       }
 
       await hostingAdd.syncNewHosting()
