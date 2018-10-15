@@ -1,4 +1,4 @@
-# Quickstart Guide
+# Installation
 
 To start using Syncano with your project follow the steps:
 
@@ -7,14 +7,14 @@ To start using Syncano with your project follow the steps:
 The `syncano-cli` is the main tool for setting up and managing your projects on the Syncano Platform. To install it, run:
 
 ```sh
-npm install @syncano/cli --save-dev
+$ npm install @syncano/cli --save-dev
 ```
 
 ## Sign up and create a project
-Once the Syncano CLI is installed you can sign up for an account. Run the following command in the root directory of your project:
+Once the Syncano CLI is installed you need to sign up for an account. Run the following command in the root directory of your project:
 
 ```sh
-npx s init
+$ npx s init
 ```
 
 > `s` is an alias to `syncano-cli` - you can simply type `syncano-cli`

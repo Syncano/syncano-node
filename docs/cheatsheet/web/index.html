@@ -575,8 +575,15 @@ s init -i <new_or_existing_instance></code></pre>
 
       <h4>Configure hosting options</h4>
       <pre><code class="lang-bash">npx s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
-s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code></pre>
-    </section>
+npx s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;
+
+# optional flags:
+-c, --cname &lt;domain_name&gt; add CNAME to hosting
+-d, --remove-cname &lt;domain_name&gt; removes CNAME from hosting
+-b, --browser-router &lt;true|false&gt; turn on/off the BrowserRouter support
+-h, --help  output usage information</code></pre>
+
+</section>
     <!--
 
       ==== SOCKET 1

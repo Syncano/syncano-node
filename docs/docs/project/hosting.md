@@ -20,15 +20,15 @@ If you answer `yes` when prompted about syncing the files, they will be hosted f
 
 ## CLI Commands
 
-- `s hosting add`
-- `s hosting config`
-- `s hosting sync`
-- `s hosting files`
-- `s hosting delete`
+- `npx s hosting add`
+- `npx s hosting config`
+- `npx s hosting sync`
+- `npx s hosting files`
+- `npx s hosting delete`
 
 ### add
 ```sh
-npx syncano-cli hosting add [hosting_path]
+npx s hosting add [hosting_path]
 ```
 Later, you will be asked to provide some info:
 * Please choose for which socket you want to list hostings
@@ -42,13 +42,21 @@ After proceeding with these prompts, hosting will be added to your configuration
 
 Thanks to the `config` command you can configure CNAME for the given hosting:
 ```sh
-npx syncano-cli config <hosting_name> --cname <your_domain>
+npx s hosting config <hosting_name> --cname <your_domain>
+npx s hosting config <hosting name> --cname <domain name>
+npx s hosting config <hosting name> --remove-cname <domain name>
+
+# optional flags:
+-c, --cname <domain_name> add CNAME to hosting
+-d, --remove-cname <domain_name> removes CNAME from hosting
+-b, --browser-router <true|false> turn on/off the BrowserRouter support
+-h, --help  output usage information
 ```
 
 ### sync
 To synchronize all the hosting files execute:
 ```sh
-npx syncano-cli hosting sync
+npx s hosting sync
 ```
 After running this command all the hosting files will be uploaded to the server. You can find all of them in URL printed after successful synchronization.
 
@@ -68,14 +76,14 @@ Example:
 
 #### Synchronizing files of specific Hosting
 ```sh
-npx syncano-cli hosting sync <hosting-name>
+npx s hosting sync <hosting-name>
 ```
 
 ### list
 To list Hosting configuration:
 ```sh
-npx syncano-cli hosting list
-npx syncano-cli hosting list <hosting-name>
+npx s hosting list
+npx s hosting list <hosting-name>
 ```
 
 Example response:
@@ -88,7 +96,7 @@ Example response:
 
 ### list files
 ```sh
-npx syncano-cli hosting files <hosting-name>
+npx s hosting files <hosting-name>
 ```
 Example response:
 ```
@@ -104,7 +112,7 @@ Example response:
 ### delete
 To delete Hosting configuration:
 ```sh
-npx syncano-cli hosting delete <hosting-name>
+npx s hosting delete <hosting-name>
 ```
 !> After that your Hosting will be deleted from the configuration but folder with files will still be available in your local directory.
 Hosting will be removed from your backend during the next `npx s deploy`.

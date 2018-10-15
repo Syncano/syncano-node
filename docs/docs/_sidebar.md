@@ -13,7 +13,7 @@
   - [Event Handlers](/building-sockets/event-handlers)
   - [Events](/building-sockets/events)
   - [Dependencies](/building-sockets/dependencies)
-  - [Database](/project/data-classes)
+  - [Database](/project/database)
   - [Core Services](/building-sockets/core-api)
   - [Config Options](/building-sockets/config-options)
   - [YAML Syntax](/building-sockets/yaml-syntax)
