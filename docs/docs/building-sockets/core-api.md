@@ -1,10 +1,12 @@
 # Using Core API library
 
 The Core API library should be used in the **Syncano Sockets** (inside the scripts powering the Syncano Sockets) to communicate with the **Syncano Core Services** and 3rd party integrated platforms. Syncano provides various Core Services:
-- **Database (db)** - NoSQL database to store your application data
+- **Database (data)** - NoSQL database to store your application data
 - **Users Management (users)** - service to store and manage users and groups of your application
 - **Event Loop (events)** - service to emit events which can be caught by any Socket
 - **Realtime Channels (channels)** - implement publish/subscribe model for realtime communication
+- **Response method (response)** - lets you send response from Socket
+- **Logging (logger)** - allows listening for events
 
 Library is by default a Syncano Socket dependency, you can check `package.json` file of your Socket:
 
@@ -36,7 +38,7 @@ import Syncano from '@syncano/core'
 export default (ctx) => {
   const { data, users, endpoint, response, event, logger } = new Syncano(ctx)
 
-  // Now you can access easily the database, e.g.:
+  // Now you can access the database easily, e.g.:
   // const awesomeMovie = await data.movies.where('title', 'Fight Club').first()
 
 }
