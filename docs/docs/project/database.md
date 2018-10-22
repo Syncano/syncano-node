@@ -380,7 +380,7 @@ await data.posts.whereBetween('pages', 200, 400)
 await data.book
   .where([
     ['id', '<', 100],
-    ['id', '>', 200]
+    ['id', '>', 200],
     ['status', 'published']
   ]).list()
 ```

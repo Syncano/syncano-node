@@ -301,53 +301,62 @@ socket.delete('tags/delete', {id: 1})</code></pre>
 data.&lt;class_name&gt;.method()
   .then(res => {})
   .catch(err => {})</code></pre>
-      <h4>Example "posts" data class</h4>
+      <h4>Example "book" data class</h4>
       <pre data-type="socket"><code class="lang-yaml">classes:
-  posts:
+  book:
     - name: title
       type: string
-    - name: status
-      type: array
       filter_index: true
     - name: author
       type: reference
       target: user
-    - name: comments
-      type: relation
-      target: comment
-    - name: views
+    - name: pages
       type: integer
-      filter_index: true</code></pre>
+    - name: publish_date
+      type: datetime
+    - name: categories
+      type: relation
+      target: category
+    - name: discount
+      type: float
+    author:
+    - name: firstname
+      type: string
+    - name: lastname
+      type: string
+    category:
+    - name: name
+      type: string</code></pre>
       <div class="c-note">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#5c9fd6" d="M272 428v28c0 10.449-6.68 19.334-16 22.629V488c0 13.255-10.745 24-24 24h-80c-13.255 0-24-10.745-24-24v-9.371c-9.32-3.295-16-12.18-16-22.629v-28c0-6.627 5.373-12 12-12h136c6.627 0 12 5.373 12 12zM128 176c0-35.29 28.71-64 64-64 8.837 0 16-7.164 16-16s-7.163-16-16-16c-52.935 0-96 43.065-96 96 0 8.836 7.164 16 16 16s16-7.164 16-16zm64-128c70.734 0 128 57.254 128 128 0 77.602-37.383 60.477-80.98 160h-94.04C101.318 236.33 64 253.869 64 176c0-70.735 57.254-128 128-128m0-48C94.805 0 16 78.803 16 176c0 101.731 51.697 91.541 90.516 192.674 3.55 9.249 12.47 15.326 22.376 15.326h126.215c9.906 0 18.826-6.078 22.376-15.326C316.303 267.541 368 277.731 368 176 368 78.803 289.195 0 192 0z"/></svg>
         <p>Built-in fields: id, revision, created_at, updated_at</p>
       </div>
       <h4>Creating</h4>
-      <pre><code class="lang-js">// Create single post
-data.posts.create({title: 'Lorem ipsum'})
+      <pre><code class="lang-js">// Create single book
+await data.book.create({title: 'Godfather'})
 
-// Create multiple posts
-data.posts.create([
-  {title: 'Lorem ipsum 1'},
-  {title: 'Lorem ipsum 2'}
+// Create multiple books
+await data.book.create([
+  {title: 'Book 1'},
+  {title: 'Book 2'}
 ])</code></pre>
       <h4>Updating</h4>
       <pre><code class="lang-js">// Update all objects
-data.posts.update({title: 'Lorem ipsum 1'})
+await data.book.update({title: 'Lorem ipsum 1'})
 
 // Update single object with given ID
-data.posts.update(14, {title: 'Lorem ipsum 1'})
+await data.book.update(14, {title: 'Lorem ipsum 1'})
 
 // Update multiple objects
-data.posts.update([
+await data.book.update([
   14, {title: 'Lorem ipsum 1'},
   15, {title: 'Lorem ipsum 1'}
 ])
 
 // Update all objects matching query
-data.posts
-  .where('status', 'in', ['draft', 'deleted'])
-  .update({title: 'Lorem ipsum 1'})</code></pre>
+await data.book
+  .where('categories', 'in', ['horror', 'thriller'])
+  .update({discount: 20})</code></pre>
     </section>
     <!--
 
@@ -356,94 +365,89 @@ data.posts
     -->
     <section data-tag="server" class="c-column">
       <h4>Other Creation Methods</h4>
-      <pre><code class="lang-js">// Get first tag with name 'ship' or create it
+      <pre><code class="lang-js">// Get first book with title 'Godfather' or create it
 // Second param holds additional data assigned to object
-data.tags.firstOrCreate({name: 'ship'}, {created_by: 1})</code></pre>
-      <pre><code class="lang-js">// Get first tag with name 'ship' or create it
+await data.book.firstOrCreate({title: 'Godfather'}, {created_by: 1})</code></pre>
+      <pre><code class="lang-js">// Get first book with name 'Godfather' or create it
 // Second param holds additional data assigned to object
-data.tags.updateOrCreate({name: 'ship'}, {created_by: 1})</code></pre>
+await data.book.updateOrCreate({title: 'Godfather'}, {created_by: 1})</code></pre>
       <h4>Deleting Class Object</h4>
       <pre><code class="lang-js">// Delete all posts
-data.posts.delete()
+await data.book.delete()
 
-// Delete signle post with given ID
-data.posts.delete(55)
+// Delete signle book with given ID
+await data.book.delete(ctx.args.id)
 
-// Delete multiple posts
-data.posts.delete([55, 56, 57])
+// Delete multiple books
+await data.book.delete([55, 56, 57])
 
-// Delee all posts where draft column is equal 1
-data.posts.where('draft', 1).delete()</code></pre>
+// Delete all books where author id is equal to 15
+await data.book.where('author', 15).delete()</code></pre>
 
       <h4>Retrieving Objects</h4>
       <pre><code class="lang-js">// Get all objects from class
-data.posts.list()
+await data.book.list()
 
-// Get all objects with status equal published
-data.posts.where('status', 'published').list()
+// Get all objects with author equal Mario Puzo
+await data.book.where('author', 'Mario Puzo').list()
 
 // Get object by ID
-data.posts.find(1)
+await data.book.find(1)
 
 // Get first object matching query
-data.posts.where('status', 'draft').first()
+await data.book.where('category', 'Crime').first()
 
 // Get object with given IDs
-data.posts.find([4, 5, 10])
+await data.book.find([4, 5, 10])
 
 // Get object with given ID or throw error
-data.posts.findOrFail(15)
+await data.book.findOrFail(15)
 
-// Get first object with views > 100 or throw error
-data.posts.where('views', '>', 100).firstOrFail())</code></pre>
+// Get first object with pages > 100 or throw error
+await data.book.where('pages', '>', 100).firstOrFail())</code></pre>
       <h4>Retrieving Related Objects</h4>
-      <pre><code class="lang-js">// Author column is reference to user class
-// It will be replaced with given author object
-data.posts.with('author').list()
-
-// You can load many references, relations at once
-// Comments column will be replaced with list of related comments
-data.posts.with(['author', 'comments']).list()</code></pre>
+      <pre><code class="lang-js">// Categories column ids will be replaced with objects from targeted class (category)
+await data.book.with('categories').list()</code></pre>
       <h4>Filtering</h4>
-      <pre><code class="lang-js">// Get all posts with views = 100
-data.posts.where('views', '=', 100).list()
+      <pre><code class="lang-js">// Get all books with pages = 500
+await data.book.where('pages', '=', 500).list()
 
 // You can ommit second param to simply check if value is equal
-data.posts.where('views', 100).list()
+await data.book.where('pages', 500).list()
 
-// Get all post with views greater than 100
+// Get all books with pages greater than 100
 // Other selectors: <, <=, >, >=, =, !=
-data.posts.where('views', '>', 200).list()
+await data.book.where('pages', '>', 100).list()
 
-// Get all posts with one of the statuses
-data.posts.where('status', 'in', ['draft', 'published']).list()
-data.posts.whereIn('status', ['draft', 'published']).list()
+// Get all books with one of the statuses
+await data.book.where('status', 'in', ['draft', 'published']).list()
+await data.book.whereIn('status', ['draft', 'published']).list()
 
-// Get all posts with id not in given array
-data.posts.where('id', 'nin', [10, 20]).list()
-data.posts.whereNotIn('id', [10, 20]).list()
+// Get all books with id not in given array
+await data.book.where('id', 'nin', [10, 20]).list()
+await data.book.whereNotIn('id', [10, 20]).list()
 
-// Get all posts with title
-data.posts.whereNotNull('title').list()
+// Get all books with title
+await data.book.whereNotNull('title').list()
 
-// Get all posts without title
-data.posts.whereNull('title')
+// Get all books without title
+await data.book.whereNull('title')
 
-// Get all posts with views between 100 and 1000
-data.posts.whereBetween('views', 100, 1000)
+// Get all books with pages between 200 and 400
+await data.book.whereBetween('pages', 200, 400)
 
-// Get all published posts with id between 100 and 200
-data.posts
+// Get all published books with id between 100 and 200
+await data.book
   .where([
-    ['id', 'gt', 100],
-    ['id', 'lt', 200]
+    ['id', '>', 100],
+    ['id', '<', 200]
     ['status', 'published']
   ]).list()
 
-// Get posts with views count lower than 100 or higher than 1000
-data.posts
-  .where('views', '<', 100)
-  .orWhere('views', '>', 1000)
+// Get books with number of pages lower than 100 or higher than 300
+await data.book
+  .where('pages', '<', 100)
+  .orWhere('pages', '>', 300)
   .list()</code></pre>
     <div class="c-note">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#5c9fd6" d="M272 428v28c0 10.449-6.68 19.334-16 22.629V488c0 13.255-10.745 24-24 24h-80c-13.255 0-24-10.745-24-24v-9.371c-9.32-3.295-16-12.18-16-22.629v-28c0-6.627 5.373-12 12-12h136c6.627 0 12 5.373 12 12zM128 176c0-35.29 28.71-64 64-64 8.837 0 16-7.164 16-16s-7.163-16-16-16c-52.935 0-96 43.065-96 96 0 8.836 7.164 16 16 16s16-7.164 16-16zm64-128c70.734 0 128 57.254 128 128 0 77.602-37.383 60.477-80.98 160h-94.04C101.318 236.33 64 253.869 64 176c0-70.735 57.254-128 128-128m0-48C94.805 0 16 78.803 16 176c0 101.731 51.697 91.541 90.516 192.674 3.55 9.249 12.47 15.326 22.376 15.326h126.215c9.906 0 18.826-6.078 22.376-15.326C316.303 267.541 368 277.731 368 176 368 78.803 289.195 0 192 0z"/></svg>
@@ -451,27 +455,27 @@ data.posts
           .where('title', 'icontains', 'test')</p>
     </div>
       <h4>Ordering, Limit, &amp; Offset</h4>
-      <pre><code class="lang-js">// Get all posts ordered descending by creation date
-data.posts.orderBy('created_at', 'DESC').list()
+      <pre><code class="lang-js">// Get all books ordered descending by creation date
+await data.book.orderBy('created_at', 'DESC').list()
 
-// Get all posts ordered ascending by creation date
-data.posts.orderBy('created_at', 'ASC').list()</code></pre>
-      <pre><code class="lang-js">// Skip 5 posts and then get next 10 posts
-data.posts.skip(5).take(10).list()</code></pre>
+// Get all books ordered ascending by creation date
+await data.book.orderBy('created_at', 'ASC').list()</code></pre>
+      <pre><code class="lang-js">// Skip 5 books and then get next 10 books
+await data.book.skip(5).take(10).list()</code></pre>
       <h4>Helper methods</h4>
       <pre><code class="lang-js">// Get only selected columns
-data.posts
-  .fields('id', 'title', 'user.first_name as author')
+await data.book
+  .fields('id', 'title', 'user.username as author')
   .list()
 
 // Get values of given column
-data.posts.pluck('title')
+await data.book.pluck('title')
 
 // Get single object key
-data.posts.where('id', 10).value('title')
+await data.book.where('id', 10).value('title')
 
 // Get number of objects matching query
-data.posts.where('id', '>', 10).count()
+await data.book.where('id', '>', 10).count()
 </code></pre>
     </section>
     <!--
