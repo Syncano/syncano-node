@@ -21,7 +21,7 @@
       <a data-tab="client" href="#client" class="is-active">Client</a>
     </div>
     <div class="c-header__tab">
-      <a data-tab="server" href="#server">Server</a>
+      <a data-tab="server" href="#server">Core</a>
     </div>
     <div class="c-header__tab">
       <a data-tab="cli" href="#cli">CLI</a>
@@ -184,7 +184,7 @@ export default (ctx) => {
       <h3>Response</h3>
       <p>Send response from socket.</p>
       <h4>Import</h4>
-      <pre><code class="lang-js">const {response} = new Server(ctx)</code></pre>
+      <pre><code class="lang-js">const {response} = new Syncano(ctx)</code></pre>
       <h4>API</h4>
       <pre><code class="lang-js">response(content, status?, mimetype, headers?)
 response.header(key, value)
@@ -212,7 +212,7 @@ response
       <h3>Logger</h3>
       <p>console.log for your sockets.</p>
       <h4>Import</h4>
-      <pre><code class="lang-js">const {logger} = new Server(ctx)</code></pre>
+      <pre><code class="lang-js">const {logger} = new Syncano(ctx)</code></pre>
       <h4>Usage</h4>
       <pre><code class="lang-js">const log = logger('Socket scope')
 
@@ -232,7 +232,7 @@ log.info('This is info message!', {hello: "world"})</code></pre>
       <h3>Events</h3>
       <p>Publish global events to which other sockets can subscribe.</p>
       <h4>Import</h4>
-      <pre><code class="lang-js">const {event} = new Server(ctx)</code></pre>
+      <pre><code class="lang-js">const {event} = new Syncano(ctx)</code></pre>
       <h4>Emiting event</h4>
       <pre><code class="lang-js">event.emit('email_sent', {to: 'mail@example.com'})</code></pre>
       <h4>Catching event</h4>
@@ -254,7 +254,7 @@ log.info('This is info message!', {hello: "world"})</code></pre>
       <h3>Sockets</h3>
       <p>Call other socket enpoints.</p>
       <h4>Import</h4>
-      <pre><code class="lang-js">const {socket} = new Server(ctx)</code></pre>
+      <pre><code class="lang-js">const {socket} = new Syncano(ctx)</code></pre>
       <h4>Usage</h4>
       <pre><code class="lang-js">socket.get('tags/list', {sort: 'latest'})
 socket.post('tags/create', {name: 'nature'})
@@ -267,7 +267,7 @@ socket.delete('tags/delete', {id: 1})</code></pre>
       <h3>Channels</h3>
       <p>Send messages to realtime channels.</p>
       <h4>Import</h4>
-      <pre><code class="lang-js">const {channel} = new Server(ctx)</code></pre>
+      <pre><code class="lang-js">const {channel} = new Syncano(ctx)</code></pre>
       <h4>Publishing to public channel</h4>
       <pre data-type="socket"><code class="lang-yaml">endpoints:
   messages:
@@ -291,7 +291,7 @@ socket.delete('tags/delete', {id: 1})</code></pre>
       <h3>Data &amp; Users</h3>
       <p>Create, update, delete, list users and class object.</p>
       <h4>Import</h4>
-      <pre><code class="lang-js">const {data, users} = new Server(ctx)</code></pre>
+      <pre><code class="lang-js">const {data, users} = new Syncano(ctx)</code></pre>
       <h4>API</h4>
       <p>Users and Data share all methods.</p>
       <pre><code class="lang-js">users.method()
@@ -440,11 +440,16 @@ data.posts
     ['status', 'published']
   ]).list()
 
-  // Get posts with views count lower than 100 or higher than 1000
-  data.posts
-    .where('views', '<', 100)
-    .orWhere('views', '>', 1000)
-    .list()</code></pre>
+// Get posts with views count lower than 100 or higher than 1000
+data.posts
+  .where('views', '<', 100)
+  .orWhere('views', '>', 1000)
+  .list()</code></pre>
+    <div class="c-note">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#5c9fd6" d="M272 428v28c0 10.449-6.68 19.334-16 22.629V488c0 13.255-10.745 24-24 24h-80c-13.255 0-24-10.745-24-24v-9.371c-9.32-3.295-16-12.18-16-22.629v-28c0-6.627 5.373-12 12-12h136c6.627 0 12 5.373 12 12zM128 176c0-35.29 28.71-64 64-64 8.837 0 16-7.164 16-16s-7.163-16-16-16c-52.935 0-96 43.065-96 96 0 8.836 7.164 16 16 16s16-7.164 16-16zm64-128c70.734 0 128 57.254 128 128 0 77.602-37.383 60.477-80.98 160h-94.04C101.318 236.33 64 253.869 64 176c0-70.735 57.254-128 128-128m0-48C94.805 0 16 78.803 16 176c0 101.731 51.697 91.541 90.516 192.674 3.55 9.249 12.47 15.326 22.376 15.326h126.215c9.906 0 18.826-6.078 22.376-15.326C316.303 267.541 368 277.731 368 176 368 78.803 289.195 0 192 0z"/></svg>
+        <p>'icontains' operator works like %test% in sql:<br/>
+          .where('title', 'icontains', 'test')</p>
+    </div>
       <h4>Ordering, Limit, &amp; Offset</h4>
       <pre><code class="lang-js">// Get all posts ordered descending by creation date
 data.posts.orderBy('created_at', 'DESC').list()
@@ -592,15 +597,8 @@ s submit  &lt;socket name&gt; -b patch</code></pre>
 
       <h4>Configure hosting options</h4>
       <pre><code class="lang-bash">npx s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
-npx s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;
-
-# optional flags:
--c, --cname &lt;domain_name&gt; add CNAME to hosting
--d, --remove-cname &lt;domain_name&gt; removes CNAME from hosting
--b, --browser-router &lt;true|false&gt; turn on/off the BrowserRouter support
--h, --help  output usage information</code></pre>
-
-</section>
+s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code></pre>
+    </section>
     <!--
 
       ==== SOCKET 1
