@@ -116,3 +116,45 @@ npx s hosting delete <hosting-name>
 ```
 !> After that your Hosting will be deleted from the configuration but folder with files will still be available in your local directory.
 Hosting will be removed from your backend during the next `npx s deploy`.
+
+
+## Socket mapping
+
+Mapping is a configuration of hosting which gives us possibility bypass preflighted requests in CORS
+
+``` yaml
+  sockets_mapping:
+    - 
+      - /<socket_name>/<specific_endpoint>
+      - <socket_name>/<specific_endpoint>
+```
+
+For simple description how socket mapping works let's assume that we have books-library socket with 3 endpoints
+
+``` yaml
+#  syncano/books-library/syncano.yaml
+  endpoints:
+    get-book:
+      description: get specific book
+    get-author-books:
+      description: get all author books
+    add-new-book:
+      description: add new book to database
+```
+
+``` yaml
+#  syncano.yaml
+hosting:
+  website:
+    config:
+      sockets_mapping:
+        - 
+          - /books-library/get-book
+          - books-library/get-book
+        - 
+          - /books-library/get-author-books
+          - books-library/get-author-books
+        - 
+          - /books-library/add-new-book
+          - books-library/add-new-book
+```
