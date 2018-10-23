@@ -23,7 +23,14 @@ export default class InfoCmd {
 
     if (this.session.project && this.session.project.instance) {
       echon(2)(`${format.dim('current instance')}:`)
+      const fromEnv = process.env.SYNCANO_PROJECT_INSTANCE
+        ? ' (taken from SYNCANO_PROJECT_INSTANCE environment variable)'
+        : ''
       echo(` ${format.cyan(this.session.project.instance)}`)
+
+      if (fromEnv) {
+        echo(19)(format.dim(fromEnv))
+      }
     }
     echon(2)(`         ${format.dim('api url')}:`)
     echo(` ${format.cyan(this.session.HOST)}`)

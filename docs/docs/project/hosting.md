@@ -42,7 +42,7 @@ After proceeding with these prompts, hosting will be added to your configuration
 
 Thanks to the `config` command you can configure CNAME for the given hosting:
 ```sh
-npx s config <hosting_name> --cname <your_domain>
+npx s hosting config <hosting_name> --cname <your_domain>
 npx s hosting config <hosting name> --cname <domain name>
 npx s hosting config <hosting name> --remove-cname <domain name>
 
