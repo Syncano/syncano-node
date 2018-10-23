@@ -70,22 +70,3 @@ s.get('socket/with_cache', { '__skip_cache': 1 })
 ```
 
 Endpoints with this parameter, will be accessible with an account key only. They are suitable for hiding away Socket settings and configuration options. End users of your app won't have access to them.
-
-## Channels
-
-Real-Time Channels are a way of providing real-time publish/subscribe functionality in Syncano.
-
-In the configuration, they are part of the endpoints section. A user can either subscribe to messages on a certain channel or publish them:
-
-```yaml
-endpoints:
-  # Publish to channel that is built from current user's username automatically by library.
-  publish: |
-      channels.publish("channel.{user}", {message: "Hello!"})
-
-  # Subscriptions to channels are open but can be based on current user (like in this example).
-  subscribe:
-      channel: channel.{user}
-```
-
-Read the Real-Time Channels documentation to learn more about the real-time capabilities of Syncano.
