@@ -2,7 +2,7 @@
 
 Syncano allows you to use built-in NoSQL database. Every instance is automatically connected to the database. Sockets can contain database schema which will be deployed automatically.
 
-# Defining
+# Defining Data Classes
 
 > To make use of the database you need to know what is the Socket. If you don't know click [here](/getting-started/sockets)
 
