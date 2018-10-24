@@ -4,20 +4,20 @@ Syncano allows you to use built-in NoSQL database. Every instance is automatical
 
 # Defining
 
-> To make use of the database you need to know what is the socket. If you don't know click [here](/getting-started/sockets)
+> To make use of the database you need to know what is the Socket. If you don't know click [here](/getting-started/sockets)
 
 Imagine that we're making a list of books. To do this, we need to define a class that includes books and authors.
 
 > Classes are the equivalent of table in relational database (table's schema, fields' description).
 An object is a row in the table.
 
-To define a class we need to edit socket file (for example socket.yml).
+To define a class we need to edit Socket file (for example socket.yml).
 
 Our example file will look like this:
 
 ```YAML
 name: api
-description: Database socket
+description: Database Socket
 
 classes:
   book:
