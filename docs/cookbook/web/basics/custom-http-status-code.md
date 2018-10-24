@@ -35,11 +35,6 @@ Edit file `syncano/hello-world/socket.yml` and change its content to:
 
 ```yaml
 name: hello-world
-description: Description of hello
-runtime: nodejs_v8
-keywords:
-  - hello
-  - world
 
 endpoints:
   hello:
