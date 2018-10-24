@@ -9,18 +9,18 @@ Thanks to built-in functionalities in user-auth socket you have access to follow
 - update users data
 - delete user
 
-### How to use user-auth
+### How to create User
 
 ```js
 // syncano/<yoursocektname>/<endpointname>.js
 import Syncano from '@syncano/core'
 
 export default async (ctx) => {
-  const {response} = Syncano(ctx)
+  const {response, users} = new Syncano(ctx)
   const {args} = ctx 
 
-  const user = await user.create({
-    username: args.username
+  const user = await users.create({
+    username: args.username,
     password: args.password
   })
 
@@ -28,7 +28,7 @@ export default async (ctx) => {
 }
 ```
 
-
+## How to use user-auth socket
 
 ### Register User
 
@@ -73,15 +73,15 @@ s.post("user-auth/login", {
 import Syncano from '@syncano/core'
 
 export default async (ctx) => {
-  const {response} = Syncano(ctx)
+  const {response, users} = new Syncano(ctx)
   const {args, meta} = ctx 
   
   if(!meta.user) {
     return response.json("Unauthorised", 401)
   }
 
-  await user.update(meta.user.id, {
-    username: args.username
+  await users.update(meta.user.id, {
+    username: args.username,
     password: args.password
   })
 
@@ -95,14 +95,14 @@ export default async (ctx) => {
 import Syncano from '@syncano/core'
 
 export default async (ctx) => {
-  const {response} = Syncano(ctx)
+  const {response, users} = new Syncano(ctx)
   const {args, meta} = ctx 
   
   if(!meta.user) {
     return response.json("Unauthorised", 401)
   }
 
-  await user.delete(meta.user.id)
+  await users.delete(meta.user.id)
 
   response.json({msg: `User with ID ${meta.user.id} has been deleted!`})
 }
