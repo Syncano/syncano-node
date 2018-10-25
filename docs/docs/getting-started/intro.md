@@ -40,7 +40,7 @@ export default (ctx) => {
 }
 ```
 
-See the [Server Lib Reference](/server-lib-reference/installation) for more information on how to use it.
+See the [Core Lib Reference](https://github.com/Syncano/syncano-node/blob/master/packages/lib-js-core/docs/readme.md) for more information on how to use it.
 
 
 ### The Syncano Client Library
