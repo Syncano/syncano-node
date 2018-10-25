@@ -1,7 +1,0 @@
-hosting:
-  docs:
-    src: ../docs/docs/
-  cheatsheet:
-    src: ../docs/cheatsheet/web
-  cookbook:
-    src: ../docs/cookbook/web

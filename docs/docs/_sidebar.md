@@ -1,37 +1,30 @@
 - Getting started
   - [Quickstart Guide](/getting-started/quickstart)
-  - [Syncano Ecosystem](/getting-started/intro)
+  - [Syncano Sockets](/getting-started/sockets)
+  - [Tools and Libraries](/getting-started/intro)
   - [Windows Development Guide](/getting-started/windows)
-- Starting a Project
+- Setting up a Project
   - [Overview](/project/overview)
   - [Hosting](/project/hosting)
-- Using Sockets
-  - [Overview](/using-sockets/overview)
-  - [Search & Install](/using-sockets/search-install)
-  - [List](/using-sockets/list)
-  - [Call](/using-sockets/call)
-  - [Config Options](/using-sockets/config-options)
-- Building Sockets
+  - [Install Socket from NPM](/project/install-from-npm)
+- Building your own Sockets
   - [Basics](/building-sockets/basics)
-  - [Data Classes](/building-sockets/data-classes)
   - [Endpoints](/building-sockets/endpoints)
   - [Event Handlers](/building-sockets/event-handlers)
   - [Events](/building-sockets/events)
   - [Dependencies](/building-sockets/dependencies)
+  - [Database](/project/database)
+  - [Core Services](/building-sockets/core-api)
   - [Config Options](/building-sockets/config-options)
   - [YAML Syntax](/building-sockets/yaml-syntax)
+- Connecting Front-End
+  - [JS Client](/client-lib-reference/installation)
 - CLI Reference Guide
   - [Installation](/cli-reference/installation)
   - [Commands](/cli-reference/commands)
   - [Config Files](/cli-reference/config-files)
   - [Advanced](/cli-reference/advanced)
   - [Development](/cli-reference/development)
-- Client Lib Reference
-  - [Installation](/client-lib-reference/installation)
-  - [Usage](/client-lib-reference/usage)
-- Server Lib Reference
-  - [Installation](/server-lib-reference/installation)
-  - [Usage](/server-lib-reference/usage)
 - [Support](/common/support)
 - [Limits](/common/limits)
 - [Contributing](/common/contributing)

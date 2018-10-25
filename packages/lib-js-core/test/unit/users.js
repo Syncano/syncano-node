@@ -24,7 +24,7 @@ describe('Users', () => {
   describe('#list', () => {
     it('should list users', () => {
       api
-        .get(`/v2/instances/${instanceName}/users/`)
+        .get(`/v3/instances/${instanceName}/users/`)
         .reply(200, {objects: [{id: 1}, {id: 2}]})
 
       return users.list().should.become([{id: 1}, {id: 2}])

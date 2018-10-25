@@ -61,7 +61,7 @@ class Init {
     if (projectPath) {
       this.session.settings.account.addProject(projectPath, projectParams)
     } else {
-      this.session.settings.account.addProject(path.join(process.cwd(), 'syncano'), projectParams)
+      this.session.settings.account.addProject(path.join(process.cwd()), projectParams)
     }
     await this.session.load()
   }

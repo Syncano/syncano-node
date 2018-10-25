@@ -7,11 +7,11 @@ Installed Sockets can be reached by calling them using the `@syncano/client` lib
 For testing purposes you can call the Syncano Socket's endpoint directly from the Syncano CLI:
 
 ```sh
-npx syncano-cli call <socket name>/<endpoint name>
+npx s call <socket name>/<endpoint name>
 ```
 Example:
 ```sh
-npx syncano-cli call openweathermap/get-three-hours-forecast
+npx s call openweathermap/get-three-hours-forecast
 ```
 You will be asked to provide the parameters (based on the specification of the endpoint):
 ```

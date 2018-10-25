@@ -19,14 +19,14 @@
     "npm": ">= 2.x <= 5.x"
   },
   "dependencies": {
-    "@syncano/cli": "0.10.0",
+    "@syncano/cli": "^0.13.0",
     "babel-eslint": "^8.0.1",
     "chalk": "^2.3.0",
     "git-branch": "^1.0.0",
     "lerna": "^2.5.1",
     "lerna-changelog": "^0.7.0",
     "lint-staged": "^6.1.0",
-    "standard": "^10.0.3"
+    "standard": "^11.0.1"
   },
   "devDependencies": {
     "codecov": "^3.0.0",

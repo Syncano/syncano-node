@@ -181,7 +181,7 @@ describe('[commands] Add Hosting', function () {
     })
 
     it('should print info how to sync files and exit process if not confirmed in prompt', async function () {
-      const syncInfo = `To sync files use: ${format.cyan(`syncano-cli hosting sync ${hostingAdd.hostingName}`)}`
+      const syncInfo = `To sync files use: ${format.cyan(`npx s hosting sync ${hostingAdd.hostingName}`)}`
       prompt.returns({ confirm: false })
 
       await hostingAdd.syncNewHosting()

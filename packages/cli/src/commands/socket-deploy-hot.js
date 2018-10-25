@@ -21,7 +21,6 @@ export default class SocketDeployCmd {
     this.context = context
     this.session = context.session
     this.Socket = context.Socket
-    this.registry = new context.Registry()
     this.firstRun = []
 
     this.mainSpinner = new GlobalSpinner(p(3)(`${format.grey('waiting...')}`))
@@ -37,11 +36,11 @@ export default class SocketDeployCmd {
       debug(`Deploying Socket: ${socketName}`)
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.flatList(socketName)
+      this.socketList = await this.Socket.list(socketName)
       const socket = _.find(this.socketList, { name: socketName })
       spinner.stop()
 
-      if (!(socket.existLocally || socket.isProjectRegistryDependency || socket.isDependencySocket)) {
+      if (!(socket.existLocally)) {
         echo()
         error(4)(`Socket ${format.cyan(socketName)} cannot be found!`)
         echo()
@@ -50,7 +49,7 @@ export default class SocketDeployCmd {
     } else {
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.flatList()
+      this.socketList = await this.Socket.list()
       spinner.stop()
     }
 
@@ -60,29 +59,29 @@ export default class SocketDeployCmd {
       .then((config) => {
         configs[socketFromList.name] = config
       }))
-    .then(() => this.deployProject())
-    .then((projectUpdateStatus) =>
-      Promise.all(this.socketList.map((socket) => this.deploySocket(socket, configs[socket.name])))
-    )
-    .then(() => {
-      debug('Starting stalker')
-      this.runStalker()
-      this.mainSpinner.queueSize += 1
-      this.mainSpinner.queueSize += this.socketList.length
-      this.mainSpinner.start()
+      .then(() => this.deployProject())
+      .then((projectUpdateStatus) =>
+        Promise.all(this.socketList.map((socket) => this.deploySocket(socket, configs[socket.name])))
+      )
+      .then(() => {
+        debug('Starting stalker')
+        this.runStalker()
+        this.mainSpinner.queueSize += 1
+        this.mainSpinner.queueSize += this.socketList.length
+        this.mainSpinner.start()
 
-      if (cmd.trace) {
-        const traces = new SocketTraceCmd(this.context, this.mainSpinner)
-        Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
-      }
-    })
-    .catch((err) => {
-      if (err.response && err.response.data && err.response.data.detail) {
-        error(4)(err.response.data.detail)
-      } else {
-        error(4)(err)
-      }
-    })
+        if (cmd.trace) {
+          const traces = new SocketTraceCmd(this.context, this.mainSpinner)
+          Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
+        }
+      })
+      .catch((err) => {
+        if (err.response && err.response.data && err.response.data.detail) {
+          error(4)(err.response.data.detail)
+        } else {
+          error(4)(err)
+        }
+      })
   }
 
   async deployProject () {

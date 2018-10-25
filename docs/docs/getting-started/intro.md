@@ -1,15 +1,4 @@
-# Syncano Ecosystem
-
-This is how the libraries relate to each other and how they complement other parts of the platform:
-![High Level Diagram](/img/syncano_arch.png)
-
-
-So, starting from the very top of the diagram:
-1. Each of the devices has an opened website or an application. Those client side applications use the Syncano Client library. Syncano Client is a lightweight wrapper for the API and you can configure the API with the Syncano CLI.
-2. Each call to the Syncano API goes through the server side scripts (part of the Sockets). These server side scripts use the Syncano Server library. The Server library handles the requests, user management and authentication, data management and realtime functionalities.
-3. The Syncano Core API is the scalable and realtime cloud backend. It's the brain of the whole toolchain.
-4. While the Syncano Core API is the brain, the Syncano CLI is the muscles and the nervous system. It integrates with your workflow and enhances it with an extra boost that accelerates your software development.
-5. Last part of the puzzle is the Syncano Sockets Registry. It is similar to npm, cocoapods, pip or nuget, but for the cloud backend. You access and manage it from the Syncano CLI.
+# Tools and Libraries
 
 ## Syncano tools
 The Syncano toolchain currently consists of:
@@ -17,7 +6,8 @@ The Syncano toolchain currently consists of:
 - `CLI` (*@syncano/cli*) - command-line interface to operate the whole platform
 - `Client Library` (*@syncano/lib-js-client*) - library used on the client-side (application, website etc.)
 - `Server-side Library` (*@syncano/lib-js-core*) - used inside the Socket's scripts for communication with Core Syncano Services (e.g. build-in database)
-- `Test Tools` (*@syncano/test*) - test library that helps run Syncano endpoints locally.
+- `Test Library` (*@syncano/test*) - test library that helps run Syncano endpoints locally
+- `Validate Library` (*@syncano/validate*) - library used to validate input/outputs base on Syncano Sockets definitions
 
 ### The Syncano CLI
 
@@ -31,9 +21,9 @@ The Syncano Cloud OS is the core of the technical platform. It hosts and execute
 
 Today, Syncano Cloud OS runs on AWS but we have ensured that it can be run on other cloud infrastructure providers like Google, Azure, IBM, et. al. We also ensured that it can be run on any private infrastructure, basically enabling the possibility to run on-premise, and thus complying with European Safe Harbour regulations, and EU’s Personal Data Act.
 
-### Server Library
+### Core Library
 
-The Server Library is used to communicate with the Syncano Cloud OS. The scripts that use the Syncano Server library are on the server side. It’s the functionality that runs the code that is powering the Syncano Sockets and makes sure they are executed at blazing speed with the right environment and runtime.
+The Core Library is used to communicate with the Syncano Cloud OS. The scripts that use the Syncano Core library are executed on the server side. It’s the functionality that runs the code that is powering the Syncano Sockets and makes sure they are executed at blazing speed with the right environment and runtime.
 
 In order to use the Syncano Server Library, simply include it in your server side scripts, like so:
 
@@ -41,15 +31,12 @@ In order to use the Syncano Server Library, simply include it in your server sid
 import Syncano from '@syncano/core'
 
 export default (ctx) => {
-  const { data } = Syncano(ctx)
+  const { data } = new Syncano(ctx)
 
 // And then to handle the data
-  data.users
-    .where('email', 'john.doe@example.com')
+  const awesomeMovie = await data.movies
+    .where('title', 'Fight Club')
     .first()
-    .then(user => {
-      console.log(user)
-    })
 }
 ```
 
@@ -72,21 +59,6 @@ A very lightweight front-end library that was created to call the endpoints whic
 </script>
 ```
 
-### Socket Registry
+### Sockets in NPM
 
-We have a registry with plenty of ready to use components and backend blueprints, all created by the Syncano community. You can immediately start using them to compose your dedicated and customized backend. You can easily create your own building blocks should you need additional functionality.
-
-#### Syncano Sockets
-
-> One of core concepts of the Syncano platform is the standardised backend building blocks which we call Syncano Sockets.
-
-A Syncano Socket has a clear purpose — whether it is sending an email, storing data, translating a text file, or analysing a web page. A Syncano Socket is defined in such a way that it can be connected to any other Socket, kinda the way LEGO works. Combining Syncano Sockets enables you to assemble tailor-made backends at lightning speed.
-
-#### Public registry
-The publicly available Syncano Sockets are listed in the Public Syncano Socket Registry, and licensed under the MIT license.
-
-#### Private registry
-If a particular backend function you need is not available in the Public Syncano Socket Registry, you can create your own Syncano Sockets. Your custom made Syncano Sockets are automatically put into your own private Socket Registry that only you and your team have access to. Publishing private Syncano Sockets to the Public Syncano Socket Registry, is as simple as removing the `private` flag with `npx s socket publish <socket_name>`.
-
-
-Ok, now go ahead and try our [Quickstart Guide](/getting-started/quickstart) to get the glimpse of what Syncano can do!
+You can find plenty of ready to use components and backend blueprints, all created by the Syncano community. You can immediately start using them to compose your dedicated and customized backend. You can easily create your own building blocks should you need additional functionality.

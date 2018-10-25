@@ -15,7 +15,7 @@ Create empty `hello-world` Socket and `hello` endpoint with custom response.
 #### Create Socket
 
 ```sh
-npx syncano-cli create hello-world --template example
+npx s create hello-world --template example
 ```
 
 #### Edit endpoint file
@@ -37,7 +37,7 @@ export default (ctx) => {
 
 ### How it works?
 
-Now you can find URL for `hello` endpoint by typing `npx syncano-cli list hello-world`:
+Now you can find URL for `hello` endpoint by typing `npx s list hello-world`:
 
 ```
 socket: hello-world
