@@ -22,6 +22,7 @@
     - [Facebook Weather Bot](/solutions/weather-bot)
   - Auth sockets
     - [Two factor authentication](/solutions/two-factor-auth)
+    - [Face authentication](/solutions/face-auth)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
   - [Creating project template](/deployment/create-project-template)
