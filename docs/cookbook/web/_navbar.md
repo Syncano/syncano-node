@@ -1,5 +1,5 @@
 - Resources
-  - [Docs](https://docs.github.io)
+  - [Docs](https://docs.syncano.io)
   - [Cookbook](https://cookbook.syncano.io)
   - [Cheatsheet](https://cheatsheet.syncano.io)
 
