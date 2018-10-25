@@ -1,4 +1,5 @@
 - Getting started
+  - [What is Syncano](/getting-started/what-is-syncano)
   - [Quickstart Guide](/getting-started/quickstart)
   - [Syncano Sockets](/getting-started/sockets)
   - [Tools and Libraries](/getting-started/intro)
