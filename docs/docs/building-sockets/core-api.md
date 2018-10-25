@@ -116,7 +116,7 @@ users
 
 ### Events (events)
 
-Publish global `events` to which other sockets can subscribe.
+Publish global `events` to which other Sockets can subscribe.
 
 ```js
 event.emit('my_signal', {dummyKey: 'dummy_value'})
@@ -126,7 +126,7 @@ event.emit('my_signal', {dummyKey: 'dummy_value'})
   })
 ```
 
-Catch `events` by subscribing to a socket emmiting an event.     
+Catch `events` by subscribing to a Socket emmiting an event.     
 
 ```yml
 event_handlers:
@@ -189,7 +189,7 @@ response
 
 ### Logging
 
-Easy way to debugg your script code. Think of it as your console.log but for your socket.
+Easy way to debug your script code. Think of it as your `console.log` but for your Socket.
 
 ```js
 // Listen for all events
