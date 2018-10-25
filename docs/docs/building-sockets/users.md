@@ -1,4 +1,4 @@
-# About users
+# About Users
 In Syncano you have database classes. Users are just another type of database classes and you should think about users as a specific model of database. The easiest way to manage users is by using Syncano socket named user-auth.   
 
 ### Managing Users
