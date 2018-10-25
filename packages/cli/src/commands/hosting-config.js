@@ -54,10 +54,10 @@ class HostingConfig {
       HostingListCmd.printHosting(this.hosting)
       echo()
     } catch (err) {
-      try {
+      if (err.response && err.response.data && err.response.data.detail) {
         error(4)(err.response.data.detail)
-      } catch (printErr) {
-        error(4)(printErr.message)
+      } else {
+        error(4)(err.message)
       }
       echo()
     }

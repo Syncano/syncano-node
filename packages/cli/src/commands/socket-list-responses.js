@@ -21,8 +21,8 @@ const socketListResponses = (session) => ({
   lackSocket: ({ name }) => (
     `${name ? format.yellow(name) : 'This Socket'} was not found on server nor in config!`
   ),
-  createNewOne: `Type ${format.cyan('syncano-cli create <name>')} to create new one.`,
-  installNewOne: `Type ${format.cyan('syncano-cli add <name>')} to install new one from registry.`,
+  createNewOne: `Type ${format.cyan('npx s create <name>')} to create new one.`,
+  installNewOne: `Type ${format.cyan('npm install <name>')} to install new one from NPM registry.`,
   params: `${format.white('input')}:`,
   responses: `${format.white('output')}:`,
   socket: (socket) => {

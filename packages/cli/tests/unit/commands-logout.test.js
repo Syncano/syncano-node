@@ -16,12 +16,12 @@ describe('[commands] Logout', function () {
   let interEcho = null
   let echo = null
   logout.session.load()
-  .then(() => {
-    account = logout.session.settings.account
-  })
-  .catch(() => {
-    account = logout.session.settings.account
-  })
+    .then(() => {
+      account = logout.session.settings.account
+    })
+    .catch(() => {
+      account = logout.session.settings.account
+    })
 
   beforeEach(function () {
     interEcho = sinon.stub()

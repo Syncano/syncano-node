@@ -12,13 +12,14 @@ class HostingAdd {
     this.session = context.session
     this.Socket = context.Socket
     this.hostingName = null
-    this.socket = null
   }
 
   async run ([folder, cmd]) {
     this.folder = folder
-    this.socketName = cmd.socket
-    this.cname = cmd.cname
+    this.hostingName = cmd.hostingName || null
+    this.browserRouter = cmd.browserRouterOn || cmd.browserRouterOff || null
+    this.sync = cmd.dontSync ? false : (cmd.sync || null)
+    this.cname = cmd.withoutCname ? false : (cmd.cname || null)
     this.fullPath = null
 
     if (!fs.existsSync(this.folder)) {
@@ -31,50 +32,47 @@ class HostingAdd {
 
     const responses = await inquirer.prompt(this.getQuestions()) || {}
 
-    this.hostingName = responses.name
+    if (!this.hostingName) {
+      this.hostingName = responses.name
+    }
 
-    if (this.socketName) {
-      // TODO: implement Socket level hosting
-      const params = {
-      }
-      this.socket = await this.Socket.get(cmd.socket || responses.socket)
-      this.socket.addHosting(this.hostingName, params)
-    } else {
-      const params = {
-        name: this.hostingName,
-        browser_router: responses.browser_router,
-        src: path.relative(this.session.projectPath, path.join(process.cwd(), this.folder)),
-        cname: this.cname || responses.CNAME || null
-      }
+    const params = {
+      name: this.hostingName,
+      browser_router: responses.browser_router || this.browserRouter,
+      src: path.relative(this.session.projectPath, path.join(process.cwd(), this.folder)),
+      cname: responses.CNAME || this.cname
+    }
 
+    try {
+      await Hosting.add(params)
+      await this.syncNewHosting()
+    } catch (err) {
+      echo()
       try {
-        await Hosting.add(params)
-        await this.syncNewHosting()
-      } catch (err) {
-        echo()
-        try {
-          error(4)(err.response.data.detail)
-        } catch (printErr) {
-          error(4)(printErr.message)
-        }
-        echo()
+        error(4)(err.response.data.detail)
+      } catch (printErr) {
+        error(4)(printErr.message)
       }
+      echo()
     }
   }
 
   async syncNewHosting () {
-    const syncQuestion = [{
-      type: 'confirm',
-      name: 'confirm',
-      message: p(2)('Do you want to sync files now?'),
-      default: false
-    }]
+    if (this.sync == null) {
+      const syncQuestion = [{
+        type: 'confirm',
+        name: 'confirm',
+        message: p(2)('Do you want to sync files now?'),
+        default: false
+      }]
 
-    const response = await inquirer.prompt(syncQuestion)
+      const response = await inquirer.prompt(syncQuestion)
+      this.sync = response.confirm || this.sync
+    }
+
     echo()
-
-    if (!response.confirm) {
-      echo(4)(`To sync files use: ${format.cyan(`syncano-cli hosting sync ${this.hostingName}`)}`)
+    if (!this.sync) {
+      echo(4)(`To sync files use: ${format.cyan(`npx s hosting sync ${this.hostingName}`)}`)
       echo()
       return process.exit()
     }
@@ -83,25 +81,28 @@ class HostingAdd {
   }
 
   getQuestions () {
-    const questions = [{
-      name: 'name',
-      message: p(2)("Set hosting's name"),
-      default: 'staging',
-      validate: (value) => {
-        if (!value) {
-          return 'This parameter is required!'
+    const questions = []
+    if (!this.hostingName) {
+      questions.push({
+        name: 'name',
+        message: p(2)("Set hosting's name"),
+        default: 'staging',
+        validate: (value) => {
+          if (!value) {
+            return 'This parameter is required!'
+          }
+          return true
         }
-        return true
-      }
-    }]
+      })
+    }
 
-    if (!this.cname) {
+    if (this.cname == null) {
       questions.push({
         name: 'CNAME',
         message: p(2)('Set CNAME now (your own domain) or leave it empty')
       })
     }
-    if (!this.browser_router) {
+    if (!this.browserRouter) {
       questions.push({
         type: 'confirm',
         name: 'browser_router',

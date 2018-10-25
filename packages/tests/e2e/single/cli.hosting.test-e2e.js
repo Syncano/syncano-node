@@ -43,7 +43,7 @@ describe('CLI Commands - Hosting', function () {
       .respond('\n')
       .on(/sync files now/)
       .respond('\n')
-      .stdout(/sync files use: syncano-cli hosting sync/)
+      .stdout(/sync files use: npx s hosting sync/)
       .end(done)
   })
 
@@ -57,7 +57,7 @@ describe('CLI Commands - Hosting', function () {
       .respond('\n')
       .on(/sync files now/)
       .respond('\n')
-      .stdout(/sync files use: syncano-cli hosting sync/)
+      .stdout(/sync files use: npx s hosting sync/)
       .end(done)
   })
 

@@ -6,9 +6,9 @@ import Data from './data'
  * @property {Function}
  */
 class Users extends Data {
-  url (id) {
+  url (id, apiVersion) {
     const {instanceName} = this.instance
-    const url = `${this._getInstanceURL(instanceName)}/users/${id
+    const url = `${this._getInstanceURL(instanceName, apiVersion)}/users/${id
       ? id + '/'
       : ''}`
     const query = querystring.stringify(this.query)

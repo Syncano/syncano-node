@@ -19,7 +19,7 @@ export const createInstance = async (instanceName) => {
     echo()
     if (err.message === 'No such API Key.') {
       error(4)('It looks like your account key is invalid.')
-      echo(4)(`Try ${format.cyan('syncano-cli logout')} and ${format.cyan('syncano-cli login')} again.`)
+      echo(4)(`Try ${format.cyan('npx s logout')} and ${format.cyan('npx s login')} again.`)
     } else if (err.message === 'name: This field must be unique.') {
       error(4)('Instance already exist!')
       echo(4)('Try another instace name.')

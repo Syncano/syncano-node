@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/Syncano/syncano-node/compare/v0.12.1...v0.13.0) (2018-09-06)
+
+
+### Bug Fixes
+
+* replaced old syncano-cli with npx s ([#244](https://github.com/Syncano/syncano-node/issues/244)) ([0b08eac](https://github.com/Syncano/syncano-node/commit/0b08eac))
+* **cli:** removing registry tests ([5beba1e](https://github.com/Syncano/syncano-node/commit/5beba1e))
+* **cli:** tests ([d88959a](https://github.com/Syncano/syncano-node/commit/d88959a))
+* **cli:tests:** no more tests of registry ([3d4c5e2](https://github.com/Syncano/syncano-node/commit/3d4c5e2))
+
+
+
+
 <a name="0.12.0"></a>
 # [0.12.0](https://github.com/Syncano/syncano-node/compare/v0.11.0...v0.12.0) (2018-04-08)
 

@@ -1,31 +1,22 @@
 # You can define following properties in a `socket.yml` file:
 
-1. Language
-2. Config
+1. Config
 2. Endpoints
 3. Classes
 4. Channels
 5. Events
 6. Event Handlers
-7. Sockets
-8. Hosting
-
-## Language
-
-Language defines a programming language that is used in all the Socket scripts. Possible values are:
-- `javascript`
-- `python`
-
-The default value is `javascript`.
+7. Hosting
 
 ## Config
 
-A General configuration dictionary. Here you can store any configuration that is not socket specific. If you decide to store a config `VERY_SECRET` with a value `FOO` you could do it like so:
+A General configuration dictionary. Here you can store any configuration that is not socket specific. If you decide to store a config `MY_API_KEY` with a value `FOO` you could do it like so:
 
 ```yaml
 config:
-  VERY_SECRET:
-    value: FOO
+  API_KEY:
+    description: API key to external service
+    required: true
 ```
  It can be later accessed from every Socket Script within the current Instance with this code:
 
@@ -38,76 +29,56 @@ console.log(secret);
 
 ## Endpoints
 
-The most important part of the socket configuration file. This is where you'll define the socket API endpoints and connect them with underlying scripts.
-
-### Source/File
-When you define an endpoint, you can point to the script code by adding one of these properties:
-- `source`
-- `file`
-
-#### Source
- Source allows you to embed the script code directly in the `socket.yml` file, like so:
-
- ```yaml
- endpoints:
-  get_obj:
-    source: |
-      data.chat.get(id).return()
-````
-
-The `data.chat.get(id).return()` is a script code that will get executed when the `get_object` endpoint is called. The script code defined this way can span across multiple lines of the config file.
-
-#### File
-While the `source` method is great for one-liners, it might get cumbersome with more sophisticated script code. That's why the recommended way of passing the script code into endpoints is with `file` property:
+The most important part of the Socket configuration file. This is where you'll define the Socket API endpoints and connect them with underlying scripts.
 
 ```yaml
 endpoints:
   get_obj:
-    file: ./src/get_obj.js
+    description: My script to get objects
 ```
 
-`file` value is a relative path to the file containing the script code. The`socket.yml` location is the root.
-
-### Separation by HTTP methods
-
-By default, an endpoint will execute the same script on any type of HTTP request. There's an option to separate the request by `GET`, `POST`, `PUT`, `PATCH` and `DELETE`. This way the same endpoint might execute different scripts depending on an HTTP method:
+In that case file located in `<endopoint folder>/src/get_obj.js` as a default one.
+You can override it by setting up `file` property:
 
 ```yaml
-endpoints:  
-  endpoint_separate_by_http_method:
-    GET:
-      file: ./src/get_obj.js
-    POST:
-    	file: ./src/create_object.js
+endpoints:
+  get_obj:
+    description: My script to get objects
+    file: get_objects.js
 ```
 
+`<endopoint folder>/src/get_objects.js` will be used in this case.
+
+
 ### Endpoint documentation
-Since the yml file will accept any property, you can add your own notes to any part of the specification file. In case you would like your socket to be a part of Syncano Sockets Registry, you'll be required to document the socket endpoints in the following manner:
+Since the YAML file will accept any property, you can add your own notes to any part of the specification file. In case you would like your socket to be a part of Syncano Sockets Registry, you'll be required to document the socket endpoints in the following manner:
 
 ```yaml
 endpoints:
   send_email:
-    file: ./src/send_email.js
-    parameters:
-      email:
-        type: string
-        description: Email of the recipient
-        example: "hulk@hogan.net"
-    response:
-      mimetype: application/json
-      examples:
-        - exit_code: 200
-          description: "Email sent successfully"
-          example: |
-          {
-            "email_id": 320
-          }
-        - exit_code: 400
-          description: "Error while sending email"
-          example: |
-          {
-            "reason": "Internal error!"
-          }
+    file: send_email.js
+    inputs:
+      properties:
+        email:
+          type: string
+          description: Email of the recipient
+          example: "hulk@hogan.net"
+    outputs:
+      success:
+        description: Email sent successfully
+        examples:
+          - |
+            {
+              "email_id": 320
+            }
+      fail:
+        exit_code: 400
+        description: Error while sending email
+        examples:
+          - |
+            {
+              "reason": "Internal error!"
+            }
 ```
 
 |Documentation Property|Description|
@@ -135,7 +106,7 @@ Read the Real-Time Channels documentation to learn more about the real-time capa
 
 ## Classes
 
-Classes section allows you to specify the type of Data Objects you'd want to store within your Instance. In case you'd like to extend a Class with new properties, you can simply add them to a Class that was already configured in a `socket.yml`. Also, removing a Class from `socket.yml` will result in its deletion from an instance. Changes will be applied when running `syncano-cli deploy` command.
+Classes section allows you to specify the type of Data Objects you'd want to store within your Instance. In case you'd like to extend a Class with new properties, you can simply add them to a Class that was already configured in a `socket.yml`. Also, removing a Class from `socket.yml` will result in its deletion from an instance. Changes will be applied when running `npx s deploy` command.
 
 Example Class might be represented as follows:
 
@@ -165,8 +136,6 @@ It can be documented in the socket.yml in this manner:
 events:
   email_sent:
      description: "Emitted when e-mail is sent"
-     parameters:
-       - recipient
 ```
 
 ## Event Handlers
@@ -187,41 +156,7 @@ For example, if I wanted a script to be run after a Data Object is created in `c
 ```yaml
 event_handlers:
 	data.cars.create:
-  	file: ./event_handlers/data.cars.create.js
-```
-
-## Sockets
-Sockets can be added to Syncano in 3 ways:
-
-#### 1. The Syncano Socket Registry
-This will be the most common situation. A user searches for a socket by the `syncano-cli search` command and add it with `syncano-cli add <socket_name>`. Socket installed this way will have the following properties:
-
-```yaml
-mailing:
-      version: 0.1
-      src: syncano-socket-mailing
-```
-
-The `src` which stands for source is a socket name as listed in the Syncano Registry
-
-#### 2. Github repository
-A Syncano User can also install Sockets that are not available int the Sockets Registry. One of the options is an installation from a Github repository. In this case, the `src` points to the `socket.yml` file from the repository:
-
-The URL should point to a **raw** version of the `socket.yml` file! See the URL below.
-
-```yaml
-mailing:
-      version: 0.1
-      src: https://raw.githubusercontent.com/eyedea-io/syncano-socket-countries/master/socket.yml
-```
-
-### 3.File
-You can also install sockets directly from your machine. In this case, the `src` value will be the file path of the socket.yml file:
-
-```yaml
-mailing:
-      version: 0.1
-      src: ./mailing/socket.yml
+  	file: data.cars.create.js
 ```
 
 ## Hosting
@@ -240,6 +175,6 @@ hosting:
     src: ./build-staging
 ```
 
-The above example uses `production` and `staging` as hosting names, but the naming is arbitrary. `src` should point to a folder with your website build and cname (optional) would be the domain name that the hosting should point to.
+The above example uses `production` and `staging` as hosting names, but the naming is arbitrary. `src` should point to a folder with your website build and CNAME (optional) would be the domain name that the hosting should point to.
 
 Please see [Hosting documentation] to learn more about storing your web assets on Syncano.
