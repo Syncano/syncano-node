@@ -126,9 +126,9 @@ describe('[commands] Sync Hosting', function () {
 
       sinon.stub(socket, 'getHosting')
         .onFirstCall()
-          .returns(localHosting)
+        .returns(localHosting)
         .onSecondCall()
-          .returns(remoteHosting)
+        .returns(remoteHosting)
 
       await hostingSync.run([localHosting.name, { socket: getRandomString('syncHosting_socket[2]') }])
 

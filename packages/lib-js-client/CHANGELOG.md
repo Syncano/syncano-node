@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/compare/v0.12.1...v0.13.0) (2018-09-06)
+
+
+### Bug Fixes
+
+* **client:** include src in npm package ([4d35211](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/commit/4d35211))
+* **lib-js-client:** add missing types property ([cb3a3a3](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/commit/cb3a3a3))
+* **lib-js-client:** invalid ts-jest path ([8370376](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/commit/8370376))
+* **lib-js-client:** invalid ts-jest path ([a8a79fa](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/commit/a8a79fa))
+* **lib-js-client:** run unit tests, ignore spec files in npm package ([67c700b](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/commit/67c700b))
+
+
+
+
 <a name="0.12.0"></a>
 # [0.12.0](https://github.com/Syncano/syncano-node/compare/v0.11.0...v0.12.0) (2018-04-08)
 
