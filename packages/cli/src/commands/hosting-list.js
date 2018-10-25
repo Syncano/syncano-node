@@ -18,7 +18,7 @@ class HostingListCmd {
   static printNoHostingsInfo () {
     echo()
     echo(4)('You don\'t have any hostings!')
-    echo(4)(`Type ${format.cyan('syncano-cli hosting add')} to add hosting for your app!`)
+    echo(4)(`Type ${format.cyan('npx s hosting add')} to add hosting for your app!`)
     echo()
   }
 
@@ -36,6 +36,9 @@ class HostingListCmd {
   static printHosting (hosting) {
     const cname = typeof hosting.getCnameURL === 'function' && hosting.getCnameURL()
     echo(11)(`${format.dim('name')}: ${format.cyan(hosting.name)}`)
+
+    echon(2)(`   ${format.dim('local path')}:`)
+    echo(` ${format.cyan(hosting.src)}`)
 
     if (hosting.existRemotely) {
       echo(12)(`${format.dim('URL')}: ${format.cyan(hosting.getURL())}`)
@@ -56,7 +59,7 @@ class HostingListCmd {
 
     if (hosting.error) {
       const errorResponses = {
-        404: `Type ${format.green(`syncano-cli hosting sync ${hosting.name}`)} to sync your hosting with server.`
+        404: `Type ${format.green(`npx s hosting sync ${hosting.name}`)} to sync your hosting with server.`
       }
 
       echo()

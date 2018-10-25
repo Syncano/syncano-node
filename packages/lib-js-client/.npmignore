@@ -3,7 +3,8 @@ example
 coverage
 tests
 docs
-src
+src/__snapshots__
+src/index.spec.ts
 .npmignore
 .idea
 .DS_Store

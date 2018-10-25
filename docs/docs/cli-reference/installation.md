@@ -7,27 +7,30 @@
 npm install  @syncano/cli
 ```
 
-Now you can use `npx syncano-cli`:
+Now you can use `npx s`:
 
 ```sh
-npx syncano-cli
+npx s
 ```
 ```
-  Usage: syncano-cli [options] [command] 
+  Usage: s [options] [command] 
 
   Current Instance: your-instance-1234
 
   Basics:
 
+    info                 Info about current project/instance/user etc.
     init [options]       Start a Syncano project in the current directory
     attach [options]     Attach project to the chosen Instance
     login                Login to your account
     logout               Logout from your current account
+    sysinfo              Sys info for debug purpose
 
   Project:
 
     hot [socket_name]                          Hot deploy to make your project continuously synced to the Syncano cloud
     deploy [options] [socket_name]             Synchronize your project to Syncano
+    compile [socket_name]                      Compile Socket
     call [options] <socket_name>/<endpoint>    Call Socket's endpoint
     trace [socket_name]                        Trace Socket calls
 
@@ -41,16 +44,10 @@ npx syncano-cli
     config-set <socket_name> <option_name> <value>    Configure a config option of a given Socket
     config-show <socket_name>                         Show config options of a Socket
 
-  Registry:
-
-    search [options] [keyword]         Search for a specific Socket in the Sockets Registry
-    submit [options] <socket_name>     Submit a Socket to Socket Registry
-    publish [options] <socket_name>    Publish a Socket in a Socket Registry
-
   Other:
 
-    hosting       Manage your web assets and host them on Syncano
-    component     Manage your Socket components
+    hosting      Manage your web assets and host them on Syncano
+    instance     Manage your instances
 
   Options:
 

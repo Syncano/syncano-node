@@ -72,15 +72,6 @@ describe('Schema', function () {
       }
     })
 
-    it('invalid version', () => {
-      try {
-        Validator.validateMainSchema(getSchema('invalid_version'))
-        assert()
-      } catch (err) {
-        assert(err.details[0].message.match(/should match pattern/))
-      }
-    })
-
     it('invalid amount of keywords', () => {
       try {
         Validator.validateMainSchema(getSchema('invalid_keywords_amount'))

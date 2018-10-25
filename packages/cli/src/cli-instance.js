@@ -32,7 +32,7 @@ const setup = async () => {
   program
     .command('delete <instanceName>')
     .group('Instance')
-    .description('Create an Instance')
+    .description('Delete an Instance')
     .action(async (...options) => {
       session.isAuthenticated()
       echo()

@@ -6,7 +6,7 @@ import sinonTestFactory from 'sinon-test'
 import format from 'chalk'
 import inquirer from 'inquirer'
 import prettyBytes from 'pretty-bytes'
-import Table from 'cli-table2'
+import Table from 'cli-table3'
 
 import { getRandomString } from '@syncano/test-tools'
 
