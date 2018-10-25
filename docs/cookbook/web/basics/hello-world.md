@@ -15,7 +15,7 @@ Create `hello-world` Socket and `hello` endpoint with simple response.
 #### Create Hello World Socket
 
 ```sh
-npx s create hello-world --template empty
+npx s create hello-world
 ```
 
 #### Create endpoint file
@@ -45,4 +45,18 @@ and call it using your browser or any other HTTP client:
 
 ```sh
 curl https://bitter-sound-5197.syncano.space/hello-world/hello/
+```
+
+To check if the Socket works, call endpoint with firstname and lastname arguments.
+
+```
+https://bitter-sound-5197.syncano.space/hello-world/hello/?firstname=James&lastname=Smith
+```
+
+You should get an answer: 
+
+```
+{
+  "message": "Hello James Smith!"
+}
 ```
