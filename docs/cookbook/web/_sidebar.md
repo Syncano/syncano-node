@@ -21,12 +21,15 @@
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
   - AWS
+    - [Comprehend](/solutions/aws-comprehend)
     - [Photo Rekogniton](/solutions/aws-photo-rekognition)
     - [Polly](/solutions/aws-polly)
   - Payments
     - [Stripe](/solutions/stripe-payment)
   - Scraping
     - [Simple Web Scraper](/solutions/simple-web-scraper)
+  - Auth sockets
+    - [Face authentication](/solutions/face-auth)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
   - [Creating project template](/deployment/create-project-template)
