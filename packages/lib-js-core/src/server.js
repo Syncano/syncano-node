@@ -13,7 +13,6 @@ import Logger from './logger'
 import Channel from './channel'
 import Class from './class'
 import Settings from './settings'
-import Registry from './registry'
 
 class Server {
   constructor (ctx = {}) {
