@@ -63,4 +63,4 @@ and call it using your browser or any other HTTP client:
 curl https://bold-haze-9618.syncano.space/hello-world/hello/
 ```
 
-Response will have `text/plain` mime-type.
+Response will be a JSON object {"msg": 'Error!'} with HTTP code `400`.
