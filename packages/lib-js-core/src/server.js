@@ -35,7 +35,6 @@ class Server {
     this.instance = new Instance(config)
     this.logger = Logger(config)
     this.users = new Users(config)
-    this.registry = new Registry(config)
     this.data = new Proxy(new Data(settings), {
       get (target, className) {
         return new Data(getConfig(className))
