@@ -18,11 +18,15 @@
     <!-- - [Simple authentication](/auth/simple) -->
     <!-- - [Group-based authorization](/auth/simple) -->
 - Complete solutions
+  - AWS Solutions
+    - [Comprehend](/solutions/aws-comprehend)
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
   - AWS
     - [Configuration](/solutions/aws-config)
     - [Storage on S3](/solutions/aws-storage)
+  - Auth sockets
+    - [Face authentication](/solutions/face-auth)
 - Deployment
   - [Deploying projects using CircleCI](/deployment/circle-ci)
   - [Creating project template](/deployment/create-project-template)
