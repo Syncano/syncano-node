@@ -1,4 +1,4 @@
-# Channels
+# Real-time channels
 
 Listen on Syncano Realtime Channels.
 

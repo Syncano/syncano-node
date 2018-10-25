@@ -9,7 +9,7 @@
   - [Install Socket from NPM](/project/install-from-npm)
 - Building your own Sockets
   - [Basics](/building-sockets/basics)
-  - [Channels](/building-sockets/channels)
+  - [Real-time channels](/building-sockets/real-time-channels)
   - [Endpoints](/building-sockets/endpoints)
   - [Event Handlers](/building-sockets/event-handlers)
   - [Events](/building-sockets/events)
