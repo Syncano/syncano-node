@@ -133,30 +133,3 @@ s.setToken()
 ```
 
 ?> Usually you want to store user session in `localStorage` or `sessionStorage`. `setToken` is helpful when you want restore a session for a user without asking for a username and password
-
-## Subscribe to channel endpoint
-
- `s.subscribe(socket-name>/<endpoint-name>, callback)`
-
-You can subscribe to the live updates from the endpoints which are configured to expose real-time channel.
-Callback is fired each time you receive message from endpoint.
-
-```js
-// chat - socket name
-// messages - endpoint name
-s.subscribe('chat/messages', message => {
-  // Handle message
-  console.log(message)
-})
-```
-
-You can also use `once` method to get only first message. After receive messages, connection with channel will be closed.
-
-`s.subscribe.once(socket-name>/<endpoint-name>, callback)`
-
-```js
-s.subscribe.once('chat/messages', message => {
-  // Will be executed only once - after the first message
-  console.log(message)
-})
-```
