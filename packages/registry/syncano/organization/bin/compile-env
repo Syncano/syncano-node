@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-
-mkdir -p .dist
-cp package.json .dist
-cd .dist
-npm install --production

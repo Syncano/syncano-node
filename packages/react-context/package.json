@@ -2,7 +2,7 @@
   "name": "@syncano/react-context",
   "description": "Syncano client react context",
   "repository": "https://github.com/syncano/syncano-node/tree/master/packages/react-context",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "license": "MIT",
   "main": "index.es5.js",
   "esnext": "index.js",

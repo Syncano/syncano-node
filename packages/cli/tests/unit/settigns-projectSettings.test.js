@@ -23,41 +23,6 @@ describe('[settings] Project Settings', function () {
     settings.save.restore()
   })
 
-  describe('Socket', function () {
-    describe('install', function () {
-      it('should set new socket with version to local attributes dependencies', function () {
-        const socket = {
-          name: getRandomString('projectSettings_socket[0]_name'),
-          version: '0.1'
-        }
-        const expectedDependencies = {
-          [socket.name]: {
-            version: socket.version
-          }
-        }
-
-        settings.installSocket(socket)
-
-        expect(settings.attributes.dependencies.sockets).to.be.eql(expectedDependencies)
-      })
-
-      it('should set new socket with src to local attributes dependencies', function () {
-        const socket = {
-          name: getRandomString('projectSettings_socket[1]_name')
-        }
-        const expectedDependencies = {
-          [socket.name]: {
-            src: `./${socket.name}`
-          }
-        }
-
-        settings.installSocket(socket)
-
-        expect(settings.attributes.dependencies.sockets).to.be.eql(expectedDependencies)
-      })
-    })
-  })
-
   describe('Hosting', function () {
     describe.skip('getAllSocketsYmlPath', function () {
       it('should return array of files named socket.yml', async function () {

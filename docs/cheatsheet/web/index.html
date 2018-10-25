@@ -33,7 +33,7 @@
       <div class="c-version-select">
         <select data-version>
           <option value="master">master</option>
-          <option value="0">0.8</option>
+          <option value="0">0.11.0</option>
         </select>
       </div>
     </div>
@@ -559,20 +559,6 @@ s init -i <new_or_existing_instance></code></pre>
       <pre><code class="lang-bash">npx s config-set &lt;socket name&gt; &lt;option name&gt; &lt;value&gt;</code></pre>
     </section>
     <section data-tag="cli" class="c-column">
-      <h3>Registry</h3>
-
-      <h4>Search for Sockets</h4>
-      <pre><code class="lang-bash">npx s search &lt;keyword&gt;</code></pre>
-
-      <h4>Submit your Socket to the registry</h4>
-      <pre><code class="lang-bash">npx s submit  &lt;socket name&gt;
-
-# bump version of the Socket (e.g. major, minor, patch)
-s submit  &lt;socket name&gt; -b patch</code></pre>
-
-      <h4>Make you private Socket public</h4>
-      <pre><code class="lang-bash">npx s publish &lt;socket name&gt;</code></pre>
-
       <h3>Hosting</h3>
 
       <h4>Add new hosting</h4>
@@ -592,8 +578,15 @@ s submit  &lt;socket name&gt; -b patch</code></pre>
 
       <h4>Configure hosting options</h4>
       <pre><code class="lang-bash">npx s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
-s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code></pre>
-    </section>
+npx s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;
+
+# optional flags:
+-c, --cname &lt;domain_name&gt; add CNAME to hosting
+-d, --remove-cname &lt;domain_name&gt; removes CNAME from hosting
+-b, --browser-router &lt;true|false&gt; turn on/off the BrowserRouter support
+-h, --help  output usage information</code></pre>
+
+</section>
     <!--
 
       ==== SOCKET 1

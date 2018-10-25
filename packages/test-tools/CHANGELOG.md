@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/syncano/syncano-node/tree/master/packages/test-tools/compare/v0.12.1...v0.13.0) (2018-09-06)
+
+
+### Bug Fixes
+
+* **cli:** lint ([a6dc753](https://github.com/syncano/syncano-node/tree/master/packages/test-tools/commit/a6dc753))
+* **lib-test:** reading compiled files ([ad80095](https://github.com/syncano/syncano-node/tree/master/packages/test-tools/commit/ad80095))
+
+
+
+
 <a name="0.11.0"></a>
 # [0.11.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.11.0) (2018-03-17)
 
