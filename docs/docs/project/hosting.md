@@ -120,7 +120,7 @@ Hosting will be removed from your backend during the next `npx s deploy`.
 
 ## Socket mapping
 
-Mapping is a configuration of hosting which gives us possibility bypass preflighted requests in CORS
+Mapping is a configuration of hosting which gives you a possibility to expose sockets endpoints as a part of the hosting URL. It is also helping to avoid preflighted requests in CORS.
 
 ``` yaml
   sockets_mapping:
