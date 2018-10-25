@@ -10,7 +10,7 @@ You want to host simple website on Syncano.
 
 ### Solution
 
-In order to publish your website or application you just have to create a Hosting in Syncano and upload the files there (e.g. index.html file with simple ```<h1>Hello world!</h1>``` tag inside of body section). To set up your page you don't have to do anything more but upload an index.html file and set a CNAME record in your domain provider dashboard. Then the domain will be leading to your page.
+In order to publish your website or application you just have to create a Hosting in Syncano and upload the files there (e.g. index.html file with simple ```<h1>Hello world!</h1>``` tag inside of body section). To set up your page you don't have to do anything more but upload an index.html file and set a CNAME record in your domain name server dashboard. Then the domain will be leading to your page.
 
 #### Create hosting
 
@@ -25,10 +25,18 @@ npx s hosting add <path-of-local-project-folder-to-host>
 https://<hosting_name>--<instance_name>.syncano.site
 ``` -->
 
-Later, you will be asked to provide some info:
+If you want your own domain to point to your hosted files you need to create CNAME record in DNS which looks like:
+``` 
+Domain: your.domain.com  CNAME Record: <instance_name>.syncano.site
+``` 
+and set it when asked in prompt below or confirm that CNAME should be empty (to use internal address)
+
+Now, you will be asked to provide some info:
+```
 * Please name this hosting
-* Please choose directory of your project **(this one appears if you don't specify the path-of-local-project-folder-to-host])**
+* Please choose directory of your project (this one appears if you don't specify the path-of-local-project-folder-to-host)
 * Do you want to set CNAME now (your own domain) or should it be empty?
+```
 
 After proceeding with these prompts, hosting will be added to your configuration in `syncano.yml` hosting section. You have to `deploy` configuration after that operation. In terminal type:
 ```
