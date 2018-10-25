@@ -50,6 +50,7 @@ Later, you will be asked to choose the template:
 ?   Choose template for your Socket (Use arrow keys)
       Vanilla JS Socket - (@syncano/template-socket-vanilla)
 ❯     ES6 Socket - (@syncano/template-socket-es6)
+      ES6 Socket + validation - (@syncano/template-socket-es6-validate) 
 
 
 Your Socket configuration is stored at /Users/qk/my_project/syncano/hello-world
@@ -68,6 +69,9 @@ endpoints:
   hello:
     description: Hello world!
     inputs:
+      required:
+        - firstname
+        - lastname
       properties:
         firstname:
           type: string
