@@ -35,7 +35,7 @@ deployment:
   production:
     branch: master
     commands:
-      - npx syncano-cli deploy
+      - npx s deploy
 ```
 
 Now add this file to your repository:

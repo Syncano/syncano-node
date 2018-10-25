@@ -23,10 +23,13 @@ export default class QueryBuilder {
     this.result = []
   }
 
-  _getSyncanoURL () {
-    const {apiVersion, host} = this.instance
+  _getSyncanoURL (apiVersion) {
+    let apiVersionInURL = apiVersion
+    if (!apiVersionInURL) {
+      apiVersionInURL = this.instance.apiVersion
+    }
 
-    return `https://${host}/${apiVersion}`
+    return `https://${this.instance.host}/${apiVersionInURL}`
   }
 
   _getSyncanoRegistryURL () {
@@ -39,8 +42,8 @@ export default class QueryBuilder {
     return `https://${this.registryHost}`
   }
 
-  _getInstanceURL (instanceName) {
-    return `${this._getSyncanoURL()}/instances/${instanceName}`
+  _getInstanceURL (instanceName, apiVersion) {
+    return `${this._getSyncanoURL(apiVersion)}/instances/${instanceName}`
   }
 
   fetch (url, options = {}, headers = {}) {

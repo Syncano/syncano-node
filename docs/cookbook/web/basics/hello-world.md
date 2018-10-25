@@ -15,13 +15,13 @@ Create `hello-world` Socket and `hello` endpoint with simple response.
 #### Create Hello World Socket
 
 ```sh
-npx syncano-cli create hello-world --template empty
+npx s create hello-world --template empty
 ```
 
 #### Create endpoint file
 
 ```sh
-npx syncano-cli deploy hello-world
+npx s deploy hello-world
 ```
 ```
 socket synced: 17:10:06 hello-world 3943 ms
@@ -29,7 +29,7 @@ socket synced: 17:10:06 hello-world 3943 ms
 
 ### How it works?
 
-Now you can find URL for `hello` endpoint by typing `npx syncano-cli list hello-world`:
+Now you can find URL for `hello` endpoint by typing `npx s list hello-world`:
 
 ```
 socket: hello-world

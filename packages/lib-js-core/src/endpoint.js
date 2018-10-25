@@ -4,8 +4,8 @@ import QueryBuilder from './query-builder'
  * Running endpoints.
  * @property {Function}
  * @example {@lang javascript}
- * const latestTags = await socket.get('tags/list', { sort: 'latest' })
- * const createdTag = await socket.post('tags/create', { name: 'nature' })
+ * const latestTags = await endpoint.get('tags/list', { sort: 'latest' })
+ * const createdTag = await endpoint.post('tags/create', { name: 'nature' })
  */
 export default class Endpoint extends QueryBuilder {
   post (endpoint, body = {}, options = {}) {
@@ -34,10 +34,14 @@ export default class Endpoint extends QueryBuilder {
     return this.post(endpoint, {...data, _method: 'PATCH'}, options)
   }
 
-  _url (endpoint) {
-    const {instanceName, spaceHost} = this.instance
+  invalidate (endpoint) {
+    return this.fetch(`${this._url(endpoint)}invalidate/`, {method: 'POST'})
+  }
 
-    return `https://${instanceName}.${spaceHost}/${endpoint}/`
+  _url (endpoint) {
+    const {instanceName} = this.instance
+
+    return `${this._getInstanceURL(instanceName)}/endpoints/sockets/${endpoint}/`
   }
 
   _parseBody (body) {
