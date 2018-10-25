@@ -1,15 +1,15 @@
 # About Users
-In Syncano you have database classes. Users are just another type of database classes and you should think about users as a specific model of database. The easiest way to manage users is by using Syncano socket named user-auth.   
+In Syncano you have database classes. Users are just another type of database classes and you should think about users as a specific model of database. The easiest way to manage users is by using Syncano Socket named [user-auth](https://www.npmjs.com/package/@syncano/socket-user-auth).   
 
 ### Managing Users
-Thanks to built-in functionalities in user-auth socket you have access to following user actions:
+Thanks to built-in functionalities in user-auth Socket you have access to following user actions:
 
 - register user
 - login (authenticate)
 - update users data
 - delete user
 
-### How to create User
+### How to create a User
 
 ```js
 // syncano/<yoursocektname>/<endpointname>.js
@@ -28,9 +28,9 @@ export default async (ctx) => {
 }
 ```
 
-## How to use user-auth socket
+## How to use user-auth Socket
 
-### Register User
+### Register a User
 
 ```js
 const s = new SyncanoClient("YOUR-INSTANCE-NAME");
@@ -49,7 +49,7 @@ s.post("user-auth/register", {
 ```
 
 
-### Login User
+### Login a User
 
 ```js
 const s = new SyncanoClient("YOUR-INSTANCE-NAME");
@@ -67,7 +67,7 @@ s.post("user-auth/login", {
 })
 ```
 
-### Update User Data
+### Update a User Data
 ```js
 // syncano/<yoursocektname>/<endpointname>.js
 import Syncano from '@syncano/core'
@@ -89,7 +89,7 @@ export default async (ctx) => {
 }
 ```
 
-### Delete User
+### Delete a User
 ```js
 // syncano/<yoursocektname>/<endpointname>.js
 import Syncano from '@syncano/core'
