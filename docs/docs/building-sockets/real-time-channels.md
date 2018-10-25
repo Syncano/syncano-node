@@ -1,6 +1,6 @@
 # Real-time channels
 
-Channels is a web socket that gives the posibility to create applications which need to receive realtime data like chat
+Channels is a web Socket that gives the posibility to create applications which need to receive realtime data like chat
 
 Listen on Syncano Realtime Channels.
 
