@@ -18,6 +18,8 @@
     <!-- - [Simple authentication](/auth/simple) -->
     <!-- - [Group-based authorization](/auth/simple) -->
 - Complete solutions
+  - AWS Solutions
+    - [Comprehend](/solutions/aws-comprehend)
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
   - Auth sockets
