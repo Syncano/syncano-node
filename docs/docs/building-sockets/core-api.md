@@ -1,12 +1,18 @@
-# Using Core API library
+# Using Core library
 
-The Core API library should be used in the **Syncano Sockets** (inside the scripts powering the Syncano Sockets) to communicate with the **Syncano Core Services** and 3rd party integrated platforms. Syncano provides various Core Services:
-- **Database (db)** - NoSQL database to store your application data
+Syncano provides various Core Services and Core library contains an interface to interact with them:
+
+- **Database (data)** - NoSQL database to store your application data
 - **Users Management (users)** - service to store and manage users and groups of your application
 - **Event Loop (events)** - service to emit events which can be caught by any Socket
 - **Realtime Channels (channels)** - implement publish/subscribe model for realtime communication
 
-Library is by default a Syncano Socket dependency, you can check `package.json` file of your Socket:
+Core library also contains number of helpers to make working with scripts easy:
+
+- **Response method (response)** - lets you send response from the script
+- **Logging (logger)** - logger which helps with debugging scripts and measuring time of execution
+
+Core library is by default Syncano Socket dependency, you can check `package.json` file of your Socket:
 
 ```sh
 cat <my-project>/syncano/<my-socket-name>/package.json
@@ -36,7 +42,7 @@ import Syncano from '@syncano/core'
 export default (ctx) => {
   const { data, users, endpoint, response, event, logger } = new Syncano(ctx)
 
-  // Now you can access easily the database, e.g.:
+  // Now you can access the database easily, e.g.:
   // const awesomeMovie = await data.movies.where('title', 'Fight Club').first()
 
 }
@@ -86,6 +92,8 @@ data.tags.delete(7652)
 
 ### Users (users)
 
+You can interact with `users` same way as you do with data.
+
 ```js
 // Get first user with given mail
 users
@@ -108,6 +116,8 @@ users
 
 ### Events (events)
 
+Publish global `events` to which other Sockets can subscribe.
+
 ```js
 event.emit('my_signal', {dummyKey: 'dummy_value'})
   .then(event => {})
@@ -116,7 +126,24 @@ event.emit('my_signal', {dummyKey: 'dummy_value'})
   })
 ```
 
+Catch `events` by subscribing to a Socket emitting an event.     
+
+```yml
+event_handlers:
+  events.socket name.my_signal:
+    file: my_signal.js
+```
+
 ### Channels (channels)
+
+You can create a public channel...
+
+```yml
+endpoints:
+  messages:
+    channel: my_channel
+```
+...and send realtime messages.
 
 ```js
 channel.publish('my_channel', {dummyKey: 'dummy_value'})
@@ -124,16 +151,11 @@ channel.publish('my_channel', {dummyKey: 'dummy_value'})
   .catch(err => {})
 ```
 
-### Calling Sockets (sockets)
-
-```js
-const latestTags = await socket.get('tags/list', { sort: 'latest' })
-const createdTag = await socket.post('tags/create', { name: 'nature' })
-```
-
 ## Utils
 
 ### Response
+
+Response lets you send custom responses from Sockets.
 
 ```js
 // Simple text/plain response
@@ -156,6 +178,7 @@ response.json({
   content: "Lorem ipsum dolor sit amet."
 })
 
+// Respond with json string and custom header
 response
   .header('X-RATE-LIMIT', 50)
   .json({
@@ -165,6 +188,8 @@ response
 ```
 
 ### Logging
+
+Easy way to debug your script code. Think of it as your `console.log` but for your Socket.
 
 ```js
 // Listen for all events
