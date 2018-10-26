@@ -155,7 +155,7 @@ channel.publish('my_channel', {dummyKey: 'dummy_value'})
 
 ### Response
 
-Response lets you send custom responses from sockets.
+Response lets you send custom responses from Sockets.
 
 ```js
 // Simple text/plain response
