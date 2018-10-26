@@ -27,7 +27,7 @@ https://<hosting_name>--<instance_name>.syncano.site
 
 If you want your own domain to point to your hosted files you need to create CNAME record in DNS which looks like:
 ``` 
-Domain: your.domain.com  CNAME Record: <instance_name>.syncano.site
+CNAME your.domain.com -> <instance_name>.syncano.site
 ``` 
 and set it when asked in prompt below or confirm that CNAME should be empty (to use internal address)
 
