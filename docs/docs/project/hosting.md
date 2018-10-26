@@ -56,7 +56,7 @@ npx s hosting config <hosting name> --remove-cname <domain name>
 ### sync
 To synchronize all the hosting files execute:
 ```sh
-npx s hosting sync
+npx s hosting sync <hosting_name>
 ```
 After running this command all the hosting files will be uploaded to the server. You can find all of them in URL printed after successful synchronization.
 
