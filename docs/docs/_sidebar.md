@@ -16,6 +16,7 @@
   - [Events](/building-sockets/events)
   - [Dependencies](/building-sockets/dependencies)
   - [Database](/project/database)
+  - [Users](/building-sockets/users)
   - [Core Services](/building-sockets/core-api)
   - [Config Options](/building-sockets/config-options)
   - [YAML Syntax](/building-sockets/yaml-syntax)
