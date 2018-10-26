@@ -1,6 +1,6 @@
 # Using Core library
 
-Syncano provides various Core Services and Core library contains an interface to intereact with them:
+Syncano provides various Core Services and Core library contains an interface to interact with them:
 
 - **Database (data)** - NoSQL database to store your application data
 - **Users Management (users)** - service to store and manage users and groups of your application
@@ -126,7 +126,7 @@ event.emit('my_signal', {dummyKey: 'dummy_value'})
   })
 ```
 
-Catch `events` by subscribing to a Socket emmiting an event.     
+Catch `events` by subscribing to a Socket emitting an event.     
 
 ```yml
 event_handlers:
