@@ -16,7 +16,7 @@ Create empty `hello-world` Socket and `hello` endpoint, use `user` from `@syncan
 #### Create Socket
 
 ```sh
-npx s create hello-world --template example
+npx s create hello-world
 ```
 
 #### Edit endpoint file
@@ -25,19 +25,18 @@ npx s create hello-world --template example
 Edit file `syncano/hello-world/src/hello.js` and change its content to:
 
 ```js
-import crypto
 import Syncano from '@syncano/core'
 
-export default (ctx) => {
-  const {user, response} = Syncano(ctx)
+export default async (ctx) => {
+  const {response, users} = new Syncano(ctx)
+  const {args} = ctx 
 
-  user.create({
-    username: 'tyler.durden@paperstreetsoap.com'
-    password: crypto.randomBytes(64).toString('hex')
+  const user = await users.create({
+    username: args.username,
+    password: args.password
   })
-  .then(userObj => {
-    response.json({msg: `User with ID ${userObj.id} created!`})
-  })
+
+  response.json({msg: `User with ID ${user.id} created!`})
 }
 ```
 
