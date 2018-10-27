@@ -6,7 +6,7 @@ You can think of Syncano Sockets as an [npm](https://www.npmjs.com/) for buildin
 What differs Syncano Sockets from an npm workflow, is that you have more control over your configuration. Scripts that come with Sockets are not bundled and can be easily configured. Integration between `modules` relies on events that they emit. You can set listeners that will catch those events and execute an appropriate Socket. More on that in the sections below.
 
 ## File structure
-When you do a `npx syncano-cli init` from the Syncano CLI, a `syncano` folder will be created in your current directory. It has a following structure:
+When you do a `npx s init` from the Syncano CLI, a `syncano` folder will be created in your current directory. It has a following structure:
 
 ![File structure](building-sockets/syncano-socket-structure.png)
 
@@ -21,5 +21,5 @@ When you do a `npx syncano-cli init` from the Syncano CLI, a `syncano` folder wi
 
 > .dist folders
 
-> When you run `npx syncano-cli deploy` command, two system folders will be created by syncano-cli:
+> When you run `npx s deploy` command, two system folders will be created by syncano-cli:
 - .dist - contains zipped socket.yml files. syncano-cli is using these files to update your Instance configuration.

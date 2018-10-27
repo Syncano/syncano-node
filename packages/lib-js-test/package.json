@@ -2,7 +2,7 @@
   "name": "@syncano/test",
   "description": "Testing tools for Syncano Sockets",
   "repository": "https://github.com/syncano/syncano-node/tree/master/packages/lib-js-test",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "license": "MIT",
   "main": "lib/index.js",
   "publishConfig": {
@@ -17,7 +17,7 @@
     "lint": "standard --fix --env mocha"
   },
   "dependencies": {
-    "@syncano/validate": "0.13.0",
+    "@syncano/validate": "0.14.0",
     "bluebird": "^3.5.1",
     "faker": "^4.1.0",
     "js-yaml": "^3.12.0",

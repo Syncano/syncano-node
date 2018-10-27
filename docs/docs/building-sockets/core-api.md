@@ -1,20 +1,51 @@
+# Using Core library
+
+Syncano provides various Core Services and Core library contains an interface to interact with them:
+
+- **Database (data)** - NoSQL database to store your application data
+- **Users Management (users)** - service to store and manage users and groups of your application
+- **Event Loop (events)** - service to emit events which can be caught by any Socket
+- **Realtime Channels (channels)** - implement publish/subscribe model for realtime communication
+
+Core library also contains number of helpers to make working with scripts easy:
+
+- **Response method (response)** - lets you send response from the script
+- **Logging (logger)** - logger which helps with debugging scripts and measuring time of execution
+
+Core library is by default Syncano Socket dependency, you can check `package.json` file of your Socket:
+
+```sh
+cat <my-project>/syncano/<my-socket-name>/package.json
+```
+
+```json
+{
+  "dependencies": {
+    "@syncano/core": "0.13.0"
+  }
+}
+```
+
+If `@syncano/core` is not listed there you can use `npm` to install it (you have to be inside Socket folder):
+```sh
+cd <my-project>/syncano/<my-socket-name>/package.json
+npm add @syncano/core
+```
+
 ## Library initialization
 
 To initialize library simply import it in a Socket script where library will be used:
-```js
-import { data, users, socket, response, event, logger } from '@syncano/core'
-```
 
-Library initiated that way will grab necessary information from the context of you Socket Script - it means that you don't need to provide additional information such as Instance name or authentication key (token) to your Instance.
+```javascript
+import Syncano from '@syncano/core'
 
-If you want to force the library to connect to specified instance type:
-```js
-import Server from '@syncano/core'
+export default (ctx) => {
+  const { data, users, endpoint, response, event, logger } = new Syncano(ctx)
 
-const { data, events } = new Server({
-  token: '9-12jdiasdnfo23nrokms',
-  instanceName: 'example-instance-name'
-})
+  // Now you can access the database easily, e.g.:
+  // const awesomeMovie = await data.movies.where('title', 'Fight Club').first()
+
+}
 ```
 
 ## Core API
@@ -61,9 +92,11 @@ data.tags.delete(7652)
 
 ### Users (users)
 
+You can interact with `users` same way as you do with data.
+
 ```js
 // Get first user with given mail
-data.users
+users
   .where('email', 'john.doe@example.com')
   .first()
   .then(user => {
@@ -72,7 +105,7 @@ data.users
   })
 
 // Get first user with given mail, throws error if user was not found
-data.users
+users
   .where('email', 'john.doe@example.com')
   .firstOrFail()
   .then(user => {})
@@ -83,6 +116,8 @@ data.users
 
 ### Events (events)
 
+Publish global `events` to which other Sockets can subscribe.
+
 ```js
 event.emit('my_signal', {dummyKey: 'dummy_value'})
   .then(event => {})
@@ -91,7 +126,24 @@ event.emit('my_signal', {dummyKey: 'dummy_value'})
   })
 ```
 
+Catch `events` by subscribing to a Socket emitting an event.     
+
+```yml
+event_handlers:
+  events.socket name.my_signal:
+    file: my_signal.js
+```
+
 ### Channels (channels)
+
+You can create a public channel...
+
+```yml
+endpoints:
+  messages:
+    channel: my_channel
+```
+...and send realtime messages.
 
 ```js
 channel.publish('my_channel', {dummyKey: 'dummy_value'})
@@ -99,16 +151,11 @@ channel.publish('my_channel', {dummyKey: 'dummy_value'})
   .catch(err => {})
 ```
 
-### Calling Sockets (sockets)
-
-```js
-const latestTags = await socket.get('tags/list', { sort: 'latest' })
-const createdTag = await socket.post('tags/create', { name: 'nature' })
-```
-
 ## Utils
 
 ### Response
+
+Response lets you send custom responses from Sockets.
 
 ```js
 // Simple text/plain response
@@ -131,6 +178,7 @@ response.json({
   content: "Lorem ipsum dolor sit amet."
 })
 
+// Respond with json string and custom header
 response
   .header('X-RATE-LIMIT', 50)
   .json({
@@ -141,9 +189,9 @@ response
 
 ### Logging
 
-```js
-import {logger} from '@syncano/core'
+Easy way to debug your script code. Think of it as your `console.log` but for your Socket.
 
+```js
 // Listen for all events
 logger.listen(event => {
   // Handle event - save to db or send email

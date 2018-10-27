@@ -63,7 +63,7 @@ class HostingAdd {
         type: 'confirm',
         name: 'confirm',
         message: p(2)('Do you want to sync files now?'),
-        default: false
+        default: true
       }]
 
       const response = await inquirer.prompt(syncQuestion)
