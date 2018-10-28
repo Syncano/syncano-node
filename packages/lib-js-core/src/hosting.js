@@ -1,5 +1,6 @@
 import logger from 'debug'
 import QueryBuilder from './query-builder'
+import querystring from 'querystring'
 
 const debug = logger('core:hosting')
 
@@ -38,18 +39,40 @@ export default class Hosting extends QueryBuilder {
     })
   }
 
-  listFiles (hostingId) {
+  async listFiles (hostingId) {
     debug('listFiles')
+    const headers = {
+      'X-API-KEY': this.instance.accountKey
+    }
+    let results = []
+    const initialFetch = await this.fetch(this.urlFiles(hostingId), {}, headers)
+    const hasNext = initialFetch.next;
+    results = results.concat(initialFetch.objects.slice(0))
+    results = await this.fetchNextListFiles(hasNext, results)
     return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.urlFiles(hostingId), {}, headers)
-        .then(resp => {
-          resolve(resp.objects)
-        })
-        .catch(reject)
+      resolve(results)
+      .catch(reject)
     })
+  }
+
+  async fetchNextListFiles(hasNext, results){
+    debug('fetchNextListFiles')
+    const headers = {
+      'X-API-KEY': this.instance.accountKey
+    }
+    if (hasNext) {
+      const nextParams = querystring.parse(hasNext.replace(/.*\?/, ''))
+      const q = querystring.stringify(...nextParams)
+      const next = nextParams.replace(/\?.*/, '');
+      const url = `${this.baseUrl}${next}?${q}`
+      const nextFetch = await this.fetch(url, {}, headers)
+      await this.fetchNextListFiles(nextFetch.next, results)
+
+    return results.concat(nextFetch.objects.slice(0))
+    }
+    else {
+      return results
+    }
   }
 
   get (hostingId) {
