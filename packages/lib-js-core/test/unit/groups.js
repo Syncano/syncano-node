@@ -66,7 +66,7 @@ describe('Groups', () => {
       }).reply(200, (url, {label, description}) => ({
         id: 1,
         label,
-        description: ''
+        description
       }))
 
       const group = await groups.create(testGroup.label, 'Test group')
