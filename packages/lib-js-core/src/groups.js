@@ -38,7 +38,7 @@ class Groups extends QueryBuilder {
     }
   }
 
-    /**
+  /**
    *  Get group with users list
    *
    * @param {string} label - group name
@@ -135,7 +135,7 @@ class Groups extends QueryBuilder {
     }
   }
 
-    /**
+  /**
    * Get user groups list
    *
    * @param {number} user - user id
@@ -188,7 +188,7 @@ class Groups extends QueryBuilder {
     }
   }
 
-    /**
+  /**
    * Remove user from group
    *
    * @param {string} label - group name
