@@ -29,7 +29,7 @@ class Groups extends QueryBuilder {
       const groups = res.objects
 
       if(res.next) {
-        groups.concat(this._getGroups(res.next))
+        groups.concat(await this._getGroups(res.next))
       }
 
       return groups
