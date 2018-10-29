@@ -8,7 +8,17 @@ chai.should()
 
 describe('Groups', () => {
   const instanceName = 'testInstance'
-  const groupName = "testGroup"
+  const user = {
+    id: 1,
+    username: 'testUser',
+  }
+  const testGroup = {
+    id: 1,
+    label: "testGroup",
+    description: ''
+  }
+  const GROUPS_URL = `/v2/instances/${instanceName}/groups/`
+  const USER_GROUPS_URL = `/v2/instances/${instanceName}/users/${user.id}/groups/`
   let api
   let groups
 
@@ -23,57 +33,104 @@ describe('Groups', () => {
 
   describe('#list', () => {
     it('get list of groups', async () => {
+      api.get(GROUPS_URL).reply(200, {next: null, objects: ['admin', 'mod']})
+
       const list = await groups.list()
+
       list.should.be.a('array')
-    })
-  })
-
-  describe('#create', () => {
-    it('Create group', async () => {
-      const group = await groups.create(groupName, 'Test group')
-
-      group.should.be.a('object')
-      group.should.have.property('id')
-      group.should.have.property('label').equal(groupName)
+      list.should.have.lengthOf(2)
     })
   })
 
   describe('#get', () => {
     it('get group', async () => {
-      const group = await groups.get(groupName)
+      api.get(`${GROUPS_URL}1/users/`).reply(200, {objects: []})
+      api.get(GROUPS_URL).reply(200, {
+        next: null,
+        objects: [testGroup]
+      })
+
+      const group = await groups.get(testGroup.label)
+
+      group.should.have.property('id')
+      group.should.have.property('label').equal(testGroup.label)
+      group.should.have.property('users')
+    })
+  })
+
+  describe('#create', () => {
+    it('create group', async () => {
+      api.get(GROUPS_URL).reply(200, {next: null, objects: []})
+      api.post(GROUPS_URL, body => {
+        return body.label && body.description
+      }).reply(200, (url, {label, description}) => ({
+        id: 1,
+        label,
+        description: ''
+      }))
+
+      const group = await groups.create(testGroup.label, 'Test group')
 
       group.should.be.a('object')
       group.should.have.property('id')
-      group.should.have.property('label').equal(groupName)
+      group.should.have.property('label').equal(testGroup.label)
+    })
+  })
+
+  describe('#delete', () => {
+    it('delete group', () => {
+      api.delete(`${GROUPS_URL}1/`).reply(200)
+      api.get(`${GROUPS_URL}1/users/`).reply(200, {objects: []})
+      api.get(GROUPS_URL).reply(200, {
+        next: null,
+        objects: [testGroup]
+      })
+
+      groups.delete(testGroup.label)
+    })
+  })
+
+  describe('#user', () => {
+    it('get user groups', async () => {
+      api.get(USER_GROUPS_URL).reply(200, {
+        objects: [testGroup]
+      })
+      const userGroups = await groups.user(1)
+
+      userGroups.should.be.a('array')
     })
   })
 
   describe('#addUser', () => {
     it('add user to group', async () => {
-      const user = await groups.addUser(groupName, 1)
+      api.get(`${GROUPS_URL}1/users/`).reply(200, {objects: []})
+      api.get(GROUPS_URL).reply(200, {
+        next: null,
+        objects: [testGroup]
+      })
+      api.post(`${GROUPS_URL}1/users/`, body => body.user).reply(200, {
+        user: {
+          id: 1,
+          username: 'user'
+        }
+      })
 
-      user.should.be.a('object')
+      const user = await groups.addUser(testGroup.label, 1)
+
       user.should.have.property('user')
     })
   })
 
   describe('#removeUser', () => {
     it('remove user from group', () => {
-      groups.removeUser(groupName, 1)
-    })
-  })
+      api.delete(`${GROUPS_URL}1/users/1/`).reply(200)
+      api.get(`${GROUPS_URL}1/users/`).reply(200, {objects: []})
+      api.get(GROUPS_URL).reply(200, {
+        next: null,
+        objects: [testGroup]
+      })
 
-  describe('#delete', () => {
-    it('delete group', () => {
-      groups.delete(groupName)
-    })
-  })
-
-  describe('#user', () => {
-    it('get user groups', async () => {
-      const userGroups = await groups.user(1)
-
-      userGroups.should.be.a('object')
+      groups.removeUser(testGroup.label, 1)
     })
   })
 })
