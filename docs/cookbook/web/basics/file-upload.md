@@ -110,7 +110,7 @@ You'll have to handle the form submission with javascript:
 <script src="https://unpkg.com/@syncano/client"></script>
 <script>
 window.addEventListener('load', function () {
-  const s = new SyncanoClient('late-mountain-7516')
+  const s = new SyncanoClient('<YOUR-INSTANCE-NAME>')
   const submit = document.querySelector('.submit--js')
 
   submit.addEventListener('click', e => {
@@ -121,7 +121,7 @@ window.addEventListener('load', function () {
     formData.append('file', file)
     formData.append('filetype', file.filetype)
     formData.append('filename', file.name)
-    s.post('new-sockit/upload', formData)
+    s.post('<YOUR-SOCKET-NAME>/upload', formData)
       .then(res => { console.log(res) })
       .catch(err => { console.error(err) })
   })
