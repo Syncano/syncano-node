@@ -61,7 +61,7 @@ endpoints:
       - coordinates
     properties:
       coordinates:
-        description: latitude, longitude plus optional distance_in_kilometers or distance_in_miles
+        description: Latitude, longitude plus optional distance_in_kilometers or distance_in_miles
         type: object
     outputs:
       success:
