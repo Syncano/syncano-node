@@ -44,16 +44,16 @@ endpoints:
       success:
         exit_code: 200
         examples: |
-           {
-             "message": "location saved"
-           }
+          {
+            "message": "location saved"
+          }
       fail:
         exit_code: 404
         description: Failed
         examples: |
-           {
-             "message": Something went wrong!"
-           }
+          {
+            "message": Something went wrong!"
+          }
   get-near-location:
     description: Gets Data Objects in range of the provided geolocation data
     inputs:
