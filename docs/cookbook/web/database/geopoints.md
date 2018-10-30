@@ -22,11 +22,6 @@ To save the data, create a `save-location` endpoint. It will serve as a gateway 
 
 ```YAML
 name: geolocation
-description: Intereact with geolocation data object
-runtime: nodejs_v8
-keywords:
-  - geolocation
-  - coordinates
 
 classes:
   geolocation:
@@ -35,7 +30,7 @@ classes:
       filter_index: true
     - name: user
       type: reference
-      target: user  
+      target: user
 
 endpoints:
   save-location:
@@ -43,37 +38,37 @@ endpoints:
     inputs:
       properties:
         coordinates:
-          description: latitude, longitude plus optional distance_in_kilometers or distance_in_miles
+          description: Latitude, longitude plus optional distance_in_kilometers or distance_in_miles
           type: object
     outputs:
       success:
-       exit_code: 200
-       examples: |
+        exit_code: 200
+        examples: |
            {
              "message": "location saved"
            }
       fail:
-       exit_code: 404
-       description: Failed
-       examples: |
+        exit_code: 404
+        description: Failed
+        examples: |
            {
              "message": Something went wrong!"
-           }      
+           }
   get-near-location:
-   description: Gets Data Objects in range of the provided geolocation data
-   inputs:
-    required:
+    description: Gets Data Objects in range of the provided geolocation data
+    inputs:
+      required:
       - coordinates    
     properties:
       coordinates:
         description: latitude, longitude plus optional distance_in_kilometers or distance_in_miles
         type: object
-   outputs:
-    success:
-      exit_code: 200
-      description: returns a list of Data Objects matching the provided range
-    fail:
-      exit_code: 404
+    outputs:
+      success:
+        exit_code: 200
+        description: returns a list of Data Objects matching the provided range
+      fail:
+        exit_code: 404              
 ```
 
 > - `filter_index` will be needed if you want to make geolocation queries
@@ -114,7 +109,7 @@ export default async (ctx) => {
       user: user.id
     })
 
-    return response.json(createdGeoPoint, 200)
+    return response.json(createdGeoPoint)
   } catch (err) {
     return response.json(err, err.status || 404)
   }
