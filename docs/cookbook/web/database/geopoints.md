@@ -58,7 +58,7 @@ endpoints:
     description: Gets Data Objects in range of the provided geolocation data
     inputs:
       required:
-      - coordinates    
+      - coordinates
     properties:
       coordinates:
         description: latitude, longitude plus optional distance_in_kilometers or distance_in_miles
