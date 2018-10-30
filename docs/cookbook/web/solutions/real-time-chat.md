@@ -8,7 +8,7 @@
 
 ### Problem to solve
 
-You want to build simple real-time chat
+You want to build simple real-time chat.
 
 ### Solution
 
