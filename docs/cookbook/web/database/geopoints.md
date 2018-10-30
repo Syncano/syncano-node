@@ -68,7 +68,7 @@ endpoints:
         exit_code: 200
         description: returns a list of Data Objects matching the provided range
       fail:
-        exit_code: 404              
+        exit_code: 404
 ```
 
 > - `filter_index` will be needed if you want to make geolocation queries
