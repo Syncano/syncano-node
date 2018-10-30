@@ -1,28 +1,35 @@
 # Real-time chat
 
-**To get started you need:**
-- Basic understanding of JS, HTML & CSS
-- How socket works in syncano
+- Preparation: **10 minutes**
+- Requirements:
+  - Initiated Syncano project
+  - Basic understanding of JS, HTML & CSS
+  - How Socket works in Syncano
 
+### Problem to solve
 
-## Create instance and socket
+You want to build simple real-time chat
 
-  You must add to your project syncano cli and create instance.
+### Solution
+
+### Create instance and Socket
+
+  You must add to your project Syncano cli and create instance.
   
   ```bash
     npm install @syncano/cli
     npx s init
   ```
 
-  Now you are ready to create new socket.
+  Now you are ready to create new Socket.
 
   ```bash
     npx s create chat
   ```
 
-## Create real-time channel
+### Create real-time channel
 
-We must declare 2 sockets.
+We must declare 2 Sockets.
 
 First one for sending messages. Second to listen for new messages.
 
@@ -48,7 +55,7 @@ It should look like this:
         channel: global-message
   ```
 
-  In your socket to send message you must declare: 
+  In your Socket to send message you must declare: 
   
   ``` js
     channel.publish('<channel_name>', message_to_send)
@@ -66,11 +73,11 @@ It should look like this:
     }
   ```
 
-## Create client
+### Create client
 
 Ok, now you're ready to listen on created channel in your project.
 
-You must import syncano client to your project
+You must import Syncano client to your project
 ```html
   <script src="https://unpkg.com/@syncano/client@latest/dist/index.js"></script>
 ```
@@ -109,12 +116,12 @@ You must import syncano client to your project
   form.addEventListener('submit', e => {
     e.preventDefault();
 
-    // Post to your send message socket with content 
+    // Post to your send message Socket with content 
     syncano.post("chat/sendMessage", {message: e.target[0].value});
     e.target[0].value = '';
   })
 
-  // Listen on socket with your channel 
+  // Listen on Socket with your channel 
   syncano.listen('chat/globalChannel')
     .addEventListener('message', message => {
       // In payload we hold received message
@@ -130,7 +137,3 @@ You must import syncano client to your project
       mesagesContainer.scrollTop = mesagesContainer.scrollHeight;
     })
 ```
-
-
-
-
