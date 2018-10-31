@@ -2,13 +2,19 @@
 
 * Preparation time: **5 minutes**
 
-### Create template
+### Problem to solve
+
+You want to create a template project which you will be able to choose during the project initialization process, when using `npx s init` command.
+
+### Solution
 
 Check out `syncano-node` repository:
 
 ```sh
 git clone https://github.com/Syncano/syncano-node.git
 ```
+
+### Create template
 
 Then create your own template repository and copy empty template:
 
@@ -37,4 +43,13 @@ Install the Syncano CLI in your project:
 npm install @syncano/cli --save-dev
 ```
 
-Now you will be able to find your template on the list of templates while executing `npx s init` command.
+### How it works?
+
+Now you will be able to find your template on the list of templates while executing `npx s init` command:
+
+```sh
+Choose template for your project (Use arrow keys)
+  Empty Project Template - (@syncano/template-project-empty) 
+  Hello World Project Template - (@syncano/template-project-hello) 
+  Your New Project Template - (syncano-template-project-my-template) 
+```
