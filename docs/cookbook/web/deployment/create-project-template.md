@@ -18,10 +18,10 @@ cp -r syncano-node/packages/template-project-hello syncano-template-project-my-t
 ```
 
 Now you can start editing template configuration file `syncano-template-project-my-template/package.json`:
-- edit name of package
+- edit name of the package
 - edit template files in `syncano-template-project-my-template/template` folder
 
-!> name of package must start with  `syncano-template-project`
+!> name of the package must start with  `syncano-template-project`
 
 ### Using template
 
