@@ -21,6 +21,8 @@ In order to be able to use the GeoPoints functionality, you'll need a Data Class
 To save the data, create a `save-location` endpoint. It will serve as a gateway for writing the coordinates to your `geolocation` class.
 
 ```YAML
+name: geolocation
+
 classes:
   geolocation:
     - name: coordinates
@@ -36,36 +38,37 @@ endpoints:
     inputs:
       properties:
         coordinates:
-          type: geopoint
+          description: Latitude, longitude plus optional distance_in_kilometers or distance_in_miles
+          type: object
     outputs:
       success:
-       exit_code: 200
-       examples:
-         - |
-           {
-             "message": "location saved"
-           }
+        exit_code: 200
+        examples: |
+          {
+            "message": "location saved"
+          }
       fail:
-       exit_code: 404
-       description: Failed
-       examples:
-         - |
-           {
-             "message": Something went wrong!"
-           }
+        exit_code: 404
+        description: Failed
+        examples: |
+          {
+            "message": Something went wrong!"
+          }
   get-near-location:
-   description: Gets Data Objects in range of the provided geolocation data
-   inputs:
+    description: Gets Data Objects in range of the provided geolocation data
+    inputs:
+      required:
+      - coordinates
     properties:
       coordinates:
-        description: latitude, longitude plus optional distance_in_kilometers or distance_in_miles
+        description: Latitude, longitude plus optional distance_in_kilometers or distance_in_miles
         type: object
-   outputs:
-    success:
-      exit_code: 200
-      description: returns a list of Data Objects matching the provided range
-    fail:
-      exit_code: 404
+    outputs:
+      success:
+        exit_code: 200
+        description: returns a list of Data Objects matching the provided range
+      fail:
+        exit_code: 404
 ```
 
 > - `filter_index` will be needed if you want to make geolocation queries
@@ -86,23 +89,27 @@ The geopoint schema field is an object that contains three properties - `type`, 
 Once you have added the GeoPoint field type to your Data Class, you can start creating Data Objects with geolocation data. If you named your GeoPoint field as `coordinates`, the `save-location.js` script file would look like this:
 
 ```js
-import Server from '@syncano/core'
+import Syncano from '@syncano/core'
 
 export default async (ctx) => {
-  const { data, response } = new Server(ctx)
+  const { data, response } = new Syncano(ctx)
   const { latitude, longitude } = ctx.args
-  const user = ctx.meta.user.id
+  const { user } = ctx.meta
+
+  if(!user) {
+      return response.json('No such user', 401)
+  }
 
   try {
     // To store only one geolocation Data Object per user, you can use `updateOrCreate`
     // method. To keep all the past info we would simply `create` a new object
     // each time a user sends his geolocation data
-    const { status } = await data.geolocation.updateOrCreate({ user }, {
+    const createdGeoPoint = await data.geolocation.updateOrCreate({user: user.id}, {
       coordinates: { latitude, longitude },
-      user
+      user: user.id
     })
 
-    return response.json({ message: 'location saved' }, status)
+    return response.json(createdGeoPoint)
   } catch (err) {
     return response.json(err, err.status || 404)
   }
@@ -133,10 +140,10 @@ Making a near query will return all the objects that are within the given range.
 This is how an example script doing the `near` lookup would look like:
 
 ```js
-import Server from '@syncano/core'
+import Syncano from '@syncano/core'
 
 export default async (ctx) => {
-  const { data, response } = new Server(ctx)
+  const { data, response } = new Syncano(ctx)
   const { latitude, longitude } = ctx.args
 
   try {
