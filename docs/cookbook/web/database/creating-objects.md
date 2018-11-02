@@ -46,7 +46,7 @@ Save the `.yml` file and update your remote Socket:
 npx s deploy hello-world
 ```
 
-> See Docs on [Data Classes](https://0-docs.syncano.io/#/building-sockets/data-classes?id=overview) for more info on available data types
+> See Docs on [Database](https://0-docs.syncano.io/#/project/database) for more info on available data types
 
 #### Edit Socket Endpoint file
 
