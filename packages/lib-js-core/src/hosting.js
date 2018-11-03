@@ -1,6 +1,5 @@
 import logger from 'debug'
 import QueryBuilder from './query-builder'
-import querystring from 'querystring'
 
 const debug = logger('core:hosting')
 
@@ -41,37 +40,39 @@ export default class Hosting extends QueryBuilder {
 
   async listFiles (hostingId) {
     debug('listFiles')
-    const headers = {
-      'X-API-KEY': this.instance.accountKey
+    try {
+    return  await this.request(this.urlFiles(hostingId))
+    } catch(err) {
+      throw err
     }
-    let results = []
-    const initialFetch = await this.fetch(this.urlFiles(hostingId), {}, headers)
-    const hasNext = initialFetch.next;
-    results = results.concat(initialFetch.objects.slice(0))
-    results = await this.fetchNextListFiles(hasNext, results)
-    return new Promise((resolve, reject) => {
-      resolve(results)
-      .catch(reject)
-    })
   }
 
-  async fetchNextListFiles(hasNext, results){
-    debug('fetchNextListFiles')
+  async request (url) {
+    debug('request')
     const headers = {
       'X-API-KEY': this.instance.accountKey
     }
-    if (hasNext) {
-      const nextParams = querystring.parse(hasNext.replace(/.*\?/, ''))
-      const q = querystring.stringify(...nextParams)
-      const next = nextParams.replace(/\?.*/, '');
-      const url = `${this.baseUrl}${next}?${q}`
-      const nextFetch = await this.fetch(url, {}, headers)
-      await this.fetchNextListFiles(nextFetch.next, results)
-
-    return results.concat(nextFetch.objects.slice(0))
+    try {
+      let result = await this.fetch(url, {}, headers)
+      let objects = result.objects
+      objects = await this.loadNextPage(result, objects)
+      return objects
+    } catch (err) {
+      throw err
     }
-    else {
-      return results
+  }
+
+  async loadNextPage (response , objects) {
+    debug('loadNextPage')
+    let hasNextPageMeta = response.next
+    try {
+      if (hasNextPageMeta) {
+        const nextObjects =  await this.request(`${this.baseUrl}${hasNextPageMeta}`)
+        return objects.concat(nextObjects)
+      }
+    return objects
+    } catch(err) {
+      throw err
     }
   }
 
