@@ -38,13 +38,9 @@ export default class Hosting extends QueryBuilder {
     })
   }
 
-  async listFiles (hostingId) {
+  listFiles (hostingId) {
     debug('listFiles')
-    try {
-    return  await this.request(this.urlFiles(hostingId))
-    } catch(err) {
-      throw err
-    }
+    return this.request(this.urlFiles(hostingId))
   }
 
   async request (url) {
@@ -52,28 +48,20 @@ export default class Hosting extends QueryBuilder {
     const headers = {
       'X-API-KEY': this.instance.accountKey
     }
-    try {
-      let result = await this.fetch(url, {}, headers)
-      let objects = result.objects
-      objects = await this.loadNextPage(result, objects)
-      return objects
-    } catch (err) {
-      throw err
-    }
+    let result = await this.fetch(url, {}, headers)
+    let objects = result.objects
+    objects = await this.loadNextPage(result, objects)
+    return objects
   }
 
   async loadNextPage (response , objects) {
     debug('loadNextPage')
     let hasNextPageMeta = response.next
-    try {
-      if (hasNextPageMeta) {
-        const nextObjects =  await this.request(`${this.baseUrl}${hasNextPageMeta}`)
-        return objects.concat(nextObjects)
-      }
-    return objects
-    } catch(err) {
-      throw err
+    if (hasNextPageMeta) {
+      const nextObjects =  await this.request(`${this.baseUrl}${hasNextPageMeta}`)
+      return objects.concat(nextObjects)
     }
+    return objects
   }
 
   get (hostingId) {

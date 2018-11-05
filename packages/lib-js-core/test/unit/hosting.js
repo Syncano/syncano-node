@@ -71,18 +71,18 @@ describe('Hosting', () => {
           next: null
         })
         return hosting
-        .listFiles(hostingId)
-        .then(objects => {
-              should(objects)
-                .be.Array()
-                .length(302)
-              should(objects)
-                .have.propertyByPath(0, 'path')
-                .which.is.String()
-              should(objects)
-                .have.propertyByPath(0, 'id')
-                .which.is.Number()
-            })
+          .listFiles(hostingId)
+          .then(objects => {
+            should(objects)
+              .be.Array()
+              .length(302)
+            should(objects)
+              .have.propertyByPath(0, 'path')
+              .which.is.String()
+            should(objects)
+              .have.propertyByPath(0, 'id')
+              .which.is.Number()
+        })
     })
 
     it('should return [] when no objects were found', () => {
