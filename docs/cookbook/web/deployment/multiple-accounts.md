@@ -14,7 +14,7 @@ The solution is to can set environment variables when you working with particula
 
 ### Setting up account and instance
 
-Every process has an environment block that contains a set of environment variables and their values. 
+Here is a list of environment variables used by Syncano CLI: 
 
 - *SYNCANO_PROJECT_INSTANCE* - name of the instance you want to use for that project
 - *SYNCANO_AUTH_KEY* - API key of the account you want to use to access that instance
