@@ -34,8 +34,8 @@ Now you can start editing template configuration file `syncano-template-project-
 You can install your template locally in you project. To do that go to your project folder and run:
 
 ```sh
-# npm install ../<path to template>
-npm install ../syncano-template-project-my-template
+# npm install --save-dev ../<path to template>
+npm install --save-dev ../syncano-template-project-my-template
 ```
 
 Install the Syncano CLI in your project:
