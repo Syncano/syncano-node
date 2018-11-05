@@ -3,18 +3,18 @@
 * Preparation time: **3 minutes**
 * Requirements:
   - Initiated Syncano project
-  - Understand Syncano hosting
-  - CircleCI account (https://circleci.com/)
+  - [Understand Syncano hosting](https://0-docs.syncano.io/#/project/hosting)
+  - [CircleCI account](https://circleci.com/)
 
 ### Problem to solve
 
-You want to configure circleCi for Syncano project
+You want to configure circleCi for Syncano project.
 
 ### Solution
 
 ### Create CircleCI configuration file
 
-First you should create syncano.yaml in your project folder
+First you should create syncano.yaml in your project folder:
 
 ```yaml
 hosting:
@@ -25,7 +25,7 @@ hosting:
 
 ```
 
-If you create hosting from cli this file above will be created automatically
+If you will create hosting from cli this file above will be created automatically.
 
 ```sh
 npx s hosting add <PATH>
