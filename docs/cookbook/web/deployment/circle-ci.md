@@ -8,15 +8,15 @@
 
 ### Problem to solve
 
-You want to configure circleCi for Syncano project.
+You want to configure CircleCi for Syncano project.
 
 ### Solution
 
 ### Create CircleCI configuration file
 
-First you should create syncano.yaml in your project folder:
+First you should create syncano.yml in your project folder:
 
-```yaml
+```yml
 hosting:
   website:
     src: ../.build/website
@@ -40,7 +40,7 @@ touch circle.yml
 
 Now edit `circle.yml` file:
 
-```yaml
+```yml
 version: 2
 
 jobs:
