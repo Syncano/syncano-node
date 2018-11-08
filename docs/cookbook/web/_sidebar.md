@@ -24,6 +24,8 @@
     - [Comprehend](/solutions/aws-comprehend)
   - Bots
     - [Facebook Weather Bot](/solutions/weather-bot)
+  - Real-time
+    - [Chat](/solutions/real-time-chat)
   - Auth sockets
     - [Face authentication](/solutions/face-auth)
 - Deployment

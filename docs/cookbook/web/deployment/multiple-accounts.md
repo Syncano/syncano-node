@@ -8,12 +8,18 @@
 
 Let's say that you have more than one Syncano account and you want to use different accounts for different projects you are working with.
 
+### Solution
+
+The solution is to can set environment variables when you working with particular project.
+
 ### Setting up account and instance
 
-The solution is to can set environment variables when you working with particular project:
+Here is a list of environment variables used by Syncano CLI: 
 
 - *SYNCANO_PROJECT_INSTANCE* - name of the instance you want to use for that project
 - *SYNCANO_AUTH_KEY* - API key of the account you want to use to access that instance
+
+### How it works?
 
 For example:
 

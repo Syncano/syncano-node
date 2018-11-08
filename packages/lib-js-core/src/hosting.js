@@ -40,16 +40,28 @@ export default class Hosting extends QueryBuilder {
 
   listFiles (hostingId) {
     debug('listFiles')
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.urlFiles(hostingId), {}, headers)
-        .then(resp => {
-          resolve(resp.objects)
-        })
-        .catch(reject)
-    })
+    return this.request(this.urlFiles(hostingId))
+  }
+
+  async request (url) {
+    debug('request')
+    const headers = {
+      'X-API-KEY': this.instance.accountKey
+    }
+    let result = await this.fetch(url, {}, headers)
+    let objects = result.objects
+    objects = await this.loadNextPage(result, objects)
+    return objects
+  }
+
+  async loadNextPage (response , objects) {
+    debug('loadNextPage')
+    let hasNextPageMeta = response.next
+    if (hasNextPageMeta) {
+      const nextObjects =  await this.request(`${this.baseUrl}${hasNextPageMeta}`)
+      return objects.concat(nextObjects)
+    }
+    return objects
   }
 
   get (hostingId) {
