@@ -73,7 +73,7 @@ describe('Backups', () => {
   })
 
   describe('#get', () => {
-    it('Get backups list', async () => {
+    it('Get backup', async () => {
       api.get(`${BACKUPS_URL}703/`).reply(200, backup)
       const data = await Backups.get(703)
 
