@@ -14,6 +14,7 @@ import Channel from './channel'
 import Class from './class'
 import Settings from './settings'
 import Groups from './groups'
+import Backups from './backups'
 
 class Server {
   constructor (ctx = {}) {
@@ -37,6 +38,7 @@ class Server {
     this.logger = Logger(config)
     this.users = new Users(config)
     this.groups = new Groups(config)
+    this.backups = new Backups(config)
     this.data = new Proxy(new Data(settings), {
       get (target, className) {
         return new Data(getConfig(className))
