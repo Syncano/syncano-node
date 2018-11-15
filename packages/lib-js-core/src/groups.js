@@ -23,19 +23,14 @@ class Groups extends QueryBuilder {
     const options = {
       method: 'GET',
     }
+    const res = await fetch(url, options)
+    let groups = res.objects
 
-    try {
-      const res = await fetch(url, options)
-      let groups = res.objects
-
-      if (res.next) {
-        groups = groups.concat(await this._getGroups(`${this.baseUrl}${res.next}`))
-      }
-
-      return groups
-    } catch(err) {
-      throw err
+    if (res.next) {
+      groups = groups.concat(await this._getGroups(`${this.baseUrl}${res.next}`))
     }
+
+    return groups
   }
 
   /**
@@ -73,11 +68,7 @@ class Groups extends QueryBuilder {
    * const groupsList = await groups.list()
    */
   async list() {
-    try {
-      return await this._getGroups(this.url())
-    } catch (err) {
-      throw err
-    }
+    return this._getGroups(this.url())
   }
 
   /**
@@ -96,17 +87,12 @@ class Groups extends QueryBuilder {
       method: 'POST',
       body: JSON.stringify({label, description})
     }
+    const group = await this.get(label)
 
-    try {
-      const group = await this.get(label)
-
-      if(!group) {
-        return await fetch(this.url(), options)
-      } else {
-        throw new Error('Group already exist')
-      }
-    } catch (err) {
-      throw err
+    if(!group) {
+      return fetch(this.url(), options)
+    } else {
+      throw new Error('Group already exist')
     }
   }
 
@@ -125,14 +111,9 @@ class Groups extends QueryBuilder {
     const options = {
       method: 'DELETE'
     }
+    const group = await this.get(label)
 
-    try {
-      const group = await this.get(label)
-
-      return await fetch(`${this.url()}${group.id}/`, options)
-    } catch (err) {
-      throw err
-    }
+    return fetch(`${this.url()}${group.id}/`, options)
   }
 
   /**
@@ -151,14 +132,9 @@ class Groups extends QueryBuilder {
     const options = {
       method: 'GET'
     }
+    const res = await fetch(`${this._getInstanceURL(instanceName)}/users/${user}/groups/`, options)
 
-    try {
-      const res = await fetch(`${this._getInstanceURL(instanceName)}/users/${user}/groups/`, options)
-
-      return res.objects.map(elem => elem.group)
-    } catch (err) {
-      throw err
-    }
+    return res.objects.map(elem => elem.group)
   }
 
   /**
@@ -178,14 +154,9 @@ class Groups extends QueryBuilder {
       method: 'POST',
       body: JSON.stringify({user})
     }
+    const group = await this.get(label)
 
-    try {
-      const group = await this.get(label)
-
-      return await fetch(`${this.url()}${group.id}/users/`, options)
-    } catch (err) {
-      throw err
-    }
+    return fetch(`${this.url()}${group.id}/users/`, options)
   }
 
   /**
@@ -204,14 +175,9 @@ class Groups extends QueryBuilder {
     const options = {
       method: 'DELETE'
     }
+    const group = await this.get(label)
 
-    try {
-      const group = await this.get(label)
-
-      return await fetch(`${this.url()}${group.id}/users/${user}/`, options)
-    } catch (err) {
-      throw err
-    }
+    return fetch(`${this.url()}${group.id}/users/${user}/`, options)
   }
 }
 
