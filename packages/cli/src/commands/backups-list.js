@@ -15,7 +15,6 @@ class BackupsList {
       backup.forEach(elem => this.printBackups(elem))
       echo()
     } catch (err) {
-      debug(err)
       error(err.message)
       process.exit(1)
     }

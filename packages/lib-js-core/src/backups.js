@@ -24,9 +24,12 @@ class Backups extends QueryBuilder {
     const options = {
       method: 'GET',
     }
+    const headers = {
+      'x-api-key': this.instance.accountKey
+    }
 
     try {
-      const res = await fetch(url, options)
+      const res = await fetch(url, options, headers)
       let backups = res.objects
 
       if(res.next) {
@@ -58,8 +61,11 @@ class Backups extends QueryBuilder {
     const options = {
       method: 'POST',
     }
+    const headers = {
+      'x-api-key': this.instance.accountKey
+    }
 
-    return fetch(this.url(), options)
+    return fetch(this.url(), options, headers)
   }
 
   /**
@@ -74,8 +80,11 @@ class Backups extends QueryBuilder {
     const options = {
       method: 'GET',
     }
+    const headers = {
+      'x-api-key': this.instance.accountKey
+    }
 
-    return fetch(`${this.url()}${id}/`, options)
+    return fetch(`${this.url()}${id}/`, options, headers)
   }
 }
 
