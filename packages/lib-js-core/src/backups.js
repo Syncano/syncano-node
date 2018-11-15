@@ -27,19 +27,14 @@ class Backups extends QueryBuilder {
     const headers = {
       'x-api-key': this.instance.accountKey
     }
+    const res = await fetch(url, options, headers)
+    let backups = res.objects
 
-    try {
-      const res = await fetch(url, options, headers)
-      let backups = res.objects
-
-      if(res.next) {
-        backups = backups.concat(await this._getGroups(`${this.baseUrl}${res.next}`))
-      }
-
-      return backups
-    } catch(err) {
-      throw err
+    if(res.next) {
+      backups = backups.concat(await this._getGroups(`${this.baseUrl}${res.next}`))
     }
+
+    return backups
   }
 
   /**

@@ -8,7 +8,6 @@ class BackupsCreate {
   }
 
   async run () {
-    echo()
     try {
       const spinner = new SimpleSpinner(p(2)('Creating Backup...')).start()
       const backup = await this.Backups.create()
@@ -17,17 +16,23 @@ class BackupsCreate {
       spinner.succeed(p(2)(`Your backup was created`))
       echo()
     } catch (err) {
+      echo()
       error(err.message)
       process.exit(1)
     }
   }
 
   async _createBackup (id) {
+    await this.timeout(3000)
     const backup = await this.Backups.get(id)
 
     if (backup.status !== 'success') {
       await this._createBackup(id)
     }
+  }
+
+  timeout (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
