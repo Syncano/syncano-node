@@ -26,10 +26,10 @@ class Groups extends QueryBuilder {
 
     try {
       const res = await fetch(url, options)
-      const groups = res.objects
+      let groups = res.objects
 
-      if(res.next) {
-        groups.concat(await this._getGroups(res.next))
+      if (res.next) {
+        groups = groups.concat(await this._getGroups(`${this.baseUrl}${res.next}`))
       }
 
       return groups
