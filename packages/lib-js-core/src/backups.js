@@ -13,7 +13,7 @@ class Backups extends QueryBuilder {
   }
 
   /**
-   *  Backups list helper
+   * Backups list helper
    *
    * @param {string} url
    *
@@ -40,7 +40,7 @@ class Backups extends QueryBuilder {
   }
 
   /**
-   *  Backups list
+   * Backups list
    *
    * @return {Promise}
    */
@@ -49,7 +49,7 @@ class Backups extends QueryBuilder {
   }
 
   /**
-   *  Create new backup
+   * Create new backup
    *
    * @return {Promise}
    */
@@ -63,7 +63,7 @@ class Backups extends QueryBuilder {
   }
 
   /**
-   *  Get backup
+   * Get backup
    *
    * @param {number} id - Backup id
    *
