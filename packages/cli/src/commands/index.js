@@ -20,8 +20,6 @@ import SocketEndpointCall from './socket-call'
 import SocketTrace from './socket-trace'
 import SocketCreate from './socket-create'
 import SocketUninstall from './socket-uninstall'
-import ComponentList from './component-list'
-import ComponentLink from './component-link'
 import InstanceList from './instance-list'
 import InstanceCreate from './instance-create'
 import InstanceDelete from './instance-delete'
@@ -50,8 +48,6 @@ export default {
   SocketTrace,
   SocketCreate,
   SocketUninstall,
-  ComponentList,
-  ComponentLink,
   InstanceList,
   InstanceCreate,
   InstanceDelete,
