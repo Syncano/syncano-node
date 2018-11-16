@@ -13,7 +13,7 @@ class Backups extends QueryBuilder {
   }
 
   /**
-   *  Backups list helper
+   * Backups list helper
    *
    * @param {string} url
    *
@@ -38,7 +38,7 @@ class Backups extends QueryBuilder {
   }
 
   /**
-   *  Backups list
+   * Backups list
    *
    * @return {Promise}
    */
@@ -47,7 +47,7 @@ class Backups extends QueryBuilder {
   }
 
   /**
-   *  Create new backup
+   * Create new backup
    *
    * @return {Promise}
    */
@@ -64,7 +64,36 @@ class Backups extends QueryBuilder {
   }
 
   /**
-   *  Get backup
+   * Delete backup
+   *
+   * @param {number} id - Backup id
+   *
+   * @return {Promise}
+   */
+  async delete (id) {
+    const fetch = this.fetch.bind(this)
+    const options = {
+      method: 'DELETE',
+    }
+    const headers = {
+      'x-api-key': this.instance.accountKey
+    }
+
+    return fetch(`${this.url()}${id}/`, options, headers)
+  }
+
+  /**
+   * Delete all backups
+   *
+   * @return {Promise}
+   */
+  async deleteAll () {
+    const backups = await this.list()
+    backups.forEach(({id}) => this.delete(id))
+  }
+
+  /**
+   * Get backup
    *
    * @param {number} id - Backup id
    *
@@ -80,6 +109,27 @@ class Backups extends QueryBuilder {
     }
 
     return fetch(`${this.url()}${id}/`, options, headers)
+  }
+
+  /**
+   * Get last backup
+   *
+   * @return {Promise}
+   */
+  async last () {
+    const backups = await this.list()
+    return backups.pop()
+  }
+
+  /**
+   * Update backup
+   *
+   * @return {Promise}
+   */
+  async update () {
+    const {id} = await this.last()
+    await this.create()
+    await this.delete(id)
   }
 }
 

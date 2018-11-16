@@ -8,15 +8,25 @@ class BackupsList {
   }
 
   async run () {
-    echo()
     try {
       const backup = await this.Backups.list()
-      backup.forEach(elem => this.printBackups(elem))
+      if (backup.length) {
+        backup.forEach(elem => this.printBackups(elem))
+      } else {
+        this.printNoBackupsInfo()
+      }
       echo()
     } catch (err) {
       error(err.message)
       process.exit(1)
     }
+  }
+
+  printNoBackupsInfo () {
+    echo()
+    echo(4)('You don\'t have any backups!')
+    echo(4)(`Type ${format.cyan('npx s backups create')} to add backups for your app!`)
+    echo()
   }
 
   async printBackups ({id, instance, author, created_at, updated_at, details}) {

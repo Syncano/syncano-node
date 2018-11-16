@@ -28,6 +28,8 @@ import InstanceDelete from './instance-delete'
 import SysInfo from './sysinfo'
 import BackupsCreate from './backups-create'
 import BackupsList from './backups-list'
+import BackupsLast from './backups-last'
+import BackupsDelete from './backups-delete'
 
 export default {
   Attach,
@@ -59,5 +61,7 @@ export default {
   InstanceDelete,
   SysInfo,
   BackupsCreate,
-  BackupsList
+  BackupsList,
+  BackupsLast,
+  BackupsDelete
 }

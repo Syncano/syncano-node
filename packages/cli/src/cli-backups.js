@@ -32,6 +32,31 @@ const setup = async () => {
       new commands.BackupsList(context).run(options)
     })
 
+  program
+    .command('last')
+    .group('Backups')
+    .description('Last backup')
+    .action(async (...options) => {
+      session.isAuthenticated()
+      session.hasProject()
+      await session.checkConnection()
+      echo()
+      new commands.BackupsLast(context).run(options)
+    })
+
+  program
+    .command('delete <id>')
+    .group('Backups')
+    .option('all', 'Delete all backups')
+    .description('Delete backup')
+    .action(async (...options) => {
+      session.isAuthenticated()
+      session.hasProject()
+      await session.checkConnection()
+      echo()
+      new commands.BackupsDelete(context).run(options)
+    })
+
   if (!process.argv.slice(2).length) {
     program.outputHelp()
   }

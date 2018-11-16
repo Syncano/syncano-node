@@ -37,6 +37,7 @@ describe('Backups', () => {
   beforeEach(() => {
     const server = new Server({
       token: 'testKey',
+      accountKey: 'testKey',
       instanceName
     })
     Backups = server.backups
@@ -72,10 +73,65 @@ describe('Backups', () => {
     })
   })
 
+  describe('#delete', () => {
+    it('Delete backup', async () => {
+      api.delete(`${BACKUPS_URL}703/`).reply(200)
+
+      await Backups.delete(backup.id)
+    })
+  })
+
+  describe('#deleteAll', () => {
+    it('Delete all backups', async () => {
+      api.delete(`${BACKUPS_URL}703/`).reply(200)
+      api.get(BACKUPS_URL).reply(200, {
+        next: null,
+        prev: null,
+        objects: [backup]
+      })
+
+     await Backups.deleteAll()
+    })
+  })
+
   describe('#get', () => {
     it('Get backup', async () => {
       api.get(`${BACKUPS_URL}703/`).reply(200, backup)
       const data = await Backups.get(703)
+
+      data.should.be.a('object')
+      data.should.have.property('id').equal(703)
+      data.should.have.property('instance')
+      data.should.have.property('author')
+      data.should.have.property('status')
+    })
+  })
+
+  describe('#getLast', () => {
+    it('Get last backup', async () => {
+      api.get(BACKUPS_URL).reply(200, {
+        next: null,
+        prev: null,
+        objects: [backup, backup]
+      })
+      const data = await Backups.last()
+
+      data.should.be.a('object')
+      data.should.have.property('id').equal(703)
+      data.should.have.property('instance')
+      data.should.have.property('author')
+      data.should.have.property('status')
+    })
+  })
+
+  describe('#update', () => {
+    it('Update backup ', async () => {
+      api.get(BACKUPS_URL).reply(200, {
+        next: null,
+        prev: null,
+        objects: [backup, backup]
+      })
+      const data = await Backups.last()
 
       data.should.be.a('object')
       data.should.have.property('id').equal(703)
