@@ -30,15 +30,15 @@ class BackupsList {
   }
 
   async printBackups ({id, instance, author, created_at, updated_at, details}) {
-    echo(12)(`${format.dim('id')}: ${format.cyan.bold(id)}`)
-    echo(6)(`${format.dim('instance')}: ${instance}`)
-    echo(8)(`${format.dim('author')}: ${author.email}`)
+    echo(4)(`        ${format.dim('id')}: ${format.cyan.bold(id)}`)
+    echo(4)(`  ${format.dim('instance')}: ${instance}`)
+    echo(4)(`    ${format.dim('author')}: ${author.email}`)
     echo(4)(`${format.dim('created at')}: ${this.dateParser(created_at)}`)
     echo(4)(`${format.dim('updated at')}: ${this.dateParser(updated_at)}`)
-    echo(7)(`${format.dim('details')}:`)
-    echo(14)(`${format.dim('class')}: ${details.class.count}`)
-    echo(13)(`${format.dim('socket')}: ${details.socket.count}`)
-    echo(12)(`${format.dim('hosting')}: ${details.hosting.count}`)
+    echo(4)(`   ${format.dim('details')}:`)
+    echo(8)(`  ${format.dim('class')}: ${details.class.count}`)
+    echo(8)(` ${format.dim('socket')}: ${details.socket.count}`)
+    echo(8)(`${format.dim('hosting')}: ${details.hosting.count}`)
     echo()
   }
 
