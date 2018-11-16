@@ -239,6 +239,43 @@ log.info('This is info message!', {hello: "world"})</code></pre>
       <pre data-type="socket"><code class="lang-yaml">event_handlers:
   events.socket name.email_sent:
     file: email-sent.js</code></pre>
+      <!--
+
+      ==== Groups
+
+      -->
+      <h3>Groups</h3>
+      <p>Syncano groups</p>
+      <h4>Import</h4>
+      <pre><code class="lang-js">const {groups} = new Syncano(ctx)</code></pre>
+      <h4>Groups management</h4>
+      <pre><code class="lang-js">
+// Create group
+await groups.create(name, description)
+
+//Delete group
+await groups.delete(name)
+
+//Groups list
+await groups.list()
+
+//Get group with users list
+await groups.get(name)
+      </code></pre>
+      <h4>Users management in groups</h4>
+      <pre><code class="lang-js">
+//Get group with users list
+await groups.get(name)
+
+//Get user groups
+await groups.user(userId)
+
+//Add user to group
+await groups.addUser(name, userId)
+
+//Remove user from group
+await groups.removeUser(name, userId)
+      </code></pre>
     </section>
     <!--
 
