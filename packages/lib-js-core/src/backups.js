@@ -120,17 +120,6 @@ class Backups extends QueryBuilder {
     const backups = await this.list()
     return backups.pop()
   }
-
-  /**
-   * Update backup
-   *
-   * @return {Promise}
-   */
-  async update () {
-    const {id} = await this.last()
-    await this.create()
-    await this.delete(id)
-  }
 }
 
 export default Backups
