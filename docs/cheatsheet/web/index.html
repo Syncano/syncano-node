@@ -625,6 +625,23 @@ s init -i <new_or_existing_instance></code></pre>
       <h4>Configure hosting options</h4>
       <pre><code class="lang-bash">npx s hosting config &lt;hosting name&gt; --cname &lt;domain name&gt;
 s hosting config &lt;hosting name&gt; --remove-cname &lt;domain name&gt;</code></pre>
+
+      <h3>Backups</h3>
+
+      <h4>Create new backup</h4>
+      <pre><code class="lang-bash">npx s backups create</code></pre>
+
+      <h4>Delete backup</h4>
+      <pre><code class="lang-bash">npx s backups delete &lt;id&gt;</code></pre>
+
+      <h4>Delete all backups</h4>
+      <pre><code class="lang-bash">npx s backups delete all</code></pre>
+
+      <h4>Backups list</h4>
+      <pre><code class="lang-bash">npx s backups list</code></pre>
+
+      <h4>Last backup</h4>
+      <pre><code class="lang-bash">npx s backups last</code></pre>
     </section>
     <!--
 

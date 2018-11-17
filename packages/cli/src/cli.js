@@ -256,6 +256,10 @@ const setup = async () => {
     })
 
   program
+    .command('backups', 'Menage your backups')
+    .on('*', (commandsArr) => validateCommands(commandsArr))
+
+  program
     .command('hosting', 'Manage your web assets and host them on Syncano')
     .on('*', (commandsArr) => validateCommands(commandsArr))
 

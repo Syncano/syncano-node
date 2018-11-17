@@ -24,19 +24,17 @@ class Backups extends QueryBuilder {
     const options = {
       method: 'GET',
     }
-
-    try {
-      const res = await fetch(url, options)
-      let backups = res.objects
-
-      if(res.next) {
-        backups = backups.concat(await this._getGroups(`${this.baseUrl}${res.next}`))
-      }
-
-      return backups
-    } catch(err) {
-      throw err
+    const headers = {
+      'x-api-key': this.instance.accountKey
     }
+    const res = await fetch(url, options, headers)
+    let backups = res.objects
+
+    if(res.next) {
+      backups = backups.concat(await this._getGroups(`${this.baseUrl}${res.next}`))
+    }
+
+    return backups
   }
 
   /**
@@ -58,8 +56,40 @@ class Backups extends QueryBuilder {
     const options = {
       method: 'POST',
     }
+    const headers = {
+      'x-api-key': this.instance.accountKey
+    }
 
-    return fetch(this.url(), options)
+    return fetch(this.url(), options, headers)
+  }
+
+  /**
+   * Delete backup
+   *
+   * @param {number} id - Backup id
+   *
+   * @return {Promise}
+   */
+  async delete (id) {
+    const fetch = this.fetch.bind(this)
+    const options = {
+      method: 'DELETE',
+    }
+    const headers = {
+      'x-api-key': this.instance.accountKey
+    }
+
+    return fetch(`${this.url()}${id}/`, options, headers)
+  }
+
+  /**
+   * Delete all backups
+   *
+   * @return {Promise}
+   */
+  async deleteAll () {
+    const backups = await this.list()
+    backups.forEach(({id}) => this.delete(id))
   }
 
   /**
@@ -74,8 +104,21 @@ class Backups extends QueryBuilder {
     const options = {
       method: 'GET',
     }
+    const headers = {
+      'x-api-key': this.instance.accountKey
+    }
 
-    return fetch(`${this.url()}${id}/`, options)
+    return fetch(`${this.url()}${id}/`, options, headers)
+  }
+
+  /**
+   * Get last backup
+   *
+   * @return {Promise}
+   */
+  async last () {
+    const backups = await this.list()
+    return backups.pop()
   }
 }
 
