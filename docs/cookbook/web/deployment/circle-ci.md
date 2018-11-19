@@ -46,28 +46,27 @@ version: 2
 jobs:
   install:
     docker:
-      - image: circleci/node:9.10.0
+      - image: circleci/node
     working_directory: ~/repo
     steps:
       - checkout
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package-lock.json" }}
-          - v1-dependencies-
+          - v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: Installing Dependencies
           command: npm i
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
+          key: v1-dependencies-{{ checksum "package.json" }}
       - persist_to_workspace:
           root: .
           paths:
             - node_modules
   upload-website:
     docker:
-      - image: circleci/node:9.10.0
+      - image: circleci/node
     working_directory: ~/repo
     steps:
       - checkout
@@ -76,8 +75,8 @@ jobs:
       - run:
           name: Uploading website and setting CNAME
           command: |
-            npx syncano-cli hosting sync website
-            npx syncano-cli hosting config website -b true # --cname YOUR_CNAME
+            npx s hosting sync website
+            npx s hosting config website -b true # --cname YOUR_CNAME
 workflows:
   version: 2
   build-test-deploy:
