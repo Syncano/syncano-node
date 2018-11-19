@@ -22,7 +22,7 @@ Our solution is based on two Sockets. [openweathermap](https://syncano.io/#/sock
 
 To install `openweathermap` type:
 ```sh
-$ npx s socket install openweathermap
+$ npm install @eyedea-sockets/openweathermap
 ```
 
 Now you have to provide API key for the OpenWeatherMap Service:
@@ -39,7 +39,7 @@ Now you have to provide API key for the OpenWeatherMap Service:
 
 To install `messenger-bot` type:
 ```sh
-$ npx s socket install messenger-bot
+$ npm install @eyedea-sockets/messenger-bot
 ```
 
 To properly configure the Socket you will need create Facebook Page and Facebook Application.
