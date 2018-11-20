@@ -97,6 +97,7 @@ export default class Login {
       echo()
       echo(4)(`😢  ${format.red(err.message)}`)
       echo()
+      process.exit(1)
     }
   }
 
