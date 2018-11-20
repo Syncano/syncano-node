@@ -1,3 +1,4 @@
+import format from 'chalk'
 import logger from '../utils/debug'
 import { echo } from '../utils/print-tools'
 import { socketNotFound } from './helpers/socket'
@@ -16,6 +17,9 @@ class SocketListCmd {
   async run ([socketName, cmd]) {
     info('SocketListCmd.run')
     this.fullPrint = cmd.full || !!socketName
+
+    echo()
+    echo(4)(`instance: ${format.yellow(this.session.project.instance)}`)
 
     if (socketName) {
       try {
