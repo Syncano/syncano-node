@@ -51,7 +51,11 @@ Then you have to provide `Page Token`, follow the instructions to get it from Fa
     To find the token, go to the 'Messenger > Settings > Token Generation' section in your Facebook Application settings panel at https://developers.facebook.com.
 
     Type in value: EAAbvRMZClZC4YBAL63OHJLSMWwbSKg9BM1eojt2VU0fv95vkgURMjqDqKPUVZCuN3HjNE8fjt2TJfK8Jt68fwVAAltb8JnQjgpcbMHF9eqh2OiH4ZC0ftsJz3h5ZA7wKOWacDOQGte9b9Lhl3KKuvdrJJhIgjZAAeXKgUXmSkEdgZDZD
-    Your socket is ready to use! Type npx s socket list messenger-bot to see docs.
+```
+
+Your socket is ready to use! To see its docs type:
+```sh
+ npx s list messenger-bot
 ```
 
 #### Creating a "responder" Socket
@@ -66,7 +70,7 @@ We need to only create a logic which will be responsible for the data flow:
 We will create new Socket called `responder`:
 
 ```sh
-$ npx s socket create responder
+$ npx s create responder
 ```
 
 Choose empty project for this Socket:
@@ -78,7 +82,7 @@ Choose empty project for this Socket:
 
 #### Building logic of the "responder" Socket
 
-First thing is to catch en event about received message, to do that we have to add event handler o to the Socket config file (syncnao/responder/socket.yml):
+First thing is to catch an event about received message, to do that we have to add event handler to the Socket config file (syncano/responder/socket.yml):
 
 ```yaml
 event_handlers:
@@ -103,43 +107,52 @@ event_handlers:
 Next step is to create actual script to:
 
 ```javascript
-import { endpoint, event } from '@syncano/core'
+import Syncano from '@syncano/core'
 
+export default async ctx => {
+  const {event, endpoint} = new Syncano(ctx)
+  const {text, sender} = ctx.args
+  console.log(text)
 
-const city = ARGS.text  // Getting a city name from the input argument
-const sender = ARGS.sender // ID of the user who sent the message
+  if (text.toLowerCase().indexOf('hello') >= 0) {
+    event.emit('messenger-bot.message-send', {text: `Hi, this is Syncano Weather bot 😎 
+To check the weather, please type your city name in your message ie. Oslo  `, sender} )
+  } else if (text.toLowerCase().indexOf('help') >= 0) {
+    event.emit('messenger-bot.message-send', {text: `It looks like you need some help 🤔 
+To check the weather, please type your city name in your message ie. Oslo  `, sender} )
+  } else {
+    endpoint.post('openweathermap/get-three-hours', {city: text})
+    .then(forecast => {
+      // Creating response message
+      const response = ['In the next few hours you can expect:']
+      let rain = false
+      forecast.forEach(prediction => {
+         response.push(`${prediction.hour} - ${prediction.forecast}`)
+         if (prediction.forecast.toLowerCase() == 'rain') {
+           rain = true
+         }
+      })
 
-// Getting forecast by calling "openweathermap" socket and "get-three-hours-forecast" endpoint
-endpoint.post('openweathermap/get-three-hours-forecast', {city})
-  .then(resp => resp.json())
-  .then(forecast => {
+      // Let's check if it is going to rain and add proper message to response
+      if (rain) {
+        response.push(`It looks like you need an umbrella in ${text} 🌧`)
+      } else {
+        response.push(`You don\'t need an umbrella in ${text} 😎`)
+      }
 
-    // Creating response message
-    const response = ['In next 3 hours you can expect:']
-    let rain = false
-    forecast.forEach(prediction => {
-       response.push(`${prediction.hour} - ${prediction.forecast}`)
-       if (prediction.forecast.toLowerCase() == 'rain') {
-         rain = true
-       }
+      // This event will be caught by "messenger-bot" Socket
+      // Content of the text argument will be sent as a replay
+      event.emit('messenger-bot.message-send', {text: response.join('\n'), sender} )
     })
+    .catch(err => {
+      // This event will be caught by "messenger-bot" Socket
+      // Content of the text argument (in this case error message) will be sent as a replay
+      event.emit('messenger-bot.message-send', {text: `Something went wrong: ${err.data.message}. 
+To check the weather, please type your city name in your message ie. Oslo`, sender} )
+    })
+  }
 
-    // Let's check if it is going to rain and add proper message to response
-    if (rain) {
-      response.push(`It looks like you need an umbrella in ${city}!`)
-    } else {
-      response.push(`You don\'t need an umbrella in ${city}!`)
-    }
-
-    // This event will be caught by "messenger-bot" Socket
-    // Content of the text argument will be sent as a replay
-    event.emit('m-bot-msg-send', {text: response.join('\n'), sender})
-  })
-  .catch(err => {
-    // This event will be caught by "messenger-bot" Socket
-    // Content of the text argument (in this case error message) will be sent as a replay
-    event.emit('m-bot-msg-send', {text: err.message, sender})
-  })
+ }
 ```
 
 ### Testing functionality
