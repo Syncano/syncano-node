@@ -9,11 +9,11 @@ class BackupsCreate {
 
   async run () {
     try {
-      const spinner = new SimpleSpinner(p(2)('Creating Backup...')).start()
+      const spinner = new SimpleSpinner(p(2)('Creating backup...')).start()
       const backup = await this.Backups.create()
       await this._createBackup(backup.id)
       spinner.stop()
-      spinner.succeed(p(2)(`Your backup was created`))
+      spinner.succeed(p(2)(`Backup was created.`))
       echo()
     } catch (err) {
       echo()

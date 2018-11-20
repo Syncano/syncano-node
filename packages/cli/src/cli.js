@@ -241,7 +241,7 @@ const setup = async () => {
     })
 
   program
-    .command('backups', 'Menage your backups')
+    .command('backup', 'Menage your backups')
     .on('*', (commandsArr) => validateCommands(commandsArr))
 
   program

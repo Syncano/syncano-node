@@ -10,7 +10,7 @@ const setup = async () => {
 
   program
     .command('create')
-    .group('Backups')
+    .group('Backup')
     .description('Create backup')
     .action(async (...options) => {
       session.isAuthenticated()
@@ -22,7 +22,7 @@ const setup = async () => {
 
   program
     .command('list')
-    .group('Backups')
+    .group('Backup')
     .description('List backups')
     .action(async (...options) => {
       session.isAuthenticated()
@@ -34,7 +34,7 @@ const setup = async () => {
 
   program
     .command('last')
-    .group('Backups')
+    .group('Backup')
     .description('Last backup')
     .action(async (...options) => {
       session.isAuthenticated()
@@ -46,7 +46,7 @@ const setup = async () => {
 
   program
     .command('delete <id>')
-    .group('Backups')
+    .group('Backup')
     .option('all', 'Delete all backups')
     .description('Delete backup')
     .action(async (...options) => {
