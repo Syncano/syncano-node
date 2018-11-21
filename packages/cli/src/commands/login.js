@@ -5,7 +5,7 @@ import validator from 'validator'
 
 import logger from '../utils/debug'
 import { track } from '../utils/analytics'
-import { echo, p } from '../utils/print-tools'
+import { echo, p, error} from '../utils/print-tools'
 
 const { debug } = logger('cmd-login')
 
@@ -78,7 +78,9 @@ export default class Login {
       Login.displayNewAccountMessage()
       return this.loginCallback(account, 'signup')
     } catch (err) {
-      echo(`Register error: ${err.message}`)
+      echo()
+      error(4)(err.message)
+      echo()
       process.exit()
     }
   }
@@ -87,7 +89,7 @@ export default class Login {
     debug('Registering/Logging in', email)
     try {
       const account = await this.session.connection.account.login({ email, password })
-      this.loginCallback(account)
+      return this.loginCallback(account)
     } catch (err) {
       if (err.message === 'Invalid email.') {
         debug('Login failed, trying to register')
