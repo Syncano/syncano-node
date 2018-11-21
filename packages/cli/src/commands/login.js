@@ -5,7 +5,7 @@ import validator from 'validator'
 
 import logger from '../utils/debug'
 import { track } from '../utils/analytics'
-import { echo, p, error} from '../utils/print-tools'
+import { echo, p, error } from '../utils/print-tools'
 
 const { debug } = logger('cmd-login')
 
