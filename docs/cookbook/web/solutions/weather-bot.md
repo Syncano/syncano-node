@@ -3,7 +3,7 @@
 - Preparation: **6 minutes**
 - Requirements:
   - Initiated Syncano project
-  - OpenWeatherMap API key
+  - OpenWeatherMap API
   - Facebook App Page Token
 - Sockets:
   - [openweathermap](https://syncano.io/#/sockets/openweathermap)
@@ -11,18 +11,23 @@
 
 ### Problem to solve
 
-You want to build simple Messenger bot for Facebook page which can give you forecast for next 3 hours for particular city.
+You want to build simple Messenger bot for a Facebook page which can give you forecast for the next 3 hours for a particular city.
 
 ### Solution
 
-Our solution is based on two Sockets. [openweathermap](https://syncano.io/#/sockets/openweathermap) Socket will be used to get weather data from [OpenWeatherMap](https://openweathermap.org/) service using their API. [messenger-bot](https://syncano.io/#/sockets/messenger-bot) will be used for communication with Facebook. On top of that, we will create `responder` Socket which will connect those two functionalities.
+Our solution is based on two Sockets. [openweathermap](https://syncano.io/#/sockets/openweathermap) Socket will be used to get weather data from [OpenWeatherMap](https://openweathermap.org/) service using their API. [messenger-bot](https://syncano.io/#/sockets/messenger-bot) will be used for communication with Facebook. On top of that, we will create a `responder` Socket which will connect those two functionalities.
 
 
 #### Installing dependencies
 
-To install `openweathermap` type:
+To install `openweathermap` Socket type:
 ```sh
 $ npm install @eyedea-sockets/openweathermap
+```
+Deploy openweathermap Socket
+
+```sh
+npx s deploy openweathermap
 ```
 
 Now you have to provide API key for the OpenWeatherMap Service:
@@ -37,9 +42,17 @@ Now you have to provide API key for the OpenWeatherMap Service:
     Your socket is ready to use! Type npx s socket list openweathermap to see docs.
 ```
 
-To install `messenger-bot` type:
+
+
+To install `messenger-bot` Socket type:
 ```sh
 $ npm install @eyedea-sockets/messenger-bot
+```
+
+Deploy messenger-bot Socket
+
+```sh
+npx s deploy messenger-bot
 ```
 
 To properly configure the Socket you will need create Facebook Page and Facebook Application.
@@ -51,11 +64,7 @@ Then you have to provide `Page Token`, follow the instructions to get it from Fa
     To find the token, go to the 'Messenger > Settings > Token Generation' section in your Facebook Application settings panel at https://developers.facebook.com.
 
     Type in value: EAAbvRMZClZC4YBAL63OHJLSMWwbSKg9BM1eojt2VU0fv95vkgURMjqDqKPUVZCuN3HjNE8fjt2TJfK8Jt68fwVAAltb8JnQjgpcbMHF9eqh2OiH4ZC0ftsJz3h5ZA7wKOWacDOQGte9b9Lhl3KKuvdrJJhIgjZAAeXKgUXmSkEdgZDZD
-```
-
-Your socket is ready to use! To see its docs type:
-```sh
- npx s list messenger-bot
+    Your socket is ready to use! Type `npx s socket list` messenger-bot to see docs.
 ```
 
 #### Creating a "responder" Socket
@@ -67,31 +76,33 @@ We need to only create a logic which will be responsible for the data flow:
   - ask OpenWeatherMap for the forecast for given city name
   - respond with the nice looking text about the weather forecast
 
-We will create new Socket called `responder`:
+We will create a new Socket called `responder`:
 
 ```sh
 $ npx s create responder
 ```
 
-Choose empty project for this Socket:
+Choose a template for your Socket (ES6 Socket template):
 ```
-?   Choose template for your Socket     empty - Empty Socket
+?
+      Vanilla JS Socket - (@syncano/template-socket-vanilla)
+  ❯   ES6 Socket - (@syncano/template-socket-es6)
+      ES6 Socket + validation - (@syncano/template-socket-es6-validate)
 
-    Your Socket configuration is stored at syncano/responder
 ```
 
 #### Building logic of the "responder" Socket
 
-First thing is to catch an event about received message, to do that we have to add event handler to the Socket config file (syncano/responder/socket.yml):
+First thing is to catch an event about the received message, to do that we have to add an event handler to the Socket config file (syncano/responder/socket.yml):
 
 ```yaml
 event_handlers:
-  events.m-bot-msg-rec:
-    description: Handling "m-bot-msg-rec" events sent by messenger-bot when message was received
-    file: scripts/response.js
+  events.messenger-bot.message-received:
+    description: Handling requests from FB
+    file: responder.js
 ```
 
-You socket config file (`socket.yml`) should now looks like this:
+You socket config file (`socket.yml`) should now look like this:
 
 ```yaml
 name: responder
@@ -99,12 +110,11 @@ description: Description of responder
 version: 0.0.1
 
 event_handlers:
-  events.m-bot-msg-rec:
+  events.messenger-bot.message-received:
     description: Handling requests from FB
-    file: scripts/response.js
+    file: responder.js
 ```
-
-Next step is to create actual script to:
+In src folder rename hello.js to responder.js and paste in the following code:
 
 ```javascript
 import Syncano from '@syncano/core'
@@ -132,7 +142,7 @@ To check the weather, please type your city name in your message ie. Oslo  `, se
         }
       })
 
-      // Let's check if it is going to rain and add proper message to response
+      // Let's check if it is going to rain and add a proper message to the response
       if (rain) {
         response.push(`It looks like you need an umbrella in ${text} 🌧`)
       } else {
@@ -145,14 +155,44 @@ To check the weather, please type your city name in your message ie. Oslo  `, se
     } catch(err) {
       // This event will be caught by "messenger-bot" Socket
       // Content of the text argument (in this case error message) will be sent as a replay
-      event.emit('messenger-bot.message-send', {text: `Something went wrong: ${err.data.message}. 
+      event.emit('messenger-bot.message-send', {text: `Something went wrong: ${err.data.message}.
 To check the weather, please type your city name in your message ie. Oslo`, sender} )
     }
   }
 }
 ```
 
+Now you need to deploy your responder Socket:
+
+```sh
+$ npx s deploy responder
+```
+
+#### Set up messenger-bot to Facebook:
+```sh
+$ npx s list
+```
+
+You will get:
+```
+socket: messenger-bot
+    description: Facebook Messenger Bot
+    version: 0.0.3
+    type: installed via NPM
+    status: ok
+
+        endpoint: messenger-bot/webhook
+        description: For authentication purpose
+        url: <your-instance-name>/messenger-bot/webhook/
+```
+Copy endpoint's url and go to your app settings in developers facebook page.
+Now in Webhook section click Setup Webhooks and provide the following information:
+- Callback URL: your-instance-name/messenger-bot/webhook/
+- Verify Token: messenger-bot
+- Subscription Fields: messages, messaging_postbacks, message_deliveries
+In the same section select your page to subscribe webhook to the page events.
+
 ### Testing functionality
 
-Now you can start a chat by clicking on "Message Now" link of your Facebook Page.
-Type in the name of the city and you should see a 3 hours forecast for it.
+Now you can start a chat by clicking on "Message Now" of your Facebook Page (www.messenger.com/t/your-facebook-page-name).
+In "Message Now" field type in the name of the city and you should see a 3 hours forecast for it.
