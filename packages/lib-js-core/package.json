@@ -31,34 +31,34 @@
     "lodash.get": "4.4.2",
     "lodash.merge": "4.6.1",
     "lodash.set": "4.3.2",
-    "node-fetch": "2.1.2"
+    "node-fetch": "2.2.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.2",
+    "@types/chai": "^4.1.4",
     "@types/chai-as-promised": "^7.1.0",
     "@types/debug": "0.0.30",
     "@types/form-data": "^2.2.1",
-    "@types/jest": "^22.2.3",
-    "@types/nock": "^9.1.3",
-    "@types/node": "^9.6.5",
-    "@types/node-fetch": "^1.6.8",
-    "@types/should": "^13.0.0",
+    "@types/jest": "^23.3.1",
+    "@types/nock": "^9.3.0",
+    "@types/node": "^10.5.7",
+    "@types/node-fetch": "^2.1.2",
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
-    "cross-env": "5.1.4",
+    "cross-env": "5.2.0",
     "dts-bundle": "^0.7.3",
-    "isparta": "4.0.0",
-    "jest": "^22.4.3",
-    "nock": "^9.2.5",
+    "isparta": "4.1.0",
+    "jest": "^23.4.2",
+    "nock": "^9.4.4",
     "rimraf": "2.6.2",
-    "should": "13.2.1",
-    "ts-jest": "^22.4.4",
-    "tslint": "^5.9.1",
-    "typescript": "^2.8.1"
+    "should": "13.2.3",
+    "ts-jest": "^23.1.3",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1"
   },
   "jest": {
+    "testURL": "http://localhost/",
     "transform": {
-      ".*": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      ".*": "ts-jest"
     },
     "testRegex": "(/test/unit/.*|\\.(test|spec))\\.(ts)$",
     "moduleFileExtensions": [

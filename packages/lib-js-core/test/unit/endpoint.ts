@@ -45,7 +45,7 @@ describe('Endpoint', () => {
       return endpoint.get('socket/endpoint', {name: 'John'}).should.be.fulfilled
     })
 
-    it.skip('should be able to parse buffer response')
+    it.skip('should be able to parse buffer response', () => null)
   })
 
   describe('#put', () => {
