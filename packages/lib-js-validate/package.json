@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "@syncano/schema": "0.14.0",
-    "ajv": "^6.2.0",
-    "ajv-error-messages": "^1.0.0",
+    "ajv": "^6.5.5",
+    "ajv-error-messages": "^1.0.2",
     "ajv-errors": "^1.0.0",
-    "ajv-keywords": "^3.1.0",
+    "ajv-keywords": "^3.2.0",
     "lodash.isempty": "^4.4.0"
   },
   "devDependencies": {
