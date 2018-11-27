@@ -38,18 +38,16 @@ export function parseJSON (response) {
   const mimetype = response.headers.get('Content-Type')
 
   if (response.status === 204 || mimetype === null) {
-    return Promise.resolve({
-      data: undefined,
-      ...response
-    })
+    response.data = undefined
+    return Promise.resolve(response)
   }
 
   // Parse JSON
   if (/^.*\/.*\+json/.test(mimetype) || /^application\/json/.test(mimetype)) {
-    return response.json().then(res => ({
-      data: res,
-      ...response
-    }))
+    return response.json().then(res => {
+      response.data = res
+      return response
+    })
   }
 
   // Parse XML and plain text
@@ -58,10 +56,10 @@ export function parseJSON (response) {
     /^.*\/.*\+xml/.test(mimetype) ||
     mimetype === 'text/plain'
   ) {
-    return response.text().then(res => ({
-      data: res,
-      ...response
-    }))
+    return response.text().then(res => {
+      response.data = res
+      return response
+    })
   }
 
   return response.arrayBuffer()
