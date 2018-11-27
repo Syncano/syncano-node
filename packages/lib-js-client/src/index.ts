@@ -6,6 +6,7 @@ const {default: request} = axios
 export interface SyncanoClientOptions {
   host?: string
   token?: string
+  apiVersion?: string
   transformResponse?: (response: axios.AxiosResponse) => void
 }
 
@@ -24,6 +25,7 @@ export default class SyncanoClient {
    */
   public instanceName?: string
   private host?: string
+  private apiVersion?: string
   private transformResponse?: (response: axios.AxiosResponse) => any
   private DEFAULT_HEADERS = {
     'Content-Type': 'application/json'
@@ -33,7 +35,8 @@ export default class SyncanoClient {
     instanceName: string,
     options: SyncanoClientOptions = {}
   ) {
-    this.host = options.host || 'syncano.space'
+    this.host = options.host || 'api.syncano.io'
+    this.apiVersion = options.apiVersion || 'v3'
     this.token = options.token
     this.transformResponse = options.transformResponse
     this.instanceName = instanceName
@@ -51,7 +54,8 @@ export default class SyncanoClient {
   } = {
     protocol: 'https'
   }): string {
-    let baseURL = `${options.protocol}://${this.instanceName}.${this.host}/${path}/`
+    let baseURL = `${options.protocol}://${this.host}`
+    baseURL = `${baseURL}/${this.apiVersion}/instances/${this.instanceName}/endpoints/sockets/${path}/`
     if (path.startsWith('http') || path.startsWith('/')) {
       baseURL = path
     }
