@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0",
+    "concurrently": "^4.1.0",
     "nyc": "^11.4.1"
   },
   "nyc": {
