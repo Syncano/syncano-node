@@ -116,7 +116,7 @@
   },
   "scripts": {
     "prepublish": "npm run build",
-    "postinstall": "cd $INIT_CWD && npx s init",
+    "postinstall": "./scripts/postinstall",
     "build": "npx babel src -d lib/ --copy-files --ignore *.test.js,*.test-e2e.js --source-maps",
     "build:watch": "npm run build -- -w",
     "clean": "rm -rf lib/",
