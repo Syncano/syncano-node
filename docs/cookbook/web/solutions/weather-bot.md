@@ -3,11 +3,11 @@
 - Preparation: **6 minutes**
 - Requirements:
   - Initiated Syncano project
-  - OpenWeatherMap API
+  - OpenWeatherMap API key
   - Facebook App Page Token
 - Sockets:
-  - [openweathermap](https://syncano.io/#/sockets/openweathermap)
-  - [messenger-bot](https://syncano.io/#/sockets/messenger-bot)
+  - [openweathermap](https://www.npmjs.com/package/@eyedea-sockets/openweathermap)
+  - [messenger-bot](https://www.npmjs.com/package/@eyedea-sockets/messenger-bot)
 
 ### Problem to solve
 
@@ -15,7 +15,7 @@ You want to build simple Messenger bot for a Facebook page which can give you fo
 
 ### Solution
 
-Our solution is based on two Sockets. [openweathermap](https://syncano.io/#/sockets/openweathermap) Socket will be used to get weather data from [OpenWeatherMap](https://openweathermap.org/) service using their API. [messenger-bot](https://syncano.io/#/sockets/messenger-bot) will be used for communication with Facebook. On top of that, we will create a `responder` Socket which will connect those two functionalities.
+Our solution is based on two Sockets. [openweathermap](https://www.npmjs.com/package/@eyedea-sockets/openweathermap) Socket will be used to get weather data from [OpenWeatherMap](https://openweathermap.org/) service using their API. [messenger-bot](https://www.npmjs.com/package/@eyedea-sockets/messenger-bot) will be used for communication with Facebook. On top of that, we will create a `responder` Socket which will connect those two functionalities.
 
 
 #### Installing dependencies
@@ -64,7 +64,7 @@ Then you have to provide `Page Token`, follow the instructions to get it from Fa
     To find the token, go to the 'Messenger > Settings > Token Generation' section in your Facebook Application settings panel at https://developers.facebook.com.
 
     Type in value: EAAbvRMZClZC4YBAL63OHJLSMWwbSKg9BM1eojt2VU0fv95vkgURMjqDqKPUVZCuN3HjNE8fjt2TJfK8Jt68fwVAAltb8JnQjgpcbMHF9eqh2OiH4ZC0ftsJz3h5ZA7wKOWacDOQGte9b9Lhl3KKuvdrJJhIgjZAAeXKgUXmSkEdgZDZD
-    Your socket is ready to use! Type `npx s socket list` messenger-bot to see docs.
+    Your socket is ready to use! Type `npx s socket list` messenger-bot to see list of endpoints.
 ```
 
 #### Creating a "responder" Socket
