@@ -559,7 +559,7 @@ describe('[utils] Session', function () {
 
   describe('notAlreadyInitialized', function () {
     it('should print instanceInformation about project if exists', function () {
-      const instanceInformation = `It is using ${format.cyan(instanceName)} Syncano instance.`
+      const instanceInformation = `It is attached to ${format.cyan(instanceName)} Syncano instance.`
       session.project = { instance: instanceName }
 
       session.notAlreadyInitialized()
