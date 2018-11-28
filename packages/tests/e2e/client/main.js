@@ -26,7 +26,7 @@ describe('Client', function () {
       .cwd(path.join(testsLocation, testInstance))
 
   before(() => {
-    client = new Syncano(testInstance, {host: 'syncano.link'})
+    client = new Syncano(testInstance, {host: 'api.syncano.rocks'})
     assert.isObject(client)
 
     return createProject(testInstance, projectTestTemplate)

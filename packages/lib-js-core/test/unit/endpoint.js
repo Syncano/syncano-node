@@ -9,7 +9,7 @@ chai.should()
 
 describe('Endpoint', () => {
   const instanceName = 'testInstance'
-  const testEndpoint = `/v2/instances/${instanceName}/endpoints/sockets/socket/endpoint/`
+  const testEndpoint = `/v3/instances/${instanceName}/endpoints/sockets/socket/endpoint/`
   let api
   let endpoint
 
