@@ -88,7 +88,7 @@ export default class SyncanoClient {
   public get(endpoint: string, params?: object, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.get(this.url(endpoint), this.options({params, ...options})).then(this.transform)
+    return request.get(this.url(endpoint), this.options({params: params || {}, ...options})).then(this.transform)
   }
 
   /**
@@ -102,7 +102,7 @@ export default class SyncanoClient {
   public patch(endpoint: string, data?: any, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.patch(this.url(endpoint), data, this.options(options)).then(this.transform)
+    return request.patch(this.url(endpoint), data || {}, this.options(options)).then(this.transform)
   }
 
   /**
@@ -116,7 +116,7 @@ export default class SyncanoClient {
   public post(endpoint: string, data?: any, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.post(this.url(endpoint), data, this.options(options)).then(this.transform)
+    return request.post(this.url(endpoint), data || {}, this.options(options)).then(this.transform)
   }
 
   /**
@@ -130,7 +130,7 @@ export default class SyncanoClient {
   public put(endpoint: string, data?: any, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.put(this.url(endpoint), data, this.options(options)).then(this.transform)
+    return request.put(this.url(endpoint), data || {}, this.options(options)).then(this.transform)
   }
 
   /**
@@ -144,7 +144,7 @@ export default class SyncanoClient {
   public delete(endpoint: string, params?: object, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.delete(this.url(endpoint), this.options({params, ...options})).then(this.transform)
+    return request.delete(this.url(endpoint), this.options({params: params || {}, ...options})).then(this.transform)
   }
 
   /**
