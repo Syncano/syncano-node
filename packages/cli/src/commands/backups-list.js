@@ -37,7 +37,7 @@ class BackupsList {
   }
 
   dateParser (time) {
-    return `${time.substring(0,9)} ${time.substring(11, 19)}`
+    return `${time.substring(0,10)} ${time.substring(11, 19)}`
   }
 }
 
