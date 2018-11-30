@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/Syncano/syncano-node/compare/v0.14.0...v0.15.0) (2018-11-30)
+
+
+### Bug Fixes
+
+* concurency tests running ([844c580](https://github.com/Syncano/syncano-node/commit/844c580))
+* deps ([3876bd4](https://github.com/Syncano/syncano-node/commit/3876bd4))
+* remove npm-run-all ([17763c8](https://github.com/Syncano/syncano-node/commit/17763c8))
+* update deps ([3b9b23f](https://github.com/Syncano/syncano-node/commit/3b9b23f))
+
+
+### Features
+
+* **cli:** run init after install ([6221636](https://github.com/Syncano/syncano-node/commit/6221636))
+
+
+
+
 <a name="0.13.0"></a>
 # [0.13.0](https://github.com/Syncano/syncano-node/compare/v0.12.1...v0.13.0) (2018-09-06)
 

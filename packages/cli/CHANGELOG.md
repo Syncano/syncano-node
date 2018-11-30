@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/Syncano/syncano-node/compare/v0.14.0...v0.15.0) (2018-11-30)
+
+
+### Bug Fixes
+
+* deps ([3876bd4](https://github.com/Syncano/syncano-node/commit/3876bd4))
+* remove npm-run-all ([17763c8](https://github.com/Syncano/syncano-node/commit/17763c8))
+* **cli:** backups date ([1c76336](https://github.com/Syncano/syncano-node/commit/1c76336))
+* **cli:** camel case ([fbae5d7](https://github.com/Syncano/syncano-node/commit/fbae5d7))
+* **cli:** missing return ([f0fa1b0](https://github.com/Syncano/syncano-node/commit/f0fa1b0))
+* **cli:** prevent wrong password moving you forward ([8e92ccf](https://github.com/Syncano/syncano-node/commit/8e92ccf))
+* **cli:** remove add command ([3b23f7a](https://github.com/Syncano/syncano-node/commit/3b23f7a))
+* **cli:** scripts paths ([cc288a4](https://github.com/Syncano/syncano-node/commit/cc288a4))
+* **cli:** skip post install in CI ([d14df13](https://github.com/Syncano/syncano-node/commit/d14df13))
+* **cli:** tests ([daf6250](https://github.com/Syncano/syncano-node/commit/daf6250))
+
+
+### Features
+
+* **cli:** add backups ([bdecb27](https://github.com/Syncano/syncano-node/commit/bdecb27))
+* **cli:** deleting backups ([090ed3c](https://github.com/Syncano/syncano-node/commit/090ed3c))
+* **cli:** run init after install ([6221636](https://github.com/Syncano/syncano-node/commit/6221636))
+* **cli:list:** add instance nam to list command ([93c0664](https://github.com/Syncano/syncano-node/commit/93c0664))
+
+
+
+
 <a name="0.13.0"></a>
 # [0.13.0](https://github.com/Syncano/syncano-node/compare/v0.12.1...v0.13.0) (2018-09-06)
 

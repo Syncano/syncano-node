@@ -2,7 +2,7 @@
   "name": "@syncano/test-tools",
   "description": "Testing tools for Syncano Sockets",
   "repository": "https://github.com/syncano/syncano-node/tree/master/packages/test-tools",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "license": "MIT",
   "main": "lib/index.js",
   "publishConfig": {
@@ -17,7 +17,7 @@
     "lint": "standard --fix --env mocha"
   },
   "dependencies": {
-    "@syncano/core": "0.14.0",
+    "@syncano/core": "0.15.0",
     "faker": "^4.1.0",
     "fs-extra": "^5.0.0",
     "home-dir": "1.0.0",

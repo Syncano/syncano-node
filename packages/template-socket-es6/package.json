@@ -1,7 +1,7 @@
 {
   "name": "@syncano/template-socket-es6",
   "description": "ES6 Syncano Socket Template",
-  "version": "0.13.0",
+  "version": "0.15.0",
   "license": "MIT",
   "main": "index.js",
   "files": [
