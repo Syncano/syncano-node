@@ -41,4 +41,4 @@ npx s list
 
 Try to call endpoints using browser or any HTTP Client.
 
-That's `it`! If you have any questions, log into our [Slack](https://syncano.io/#/slack-invite) and chat with the community. Happy coding!
+That's `it`! If you have any questions, join our [Spectrum](https://spectrum.chat/syncano) community space. Happy coding!
