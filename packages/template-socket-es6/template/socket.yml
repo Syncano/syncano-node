@@ -1,9 +1,5 @@
 name: ${socketName}
 description: ${socketDescription}
-runtime: nodejs_v8
-keywords:
-  - hello
-  - world
 
 endpoints:
   hello:

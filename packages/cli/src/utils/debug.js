@@ -5,6 +5,7 @@
 import Raven from 'raven'
 import printDebug from 'debug'
 
+
 const logTypes = ['debug', 'info', 'warn', 'error']
 
 const logger = (name) => {

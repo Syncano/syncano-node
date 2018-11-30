@@ -93,7 +93,6 @@ export default class Validator {
     }
 
     // Should we validate empty schema?
-    console.log('YYY validateResponse')
     if (!responseSchema || !isEmpty(responseSchema)) {
       return true
     }

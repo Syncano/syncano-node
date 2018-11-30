@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/Syncano/syncano-node/compare/v0.14.0...v0.15.0) (2018-11-30)
+
+
+### Bug Fixes
+
+* update deps ([3b9b23f](https://github.com/Syncano/syncano-node/commit/3b9b23f))
+
+
+
+
 <a name="0.11.0"></a>
 # [0.11.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.11.0) (2018-03-17)
 

@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/Syncano/syncano-node/compare/v0.14.0...v0.15.0) (2018-11-30)
+
+
+### Bug Fixes
+
+* Broken link ([121db4a](https://github.com/Syncano/syncano-node/commit/121db4a))
+* concurency tests running ([844c580](https://github.com/Syncano/syncano-node/commit/844c580))
+* conflict ([0ce6b42](https://github.com/Syncano/syncano-node/commit/0ce6b42))
+* deps ([3876bd4](https://github.com/Syncano/syncano-node/commit/3876bd4))
+* remove npm-run-all ([17763c8](https://github.com/Syncano/syncano-node/commit/17763c8))
+* update deps ([3b9b23f](https://github.com/Syncano/syncano-node/commit/3b9b23f))
+* **lib-core:** fixing for axios ([7809576](https://github.com/Syncano/syncano-node/commit/7809576))
+* version select button ([e9a53dc](https://github.com/Syncano/syncano-node/commit/e9a53dc))
+* **cli:** backups date ([1c76336](https://github.com/Syncano/syncano-node/commit/1c76336))
+* **cli:** camel case ([fbae5d7](https://github.com/Syncano/syncano-node/commit/fbae5d7))
+* **cli:** missing return ([f0fa1b0](https://github.com/Syncano/syncano-node/commit/f0fa1b0))
+* **cli:** prevent wrong password moving you forward ([8e92ccf](https://github.com/Syncano/syncano-node/commit/8e92ccf))
+* **cli:** remove add command ([3b23f7a](https://github.com/Syncano/syncano-node/commit/3b23f7a))
+* **cli:** scripts paths ([cc288a4](https://github.com/Syncano/syncano-node/commit/cc288a4))
+* **cli:** skip post install in CI ([d14df13](https://github.com/Syncano/syncano-node/commit/d14df13))
+* **cli:** tests ([daf6250](https://github.com/Syncano/syncano-node/commit/daf6250))
+* **template-hello:** remove root level .gitignore file ([f932297](https://github.com/Syncano/syncano-node/commit/f932297))
+
+
+### Features
+
+* **cli:** add backups ([bdecb27](https://github.com/Syncano/syncano-node/commit/bdecb27))
+* **cli:** deleting backups ([090ed3c](https://github.com/Syncano/syncano-node/commit/090ed3c))
+* **cli:** run init after install ([6221636](https://github.com/Syncano/syncano-node/commit/6221636))
+* Corrected logic ,  added test ([2e6ef6c](https://github.com/Syncano/syncano-node/commit/2e6ef6c))
+* **cli:list:** add instance nam to list command ([93c0664](https://github.com/Syncano/syncano-node/commit/93c0664))
+* **cookbook:** real-time cookbook ([774b50d](https://github.com/Syncano/syncano-node/commit/774b50d))
+* **core:** Backups ([fc14d7d](https://github.com/Syncano/syncano-node/commit/fc14d7d))
+* **core:** groups ([5111625](https://github.com/Syncano/syncano-node/commit/5111625))
+* **core:** groups tests ([e429d15](https://github.com/Syncano/syncano-node/commit/e429d15))
+* **docs:** Add backups in cheatsheet ([d4fe868](https://github.com/Syncano/syncano-node/commit/d4fe868))
+* **dosc:** groups cheatsheet ([05017b7](https://github.com/Syncano/syncano-node/commit/05017b7))
+
+
+
+
 <a name="0.13.0"></a>
 # [0.13.0](https://github.com/Syncano/syncano-node/compare/v0.12.1...v0.13.0) (2018-09-06)
 

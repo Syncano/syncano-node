@@ -103,6 +103,7 @@ export class Session {
     }
 
     try {
+      debug('get user details')
       const details = await this.connection.account.get(this.settings.account.getAuthKey())
       this.userId = details.id
       this.userEmail = details.email
@@ -239,8 +240,8 @@ export class Session {
   notAlreadyInitialized () {
     if (this.projectPath && this.project) {
       echo()
-      echo(4)('You are fine! Project in this folder is already initiated!')
-      echo(4)(`It is using ${format.cyan(this.project.instance)} Syncano instance.`)
+      echo(4)('Project in this folder is already initiated!')
+      echo(4)(`It is attached to ${format.cyan(this.project.instance)} Syncano instance.`)
       echo()
       process.exit()
     }

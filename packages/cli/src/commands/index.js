@@ -20,12 +20,14 @@ import SocketEndpointCall from './socket-call'
 import SocketTrace from './socket-trace'
 import SocketCreate from './socket-create'
 import SocketUninstall from './socket-uninstall'
-import ComponentList from './component-list'
-import ComponentLink from './component-link'
 import InstanceList from './instance-list'
 import InstanceCreate from './instance-create'
 import InstanceDelete from './instance-delete'
 import SysInfo from './sysinfo'
+import BackupsCreate from './backups-create'
+import BackupsList from './backups-list'
+import BackupsLast from './backups-last'
+import BackupsDelete from './backups-delete'
 
 export default {
   Attach,
@@ -50,10 +52,12 @@ export default {
   SocketTrace,
   SocketCreate,
   SocketUninstall,
-  ComponentList,
-  ComponentLink,
   InstanceList,
   InstanceCreate,
   InstanceDelete,
-  SysInfo
+  SysInfo,
+  BackupsCreate,
+  BackupsList,
+  BackupsLast,
+  BackupsDelete
 }

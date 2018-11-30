@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/compare/v0.14.0...v0.15.0) (2018-11-30)
+
+
+### Features
+
+* **cli:** run init after install ([6221636](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/commit/6221636))
+
+
+
+
 <a name="0.13.0"></a>
 # [0.13.0](https://github.com/syncano/syncano-node/tree/master/packages/lib-js-client/compare/v0.12.1...v0.13.0) (2018-09-06)
 
