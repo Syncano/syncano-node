@@ -55,6 +55,7 @@ export default class QueryBuilder {
       headers,
       options.headers
     )
+    delete options.headers
 
     const fetchOptions = Object.assign({}, generalOptions, options)
     return nodeFetch(url, {
