@@ -47,6 +47,24 @@ describe('Endpoint', () => {
       return endpoint.get('socket/endpoint', {name: 'John'}).should.be.fulfilled
     })
 
+    it('should pass headers', () => {
+      const testHeaderName = 'X-User-Key'
+      const testHeaderValue = 'test123'
+      const testHeader = {}
+      testHeader[testHeaderName] = testHeaderValue
+
+      api
+        .matchHeader(testHeaderName, testHeaderValue)
+        .post(testEndpoint, {name: 'John', _method: 'GET'})
+        .reply(200, `Hello world`, {
+          'Content-Type': 'text/plain'
+        })
+
+      return endpoint
+        .get('socket/endpoint', {name: 'John'}, {headers: testHeader})
+        .should.be.fulfilled
+    })
+
     it.skip('should be able to parse buffer response')
   })
 

@@ -52,7 +52,8 @@ export default class QueryBuilder {
         'content-type': 'application/json',
         'x-api-key': this.instance.token
       },
-      headers
+      headers,
+      options.headers
     )
 
     const fetchOptions = Object.assign({}, generalOptions, options)
