@@ -52,9 +52,10 @@ describe('[utils] Session', function () {
 
   describe('getSpaceHost', function () {
     it('should return proper host', function () {
-      session.project = { instance: instanceName, location: 'us1' }
+      session.project = { instance: instanceName }
+      session.getHost = sinon.stub().returns('api.syncano.rocks')
 
-      const expectedHostURL = `${instanceName}.${session.project.location}.syncano.space`
+      const expectedHostURL = `${instanceName}.syncano.link`
       const spaceHostResult = session.getSpaceHost()
 
       expect(spaceHostResult).to.equal(expectedHostURL)
