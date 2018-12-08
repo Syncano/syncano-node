@@ -69,7 +69,7 @@ class InitCmd {
 
     if (!project && instance) {
       await this.session.checkConnection(instance)
-      await this.init.addConfigFiles({ instance, location: this.init.locationName})
+      await this.init.addConfigFiles({ instance, location: this.init.locationName })
       echo(4)(`Your project is attached to ${format.green(instance.name)} instance now!`)
 
       return this.init.createFilesAndFolders()
@@ -79,7 +79,7 @@ class InitCmd {
       debug('no project, no instance')
       const newInstance = await createInstance()
 
-      await this.init.addConfigFiles({ instance: newInstance.name, location: this.init.locationName})
+      await this.init.addConfigFiles({ instance: newInstance.name, location: this.init.locationName })
       echo(4)(`Your project is attached to ${format.green(newInstance.name)} instance now!`)
 
       this.init.createFilesAndFolders()

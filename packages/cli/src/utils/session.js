@@ -37,7 +37,7 @@ export class Session {
   }
 
   async setLocation (location) {
-    if (this.location != location) {
+    if (this.location !== location) {
       this.location = location
       await this.createConnection()
     }
@@ -52,6 +52,9 @@ export class Session {
   }
 
   getSpaceHost () {
+    if (this.getHost() === 'api.syncano.rocks') {
+      return `${this.project.instance}.syncano.link`
+    }
     if (this.project && this.project.instance) {
       return `${this.project.instance}.${this.location}.syncano.space`
     }
