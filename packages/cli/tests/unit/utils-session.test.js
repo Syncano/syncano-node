@@ -52,9 +52,9 @@ describe('[utils] Session', function () {
 
   describe('getSpaceHost', function () {
     it('should return proper host', function () {
-      session.project = { instance: instanceName }
+      session.project = { instance: instanceName, location: 'us1' }
 
-      const expectedHostURL = `${instanceName}.${session.ENDPOINT_HOST}`
+      const expectedHostURL = `${instanceName}.${session.project.location}.syncano.space`
       const spaceHostResult = session.getSpaceHost()
 
       expect(spaceHostResult).to.equal(expectedHostURL)
