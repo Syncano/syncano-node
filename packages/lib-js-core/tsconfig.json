@@ -16,15 +16,14 @@
     "noUnusedLocals": true,
     "suppressImplicitAnyIndexErrors": true,
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
     "lib": [
       "es2015",
       "es2016"
     ],
     "typeRoots": [
-      "./node_modules/@types",
-      "./typings"
-    ],
-    "declaration": true
+      "node_modules/@types"
+    ]
   },
   "include": [
     "src/**/*"

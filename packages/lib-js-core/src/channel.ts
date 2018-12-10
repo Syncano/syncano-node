@@ -18,7 +18,7 @@ export interface ChannelResponse<T> {
   }
 }
 
-class Channel extends QueryBuilder {
+export class Channel extends QueryBuilder {
   /**
    * Publish any payload to channel
    *

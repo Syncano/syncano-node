@@ -1,9 +1,9 @@
 import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
-import * as should from 'should/as-function'
+import * as should from 'should'
 import Server from '../../src'
-import Event from '../../src/event'
+import {Event} from '../../src/event'
 import {getRandomString} from '../utils'
 
 chai.use(chaiAsPromised)
@@ -11,8 +11,8 @@ chai.should()
 
 describe('Event', () => {
   const instanceName = 'testInstance'
-  let api
-  let event
+  let api: nock.Scope
+  let event: Event
 
   beforeEach(() => {
     const server = new Server({

@@ -42,8 +42,8 @@ export type ResponseFn = (
 ) => Response
 
 export interface CustomResponse extends ResponseFn {
-  header?: (key: string, value: string) => CustomResponse
-  json?: (content?: any, status?: 200) => Response
+  header: (key: string, value: string) => CustomResponse
+  json: (content?: any, status?: 200) => Response
   [x: string]: any
 }
 

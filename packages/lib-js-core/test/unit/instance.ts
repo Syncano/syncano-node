@@ -2,14 +2,15 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
+import { InstanceClass } from '../../src/instance'
 
 chai.use(chaiAsPromised)
 chai.should()
 
 describe('Instance', () => {
   const instanceName = 'testInstance'
-  let api
-  let instance
+  let api: nock.Scope
+  let instance: InstanceClass
 
   beforeEach(() => {
     const server = new Server({

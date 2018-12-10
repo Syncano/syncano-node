@@ -2,14 +2,15 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
+import {Account} from '../../src/account'
 
 chai.use(chaiAsPromised)
 chai.should()
 
 describe('Account', () => {
   const instanceName = 'testInstance'
-  let api
-  let account
+  let api: nock.Scope
+  let account: Account
 
   beforeEach(() => {
     const server = new Server({
@@ -23,8 +24,8 @@ describe('Account', () => {
   describe('#get', () => {
     it('should fail for invalid account key', () => {
       api
-        .get(`/v2/account/`)
         .matchHeader('x-api-key', 'invalid_key')
+        .get(`/v2/account/`)
         .reply(400, {
           detail: 'No such API Key.'
         })
@@ -36,8 +37,8 @@ describe('Account', () => {
 
     it('should get account with valid account key', () => {
       api
-        .get(`/v2/account/`)
         .matchHeader('x-api-key', 'valid_key')
+        .get(`/v2/account/`)
         .reply(200, {
           id: 1
         })

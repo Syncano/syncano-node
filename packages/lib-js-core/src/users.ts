@@ -31,7 +31,7 @@ export interface User {
   [fieldName: string]: any
 }
 
-class Users extends Data {
+export class Users extends Data {
   /**
    * Login Syncano user
    *

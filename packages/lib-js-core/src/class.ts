@@ -29,7 +29,7 @@ export interface SchemaObject {
   target?: string
 }
 
-class Class extends QueryBuilder {
+export class Class extends QueryBuilder {
   public url (className?: string) {
     const {instanceName} = this.instance
     const baseUrl = `${this.getInstanceURL(instanceName)}/classes/`

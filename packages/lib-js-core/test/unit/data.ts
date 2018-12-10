@@ -2,10 +2,8 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as FormData from 'form-data'
 import * as nock from 'nock'
-import * as should from 'should/as-function'
+import * as should from 'should'
 import Server from '../../src/server'
-
-import {NotFoundError} from '../../src/errors'
 
 chai.use(chaiAsPromised)
 chai.should()
@@ -13,8 +11,8 @@ chai.should()
 describe('Data', () => {
   const testUrl = `https://${process.env.SYNCANO_HOST || 'api.syncano.io'}`
   const instanceName = 'testInstance'
-  let data: Server['data'] | null = null
-  let api = null
+  let data: Server['data']
+  let api: nock.Scope
 
   beforeEach(() => {
     const server = new Server({
@@ -55,10 +53,10 @@ describe('Data', () => {
             .be.Array()
             .length(1)
           should(objects)
-            .have.propertyByPath(0, 'name')
+            .have.propertyByPath('0', 'name')
             .which.is.String()
           should(objects)
-            .have.propertyByPath(0, 'id')
+            .have.propertyByPath('0', 'id')
             .which.is.Number()
         })
     })
@@ -446,7 +444,7 @@ describe('Data', () => {
         .which.is.equal('{"name":{"_eq":"Jane"}}')
 
       should(query)
-        .have.propertyByPath('_queries', 0)
+        .have.propertyByPath('_queries', '0')
         .which.is.equal('{"name":{"_eq":"John"}}')
     })
   })
@@ -462,7 +460,7 @@ describe('Data', () => {
       const query = data.users.with('posts')
 
       should(query)
-        .have.propertyByPath('_relationships', 0)
+        .have.propertyByPath('_relationships', '0')
         .which.is.String()
     })
 
@@ -616,7 +614,8 @@ describe('Data', () => {
       user.append('name', 'John')
 
       api
-        .post('/v2/instances/testInstance/classes/users/objects/', (body) =>
+        // FIXME: add proper body type
+        .post('/v2/instances/testInstance/classes/users/objects/', (body: any) =>
           body.includes('name')
         )
         .reply(200, {name: 'John'})
@@ -716,7 +715,8 @@ describe('Data', () => {
       user.append('name', 'John')
 
       api
-        .patch('/v2/instances/testInstance/classes/users/objects/1/', (body) =>
+        // FIXME: add proper body type
+        .patch('/v2/instances/testInstance/classes/users/objects/1/', (body: any) =>
           body.includes('name')
         )
         .reply(200, {name: 'John'})

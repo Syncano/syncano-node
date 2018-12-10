@@ -5,11 +5,11 @@
 
 const LEVELS = ['error', 'warn', 'info', 'debug']
 
-export class LoggerClass {
-  public warn?: (...args: any[]) => void
-  public info?: (...args: any[]) => void
-  public error?: (...args: any[]) => void
-  public debug?: (...args: any[]) => void
+class LoggerClass {
+  public warn: (...args: any[]) => void
+  public info: (...args: any[]) => void
+  public error: (...args: any[]) => void
+  public debug: (...args: any[]) => void
   private callback?: ((event: any) => void)
   private level: string | null = null
   private config: any
@@ -25,6 +25,11 @@ export class LoggerClass {
     this.scope = scope
     this.callback = callback
     this.config = instance.meta.debug
+
+    this.warn = this.makePrinter.bind(this, 'warn')
+    this.info = this.makePrinter.bind(this, 'info')
+    this.error = this.makePrinter.bind(this, 'error')
+    this.debug = this.makePrinter.bind(this, 'debug')
 
     levels.forEach((level) => {
       this[level] = this.makePrinter.bind(this, level)
@@ -100,8 +105,8 @@ export type LoggerType = (scope: string) => LoggerClass
 export interface Logger extends LoggerType {
   callback?: (event: any) => void
   levels?: string[]
-  setLevels?: (userLevels: string[]) => void
-  listen?: (userCallback: ((event: any) => void)) => void
+  setLevels: (userLevels: string[]) => void
+  listen: (userCallback: ((event: any) => void)) => void
 }
 
 export default (instance: any) => {
@@ -109,7 +114,7 @@ export default (instance: any) => {
   const logger: Logger = function (scope: string) {
     return new LoggerClass(instance, {
       callback: logger.callback,
-      levels: logger.levels || LEVELS,
+      levels: LEVELS.concat(logger.levels || []),
       scope
     })
   }

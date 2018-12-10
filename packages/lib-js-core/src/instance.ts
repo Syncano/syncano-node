@@ -56,7 +56,7 @@ export interface Instance {
   }
 }
 
-class InstanceClass extends QueryBuilder {
+export class InstanceClass extends QueryBuilder {
   /**
    * Create Syncano instance
    *

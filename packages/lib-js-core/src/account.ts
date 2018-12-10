@@ -19,7 +19,7 @@ export interface LoginData extends AccountData {
  * Syncano account query builder
  * @property {Function}
  */
-class Account extends QueryBuilder {
+export class Account extends QueryBuilder {
   /**
    * Get details of Syncano account
    */

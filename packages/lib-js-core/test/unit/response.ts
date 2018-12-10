@@ -1,4 +1,5 @@
-import * as should from 'should/as-function'
+import * as should from 'should'
+import {Response} from '../../src/response'
 import Server from '../../src/server'
 
 describe('Response', () => {
@@ -20,7 +21,7 @@ describe('Response', () => {
     }
   })
 
-  let res = null
+  let res: Response
 
   beforeEach(() => {
     res = response()

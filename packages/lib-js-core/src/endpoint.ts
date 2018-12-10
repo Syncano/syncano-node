@@ -1,7 +1,7 @@
 import {RequestInit} from 'node-fetch'
 import QueryBuilder from './query-builder'
 
-export default class Endpoint extends QueryBuilder {
+export class Endpoint extends QueryBuilder {
   /**
    * Send POST request to Syncano Endpoiint
    *
@@ -75,3 +75,5 @@ export default class Endpoint extends QueryBuilder {
     return isBodyAnObject ? JSON.stringify({...body}) : body
   }
 }
+
+export default Endpoint

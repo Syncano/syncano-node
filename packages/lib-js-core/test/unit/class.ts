@@ -2,15 +2,16 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
+import {Class as ClassInterface} from '../../src/class'
 
 chai.use(chaiAsPromised)
 chai.should()
 
 describe('Class', () => {
   const instanceName = 'testInstance'
-  let api
+  let api: nock.Scope
   // tslint:disable-next-line:variable-name
-  let _class
+  let _class: ClassInterface
 
   beforeEach(() => {
     const server = new Server({

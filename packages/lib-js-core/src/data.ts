@@ -11,10 +11,6 @@ const debug = logger('core:data')
 
 const MAX_BATCH_SIZE = 50
 
-// export interface IsObject extends keyof Object {
-
-// }
-
 export interface ClassObject {
   id: number
   created_at: string

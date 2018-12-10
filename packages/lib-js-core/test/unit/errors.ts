@@ -1,8 +1,8 @@
-import * as should from 'should/as-function'
+import * as should from 'should'
 import {NotFoundError, SyncanoError} from '../../src/errors'
 
 describe('SyncanoError', () => {
-  let error = null
+  let error: SyncanoError
 
   beforeEach(() => {
     error = new SyncanoError('dummy')
@@ -41,7 +41,7 @@ describe('SyncanoError', () => {
 })
 
 describe('NotFoundError', () => {
-  let error = null
+  let error: NotFoundError
 
   beforeEach(() => {
     error = new NotFoundError('dummy')

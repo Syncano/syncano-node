@@ -1,9 +1,10 @@
-import * as should from 'should/as-function'
+import * as should from 'should'
+import {Logger} from '../../src/logger'
 import Server from '../../src/server'
 
 describe('Logger', () => {
-  let logger
-  let log = null
+  let logger: Logger
+  let log: any
 
   beforeEach(() => {
     const server = new Server({

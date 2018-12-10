@@ -14,10 +14,10 @@ export const getRandomString = (length = 8) => {
   return text.toLowerCase()
 }
 
-export const createTestInstance = (instanceName) => {
+export const createTestInstance = (instanceName: string) => {
   return accountConnection.instance.create({name: instanceName})
 }
 
-export const deleteTestInstance = (instanceName) => {
+export const deleteTestInstance = (instanceName: string) => {
   return accountConnection.instance.delete(instanceName)
 }

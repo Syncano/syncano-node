@@ -1,6 +1,6 @@
 import QueryBuilder from './query-builder'
 
-class Event extends QueryBuilder {
+export class Event extends QueryBuilder {
   public static splitSignal (signalString: string) {
     const splited = signalString.split('.')
     if (splited.length === 1) {
@@ -19,7 +19,7 @@ class Event extends QueryBuilder {
    *                  `socket-name.event-name`. Custom sockets should follow `event-name` naming.
    * @param payload Additional data passed along with event
    */
-  public emit (eventName: string, payload: any): Promise<void> {
+  public emit (eventName: string, payload?: any): Promise<void> {
     const fetch = this.fetch.bind(this)
     const {socket, signal} = Event.splitSignal(eventName)
 
