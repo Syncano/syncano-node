@@ -17,20 +17,71 @@ import Trace from './trace'
 import Users from './users'
 
 class Server {
+  /**
+   * Manage Syncano Classes
+   */
   // tslint:disable-next-line:variable-name
   public _class: Class
+
+  /**
+   * Emit global events, to which other sockets can subscribe.
+   */
   public event: Event
+
+  /**
+   * Send XHR requests to Syncano Endpoints
+   */
   public endpoint: Endpoint
+
+  /**
+   * Publish events to Syncano Channels
+   */
   public channel: Channel
+
+  /**
+   * Manage Syncano Sockets
+   */
   public socket: Socket
+
+  /**
+   * Get Syncano Endpoint traces
+   */
   public trace: Trace
+
+  /**
+   * Manage Syncano Hostings
+   */
   public hosting: Hosting
+
+  /**
+   * Format HTTP responses
+   */
   public response: CustomResponse
+
+  /**
+   * Manage Syncano Account
+   */
   public account: Account
+
+  /**
+   * Manage Syncano Instances
+   */
   public instance: Instance
+
+  /**
+   * Log debuging messages that can be viewed in Syncano CLI
+   */
   public logger: Logger
+
+  /**
+   * Manage Syncano Users
+   */
   public users: Users
   public registry: Registry
+
+  /**
+   * Manage Syncano Database. Create, update, query & list, delete objects.
+   */
   public data: {
     [className: string]: Data
   }

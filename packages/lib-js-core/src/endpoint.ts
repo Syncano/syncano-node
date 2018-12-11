@@ -3,7 +3,7 @@ import QueryBuilder from './query-builder'
 
 export class Endpoint extends QueryBuilder {
   /**
-   * Send POST request to Syncano Endpoiint
+   * Send POST request to Syncano Endpoint
    *
    * @param endpoint Endpoint path in format `socket-name/endpoint-name`. For example: `user-auth/register`.
    * @param [data={}] Data passed to endpoint.

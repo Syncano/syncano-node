@@ -167,7 +167,7 @@ class Data extends QueryBuilder {
    *
    * @param ids Array of IDs
    * @example
-   * data.posts.find([1, 2])
+   * data.posts.findMany([1, 2])
    */
   public async findMany (ids: number[]): Promise<ClassObject[]> {
     debug('findMany', ids)
