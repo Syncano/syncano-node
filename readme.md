@@ -16,6 +16,11 @@
 - [Test Library](packages/lib-js-test/docs/readme.md)
 - [Validate Library](packages/lib-js-validate/docs/readme.md)
 
+## Community 
+- [Spectrum](https://spectrum.chat/syncano/)
+- [Facebook](https://fb.com/syncano)
+- [Twitter](https://twitter.com/syncano)
+
 ## Issues
 
 Found a bug? Let us know so we can take care of it.
