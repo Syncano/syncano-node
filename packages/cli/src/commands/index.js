@@ -1,4 +1,5 @@
 import Attach from './attach'
+import Info from './info'
 import Init from './init'
 import Login from './login'
 import Logout from './logout'
@@ -10,26 +11,27 @@ import HostingSync from './hosting-sync'
 import HostingConfig from './hosting-config'
 import SocketList from './socket-list'
 import SocketDeploy from './socket-deploy'
+import SocketCompile from './socket-compile'
 import SocketDeployHot from './socket-deploy-hot'
 import SocketConfig from './socket-config'
 import SocketConfigSet from './socket-config-set'
 import SocketConfigShow from './socket-config-show'
 import SocketEndpointCall from './socket-call'
-import SocketSearch from './socket-search'
-import SocketSubmit from './socket-submit'
-import SocketPublish from './socket-publish'
 import SocketTrace from './socket-trace'
-import SocketAdd from './socket-add'
 import SocketCreate from './socket-create'
 import SocketUninstall from './socket-uninstall'
-import ComponentList from './component-list'
-import ComponentLink from './component-link'
 import InstanceList from './instance-list'
 import InstanceCreate from './instance-create'
 import InstanceDelete from './instance-delete'
+import SysInfo from './sysinfo'
+import BackupsCreate from './backups-create'
+import BackupsList from './backups-list'
+import BackupsLast from './backups-last'
+import BackupsDelete from './backups-delete'
 
 export default {
   Attach,
+  Info,
   Init,
   Login,
   Logout,
@@ -41,21 +43,21 @@ export default {
   SocketDeployHot,
   HostingConfig,
   SocketDeploy,
+  SocketCompile,
   SocketConfig,
   SocketConfigSet,
   SocketConfigShow,
   SocketList,
   SocketEndpointCall,
-  SocketSearch,
-  SocketPublish,
-  SocketSubmit,
   SocketTrace,
-  SocketAdd,
   SocketCreate,
   SocketUninstall,
-  ComponentList,
-  ComponentLink,
   InstanceList,
   InstanceCreate,
-  InstanceDelete
+  InstanceDelete,
+  SysInfo,
+  BackupsCreate,
+  BackupsList,
+  BackupsLast,
+  BackupsDelete
 }

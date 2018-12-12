@@ -2,7 +2,9 @@ node_modules
 example
 coverage
 tests
-src
+docs
+src/__snapshots__
+src/index.spec.ts
 .npmignore
 .idea
 .DS_Store
@@ -11,6 +13,16 @@ src
 codecov.yml
 circle.yml
 webpack.config.js
+jest.config.js
 npm-debug.log
 yarn.lock
 *.sublime-*
+lib/*.spec.d.ts
+lib/*.spec.js
+lib/*.spec.js.map
+tsconfig.json
+tslint.json
+contributing.md
+readme.md
+CHANGELOG.md
+.gitattributes

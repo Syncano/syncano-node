@@ -1,8 +1,7 @@
 import * as logger from 'debug'
 import {Agent} from 'https'
-import nodeFetch from 'node-fetch'
+import nodeFetch, { RequestInit } from 'node-fetch'
 import {checkStatus, parseJSON} from './utils'
-const pjson = require('../package.json')
 
 const debug = logger('core:query-builder')
 
@@ -38,36 +37,41 @@ export default class QueryBuilder {
     this.result = []
   }
 
-  protected fetch (url: string, options = {}, headers = {}): Promise<any> {
+  protected async fetch (url: string, options: RequestInit = {}, headers = {}): Promise<any> {
     const headersToSend = Object.assign(
       {
         'content-type': 'application/json',
         'x-api-key': this.instance.token
       },
-      headers
+      headers,
+      options.headers
     )
+    delete options.headers
+
     const fetchOptions = Object.assign({}, generalOptions, options)
 
-    return nodeFetch(url, {
+    const res = await nodeFetch(url, {
       headers: headersToSend,
       ...fetchOptions
     })
-      .then(parseJSON)
-      .then(checkStatus)
+    const json = await parseJSON(res)
+
+    return checkStatus(json)
   }
 
-  protected nonInstanceFetch (url: string, options = {}, headers = {}) {
+  protected async nonInstanceFetch (url: string, options: RequestInit = {}, headers = {}) {
     const fetchOptions = Object.assign({}, generalOptions, options)
 
-    return nodeFetch(url, {
+    const res = await nodeFetch(url, {
       headers: {
         'content-type': 'application/json',
         ...headers
       },
       ...fetchOptions
     })
-      .then(parseJSON)
-      .then(checkStatus)
+    const json = await parseJSON(res)
+
+    return checkStatus(json)
   }
 
   protected get query (): {
@@ -112,16 +116,6 @@ export default class QueryBuilder {
     const {apiVersion, host} = this.instance
 
     return `https://${host}/${apiVersion}`
-  }
-
-  protected getSyncanoRegistryURL () {
-    const {host} = this.instance
-    const endpointHost = host === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
-    const majorVersion = pjson.version.split('.')[0]
-    const registryInstance = process.env.SYNCANO_SOCKET_REGISTRY_INSTANCE || `registry-${majorVersion}`
-    this.registryHost = `${registryInstance}.${endpointHost}`
-    debug('registryHost', this.registryHost)
-    return `https://${this.registryHost}`
   }
 
   protected getInstanceURL (instanceName: string) {

@@ -1,12 +1,13 @@
 {
   "lerna": "2.4.0",
-  "version": "0.12.1",
+  "version": "0.15.0",
   "packages": [
-    "packages/*",
-    "packages/registry/syncano/organization",
-    "packages/registry/syncano/registry"
+    "packages/*"
   ],
   "command": {
+    "bootstrap": {
+      "hoist": true
+    },
     "init": {
       "exact": true
     },

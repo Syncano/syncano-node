@@ -13,7 +13,17 @@ const setup = async () => {
     .command('add <path>')
     .group('Hosting')
     .description('Create a new hosting')
+    .option('-n, --hosting-name <name>', 'Name of the hosting')
+
+    .option('--browser-router-on', 'Turn on browser router for a hosting')
+    .option('--browser-router-off', 'Turn off browser router for a hosting')
+
+    .option('--dont-sync', 'Do not sync files after adding hosting')
+    .option('--sync', 'Sync files after adding hosting')
+
+    .option('--without-cname', 'No CNAME')
     .option('-c, --cname <cname>', 'CNAME')
+
     .action(async (...options) => {
       session.isAuthenticated()
       session.hasProject()

@@ -1,15 +1,6 @@
 import { ResponseError } from './errors'
 import QueryBuilder from './query-builder'
-
-export interface AccountData {
-  id: number
-  email: string
-  first_name: string
-  last_name: string
-  is_active: boolean
-  has_password: boolean
-  metadata: object
-}
+import { AccountData } from './types'
 
 export interface LoginData extends AccountData {
   account_key: string

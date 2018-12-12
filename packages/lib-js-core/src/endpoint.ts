@@ -2,6 +2,9 @@ import {RequestInit} from 'node-fetch'
 import QueryBuilder from './query-builder'
 
 export class Endpoint extends QueryBuilder {
+  public invalidate (endpoint: string) {
+    return this.fetch(`${this.url(endpoint)}invalidate/`, {method: 'POST'})
+  }
   /**
    * Send POST request to Syncano Endpoint
    *
@@ -64,9 +67,9 @@ export class Endpoint extends QueryBuilder {
   }
 
   private url (endpoint: string) {
-    const {instanceName, spaceHost} = this.instance
+    const {instanceName} = this.instance
 
-    return `https://${instanceName}.${spaceHost}/${endpoint}/`
+    return `${this.getInstanceURL(instanceName)}/endpoints/sockets/${endpoint}/`
   }
 
   private parseBody (body: any) {

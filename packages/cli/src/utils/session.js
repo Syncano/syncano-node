@@ -1,10 +1,7 @@
 import Syncano from '@syncano/core'
-import _ from 'lodash'
-import fs from 'fs'
 import format from 'chalk'
 import path from 'path'
 import mkdirp from 'mkdirp'
-import walkUp from 'node-walkup'
 import Promise from 'bluebird'
 
 import logger from './debug'
@@ -25,12 +22,15 @@ export class Session {
     this.projectPath = null
     this.project = null
     this.userId = null
-    this.walkup = Promise.promisify(walkUp)
 
     this.majorVersion = pjson.version.split('.')[0]
 
     this.HOST = process.env.SYNCANO_HOST || 'api.syncano.io'
     this.ENDPOINT_HOST = this.HOST === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
+  }
+
+  getFullName () {
+    return `${this.userFirstName} ${this.userLastName}`
   }
 
   getSpaceHost () {
@@ -103,8 +103,12 @@ export class Session {
     }
 
     try {
+      debug('get user details')
       const details = await this.connection.account.get(this.settings.account.getAuthKey())
       this.userId = details.id
+      this.userEmail = details.email
+      this.userFirstName = details.first_name
+      this.userLastName = details.last_name
     } catch (err) {}
   }
 
@@ -136,40 +140,7 @@ export class Session {
   }
 
   static findProjectPath () {
-    return new Promise((resolve, reject) => {
-      if (fs.existsSync('syncano.yml')) {
-        return resolve(process.cwd())
-      }
-      if (fs.existsSync('syncano/syncano.yml')) {
-        return resolve(path.join(process.cwd(), 'syncano'))
-      }
-
-      const searchInPath = (pathToCheck) => {
-        if (pathToCheck === process.env.HOME || pathToCheck === '/') {
-          return reject(new Error('No more folders to check'))
-        }
-
-        let files = null
-        try {
-          files = fs.readdirSync(pathToCheck)
-        } catch (err) {
-          return reject(new Error(`Path ${pathToCheck} can not be read`))
-        }
-
-        if (_.includes(files, 'syncano.yml')) {
-          return resolve(pathToCheck)
-        }
-
-        const nextFolder = path.parse(pathToCheck)
-        if (nextFolder.name) {
-          searchInPath(nextFolder.dir)
-        } else {
-          return reject(new Error('No more folders to check'))
-        }
-      }
-
-      searchInPath(process.cwd())
-    })
+    return process.cwd()
   }
 
   async load () {
@@ -197,7 +168,7 @@ export class Session {
     if (!this.settings.account.authenticated()) {
       echo()
       echo(4)('You are not logged in!')
-      echo(4)(`Type ${format.cyan('syncano-cli login')} for login to your account.`)
+      echo(4)(`Type ${format.cyan('npx s login')} for login to your account.`)
       echo()
       process.exit(1)
     }
@@ -225,7 +196,7 @@ export class Session {
 
         if (instanceName) return process.exit()
 
-        echo(4)(`Type ${format.cyan('syncano-cli attach')} to choose one of the existing instances.`)
+        echo(4)(`Type ${format.cyan('npx s attach')} to choose one of the existing instances.`)
         echo()
       }
       process.exit(1)
@@ -240,7 +211,7 @@ export class Session {
     if (!this.project) {
       echo()
       echo(4)('You have to attach this project to one of your instances.')
-      echo(4)(`Try ${format.cyan('syncano-cli attach')}.`)
+      echo(4)(`Try ${format.cyan('npx s attach')}.`)
       echo()
       process.exit()
     }
@@ -249,7 +220,7 @@ export class Session {
   hasProjectPath () {
     if (!this.projectPath) {
       echo()
-      echo(4)(`I don't see any project here. Try ${format.cyan('syncano-cli init')}.`)
+      echo(4)(`I don't see any project here. Try ${format.cyan('npx s init')}.`)
       echo()
       process.exit()
     }
@@ -260,7 +231,7 @@ export class Session {
     if (!socket.existLocally) {
       echo()
       echo(4)('File socket.yml was not found in a project directory!')
-      echo(4)(`Check your directory or try ${format.cyan('syncano-cli create')} to create a new Socket.`)
+      echo(4)(`Check your directory or try ${format.cyan('npx s create')} to create a new Socket.`)
       echo()
       process.exit()
     }
@@ -269,8 +240,8 @@ export class Session {
   notAlreadyInitialized () {
     if (this.projectPath && this.project) {
       echo()
-      echo(4)('You are fine! Project in this folder is already initiated!')
-      echo(4)(`It is using ${format.cyan(this.project.instance)} Syncano instance.`)
+      echo(4)('Project in this folder is already initiated!')
+      echo(4)(`It is attached to ${format.cyan(this.project.instance)} Syncano instance.`)
       echo()
       process.exit()
     }

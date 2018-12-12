@@ -152,12 +152,14 @@ describe('[commands] Login', function () {
       loginCallback = sinon.stub(login, 'loginCallback')
       register = sinon.stub(login, 'register')
       sinon.stub(Login, 'promptCreation')
+      sinon.stub(process, 'exit')
     })
 
     after(function () {
       login.loginCallback.restore()
       login.register.restore()
       Login.promptCreation.restore()
+      process.exit.restore()
     })
 
     it('should return loginCallback', sinon.test(async function () {

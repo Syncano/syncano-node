@@ -1,6 +1,7 @@
 // tslint:disable-next-line:no-var-requires
 const pjson = require('../package.json')
 import Account from './account'
+import Backups from './backups'
 import Channel from './channel'
 import Class from './class'
 import Data from './data'
@@ -9,7 +10,6 @@ import Event from './event'
 import Hosting from './hosting'
 import Instance from './instance'
 import Log, { Logger } from './logger'
-import Registry from './registry'
 import Response, { CustomResponse } from './response'
 import Settings from './settings'
 import Socket from './socket'
@@ -17,6 +17,11 @@ import Trace from './trace'
 import Users from './users'
 
 class Server {
+  /**
+   * Manage Syncano Backups
+   */
+  public backups: Backups
+
   /**
    * Manage Syncano Classes
    */
@@ -77,7 +82,6 @@ class Server {
    * Manage Syncano Users
    */
   public users: Users
-  public registry: Registry
 
   /**
    * Manage Syncano Database. Create, update, query & list, delete objects.
@@ -108,7 +112,8 @@ class Server {
     this.instance = new Instance(config)
     this.logger = Log(config)
     this.users = new Users(config)
-    this.registry = new Registry(config)
+    this.groups = new Groups(config)
+    this.backups = new Backups(config)
     this.data = new Proxy(new Data(settings), {
       get (target, className: string) {
         return new Data(getConfig(className))

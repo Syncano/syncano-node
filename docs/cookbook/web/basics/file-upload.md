@@ -24,9 +24,6 @@ Syncano Data Classes have a `file` type schema property that is suitable for fil
 
 ```
 name: documents-socket
-description: An example of file uploads on Syncano
-version: 0.0.1
-runtime: nodejs_v8
 
 classes:
   files:
@@ -67,20 +64,21 @@ Next, you need to install `form-data` package using `npm install -D form-data` i
 import Syncano from '@syncano/core'
 import FormData from 'form-data'
 
-export default (ctx) => {
+export default async (ctx) => {
   const {data, response} = new Syncano(ctx)
   const {file, filename, filetype} = ctx.args
   const form = new FormData()
 
   if (file) {
     form.append('file', file, {filename, filetype})
-    data.files.create(form)
-      .then((res) => {
-        return response.json({message: `Upload successful`})
-      })
-      .catch(({ error, statusCode = 400 }) => {
-        return response.json(error, statusCode)
-      })
+    try {
+      const data = await data.files.create(form)
+
+      return response.json({message: `Upload successful`})
+    } catch (err) {
+        
+      return response.json(error, statusCode)
+    }
   } else {
     return response.json({message: 'Upload failed'}, 400)
   }
@@ -110,10 +108,10 @@ You'll have to handle the form submission with javascript:
 <script src="https://unpkg.com/@syncano/client"></script>
 <script>
 window.addEventListener('load', function () {
-  const s = new SyncanoClient('late-mountain-7516')
+  const s = new SyncanoClient('<YOUR-INSTANCE-NAME>')
   const submit = document.querySelector('.submit--js')
 
-  submit.addEventListener('click', e => {
+  submit.addEventListener('click', async e => {
     e.preventDefault()
     const file = document.querySelector('#upload').files[0]
     const formData = new FormData()
@@ -121,9 +119,12 @@ window.addEventListener('load', function () {
     formData.append('file', file)
     formData.append('filetype', file.filetype)
     formData.append('filename', file.name)
-    s.post('new-sockit/upload', formData)
-      .then(res => { console.log(res) })
-      .catch(err => { console.error(err) })
+    try {
+      const res = await s.post('<documents-socket/upload', formData)
+      console.log(res)
+    } catch (err) {
+      console.log(error)
+    } 
   })
 })
 </script>

@@ -3,28 +3,13 @@ import * as FormData from 'form-data'
 import * as querystring from 'querystring'
 import {NotFoundError} from './errors'
 import QueryBuilder from './query-builder'
-import {ACL} from './types'
+import { ClassObject } from './types'
 const get = require('lodash.get')
 const merge = require('lodash.merge')
 const set = require('lodash.set')
 const debug = logger('core:data')
 
 const MAX_BATCH_SIZE = 50
-
-export interface ClassObject {
-  id: number
-  created_at: string
-  updated_at: string
-  revision: number
-  acl: ACL
-  channel: null
-  channel_room: null
-  links: {
-    self: string
-    [x: string]: string
-  }
-  [x: string]: any
-}
 
 class Data extends QueryBuilder {
   // tslint:disable-next-line:variable-name
@@ -847,7 +832,6 @@ class Data extends QueryBuilder {
       err.message = get(err, 'response.data.query')
       throw err
     }
-
   }
 }
 

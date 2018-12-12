@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/Syncano/syncano-node/compare/v0.14.0...v0.15.0) (2018-11-30)
+
+
+### Bug Fixes
+
+* deps ([3876bd4](https://github.com/Syncano/syncano-node/commit/3876bd4))
+* remove npm-run-all ([17763c8](https://github.com/Syncano/syncano-node/commit/17763c8))
+* **cli:** backups date ([1c76336](https://github.com/Syncano/syncano-node/commit/1c76336))
+* **cli:** camel case ([fbae5d7](https://github.com/Syncano/syncano-node/commit/fbae5d7))
+* **cli:** missing return ([f0fa1b0](https://github.com/Syncano/syncano-node/commit/f0fa1b0))
+* **cli:** prevent wrong password moving you forward ([8e92ccf](https://github.com/Syncano/syncano-node/commit/8e92ccf))
+* **cli:** remove add command ([3b23f7a](https://github.com/Syncano/syncano-node/commit/3b23f7a))
+* **cli:** scripts paths ([cc288a4](https://github.com/Syncano/syncano-node/commit/cc288a4))
+* **cli:** skip post install in CI ([d14df13](https://github.com/Syncano/syncano-node/commit/d14df13))
+* **cli:** tests ([daf6250](https://github.com/Syncano/syncano-node/commit/daf6250))
+
+
+### Features
+
+* **cli:** add backups ([bdecb27](https://github.com/Syncano/syncano-node/commit/bdecb27))
+* **cli:** deleting backups ([090ed3c](https://github.com/Syncano/syncano-node/commit/090ed3c))
+* **cli:** run init after install ([6221636](https://github.com/Syncano/syncano-node/commit/6221636))
+* **cli:list:** add instance nam to list command ([93c0664](https://github.com/Syncano/syncano-node/commit/93c0664))
+
+
+
+
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/Syncano/syncano-node/compare/v0.12.1...v0.13.0) (2018-09-06)
+
+
+### Bug Fixes
+
+* **cli:** all socket files ([366a5b9](https://github.com/Syncano/syncano-node/commit/366a5b9))
+* **cli:** checking socket source ([4fd7a5a](https://github.com/Syncano/syncano-node/commit/4fd7a5a))
+* **cli:** configuring hosting ([951da2c](https://github.com/Syncano/syncano-node/commit/951da2c))
+* **cli:** double export ([c9db955](https://github.com/Syncano/syncano-node/commit/c9db955))
+* **cli:** hosting config ([bf1b50f](https://github.com/Syncano/syncano-node/commit/bf1b50f))
+* **cli:** imports ([583027c](https://github.com/Syncano/syncano-node/commit/583027c))
+* hosting sync ([bdcdab6](https://github.com/Syncano/syncano-node/commit/bdcdab6))
+* **cli:** lint ([a6dc753](https://github.com/Syncano/syncano-node/commit/a6dc753))
+* **cli:** loading package.json ([1c5fb60](https://github.com/Syncano/syncano-node/commit/1c5fb60))
+* **cli:** old imports ([6b603a6](https://github.com/Syncano/syncano-node/commit/6b603a6))
+* **cli:** removing registry ([830536a](https://github.com/Syncano/syncano-node/commit/830536a))
+* **cli:** style ([3626f89](https://github.com/Syncano/syncano-node/commit/3626f89))
+* **cli:** tests ([9d4b609](https://github.com/Syncano/syncano-node/commit/9d4b609))
+* **cli:** update hosting without loosing config ([f4705a9](https://github.com/Syncano/syncano-node/commit/f4705a9))
+* **cli:** wrong import ([c6a8530](https://github.com/Syncano/syncano-node/commit/c6a8530))
+* **npmkeywords:** typo front/back ([c0439ce](https://github.com/Syncano/syncano-node/commit/c0439ce))
+* replaced old syncano-cli with npx s ([e0f1ab8](https://github.com/Syncano/syncano-node/commit/e0f1ab8))
+* replaced old syncano-cli with npx s ([#244](https://github.com/Syncano/syncano-node/issues/244)) ([0b08eac](https://github.com/Syncano/syncano-node/commit/0b08eac))
+
+
+### Features
+
+* **cli:** add info command ([e3637b5](https://github.com/Syncano/syncano-node/commit/e3637b5))
+* **cli:** add sysinfo command ([9dd7890](https://github.com/Syncano/syncano-node/commit/9dd7890))
+* **cli/hosting:** add path to listing [#246](https://github.com/Syncano/syncano-node/issues/246) ([4e791f7](https://github.com/Syncano/syncano-node/commit/4e791f7))
+
+
+
+
 <a name="0.12.0"></a>
 # [0.12.0](https://github.com/Syncano/syncano-node/compare/v0.11.0...v0.12.0) (2018-04-08)
 

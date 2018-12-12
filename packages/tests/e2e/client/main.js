@@ -10,7 +10,7 @@ import {
   getRandomString
 } from '@syncano/test-tools'
 
-import Syncano from '../../../lib-js-client/src/index.js'
+import Syncano from '../../../lib-js-client/lib'
 
 const cliLocation = path.join(process.cwd(), '../cli/lib/cli.js')
 const projectTestTemplate = path.join(__dirname, '../../assets/project/empty/')
@@ -26,8 +26,8 @@ describe('Client', function () {
       .cwd(path.join(testsLocation, testInstance))
 
   before(() => {
-    client = new Syncano(testInstance, {host: 'syncano.link'})
-    assert.isFunction(client)
+    client = new Syncano(testInstance, {host: 'api.syncano.rocks'})
+    assert.isObject(client)
 
     return createProject(testInstance, projectTestTemplate)
   })
@@ -51,7 +51,7 @@ describe('Client', function () {
 
   it('init client', () => {
     const client = new Syncano(testInstance)
-    assert.isFunction(client)
+    assert.isObject(client)
   })
 
   it('post to endpoint without arguments', async () => {
@@ -87,6 +87,15 @@ describe('Client', function () {
     const params = {firstname: getRandomString(), lastname: getRandomString()}
     const expectedResponse = `Hello ${params.firstname} ${params.lastname}!`
     const resp = await client.post('hello/hello', params)
+    assert(resp.message === expectedResponse)
+  })
+
+  it('post to "full url" endpoint with arguments', async () => {
+    const params = {firstname: getRandomString(), lastname: getRandomString()}
+    const expectedResponse = `Hello ${params.firstname} ${params.lastname}!`
+
+    const fullUrl = `https://${process.env.E2E_SYNCANO_HOST}/v2/instances/${testInstance}/endpoints/sockets/hello/hello/`
+    const resp = await client.post(fullUrl, params)
     assert(resp.message === expectedResponse)
   })
 })

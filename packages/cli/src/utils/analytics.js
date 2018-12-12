@@ -13,10 +13,7 @@ const STG_KEY = 'CCupheBjgV6WI0emy3oRUnDyjQ8ngmgB'
 const PROD_KEY = 'fLDtpYXRjFYnHlp1gvzl4I3Gv8gDoQ8m'
 
 const ANALYTICS_WRITE_KEY = process.env.SYNCANO_ENV === 'test' ? STG_KEY : PROD_KEY
-const analytics = new Analytics(ANALYTICS_WRITE_KEY, {
-  flushAt: 5,
-  flushAfter: 300
-})
+const analytics = new Analytics(ANALYTICS_WRITE_KEY, {flushAt: 1})
 
 const identify = (details) => {
   debug('identify')

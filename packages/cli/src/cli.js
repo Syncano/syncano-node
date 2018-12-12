@@ -31,11 +31,20 @@ const setup = async () => {
     .version(pjson.version)
 
   program
+    .command('info')
+    .group('Basics')
+    .description('Info about current project/instance/user etc.')
+    .action(async (...options) => {
+      trackAndDebug(options)
+      new commands.Info(context).run(options)
+    })
+
+  program
     .command('init')
     .group('Basics')
     .description('Start a Syncano project in the current directory')
     .option('-i, --instance <name>',
-    'Instance you want to use for your project. If not provided, an Instance will be created')
+      'Instance you want to use for your project. If not provided, an Instance will be created')
     .action(async (...options) => {
       trackAndDebug(options)
       session.notAlreadyInitialized()
@@ -78,6 +87,15 @@ const setup = async () => {
     })
 
   program
+    .command('sysinfo')
+    .group('Basics')
+    .description('Sys info for debug purpose')
+    .action((...options) => {
+      trackAndDebug(options)
+      new commands.SysInfo(context).run(options)
+    })
+
+  program
     .command('hot [socket_name]')
     .group('Project')
     .description('Hot deploy to make your project continuously synced to the Syncano cloud')
@@ -111,6 +129,16 @@ const setup = async () => {
     })
 
   program
+    .command('compile [socket_name]')
+    .group('Project')
+    .description('Compile Socket')
+    .action(async (...options) => {
+      trackAndDebug(options)
+      echo()
+      new commands.SocketCompile(context).run(options)
+    })
+
+  program
     .command('call <socket_name>/<endpoint>')
     .group('Project')
     .description("Call Socket's endpoint")
@@ -128,28 +156,12 @@ const setup = async () => {
     .group('Sockets')
     .description('List the installed Sockets')
     .option('-f, --full', 'Print the detailed information (including parameters and response)')
-    .option('-d, --with-deps', 'Print also Sockets which are dependencies of other Sockets')
     .action(async (...options) => {
       trackAndDebug(options)
       session.isAuthenticated()
       session.hasProject()
       await session.checkConnection()
       new commands.SocketList(context).run(options)
-    })
-
-  program
-    .command('add <socket_name>')
-    .group('Sockets')
-    .description('Add a Socket as a dependency of your project or local Socket')
-    .option('-s, --socket <socket>', 'Name of the Socket')
-    .action(async (...options) => {
-      const [name] = options
-      trackAndDebug(options, { socketName: name })
-      session.isAuthenticated()
-      session.hasProject()
-      await session.checkConnection()
-      echo()
-      new commands.SocketAdd(context).run(options)
     })
 
   program
@@ -216,49 +228,6 @@ const setup = async () => {
     })
 
   program
-    .command('search [keyword]')
-    .group('Registry')
-    .description('Search for a specific Socket in the Sockets Registry')
-    .option('-l, --long', 'Display full descriptions')
-    .action((...options) => {
-      const [keyword] = options
-      trackAndDebug(options, { keyword })
-      if (!keyword) {
-        return program.outputHelp()
-      }
-      echo()
-      new commands.SocketSearch(context).run(options)
-    })
-
-  program
-    .command('submit <socket_name>')
-    .group('Registry')
-    .description('Submit a Socket to Socket Registry')
-    .option(
-      '-b, --bump <release type>',
-      'Bump version of the socket (major, premajor, minor, preminor, patch, prepatch, or prerelease)'
-    )
-    .action(async(...options) => {
-      const [name] = options
-      trackAndDebug(options, { socketName: name })
-      new commands.SocketSubmit(context).run(options)
-    })
-
-  program
-    .command('publish <socket_name>')
-    .group('Registry')
-    .description('Publish a Socket in a Socket Registry')
-    .option(
-      '-v, --version <socket version>',
-      'Version of the Socket you want to publish'
-    )
-    .action(async(...options) => {
-      const [name] = options
-      trackAndDebug(options, { socketName: name })
-      new commands.SocketPublish(context).run(options)
-    })
-
-  program
     .command('trace [socket_name]')
     .group('Project')
     .description('Trace Socket calls')
@@ -272,11 +241,11 @@ const setup = async () => {
     })
 
   program
-    .command('hosting', 'Manage your web assets and host them on Syncano')
+    .command('backup', 'Menage your backups')
     .on('*', (commandsArr) => validateCommands(commandsArr))
 
   program
-    .command('component', 'Manage your Socket components')
+    .command('hosting', 'Manage your web assets and host them on Syncano')
     .on('*', (commandsArr) => validateCommands(commandsArr))
 
   program

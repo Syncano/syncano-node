@@ -1,7 +1,5 @@
 name: ${socketName}
 description: ${socketDescription}
-version: 0.0.1
-runtime: nodejs_v8
 
 endpoints:
   hello:

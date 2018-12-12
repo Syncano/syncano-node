@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/Syncano/syncano-node/compare/v0.14.0...v0.15.0) (2018-11-30)
+
+
+### Bug Fixes
+
+* Broken link ([121db4a](https://github.com/Syncano/syncano-node/commit/121db4a))
+* **lib-core:** fixing for axios ([7809576](https://github.com/Syncano/syncano-node/commit/7809576))
+* deps ([3876bd4](https://github.com/Syncano/syncano-node/commit/3876bd4))
+* update deps ([3b9b23f](https://github.com/Syncano/syncano-node/commit/3b9b23f))
+
+
+### Features
+
+* Corrected logic ,  added test ([2e6ef6c](https://github.com/Syncano/syncano-node/commit/2e6ef6c))
+* **cli:** deleting backups ([090ed3c](https://github.com/Syncano/syncano-node/commit/090ed3c))
+* **core:** Backups ([fc14d7d](https://github.com/Syncano/syncano-node/commit/fc14d7d))
+* **core:** groups ([5111625](https://github.com/Syncano/syncano-node/commit/5111625))
+* **core:** groups tests ([e429d15](https://github.com/Syncano/syncano-node/commit/e429d15))
+
+
+
+
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/Syncano/syncano-node/compare/v0.12.1...v0.13.0) (2018-09-06)
+
+
+### Bug Fixes
+
+* **cli:** lint ([a6dc753](https://github.com/Syncano/syncano-node/commit/a6dc753))
+* **core:** unit tests ([0abf9e7](https://github.com/Syncano/syncano-node/commit/0abf9e7))
+
+
+
+
 <a name="0.11.0"></a>
 # [0.11.0](https://github.com/Syncano/syncano-node/compare/v0.9.3...v0.11.0) (2018-03-17)
 

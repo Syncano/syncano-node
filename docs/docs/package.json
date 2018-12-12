@@ -4,6 +4,6 @@
     "docs:watch": "npx docsify serve"
   },
   "devDependencies": {
-    "docsify-cli": "^4.2.0"
+    "docsify-cli": "^4.2.1"
   }
 }

@@ -4,6 +4,7 @@ import inquirer from 'inquirer'
 import logger from '../utils/debug'
 import { createInstance } from './helpers/create-instance'
 import { p, echo } from '../utils/print-tools'
+import { track } from '../utils/analytics'
 import Login from './login'
 
 const { debug } = logger('cmd-init')
@@ -17,16 +18,20 @@ class InitCmd {
   }
 
   async run ([cmd]) {
-    if (!this.session.settings.account.authenticated()) {
+    const { project, settings } = this.session
+    const { instance } = cmd
+
+    if (process.env.INIT_CWD) {
+      track('CLI: install')
+    }
+
+    if (!settings.account.authenticated()) {
       echo()
       echo(4)(format.red('You have to be logged in to initialize a new project!'))
       await new Login(this.context).run([])
     }
 
     this.init = new this.Init()
-
-    const { project } = this.session
-    const { instance } = cmd
 
     const questions = [
       {

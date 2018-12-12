@@ -1,28 +1,28 @@
 {
   "name": "@syncano/validate",
   "description": "Validating Syncanao request/responses and more",
-  "version": "0.12.1",
+  "version": "0.15.0",
   "license": "MIT",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@syncano/schema": "0.12.1",
-    "ajv": "^6.2.0",
-    "ajv-error-messages": "^1.0.0",
+    "@syncano/schema": "0.15.0",
+    "ajv": "^6.5.5",
+    "ajv-error-messages": "^1.0.2",
     "ajv-errors": "^1.0.0",
-    "ajv-keywords": "^3.1.0",
+    "ajv-keywords": "^3.2.0",
     "lodash.isempty": "^4.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
-    "mocha": "^5.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
-    "standard": "^10.0.3"
+    "standard": "^11.0.1"
   },
   "scripts": {
     "clean": "rimraf ./lib",

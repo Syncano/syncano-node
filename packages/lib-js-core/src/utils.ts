@@ -2,7 +2,7 @@ import {Headers, Response} from 'node-fetch'
 import { ResponseError } from './errors'
 
 export interface JSONResponse extends Response {
-  data: any
+  data?: any
 }
 
 export function checkStatus(response: JSONResponse) {
@@ -41,17 +41,23 @@ export function checkStatus(response: JSONResponse) {
   throw error
 }
 
-export function parseJSON(response: Response): Promise<JSONResponse> {
+export function parseJSON(response: JSONResponse): Promise<JSONResponse> {
   const headers: Headers = response.headers
   const mimetype = headers.get('Content-Type')
 
   if (response.status === 204 || mimetype === null) {
-    return Promise.resolve(Object.assign(response, {data: undefined}))
+    response.data = undefined
+
+    return Promise.resolve(response)
   }
 
   // Parse JSON
   if (/^.*\/.*\+json/.test(mimetype) || /^application\/json/.test(mimetype)) {
-    return response.json().then((data) => Object.assign(response, {data}))
+    return response.json().then((data) => {
+      response.data = data
+
+      return response
+    })
   }
 
   // Parse XML and plain text
@@ -60,8 +66,16 @@ export function parseJSON(response: Response): Promise<JSONResponse> {
     /^.*\/.*\+xml/.test(mimetype) ||
     mimetype === 'text/plain'
   ) {
-    return response.text().then((data) => Object.assign(response, {data}))
+    return response.text().then((data) => {
+      response.data = data
+
+      return response
+    })
   }
 
-  return response.arrayBuffer().then((data) => Object.assign(response, {data}))
+  return response.arrayBuffer().then((data) => {
+    response.data = data
+
+    return response
+  })
 }

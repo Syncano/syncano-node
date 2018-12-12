@@ -9,7 +9,7 @@ process.on('unhandledRejection', (reason, p) => {
   if (reason.name === 'RequestError' && reason.status === 403) {
     if (reason.errors.detail === 'No such API Key.') {
       const errorMessage =
-        `API key from your config file is not valid. Use ${format.cyan('syncano-cli login')} to log in once again.`
+        `API key from your config file is not valid. Use ${format.cyan('npx s login')} to log in once again.`
       echo(errorMessage)
       echo()
       return
@@ -46,7 +46,7 @@ class ErrorResponse {
 
       error(err, errorMessage, url)
       echo()
-      echo(`Did you run ${format.green('syncano-cli deploy')} command?`)
+      echo(`Did you run ${format.green('npx s deploy')} command?`)
       return
     }
     error(err)

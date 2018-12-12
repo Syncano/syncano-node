@@ -1,5 +1,7 @@
 import * as logger from 'debug'
+import {parse, stringify} from 'querystring'
 import QueryBuilder from './query-builder'
+import { SyncanoResponse } from './types';
 
 const debug = logger('core:hosting')
 
@@ -59,20 +61,21 @@ export default class HostingClass extends QueryBuilder {
    * Get list of files in given hosting
    * @param hostingName Name of hosting
    */
-  public listFiles (hostingName: string): Promise<{
-    next: string|null
-    prev: string|null
-    objects: File[]
-  }> {
+  public async listFiles (hostingName: string): Promise<File[]> {
     debug('listFiles')
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.urlFiles(hostingName), {}, headers)
-        .then((res) => resolve(res.objects))
-        .catch(reject)
-    })
+
+    try {
+      const response: SyncanoResponse<File> = await this.fetch(
+        this.urlFiles(hostingName),
+        undefined, {
+          'X-API-KEY': this.instance.accountKey
+        }
+      )
+
+      return this.loadNextFilesPage(response)
+    } catch (err) {
+      return err
+    }
   }
 
   /**
@@ -158,6 +161,25 @@ export default class HostingClass extends QueryBuilder {
         .then(resolve)
         .catch(reject)
     })
+  }
+
+  private async loadNextFilesPage(response: SyncanoResponse<File>) {
+    debug('loadNextFilesPage')
+
+    if (response.next !== null) {
+      const next = response.next.replace(/\?.*/, '')
+      const nextParams = parse(response.next.replace(/.*\?/, ''))
+      const q = stringify(nextParams)
+      const nextResponse: SyncanoResponse<File> = await this.fetch(`${this.baseUrl}${next}?${q}`, undefined, {
+        'X-API-KEY': this.instance.accountKey
+      })
+
+      await this.loadNextFilesPage(nextResponse)
+
+      return response.objects.concat(nextResponse.objects)
+    }
+
+    return response.objects
   }
 
   private urlFiles (hostingName: string, fileId?: string) {

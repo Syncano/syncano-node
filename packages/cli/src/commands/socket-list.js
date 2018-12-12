@@ -1,3 +1,4 @@
+import format from 'chalk'
 import logger from '../utils/debug'
 import { echo } from '../utils/print-tools'
 import { socketNotFound } from './helpers/socket'
@@ -17,6 +18,9 @@ class SocketListCmd {
     info('SocketListCmd.run')
     this.fullPrint = cmd.full || !!socketName
 
+    echo()
+    echo(4)(`instance: ${format.yellow(this.session.project.instance)}`)
+
     if (socketName) {
       try {
         const socket = await this.Socket.get(socketName)
@@ -30,7 +34,7 @@ class SocketListCmd {
         process.exit(1)
       }
     } else {
-      const sockets = cmd.withDeps ? await this.Socket.flatList() : await this.Socket.list()
+      const sockets = await this.Socket.list()
       this.printSockets(sockets)
     }
   }

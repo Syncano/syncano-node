@@ -18,11 +18,6 @@ export default {
       maxLength: 64,
       pattern: '^[?:a-z0-9-_]*$'
     },
-    version: {
-      title: 'Version of the Socket',
-      type: 'string',
-      pattern: '\\d+\\.\\d+\\.\\d+'
-    },
     keywords: {
       title: 'Keywords',
       type: 'array',
@@ -170,5 +165,5 @@ export default {
       }
     }
   },
-  required: [ 'name', 'description', 'version' ]
+  required: [ 'name' ]
 }

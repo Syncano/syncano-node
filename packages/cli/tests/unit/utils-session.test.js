@@ -422,7 +422,7 @@ describe('[utils] Session', function () {
     })
 
     it('should print message about missing login information', function () {
-      const expectedMessage = `Type ${format.cyan('syncano-cli login')} for login to your account.`
+      const expectedMessage = `Type ${format.cyan('npx s login')} for login to your account.`
       authenticationStub.returns(false)
 
       session.isAuthenticated()
@@ -478,7 +478,7 @@ describe('[utils] Session', function () {
 
   describe('hasProject', function () {
     it('should print message about missing project if no project path exists', function () {
-      const expectedMessage = `I don't see any project here. Try ${format.cyan('syncano-cli init')}.`
+      const expectedMessage = `I don't see any project here. Try ${format.cyan('npx s init')}.`
       session.projectPath = null
       session.project = null
 
@@ -527,7 +527,7 @@ describe('[utils] Session', function () {
   describe('hasSocket', function () {
     const reasonResponse = 'File socket.yml was not found in a project directory!'
     // eslint-disable-next-line max-len
-    const solutionResponse = `Check your directory or try ${format.cyan('syncano-cli create')} to create a new Socket.`
+    const solutionResponse = `Check your directory or try ${format.cyan('npx s create')} to create a new Socket.`
 
     it('should print reason response with proper padding if socket.yml does not exists', function () {
       session.hasSocket(getRandomString('session_hasSocket_socketName[0]'))
@@ -559,7 +559,7 @@ describe('[utils] Session', function () {
 
   describe('notAlreadyInitialized', function () {
     it('should print instanceInformation about project if exists', function () {
-      const instanceInformation = `It is using ${format.cyan(instanceName)} Syncano instance.`
+      const instanceInformation = `It is attached to ${format.cyan(instanceName)} Syncano instance.`
       session.project = { instance: instanceName }
 
       session.notAlreadyInitialized()

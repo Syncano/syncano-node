@@ -8,11 +8,10 @@ import proxyquire from 'proxyquire'
 import Validator from '@syncano/validate'
 
 const socketFolder = process.cwd()
-const socketScriptsFolder = path.join(socketFolder, 'src')
-const compiledScriptsFolder = path.join(socketFolder, '.src')
+const compiledScriptsFolder = path.join(socketFolder, '.dist', 'src')
 const socketDefinition = YAML.load(fs.readFileSync('./socket.yml', 'utf8'))
 
-const generateMeta = (endpointName, metaUpdate) => {
+const generateEndpointMeta = (endpointName, metaUpdate) => {
   const socketName = socketDefinition.name
 
   const apiHost = process.env.SYNCANO_HOST
@@ -47,6 +46,30 @@ const generateMeta = (endpointName, metaUpdate) => {
   return meta
 }
 
+const generateEventHandlerMeta = (eventName, metaUpdate) => {
+  const socketName = socketDefinition.name
+
+  const apiHost = process.env.SYNCANO_HOST
+  const token = process.env.SYNCANO_AUTH_KEY
+  const instance = process.env.SYNCANO_INSTANCE_NAME || process.env.SYNCANO_PROJECT_INSTANCE
+
+  let meta = {
+    socket: socketName,
+    api_host: apiHost,
+    token,
+    instance,
+    debug: process.env.DEBUG || false,
+    // executor: `${socketName}/${eventName}`,
+    executed_by: 'socket_endpoint',
+    metadata: socketDefinition.event_handlers[`events.${eventName}`]
+  }
+
+  if (metaUpdate) {
+    meta = merge(meta, metaUpdate)
+  }
+  return meta
+}
+
 async function verifyResponse (endpoint, responseType, response) {
   const validator = new Validator({
     meta: {
@@ -62,18 +85,29 @@ async function verifyRequest (ctx) {
   return validator.validateRequest(ctx)
 }
 
-function run (endpoint, ctx = {}, params = {}) {
+function runEventHandler (eventName, ctx = {}, params = {}, callType = 'eventHandler') {
+  return run(eventName, ctx, params, callType)
+}
+
+function run (socketEndpoint, ctx = {}, params = {}, callType = 'endpoint') {
   const {args = {}, config = {}, meta = {}} = ctx
   const mocks = params.mocks
-  const socketMeta = generateMeta(endpoint, meta)
+
+  let socketMeta
+  switch (callType) {
+    case 'endpoint':
+      socketMeta = generateEndpointMeta(socketEndpoint, meta)
+      break
+    case 'eventHandler':
+      socketMeta = generateEventHandlerMeta(socketEndpoint, meta)
+      break
+  }
 
   if (run.verifyRequest !== false) {
     verifyRequest({args, config, meta: socketMeta})
   }
 
-  return new Promise(function (resolve, reject) {
-    let output = null
-
+  return new Promise((resolve, reject) => {
     const HttpResponse = function (code, data, mimetype) {
       let response = null
       if (mimetype === 'json/application') {
@@ -83,13 +117,13 @@ function run (endpoint, ctx = {}, params = {}) {
       }
       response.is = (responseType) => {
         if (run.verifyResponse !== false) {
-          return verifyResponse(endpoint, responseType, response)
+          return verifyResponse(socketEndpoint, responseType, response)
         }
       }
       return response
     }
 
-    const setResponse = function (response) {
+    const setResponse = (response) => {
       const processedResponse = response
       if (response.mimetype === 'application/json') {
         processedResponse.data = JSON.parse(response.data)
@@ -100,25 +134,24 @@ function run (endpoint, ctx = {}, params = {}) {
     process.exitOrig = process.exit
     process.exit = () => {}
 
-    module.filename = `${compiledScriptsFolder}/${endpoint}.js`
+    module.filename = `${compiledScriptsFolder}/${socketEndpoint}.js`
 
     try {
       let runFunc
       if (mocks) {
-        runFunc = proxyquire(path.join(socketScriptsFolder, `${endpoint}.js`), mocks).default
+        runFunc = proxyquire(path.join(compiledScriptsFolder, `${socketEndpoint}.js`), mocks).default
       } else {
-        runFunc = require(path.join(socketScriptsFolder, `${endpoint}.js`)).default
+        runFunc = require(path.join(compiledScriptsFolder, `${socketEndpoint}.js`)).default
       }
-      output = runFunc({args, config, meta: socketMeta, HttpResponse, setResponse})
+      runFunc({args, config, meta: socketMeta, HttpResponse, setResponse})
     } catch (err) {
       reject(err)
-    } finally {
-      Promise.resolve(output).then(resolve)
     }
   })
 }
 
 export {
   run,
-  generateMeta
+  runEventHandler,
+  generateEndpointMeta
 }

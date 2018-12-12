@@ -46,7 +46,7 @@ Save the `.yml` file and update your remote Socket:
 npx s deploy hello-world
 ```
 
-> See Docs on [Data Classes](https://0-docs.syncano.io/#/building-sockets/data-classes?id=overview) for more info on available data types
+> See Docs on [Database](https://0-docs.syncano.io/#/project/database?id=types-of-data-class-schema-fields) for more info on available data types
 
 #### Edit Socket Endpoint file
 
@@ -55,14 +55,13 @@ Edit file `syncano/hello-world/src/hello.js` and change its content to:
 ```js
 import Syncano from '@syncano/core'
 
-export default (ctx) => {
+export default async (ctx) => {
   const { data, response } = new Syncano(ctx)
-  const { title, pages } = ctx.args
-
-  data.book.create({ title, pages })
-    .then(bookObj => {
-      response.json({msg: `Book with ID ${bookObj.id} created!`})
-    }).catch(({ data, status }) => response.json(data, status))
+  const book = await data.book.create({
+    title: ctx.args.title,
+    pages: ctx.args.pages
+  })
+  response.json(book)
 }
 ```
 
@@ -85,10 +84,10 @@ The server side is ready so now the only thing left to do, is adding a client si
 <script>
   const s = new SyncanoClient('YOUR_INSTANCE')
 
-  s.post('hello-world/hello', { title: 'PeterPan', pages: 334 })
-   .then(res => {
-     console.log(res.msg)
-   })
+  s.post('hello-world/hello', { title: 'Godfather', pages: 446 })
+   .then(res =>
+     console.log(`Book with ID ${res.id} created!`)
+   )
 </script>
 ```
 

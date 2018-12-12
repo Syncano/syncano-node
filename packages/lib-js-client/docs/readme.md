@@ -36,7 +36,7 @@ You can create instance via [Syncano CLI][cli].
 **Call socket**
 
 ```js
-s('socket_name/endpoint_name').then(res => {
+s.post('socket_name/endpoint_name').then(res => {
   // Handle response
 })
 ```
@@ -44,7 +44,7 @@ s('socket_name/endpoint_name').then(res => {
 **Call socket with parameters**
 
 ```js
-s('socket_name/endpoint_name', {
+s.post('socket_name/endpoint_name', {
   city: 'Warsaw'
 }).then(res => {
   // Handle response
@@ -59,11 +59,11 @@ s('socket_name/endpoint_name', {
 npm i @syncano/client --save
 ```
 
-**Also available at [UNPKG](https://unpkg.com/@syncano/client@latest/dist/syncano-client.min.js)**
+**Also available at [UNPKG](https://unpkg.com/@syncano/client@latest/dist/index.js)**
 
 ```html
-<script src="https://unpkg.com/@syncano/client@latest/dist/syncano-client.min.js"></script>
+<script src="https://unpkg.com/@syncano/client@latest/dist/index.js"></script>
 ```
 
 [cheatsheet]: https://cheatsheet.syncano.io/#client
-[cli]: https://github.com/Syncano/syncan/node/tree/master/packages/cli
+[cli]: https://github.com/Syncano/syncano-node/tree/master/packages/cli
