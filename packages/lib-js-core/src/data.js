@@ -9,7 +9,8 @@ import {NotFoundError} from './errors'
 
 const debug = logger('core:data')
 
-const MAX_BATCH_SIZE = 50
+export const MAX_PAGE_SIZE = 500
+export const MAX_BATCH_SIZE = 50
 
 /**
  * Syncano server
@@ -150,17 +151,17 @@ class Data extends QueryBuilder {
   }
 
   resolveIfFinished (result) {
-    if (this.query.page_size !== 0) {
-      return result.slice(0, this.query.page_size)
+    if (this.query.limit) {
+      return result.slice(0, this.query.limit)
     }
     return result
   }
 
   async loadNextPage (response, objects) {
     debug('loadNextPage')
-    const pageSize = this.query.page_size || 0
+
     const hasNextPageMeta = response.next
-    const hasNotEnoughResults = pageSize === 0 || pageSize > objects.length
+    const hasNotEnoughResults = !this.queries.limit || this.query.limit > objects.length
 
     if (hasNextPageMeta && hasNotEnoughResults) {
       const next = response.next.replace(/\?.*/, '')
@@ -209,10 +210,9 @@ class Data extends QueryBuilder {
     ))
     debug('urls', urls)
     const uniqueIds = []
-
     const fetches = urls.map(async url => self.request(url))
-
     let results = await Promise.all(fetches)
+
     results = [].concat.apply([], results)
     results = await self.resolveRelatedModels(results)
     results = await self._replaceCustomTypesWithValue(results)
@@ -442,7 +442,7 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.take(500).list()
    */
   take (count) {
-    return this.withQuery({page_size: count}) // eslint-disable-line camelcase
+    return this.withQuery({limit: count, page_size: Math.min(this.query.page_size, count)}) // eslint-disable-line camelcase
   }
 
   /**

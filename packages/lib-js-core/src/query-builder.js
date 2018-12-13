@@ -3,6 +3,7 @@ import logger from 'debug'
 import pjson from '../package.json'
 import nodeFetch from 'node-fetch'
 import {checkStatus, parseJSON} from './utils'
+import {MAX_PAGE_SIZE} from './data'
 
 const debug = logger('core:query-builder')
 
@@ -80,7 +81,9 @@ export default class QueryBuilder {
   }
 
   get query () {
-    return this._query || {}
+    return this._query || {
+      page_size: MAX_PAGE_SIZE
+    }
   }
 
   get queries () {
