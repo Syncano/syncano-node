@@ -42,7 +42,7 @@ describe('Data', () => {
     it('should be able to fetch objects list', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 10}) // eslint-disable-line camelcase
+        .query({limit: 10, page_size: 10}) // eslint-disable-line camelcase
         .reply(200, {
           objects: [{name: 'John Doe', id: 3}],
           next: null
@@ -65,42 +65,41 @@ describe('Data', () => {
     })
 
     it('should be able to fetch objects list', () => {
-      const objects = [...Array(302).keys()].map(key => {
+      const objects = [...Array(1502).keys()].map(key => {
         return {name: 'John Doe', id: key}
       })
 
-      const first100 = objects.slice(0, 100)
-      const first100last = first100.slice(-1).pop().id
+      const first500 = objects.slice(0, 500)
+      const first500last = first500.slice(-1).pop().id
+      const second500 = objects.slice(500, 1000)
+      const second500last = second500.slice(-1).pop().id
+      const third500 = objects.slice(1000, 1500)
+      const third500last = third500.slice(-1).pop().id
+      const fourth500 = objects.slice(1500, 1502)
+
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 500}) // eslint-disable-line camelcase
         .reply(200, {
-          objects: first100,
-          next: `/v3/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`
+          objects: first500,
+          next: `/v3/instances/${instanceName}/classes/users/objects/?page_size=500&last_pk=${first500last}`
         })
-
-      const second100 = objects.slice(100, 200)
-      const second100last = second100.slice(-1).pop().id
-      api
-        .get(`/v3/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 500, last_pk: first500last}) // eslint-disable-line camelcase
         .reply(200, {
-          objects: second100,
-          next: `/v3/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`
+          objects: second500,
+          next: `/v3/instances/${instanceName}/classes/users/objects/?page_size=500&last_pk=${second500last}`
         })
-
-      const third100 = objects.slice(100, 200)
-      const third100last = third100.slice(-1).pop().id
-      api
-        .get(`/v3/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 500, last_pk: second500last}) // eslint-disable-line camelcase
         .reply(200, {
-          objects: third100,
-          next: `/v3/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`
+          objects: third500,
+          next: `/v3/instances/${instanceName}/classes/users/objects/?page_size=500&last_pk=${third500last}`
         })
-
-      const fourth100 = objects.slice(300, 302)
-      api
-        .get(`/v3/instances/${instanceName}/classes/users/objects/?last_pk=${third100last}`)
+        .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({last_pk: third500last, page_size: 500}) // eslint-disable-line camelcase
         .reply(200, {
-          objects: fourth100,
+          objects: fourth500,
           next: null
         })
 
@@ -109,7 +108,7 @@ describe('Data', () => {
         .then(objects => {
           should(objects)
             .be.Array()
-            .length(302)
+            .length(1502)
           should(objects)
             .have.propertyByPath(0, 'name')
             .which.is.String()
@@ -122,7 +121,7 @@ describe('Data', () => {
     it('should return [] when no objects were not found', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 5}) // eslint-disable-line camelcase
+        .query({limit: 5, page_size: 5}) // eslint-disable-line camelcase
         .reply(200, {objects: [], next: null})
 
       return data.users
@@ -140,6 +139,7 @@ describe('Data', () => {
 
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 500}) // eslint-disable-line camelcase
         .reply(200, {
           objects: [
             {
@@ -157,13 +157,13 @@ describe('Data', () => {
     it('should load next page', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 2}) // eslint-disable-line camelcase
+        .query({page_size: 2, limit: 2}) // eslint-disable-line camelcase
         .reply(200, {
           objects: [{id: 1}],
-          next: `/v3/instances/${instanceName}/classes/users/objects/?page_size=2&last_pk=100`
+          next: `/v3/instances/${instanceName}/classes/users/objects/?page_size=2&last_pk=1`
         })
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 2, last_pk: 100}) // eslint-disable-line camelcase
+        .query({page_size: 2, last_pk: 1, limit: 2}) // eslint-disable-line camelcase
         .reply(200, {objects: [{id: 2}], next: null})
 
       return data.users
@@ -200,7 +200,7 @@ describe('Data', () => {
     it('should be able to fetch single object', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 1}) // eslint-disable-line camelcase
+        .query({page_size: 1, limit: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: [{name: 'John Doe', id: 3}]})
 
       return data.users.first().should.become({name: 'John Doe', id: 3})
@@ -209,7 +209,7 @@ describe('Data', () => {
     it('should return null when object was not found', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 1}) // eslint-disable-line camelcase
+        .query({page_size: 1, limit: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: []})
 
       return data.users.first().should.become(null)
@@ -226,7 +226,7 @@ describe('Data', () => {
     it('should be able to fetch single object', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 1}) // eslint-disable-line camelcase
+        .query({page_size: 1, limit: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: [{name: 'John Doe', id: 3}]})
 
       return data.users.firstOrFail().should.become({name: 'John Doe', id: 3})
@@ -235,7 +235,7 @@ describe('Data', () => {
     it('should throw error when object was not found', async () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 1}) // eslint-disable-line camelcase
+        .query({page_size: 1, limit: 1}) // eslint-disable-line camelcase
         .reply(404)
 
       return data.users.firstOrFail().should.rejectedWith(NotFoundError)
@@ -251,13 +251,14 @@ describe('Data', () => {
 
     it('should be able to fetch single existing object', () => {
       const query = {username: 'john.doe'}
-      const user = {name: 'John'}
+      const user = {name: 'John Doe'}
 
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({username: {_eq: 'john.doe'}}),
-          page_size: 1 // eslint-disable-line camelcase
+          page_size: 1, // eslint-disable-line camelcase
+          limit: 1
         })
         .reply(200, {objects: [{name: 'John Doe', id: 3}], next: null})
 
@@ -272,10 +273,10 @@ describe('Data', () => {
 
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({query, page_size: 1})
+        .query({query, page_size: 1, limit: 1})
         .reply(404)
         .post('/v2/instances/testInstance/classes/users/objects/', user)
-        .query({query, page_size: 1})
+        .query({query, page_size: 1, limit: 1})
         .reply(200, user)
 
       return data.users
@@ -297,10 +298,10 @@ describe('Data', () => {
 
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({query, page_size: 1})
+        .query({query, page_size: 1, limit: 1})
         .reply(200, {objects: [{name: 'John Doe', id: 3}], next: null})
         .patch(`/v2/instances/${instanceName}/classes/users/objects/3/`)
-        .query({query, page_size: 1})
+        .query({query, page_size: 1, limit: 1})
         .reply(200, user)
 
       return data.users
@@ -314,10 +315,10 @@ describe('Data', () => {
 
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({query, page_size: 1})
+        .query({query, page_size: 1, limit: 1})
         .reply(404)
         .post('/v2/instances/testInstance/classes/users/objects/', user)
-        .query({query, page_size: 1})
+        .query({query, page_size: 1, limit: 1})
         .reply(200, user)
 
       return data.users
@@ -338,6 +339,7 @@ describe('Data', () => {
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 7}}),
+          limit: 1,
           page_size: 1 // eslint-disable-line camelcase
         })
         .reply(200, {objects: [{name: 'John Doe', id: 7}]})
@@ -349,7 +351,8 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          query: JSON.stringify({id: {_in: [7, 8]}})
+          query: JSON.stringify({id: {_in: [7, 8]}}),
+          page_size: 500,
         })
         .reply(200, {
           objects: [{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}],
@@ -366,6 +369,7 @@ describe('Data', () => {
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 5}}),
+          limit: 1,
           page_size: 1 // eslint-disable-line camelcase
         })
         .reply(200, {objects: [], next: null})
@@ -377,7 +381,8 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          query: JSON.stringify({id: {_in: [7, 8]}})
+          query: JSON.stringify({id: {_in: [7, 8]}}),
+          page_size: 500,
         })
         .reply(200, {objects: [], next: null})
 
@@ -397,6 +402,7 @@ describe('Data', () => {
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 7}}),
+          limit: 1,
           page_size: 1 // eslint-disable-line camelcase
         })
         .reply(200, {objects: [{name: 'John Doe', id: 7}]})
@@ -408,7 +414,8 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          query: JSON.stringify({id: {_in: [7, 8]}})
+          query: JSON.stringify({id: {_in: [7, 8]}}),
+          page_size: 500,
         })
         .reply(200, {
           objects: [{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}],
@@ -445,6 +452,14 @@ describe('Data', () => {
 
       should(query)
         .have.propertyByPath('query', 'page_size')
+        .which.is.equal(7)
+    })
+
+    it('should add limit parameter to the query', () => {
+      const query = data.users.take(7)
+
+      should(query)
+        .have.propertyByPath('query', 'limit')
         .which.is.equal(7)
     })
   })
@@ -525,6 +540,9 @@ describe('Data', () => {
     it('should extend reference with object', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {
           objects: [
             {
@@ -539,7 +557,8 @@ describe('Data', () => {
         })
         .get(`/v2/instances/${instanceName}/users/`)
         .query({
-          query: JSON.stringify({id: {_in: [1]}})
+          query: JSON.stringify({id: {_in: [1]}}),
+          page_size: 500,
         })
         .reply(200, {objects: [{id: 1, name: 'John'}]})
 
@@ -560,6 +579,9 @@ describe('Data', () => {
     it('should extend relation with array of objects', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {
           objects: [
             {
@@ -582,7 +604,8 @@ describe('Data', () => {
         })
         .get(`/v3/instances/${instanceName}/classes/comment/objects/`)
         .query({
-          query: JSON.stringify({id: {_in: [1, 2]}})
+          query: JSON.stringify({id: {_in: [1, 2]}}),
+          page_size: 500,
         })
         .reply(200, {
           objects: [{id: 1, content: 'Hello'}, {id: 2, content: 'World'}]
@@ -636,6 +659,9 @@ describe('Data', () => {
 
       api
         .post('/v2/instances/testInstance/classes/users/objects/', user)
+        .query({
+          page_size: 500,
+        })
         .reply(200, user)
 
       return data.users.create(user).should.become({name: 'John'})
@@ -675,6 +701,9 @@ describe('Data', () => {
         .post('/v2/instances/testInstance/classes/users/objects/', body =>
           body.includes('name')
         )
+        .query({
+          page_size: 500,
+        })
         .reply(200, {name: 'John'})
 
       return data.users.create(user).should.become({name: 'John'})
@@ -712,6 +741,9 @@ describe('Data', () => {
 
       api
         .patch(`/v2/instances/${instanceName}/classes/users/objects/${id}/`)
+        .query({
+          page_size: 500
+        })
         .reply(200, {id, ...user})
 
       return data.users.update(id, user).should.become({id, ...user})
@@ -746,7 +778,8 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          query: JSON.stringify({likes: {_gt: 100}})
+          query: JSON.stringify({likes: {_gt: 100}}),
+          page_size: 500
         })
         .reply(200, {objects: [{likes: 200, id: 1}], next: null})
         .post(`/v2/instances/${instanceName}/batch/`, {
@@ -775,6 +808,9 @@ describe('Data', () => {
         .patch('/v2/instances/testInstance/classes/users/objects/1/', body =>
           body.includes('name')
         )
+        .query({
+          page_size: 500
+        })
         .reply(200, {name: 'John'})
 
       return data.users.update(1, user).should.become({name: 'John'})
@@ -793,6 +829,9 @@ describe('Data', () => {
 
       api
         .delete(`/v2/instances/${instanceName}/classes/users/objects/${id}/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {id})
 
       return data.users.delete(id).should.become({id})
@@ -825,7 +864,8 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          query: JSON.stringify({likes: {_gt: 100}})
+          query: JSON.stringify({likes: {_gt: 100}}),
+          page_size: 500,
         })
         .reply(200, {
           objects: [{likes: 200, id: 1}, {likes: 300, id: 4}],
@@ -862,6 +902,9 @@ describe('Data', () => {
     it('should be able to whitelist fields', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {objects: [{name: 'John', id: 2}]})
 
       return data.users
@@ -873,6 +916,9 @@ describe('Data', () => {
     it('should be able to map field names', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {objects: [{name: 'John', id: 2}]})
 
       return data.users
@@ -884,6 +930,9 @@ describe('Data', () => {
     it('should be able to whitelist fields passed as array', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {objects: [{name: 'John', views: 100, id: 2}]})
 
       return data.users
@@ -895,6 +944,9 @@ describe('Data', () => {
     it('should work with nested array of objects', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {objects: [
           {
             name: 'John',
@@ -932,6 +984,9 @@ describe('Data', () => {
     it('should work with create method', () => {
       api
         .post(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {title: 'Lorem ipsum', views: 0, id: 2})
 
       return data.posts
@@ -970,6 +1025,9 @@ describe('Data', () => {
     it('should work with update method', () => {
       api
         .patch(`/v2/instances/${instanceName}/classes/posts/objects/10/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {title: 'Lorem ipsum', views: 0, id: 10})
 
       return data.posts
@@ -1016,6 +1074,9 @@ describe('Data', () => {
     it('should be able to take column values', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
+        .query({
+          page_size: 500,
+        })
         .reply(200, {objects: [{name: 'John', id: 2}, {name: 'Jane', id: 3}]})
 
       return data.users.pluck('name').should.become(['John', 'Jane'])
@@ -1032,7 +1093,7 @@ describe('Data', () => {
     it('should be able to take column value of single record', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
-        .query({page_size: 1})
+        .query({page_size: 1, limit: 1})
         .reply(200, {objects: [{name: 'John', id: 2}]})
 
       return data.users.value('name').should.become('John')
