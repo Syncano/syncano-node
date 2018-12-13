@@ -20,6 +20,7 @@ class SocketListCmd {
 
     echo()
     echo(4)(`instance: ${format.yellow(this.session.project.instance)}`)
+    echo(4)(`location: ${format.yellow(this.session.location)}`)
 
     if (socketName) {
       try {

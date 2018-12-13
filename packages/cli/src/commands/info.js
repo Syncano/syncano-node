@@ -32,8 +32,6 @@ export default class InfoCmd {
         echo(19)(format.dim(fromEnv))
       }
     }
-    echon(2)(`         ${format.dim('api url')}:`)
-    echo(` ${format.cyan(this.session.HOST)}`)
 
     const instances = await this.session.getInstances()
     if (instances.length < 1) {
@@ -43,7 +41,8 @@ export default class InfoCmd {
     } else {
       echo(2)(`   ${format.dim('all instances')}:`)
       instances.forEach(instance => {
-        echo(18)(`- ${format.cyan(instance.name)}`)
+        const instanceLocation = format.grey(`(${instance.location})`)
+        echo(18)(`- ${format.cyan(instance.name)} ${instanceLocation}`)
       })
       echo()
     }
