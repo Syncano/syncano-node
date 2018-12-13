@@ -38,8 +38,8 @@ Now you have to provide API key for the OpenWeatherMap Service:
     To find the API key, go to your OpenWeatherMap account and copy it from
     API keys section at (https://home.openweathermap.org/api_keys).
 
-    Type in value: bf0a7ccf140879bc0098a85f3b8b2c94
-    Your socket is ready to use! Type npx s socket list openweathermap to see docs.
+    Type in value: Your-OpenWeather-API-Key
+    Your socket is ready to use! Type npx s socket list openweathermap to get more info about this socket.
 ```
 
 
@@ -63,7 +63,7 @@ Then you have to provide `Page Token`, follow the instructions to get it from Fa
 ?   Facebook App Page Token (FACEBOOK_APP_TOKEN)
     To find the token, go to the 'Messenger > Settings > Token Generation' section in your Facebook Application settings panel at https://developers.facebook.com.
 
-    Type in value: EAAbvRMZClZC4YBAL63OHJLSMWwbSKg9BM1eojt2VU0fv95vkgURMjqDqKPUVZCuN3HjNE8fjt2TJfK8Jt68fwVAAltb8JnQjgpcbMHF9eqh2OiH4ZC0ftsJz3h5ZA7wKOWacDOQGte9b9Lhl3KKuvdrJJhIgjZAAeXKgUXmSkEdgZDZD
+    Type in value: Your-Facebook-App-Page-Token
     Your socket is ready to use! Type `npx s socket list` messenger-bot to see list of endpoints.
 ```
 
