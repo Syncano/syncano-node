@@ -5,6 +5,7 @@ const {default: request} = axios
 
 export interface SyncanoClientOptions {
   host?: string
+  location?: 'eu1' | 'us1'
   token?: string
   apiVersion?: string
   transformResponse?: (response: axios.AxiosResponse) => void
@@ -25,17 +26,26 @@ export default class SyncanoClient {
    */
   public instanceName?: string
   private host?: string
+  private location?: string
   private apiVersion?: string
   private transformResponse?: (response: axios.AxiosResponse) => any
   private DEFAULT_HEADERS = {
     'Content-Type': 'application/json'
   }
 
+  private LOCATIONS = {
+    us1: 'api.syncano.io',
+    eu1: 'api-eu1.syncano.io'
+  }
+  private DEFAULT_LOCATION = 'us1'
+  private DEFAULT_HOST = this.LOCATIONS[this.DEFAULT_LOCATION]
+
   constructor(
     instanceName: string,
     options: SyncanoClientOptions = {}
   ) {
-    this.host = options.host || 'api.syncano.io'
+    this.location = options.location || this.DEFAULT_LOCATION
+    this.host = options.host || this.LOCATIONS[this.location] || this.DEFAULT_HOST
     this.apiVersion = options.apiVersion || 'v3'
     this.token = options.token
     this.transformResponse = options.transformResponse

@@ -39,7 +39,10 @@ export default class AccountSettings extends Settings {
     debug('getProject()', projectName)
     const envInstance = process.env.SYNCANO_PROJECT_INSTANCE
     if (envInstance) {
-      return { instance: envInstance }
+      return {
+        instance: envInstance,
+        location: process.env.SYNCANO_PROJECT_INSTANCE_LOCATION
+      }
     }
     if (this.attributes.projects) {
       return this.attributes.projects[projectName]
