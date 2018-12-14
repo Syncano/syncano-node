@@ -25,7 +25,7 @@ export class Session {
 
     this.majorVersion = pjson.version.split('.')[0]
 
-    this.location = 'us1' // default location
+    this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION || 'us1' // default location
     this.locations = {
       'us1': 'api.syncano.io',
       'eu1': 'api-eu1.syncano.io',

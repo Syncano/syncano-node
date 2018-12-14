@@ -39,6 +39,7 @@
     "url": "https://github.com/Syncano/syncano-node/issues"
   },
   "dependencies": {
+    "@eyedea/syncano-cli-plugin-postman": "file:../../../../syncano-cli-plugin-postman",
     "@syncano/core": "0.15.0",
     "@syncano/template-project-empty": "0.13.0",
     "@syncano/template-project-hello": "0.15.0",

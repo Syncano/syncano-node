@@ -23,6 +23,7 @@ const setup = async () => {
     .command('create <instanceName>')
     .group('Instance')
     .description('Create an Instance')
+    .option('-l, --location <location>', 'Location of the instance - us1 (default) or eu1')
     .action(async (...options) => {
       session.isAuthenticated()
       echo()
