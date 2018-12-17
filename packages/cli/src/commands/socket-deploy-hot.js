@@ -149,82 +149,11 @@ export default class SocketDeployCmd {
     }
   }
 
-  async deployComponent (component) {
-    const componentName = component.packageName
-    debug(`deployComponent: ${componentName}`)
-    const deployTimer = new Timer()
-    const msg = p(`${format.magenta('component build:')} ${currentTime()} ${format.cyan(componentName)}`)
-    this.mainSpinner.stop()
-    const spinner = new SimpleSpinner(msg).start()
-
-    // We have to count here number of updates
-    if (!pendingUpdates[componentName]) { pendingUpdates[componentName] = 0 }
-
-    pendingUpdates[componentName] += 1
-    if (pendingUpdates[componentName] > 1) {
-      spinner.stop()
-      this.mainSpinner.start()
-      debug(`not updating, update pending: ${pendingUpdates[componentName]}`)
-      return
-    }
-
-    const updateEnds = async () => {
-      this.mainSpinner.start()
-      // After update we have to understand if we should fire new one
-      pendingUpdates[componentName] -= 1
-      if (pendingUpdates[componentName] > 0) {
-        pendingUpdates[componentName] = 0
-        await this.deployComponent(component)
-      }
-    }
-
-    try {
-      await component.build()
-
-      spinner.stop()
-      SocketDeployCmd.printUpdateSuccessful(componentName, {status: 'ok'}, deployTimer)
-      await updateEnds()
-    } catch (err) {
-      spinner.stop()
-      if (err instanceof CompileError) {
-        const status = format.red('    build error:')
-        echo(2)(`${status} ${currentTime()} ${format.cyan(componentName)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
-      } else {
-        const status = format.red('build error:')
-        echo(2)(`${status} ${currentTime()} ${format.cyan(componentName)} ${format.red(err.message)}`)
-      }
-
-      if (this.cmd.bail) {
-        SocketDeployCmd.bail()
-      }
-      updateEnds()
-      spinner.stop()
-    }
-  }
-
   getSocketToUpdate (fileName) {
     if (fileName.match(/\/test\//) || fileName.match(/\/components\//)) {
       return false
     }
     return this.localSockets.find((socket) => socket.isSocketFile(fileName))
-  }
-
-  async getComponentToUpdate (fileName) {
-    const sockets = await this.Socket.listLocal()
-    const componentsList = []
-    await Promise.all(sockets.map(async socket => {
-      const components = await this.Socket.getLocal(socket).getComponents()
-      components.forEach(component => {
-        componentsList.push(component)
-      })
-    }))
-    let componentFound = null
-    componentsList.some(component => {
-      if (component.isComponentFile(fileName)) {
-        componentFound = component
-      }
-    })
-    return componentFound
   }
 
   runStalker () {
@@ -234,10 +163,7 @@ export default class SocketDeployCmd {
     this.stalker.on('change', async (changeType, fileName) => {
       timer.reset()
       const socketToUpdate = this.getSocketToUpdate(fileName)
-      const componentToUpdate = await this.getComponentToUpdate(fileName)
-      if (componentToUpdate) {
-        this.deployComponent(componentToUpdate)
-      } else if (socketToUpdate) {
+      if (socketToUpdate) {
         this.deploySocket(socketToUpdate)
       }
     })

@@ -5,28 +5,35 @@
 import Raven from 'raven'
 import printDebug from 'debug'
 
-
 const logTypes = ['debug', 'info', 'warn', 'error']
+const debug = printDebug('cli')
 
 const logger = (name) => {
   const functions = {}
-  logTypes.forEach((type) => {
-    functions[type] = (...args) => {
-      args.forEach((arg, index) => {
-        if (index === 0) {
-          Raven.captureBreadcrumb({
-            message: arg,
-            category: name,
-            level: type
-          })
-          printDebug(`${name}:${type}`)(arg)
-        } else {
-          printDebug(`${name}:${type}:verbose`)(arg)
-        }
-      })
-    }
+  logTypes.forEach(type => {
+    functions[type] = debug.extend(`${name}:${type}`)
   })
+  // console.log(functions)
   return functions
+      // return debug.extend(`${name}:${type}`)(args)
+      // args.forEach((arg, index) => {
+        // debug.extend(`${name}:${type}`)(arg)
+        // if (index === 0) {
+        //   Raven.captureBreadcrumb({
+        //     message: arg,
+        //     category: name,
+        //     level: type
+        //   })
+        //   debug.extend(`${name}:${type}`)(arg)
+        //   // printDebug(`${name}:${type}`)(arg)
+        // } else {
+        //   debug.extend(`${name}:${type}:verbose`)(arg)
+        //   // printDebug(`${name}:${type}:verbose`)(arg)
+        // }
+      // })
+    // }
+  // })
+  // return functions
 }
 
 export default logger

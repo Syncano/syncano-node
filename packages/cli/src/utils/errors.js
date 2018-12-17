@@ -3,6 +3,11 @@ class CompileError {
     this.traceback = traceback
   }
 }
+class SocketUpdateError {
+  constructor (message) {
+    this.message = message
+  }
+}
 
 class CompatibilityError {
   constructor (socketVersion, envVersion) {
@@ -13,5 +18,6 @@ class CompatibilityError {
 
 export {
   CompatibilityError,
-  CompileError
+  CompileError,
+  SocketUpdateError,
 }
