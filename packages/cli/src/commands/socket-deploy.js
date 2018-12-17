@@ -32,7 +32,6 @@ export default class SocketDeployCmd {
     if (cmd.createInstance) {
       await createInstance(cmd.createInstance)
       await this.init.addConfigFiles({ instance: cmd.createInstance })
-      echo(4)(`Your project is attached to ${format.green(cmd.createInstance)} instance now!`)
     } else {
       // If not, we have to check if we have a project attached to any instance
       this.session.hasProject()
@@ -103,9 +102,12 @@ export default class SocketDeployCmd {
       echo(2)('         settings:')
       await projectTasks.run()
       echo()
-      echo(2)('          sockets:')
-      await socketsTasks.run()
-      echo()
+
+      if (this.socketList.length > 0) {
+        echo(2)('          sockets:')
+        await socketsTasks.run()
+        echo()
+      }
       echo(2)(format.grey(`      total time: ${deployTimer.getDuration()}`))
       echo()
     } catch (err) {

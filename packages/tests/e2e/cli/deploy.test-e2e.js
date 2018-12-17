@@ -84,7 +84,7 @@ describe('CLI Deploy', function () {
       .before(() => moveTestProject(projectTestTemplate))
       .after(() => deleteInstance(testInstance))
       .run(`${cliLocation} deploy --create-instance ${testInstance}`)
-      .stdout(/project synced:/)
+      .stdout(/has been created/)
       .code(0)
       .end(done)
   })
