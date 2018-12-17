@@ -117,8 +117,8 @@
     "standard": "^11.0.1"
   },
   "scripts": {
-    "prepublish": "npm run build",
-    "postinstall": "./scripts/postinstall",
+    "prepublishOnly": "npm run build",
+    "postinstall": "scripts/postinstall || exit 0",
     "build": "npx babel src -d lib/ --copy-files --ignore *.test.js,*.test-e2e.js --source-maps",
     "build:watch": "npm run build -- -w",
     "clean": "rm -rf lib/",
