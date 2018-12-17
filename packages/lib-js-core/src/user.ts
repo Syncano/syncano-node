@@ -48,10 +48,18 @@ export class User extends Data {
         body: JSON.stringify({username, password}),
         method: 'POST'
       }
-      fetch(`${this.url()}auth/`, options)
+      fetch(this.authUrl(), options)
         .then((res: any) => resolve(res))
         .catch((err: any) => reject(err))
     })
+  }
+
+  protected authUrl () {
+    const {instanceName} = this.instance
+    const url = `${this._getInstanceURL(instanceName)}/users/auth/`
+    const query = querystring.stringify(this.query)
+
+    return query ? `${url}?${query}` : url
   }
 
   protected url (id?: number, apiVersion?: string): string {
