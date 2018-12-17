@@ -1086,7 +1086,6 @@ class Socket {
     }
   }
 
-
   isCompatible () {
     const socketMajorVersion = this.spec.version.split('.')[0]
     if (socketMajorVersion !== session.majorVersion) {

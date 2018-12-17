@@ -31,9 +31,9 @@ describe('[commands] Trace Sockets', function () {
     it('should echo properly formatted message', function () {
       const socketNameStr = format.cyan('foo')
 
-      const resp = SocketDeploy.printSummary('foo', { status: 'ok', duration: '42 ms'})
+      const resp = SocketDeploy.printSummary('foo', {status: 'ok', duration: '42 ms'})
 
-      expect(resp).to.be.equal(`  ${format.grey('socket synced:')} ${currentTime()} ${socketNameStr} ${format.dim(42, 'ms')}`);
+      expect(resp).to.be.equal(`  ${format.grey('socket synced:')} ${currentTime()} ${socketNameStr} ${format.dim(42, 'ms')}`)
     })
   })
 
