@@ -46,7 +46,6 @@ export default class SocketDeployCmd {
 
     if (socketName) {
       info('deploying socket', socketName)
-      // const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const socket = await this.Socket.get(socketName)
 
       if (!socket.existLocally) {
@@ -57,19 +56,12 @@ export default class SocketDeployCmd {
       }
       this.socketList = [socket]
     } else {
-      // const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       this.socketList = await this.Socket.list()
     }
 
     const configs = {}
 
     try {
-      // await Promise.each(this.socketList, async (socketFromList) => {
-      //   const config = await askQuestions(socketFromList.getConfigOptionsToAsk())
-      //   configs[socketFromList.name] = config
-      // })
-      // await this.deployProject()
-
       const deployList = []
       this.socketList.forEach(socket => {
         deployList.push({
@@ -99,7 +91,6 @@ export default class SocketDeployCmd {
         exitOnError: cmd.bail || false,
       })
 
-
       const socketsTasks = new Listr(deployList, {
         concurrent: cmd.parallel || false,
         exitOnError: cmd.bail || false,
@@ -121,25 +112,20 @@ export default class SocketDeployCmd {
       echo(2)(format.grey(`      total time: ${deployTimer.getDuration()}`))
       echo()
     } catch (err) {
-      echo()
-      process.exit(1)
+      SocketDeployCmd.bail()
     }
+    return this
   }
 
   async deployProject () {
     timer.reset()
-    // const msg = p(4)(`${format.magenta('project deploy:')} ${currentTime()}`)
     await this.session.deployProject()
-    // const status = format.grey('project synced:')
-    const duration = timer.getDuration()
-    // echo(5)(`${status} ${currentTime()} ${format.grey(duration)}`)
-    return duration
+    return timer.getDuration()
   }
 
   async deploySocket (socket, config) {
     debug(`deploySocket: ${socket.name}`)
     const deployTimer = new Timer()
-    const msg = p(4)(`${format.magenta('socket deploy:')} ${currentTime()} ${format.cyan(socket.name)}`)
 
     // We have co count here updates
     if (!pendingUpdates[socket.name]) { pendingUpdates[socket.name] = 0 }
@@ -157,13 +143,13 @@ export default class SocketDeployCmd {
         updateSocketNPMDeps: true,
         updateEnv: true
       })
-      updateStatus.duration = deployTimer
+      updateStatus.duration = deployTimer.getDuration()
       return updateStatus
     } catch (err) {
       debug(err)
       const errorStatus = {
         status: 'error',
-        duration: deployTimer
+        duration: deployTimer.getDuration()
       }
       if (err instanceof CompileError) {
         errorStatus.status = 'compile error'
@@ -183,14 +169,9 @@ export default class SocketDeployCmd {
     return this.localSockets.find((socket) => socket.isSocketFile(fileName))
   }
 
-  static bail () {
-    echo()
-    process.exit(1)
-  }
-
   static printSummary (socketName, updateStatus) {
     debug('printSummary()', socketName, updateStatus)
-    const duration = format.dim(updateStatus.duration.getDuration())
+    const duration = format.dim(updateStatus.duration)
     const socketNameStr = `${format.cyan(socketName)}`
 
     if (updateStatus.status === 'ok') {
@@ -209,5 +190,10 @@ export default class SocketDeployCmd {
       const status = format.red(' socket not synced:')
       return `${status} ${currentTime()} ${socketNameStr} ${duration}`
     }
+  }
+
+  static bail () {
+    echo()
+    process.exit(1)
   }
 }

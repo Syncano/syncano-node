@@ -9,14 +9,15 @@ import { askQuestions } from './helpers/socket'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
 import SocketTraceCmd from './socket-trace'
+import SocketDeployCmd from './socket-deploy'
 import { CompileError } from '../utils/errors'
 
-const { debug } = logger('cmd-socket-deploy')
+const { debug, info } = logger('cmd-socket-deploy')
 
 const pendingUpdates = {}
 const timer = new Timer()
 
-export default class SocketDeployCmd {
+export default class SocketHotDeployCmd {
   constructor (context) {
     this.context = context
     this.session = context.session
@@ -29,59 +30,25 @@ export default class SocketDeployCmd {
   async run ([socketName, cmd]) {
     this.cmd = cmd
 
-    echo(2)(`🔥 ${format.grey(' Hot deploy started')} ${format.dim('(Hit Ctrl-C to stop)')}`)
+    echo(1)(`🚀 ${format.grey(' Initial sync started...')}`)
     echo()
 
-    if (socketName) {
-      debug(`Deploying Socket: ${socketName}`)
-      const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
-      const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.list(socketName)
-      const socket = _.find(this.socketList, { name: socketName })
-      spinner.stop()
+    const deployCmd = await new SocketDeployCmd(this.context).run([socketName, cmd])
+    this.socketList = deployCmd.socketList
 
-      if (!(socket.existLocally)) {
-        echo()
-        error(4)(`Socket ${format.cyan(socketName)} cannot be found!`)
-        echo()
-        process.exit(1)
-      }
-    } else {
-      const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
-      const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.list()
-      spinner.stop()
+    echo(1)(`🔥 ${format.grey(' Hot deploy started')} ${format.dim('(Hit Ctrl-C to stop)')}`)
+    echo()
+
+    info('Starting stalker')
+    this.runStalker()
+    this.mainSpinner.queueSize += 1
+    this.mainSpinner.queueSize += this.socketList.length
+    this.mainSpinner.start()
+
+    if (cmd.trace) {
+      const traces = new SocketTraceCmd(this.context, this.mainSpinner)
+     Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
     }
-
-    const configs = {}
-
-    Promise.each(this.socketList, (socketFromList) => askQuestions(socketFromList.getConfigOptionsToAsk())
-      .then((config) => {
-        configs[socketFromList.name] = config
-      }))
-      .then(() => this.deployProject())
-      .then((projectUpdateStatus) =>
-        Promise.all(this.socketList.map((socket) => this.deploySocket(socket, configs[socket.name])))
-      )
-      .then(() => {
-        debug('Starting stalker')
-        this.runStalker()
-        this.mainSpinner.queueSize += 1
-        this.mainSpinner.queueSize += this.socketList.length
-        this.mainSpinner.start()
-
-        if (cmd.trace) {
-          const traces = new SocketTraceCmd(this.context, this.mainSpinner)
-          Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.data && err.response.data.detail) {
-          error(4)(err.response.data.detail)
-        } else {
-          error(4)(err)
-        }
-      })
   }
 
   async deployProject () {
@@ -128,7 +95,7 @@ export default class SocketDeployCmd {
       const updateStatus = await socket.update({ config, updateEnv })
 
       spinner.stop()
-      SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
+      SocketHotDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
       await updateEnds()
       this.firstRun[socket.name] = true
     } catch (err) {
@@ -143,14 +110,14 @@ export default class SocketDeployCmd {
       }
 
       if (this.cmd.bail) {
-        SocketDeployCmd.bail()
+        SocketHotDeployCmd.bail()
       }
       updateEnds()
     }
   }
 
   getSocketToUpdate (fileName) {
-    if (fileName.match(/\/test\//) || fileName.match(/\/components\//)) {
+    if (fileName.match(/\/test\//)) {
       return false
     }
     return this.localSockets.find((socket) => socket.isSocketFile(fileName))

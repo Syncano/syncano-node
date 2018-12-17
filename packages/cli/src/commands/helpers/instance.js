@@ -5,5 +5,3 @@ export const printInstanceInfo = (session, indent=4) => {
   echo(indent)(`${format.grey('instance:')} ${format.yellow(session.project.instance)}`)
   echo(indent)(`${format.grey('location:')} ${format.yellow(session.location)}`)
 }
-
-

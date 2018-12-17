@@ -917,8 +917,11 @@ class Socket {
     const resp = await this.updateSocketZip({ config, install: !this.existRemotely })
     debug('resp after update Socket zip:', resp)
 
+    if (resp && resp.status === 'stopped') {
+      return { status: 'stopped' }
+    }
+
     if (resp && resp.status !== 'ok') return this.waitForStatusInfo()
-    return { status: 'stopped' }
   }
 
   waitForStatusInfo () {
