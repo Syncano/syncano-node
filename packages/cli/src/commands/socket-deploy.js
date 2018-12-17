@@ -28,19 +28,18 @@ export default class SocketDeployCmd {
   async run ([socketName, cmd]) {
     this.cmd = cmd
 
-    printInstanceInfo(this.session, 11)
-    echo()
-
     // Create Instance if --create-instance provided
     if (cmd.createInstance) {
       await createInstance(cmd.createInstance)
       await this.init.addConfigFiles({ instance: cmd.createInstance })
       echo(4)(`Your project is attached to ${format.green(cmd.createInstance)} instance now!`)
-      await this.session.load()
     } else {
       // If not, we have to check if we have a project attached to any instance
       this.session.hasProject()
     }
+
+    printInstanceInfo(this.session, 11)
+    echo()
 
     if (socketName) {
       info('deploying socket', socketName)
