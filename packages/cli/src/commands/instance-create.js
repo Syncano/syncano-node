@@ -11,7 +11,11 @@ export default class InstanceCreateCmd {
     this.Init = context.Init
   }
 
-  async run ([instanceName]) {
+  async run ([instanceName, cmd]) {
+    if (cmd.location) {
+      await this.session.setLocation(cmd.location)
+    }
+
     return createInstance(instanceName, this.session)
   }
 }

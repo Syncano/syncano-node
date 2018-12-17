@@ -1,6 +1,7 @@
 import * as logger from 'debug'
 import {Agent} from 'https'
 import nodeFetch, { RequestInit } from 'node-fetch'
+import { MAX_PAGE_SIZE } from './constants'
 import {checkStatus, parseJSON} from './utils'
 
 const debug = logger('core:query-builder')
@@ -24,7 +25,9 @@ export default class QueryBuilder {
   // tslint:disable-next-line:variable-name
   protected _query: {
     [x: string]: any
-  } = {}
+  } = {
+    page_size: MAX_PAGE_SIZE
+  }
   protected registryHost: string = ''
   protected instance: any
   protected baseUrl: string
@@ -78,7 +81,7 @@ export default class QueryBuilder {
     page_size?: number
     [x: string]: any
   } {
-    return this._query || {}
+    return this._query
   }
 
   protected get queries (): any[] {

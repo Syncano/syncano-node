@@ -18,7 +18,7 @@ export default () => {
     const newData = Object.assign({}, data)
     newData.user = {
       project: session.project ? session.project.instance : null,
-      host: session.HOST
+      host: session.getHost()
     }
     return newData
   }

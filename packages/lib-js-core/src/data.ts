@@ -1,6 +1,7 @@
 import * as logger from 'debug'
 import * as FormData from 'form-data'
 import * as querystring from 'querystring'
+import { MAX_BATCH_SIZE } from './constants'
 import {NotFoundError} from './errors'
 import QueryBuilder from './query-builder'
 import { ClassObject } from './types'
@@ -8,8 +9,6 @@ const get = require('lodash.get')
 const merge = require('lodash.merge')
 const set = require('lodash.set')
 const debug = logger('core:data')
-
-const MAX_BATCH_SIZE = 50
 
 class Data extends QueryBuilder {
   // tslint:disable-next-line:variable-name
@@ -30,7 +29,6 @@ class Data extends QueryBuilder {
     }))
     debug('urls', urls)
     const uniqueIds: any[] = []
-
     const fetches = urls.map(async (url) => self.request(url))
 
     let results = await Promise.all(fetches)
@@ -196,7 +194,7 @@ class Data extends QueryBuilder {
    * @param number Number of objects
    */
   public take (count: number) {
-    return this.withQuery({page_size: count})
+    return this.withQuery({limit: count, page_size: Math.min(this.query.page_size || 500, count)})
   }
 
   /**
@@ -517,7 +515,7 @@ class Data extends QueryBuilder {
   }
 
   protected url (id?: number, apiVersion?: string): string {
-    debug('url', id)
+    debug('url %O', {id, apiVersion})
     const {instanceName, className} = this.instance
     let url = `${this.getInstanceURL(
       instanceName, apiVersion
@@ -795,17 +793,15 @@ class Data extends QueryBuilder {
   }
 
   private resolveIfFinished (result: any[]) {
-    if (this.query.page_size !== 0) {
-      return result.slice(0, this.query.page_size)
+    if (this.query.limit) {
+      return result.slice(0, this.query.limit)
     }
     return result
   }
 
   private async loadNextPage (response: any, objects: any[]) {
-    debug('loadNextPage')
-    const pageSize = this.query.page_size || 0
     const hasNextPageMeta = response.next
-    const hasNotEnoughResults = pageSize === 0 || pageSize > objects.length
+    const hasNotEnoughResults = !this.query.limit || this.query.limit >= objects.length
 
     if (hasNextPageMeta && hasNotEnoughResults) {
       const next = response.next.replace(/\?.*/, '')
@@ -813,6 +809,7 @@ class Data extends QueryBuilder {
         response.next.replace(/.*\?/, '')
       )
       const q = querystring.stringify({...this.query, ...nextParams})
+      debug('loadNextPage %o', {q, next})
       const nextObjects = await this.request(`${this.baseUrl}${next}?${q}`)
       return objects.concat(nextObjects)
     }

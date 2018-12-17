@@ -31,7 +31,15 @@ class Init {
   }
 
   static getTemplatesChoices () {
-    return Init.projectTemplates().map(template => `${template.description} ${format.grey(`- (${template.name})`)}`)
+    return Init.projectTemplates()
+      .map(template => `${template.description} ${format.grey(`- (${template.name})`)}`)
+  }
+
+  static getLocationChoices () {
+    return [
+      `eu1 ${format.grey(`- (Europe Belgium)`)}`,
+      `us1 ${format.grey(`- (US Virginia)`)}`,
+    ]
   }
 
   createFilesAndFolders (pathToCopyTo = process.cwd()) {
@@ -39,6 +47,7 @@ class Init {
 
     try {
       debug('Template name:', this.templateName)
+      debug('Loction name:', this.locationName)
       debug('Path to copy to:', pathToCopyTo)
       fs.copySync(getTemplate(this.templateName), pathToCopyTo)
       echo(4)(format.dim(`Project has been created from ${format.green(this.templateName)} template.`))

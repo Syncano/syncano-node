@@ -35,6 +35,13 @@ class InitCmd {
 
     const questions = [
       {
+        name: 'Location',
+        type: 'list',
+        message: p(2)('Choose location for your instance'),
+        choices: this.Init.getLocationChoices().map(choice => p(4)(choice)),
+        default: 0
+      },
+      {
         name: 'Template',
         type: 'list',
         message: p(2)('Choose template for your project'),
@@ -56,10 +63,13 @@ class InitCmd {
 
     const promptResponses = await inquirer.prompt(questions)
     this.init.templateName = promptResponses.Template.match(/\((.*)\)/)[1]
+    this.init.locationName = promptResponses.Location.match(/[a-z0-9]+/)[0]
+
+    await this.session.setLocation(this.init.locationName)
 
     if (!project && instance) {
       await this.session.checkConnection(instance)
-      await this.init.addConfigFiles({ instance })
+      await this.init.addConfigFiles({ instance, location: this.init.locationName })
       echo(4)(`Your project is attached to ${format.green(instance.name)} instance now!`)
 
       return this.init.createFilesAndFolders()
@@ -69,7 +79,7 @@ class InitCmd {
       debug('no project, no instance')
       const newInstance = await createInstance()
 
-      await this.init.addConfigFiles({ instance: newInstance.name })
+      await this.init.addConfigFiles({ instance: newInstance.name, location: this.init.locationName })
       echo(4)(`Your project is attached to ${format.green(newInstance.name)} instance now!`)
 
       this.init.createFilesAndFolders()
