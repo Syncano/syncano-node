@@ -1,6 +1,6 @@
-import { ResponseError } from './errors'
+import {ResponseError} from './errors'
 import QueryBuilder from './query-builder'
-import { AccountData } from './types'
+import {AccountData} from './types'
 
 export interface LoginData extends AccountData {
   account_key: string
@@ -33,7 +33,7 @@ export class Account extends QueryBuilder {
     const fetch = this.nonInstanceFetch.bind(this)
     return new Promise((resolve, reject) => {
       const options = {
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({email, password}),
         method: 'POST'
       }
       fetch(`${this.url()}auth/`, options)
@@ -48,7 +48,7 @@ export class Account extends QueryBuilder {
     const fetch = this.nonInstanceFetch.bind(this)
     return new Promise((resolve, reject) => {
       const options = {
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({email, password}),
         method: 'POST'
       }
 

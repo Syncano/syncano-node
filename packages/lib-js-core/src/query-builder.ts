@@ -1,7 +1,7 @@
 import * as logger from 'debug'
 import {Agent} from 'https'
-import nodeFetch, { RequestInit } from 'node-fetch'
-import { MAX_PAGE_SIZE } from './constants'
+import nodeFetch, {RequestInit} from 'node-fetch'
+import {MAX_PAGE_SIZE} from './constants'
 import {checkStatus, parseJSON} from './utils'
 
 const debug = logger('core:query-builder')

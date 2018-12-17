@@ -1,10 +1,10 @@
 import * as logger from 'debug'
 import * as FormData from 'form-data'
 import * as querystring from 'querystring'
-import { MAX_BATCH_SIZE } from './constants'
+import {MAX_BATCH_SIZE} from './constants'
 import {NotFoundError} from './errors'
 import QueryBuilder from './query-builder'
-import { ClassObject } from './types'
+import {ClassObject} from './types'
 const get = require('lodash.get')
 const merge = require('lodash.merge')
 const set = require('lodash.set')

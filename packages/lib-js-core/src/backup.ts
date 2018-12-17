@@ -1,6 +1,6 @@
-import { NotFoundError } from './errors'
+import {NotFoundError} from './errors'
 import QueryBuilder from './query-builder'
-import { BackupObject } from './types'
+import {BackupObject} from './types'
 
 /**
  * Syncano Backups

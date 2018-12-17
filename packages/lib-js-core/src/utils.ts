@@ -1,5 +1,5 @@
 import {Headers, Response} from 'node-fetch'
-import { ResponseError } from './errors'
+import {ResponseError} from './errors'
 
 export interface JSONResponse extends Response {
   data?: any

@@ -1,6 +1,6 @@
-import { NotFoundError } from './errors'
+import {NotFoundError} from './errors'
 import QueryBuilder from './query-builder'
-import { SyncanoResponse, UserGroup } from './types'
+import {SyncanoResponse, UserGroup} from './types'
 
 export type Primitive = undefined | null | boolean | string | number
 

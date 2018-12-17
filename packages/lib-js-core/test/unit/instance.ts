@@ -2,7 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
-import { InstanceClass } from '../../src/instance'
+import {InstanceClass} from '../../src/instance'
 
 chai.use(chaiAsPromised)
 chai.should()

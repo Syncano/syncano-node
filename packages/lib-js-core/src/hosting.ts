@@ -1,7 +1,7 @@
 import * as logger from 'debug'
 import {parse, stringify} from 'querystring'
 import QueryBuilder from './query-builder'
-import { SyncanoResponse } from './types'
+import {SyncanoResponse} from './types'
 
 const debug = logger('core:hosting')
 
@@ -131,7 +131,7 @@ export default class HostingClass extends QueryBuilder {
       const headers = {
         'X-API-KEY': this.instance.accountKey
       }
-      const options = { method: 'DELETE' }
+      const options = {method: 'DELETE'}
 
       this.fetch(this.urlFiles(hostingName, fileId), options, headers)
         .then(resolve)

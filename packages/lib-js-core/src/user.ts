@@ -45,7 +45,7 @@ export class User extends Data {
 
     return new Promise((resolve, reject) => {
       const options = {
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({username, password}),
         method: 'POST'
       }
       fetch(`${this.url()}auth/`, options)

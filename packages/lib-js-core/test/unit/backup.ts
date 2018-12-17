@@ -30,7 +30,7 @@ describe('Backup', () => {
        metadata: {} },
     details: {},
     metadata: {},
-    links: { self: '/v2/backups/full/703/' }
+    links: {self: '/v2/backups/full/703/'}
   }
   let api: nock.Scope
   let backup: Backup
