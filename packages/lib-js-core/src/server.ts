@@ -1,5 +1,6 @@
 // tslint:disable-next-line:no-var-requires
 const pjson = require('../package.json')
+import * as logger from 'debug'
 import Account from './account'
 import Backup from './backup'
 import Channel from './channel'
@@ -16,6 +17,8 @@ import Settings from './settings'
 import Socket from './socket'
 import Trace from './trace'
 import User from './user'
+
+const debug = logger('syncano:core')
 
 class Server {
   /**
@@ -126,6 +129,8 @@ class Server {
 
     this.version = pjson.version
     this.majorVersion = pjson.version.split('.')[0]
+
+    debug('%o', {version: this.version})
 
     this._class = new Class(config)
     this.event = new Event(config)

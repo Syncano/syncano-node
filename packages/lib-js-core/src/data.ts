@@ -27,7 +27,7 @@ class Data extends QueryBuilder {
       this._query.query = query
       return this.url()
     }))
-    debug('urls', urls)
+    debug('list/urls %o', urls)
     const uniqueIds: any[] = []
     const fetches = urls.map(async (url) => self.request(url))
 
@@ -515,7 +515,6 @@ class Data extends QueryBuilder {
   }
 
   protected url (id?: number, apiVersion?: string): string {
-    debug('url %O', {id, apiVersion})
     const {instanceName, className} = this.instance
     let url = `${this.getInstanceURL(
       instanceName, apiVersion
