@@ -3,7 +3,6 @@ import klawSync from 'klaw-sync'
 import glob from 'glob'
 import child from 'child_process'
 import FindKey from 'find-key'
-// import md5 from 'md5'
 import md5File from 'md5-file/promise'
 import YAML from 'js-yaml'
 import axios from 'axios'
@@ -97,7 +96,7 @@ class Socket {
       spec: {
         endpoints: {},
         event_handlers: {},
-        events: {},
+        events: {}
       },
       metadata: {}
     }
@@ -106,7 +105,7 @@ class Socket {
       spec: {
         endpoints: {},
         event_handlers: {},
-        events: {},
+        events: {}
       }
     }
 
@@ -658,7 +657,7 @@ class Socket {
       return
     }
 
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const form = new FormData()
 
       let endpointPath = `/v2/instances/${session.project.instance}/environments/`
@@ -725,7 +724,7 @@ class Socket {
   async updateSocketZip ({ config, install = false }) {
     info('updateSocketZip()')
     let endpointPath = `/v2/instances/${session.project.instance}/sockets/`
-    const zipChecksum = await md5File(this.getSocketZip())
+    // const zipChecksum = await md5File(this.getSocketZip())
 
     if (!install) {
       endpointPath += `${this.name}/`
@@ -854,7 +853,7 @@ class Socket {
         stdout += chunk
       })
 
-      out.on('error', (err) => {
+      out.on('error', () => {
         reject(new CompileError(stderr))
       })
 

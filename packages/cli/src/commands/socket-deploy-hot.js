@@ -5,8 +5,7 @@ import Promise from 'bluebird'
 
 import logger from '../utils/debug'
 import { SimpleSpinner, GlobalSpinner } from './helpers/spinner'
-import { askQuestions } from './helpers/socket'
-import { p, error, echo } from '../utils/print-tools'
+import { p, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
 import SocketTraceCmd from './socket-trace'
 import SocketDeployCmd from './socket-deploy'
@@ -47,7 +46,7 @@ export default class SocketHotDeployCmd {
 
     if (cmd.trace) {
       const traces = new SocketTraceCmd(this.context, this.mainSpinner)
-     Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
+      Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
     }
   }
 

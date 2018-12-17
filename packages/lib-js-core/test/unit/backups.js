@@ -90,7 +90,7 @@ describe('Backups', () => {
         objects: [backup]
       })
 
-     await Backups.deleteAll()
+      await Backups.deleteAll()
     })
   })
 
@@ -141,5 +141,3 @@ describe('Backups', () => {
     })
   })
 })
-
-

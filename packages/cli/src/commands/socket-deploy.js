@@ -4,15 +4,12 @@ import Promise from 'bluebird'
 import Listr from 'listr'
 
 import logger from '../utils/debug'
-import { SimpleSpinner } from './helpers/spinner'
 import { createInstance } from './helpers/create-instance'
 import { askQuestions } from './helpers/socket'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
 import { CompileError } from '../utils/errors'
-import { consoleTestResultHandler } from 'tslint/lib/test';
 import { printInstanceInfo } from './helpers/instance'
-
 
 const { debug, info } = logger('cmd-socket-deploy')
 
@@ -88,12 +85,12 @@ export default class SocketDeployCmd {
       ],
       {
         concurrent: false,
-        exitOnError: cmd.bail || false,
+        exitOnError: cmd.bail || false
       })
 
       const socketsTasks = new Listr(deployList, {
         concurrent: cmd.parallel || false,
-        exitOnError: cmd.bail || false,
+        exitOnError: cmd.bail || false
       })
 
       // Ask for missing config options

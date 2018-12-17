@@ -54,11 +54,11 @@ export default class Hosting extends QueryBuilder {
     return objects
   }
 
-  async loadNextPage (response , objects) {
+  async loadNextPage (response, objects) {
     debug('loadNextPage')
     let hasNextPageMeta = response.next
     if (hasNextPageMeta) {
-      const nextObjects =  await this.request(`${this.baseUrl}${hasNextPageMeta}`)
+      const nextObjects = await this.request(`${this.baseUrl}${hasNextPageMeta}`)
       return objects.concat(nextObjects)
     }
     return objects

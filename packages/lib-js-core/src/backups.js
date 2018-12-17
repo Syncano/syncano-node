@@ -22,7 +22,7 @@ class Backups extends QueryBuilder {
   async _getBackups (url) {
     const fetch = this.fetch.bind(this)
     const options = {
-      method: 'GET',
+      method: 'GET'
     }
     const headers = {
       'x-api-key': this.instance.accountKey
@@ -30,7 +30,7 @@ class Backups extends QueryBuilder {
     const res = await fetch(url, options, headers)
     let backups = res.objects
 
-    if(res.next) {
+    if (res.next) {
       backups = backups.concat(await this._getGroups(`${this.baseUrl}${res.next}`))
     }
 
@@ -43,7 +43,7 @@ class Backups extends QueryBuilder {
    * @return {Promise}
    */
   async list () {
-    return  this._getBackups(this.url())
+    return this._getBackups(this.url())
   }
 
   /**
@@ -54,7 +54,7 @@ class Backups extends QueryBuilder {
   async create () {
     const fetch = this.fetch.bind(this)
     const options = {
-      method: 'POST',
+      method: 'POST'
     }
     const headers = {
       'x-api-key': this.instance.accountKey
@@ -73,7 +73,7 @@ class Backups extends QueryBuilder {
   async delete (id) {
     const fetch = this.fetch.bind(this)
     const options = {
-      method: 'DELETE',
+      method: 'DELETE'
     }
     const headers = {
       'x-api-key': this.instance.accountKey
@@ -102,7 +102,7 @@ class Backups extends QueryBuilder {
   async get (id) {
     const fetch = this.fetch.bind(this)
     const options = {
-      method: 'GET',
+      method: 'GET'
     }
     const headers = {
       'x-api-key': this.instance.accountKey

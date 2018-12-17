@@ -38,7 +38,7 @@ class Init {
   static getLocationChoices () {
     return [
       `eu1 ${format.grey(`- (Europe Belgium)`)}`,
-      `us1 ${format.grey(`- (US Virginia)`)}`,
+      `us1 ${format.grey(`- (US Virginia)`)}`
     ]
   }
 

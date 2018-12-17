@@ -1,4 +1,3 @@
-import format from 'chalk'
 import logger from '../utils/debug'
 import { echo } from '../utils/print-tools'
 import { socketNotFound } from './helpers/socket'

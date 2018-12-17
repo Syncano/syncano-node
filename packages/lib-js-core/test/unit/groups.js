@@ -10,11 +10,11 @@ describe('Groups', () => {
   const instanceName = 'testInstance'
   const user = {
     id: 1,
-    username: 'testUser',
+    username: 'testUser'
   }
   const testGroup = {
     id: 1,
-    label: "testGroup",
+    label: 'testGroup',
     description: ''
   }
   const GROUPS_URL = `/v2/instances/${instanceName}/groups/`

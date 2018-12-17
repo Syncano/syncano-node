@@ -25,7 +25,6 @@ describe('Hosting', () => {
   })
 
   describe('#listFiles', () => {
-
     it('should be a method of the model', () => {
       should(hosting)
         .have.property('listFiles')
@@ -70,18 +69,18 @@ describe('Hosting', () => {
           objects: fourth100,
           next: null
         })
-        return hosting
-          .listFiles(hostingId)
-          .then(objects => {
-            should(objects)
-              .be.Array()
-              .length(302)
-            should(objects)
-              .have.propertyByPath(0, 'path')
-              .which.is.String()
-            should(objects)
-              .have.propertyByPath(0, 'id')
-              .which.is.Number()
+      return hosting
+        .listFiles(hostingId)
+        .then(objects => {
+          should(objects)
+            .be.Array()
+            .length(302)
+          should(objects)
+            .have.propertyByPath(0, 'path')
+            .which.is.String()
+          should(objects)
+            .have.propertyByPath(0, 'id')
+            .which.is.Number()
         })
     })
 

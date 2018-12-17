@@ -19,5 +19,5 @@ class CompatibilityError {
 export {
   CompatibilityError,
   CompileError,
-  SocketUpdateError,
+  SocketUpdateError
 }

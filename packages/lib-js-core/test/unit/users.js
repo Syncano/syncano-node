@@ -26,7 +26,7 @@ describe('Users', () => {
       api
         .get(`/v3/instances/${instanceName}/users/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {objects: [{id: 1}, {id: 2}]})
 

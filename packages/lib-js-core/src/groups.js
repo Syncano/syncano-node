@@ -21,7 +21,7 @@ class Groups extends QueryBuilder {
   async _getGroups (url) {
     const fetch = this.fetch.bind(this)
     const options = {
-      method: 'GET',
+      method: 'GET'
     }
     const res = await fetch(url, options)
     let groups = res.objects
@@ -46,12 +46,12 @@ class Groups extends QueryBuilder {
   async get (label) {
     const fetch = this.fetch.bind(this)
     const options = {
-      method: 'GET',
+      method: 'GET'
     }
 
     const groups = await this.list()
     const group = groups.find(elem => elem.label === label)
-    if(group) {
+    if (group) {
       const res = await fetch(`${this.url()}${group.id}/users/`, options)
       group.users = res.objects
     }
@@ -67,7 +67,7 @@ class Groups extends QueryBuilder {
    * @example {@lang javascript}
    * const groupsList = await groups.list()
    */
-  async list() {
+  async list () {
     return this._getGroups(this.url())
   }
 
@@ -89,7 +89,7 @@ class Groups extends QueryBuilder {
     }
     const group = await this.get(label)
 
-    if(!group) {
+    if (!group) {
       return fetch(this.url(), options)
     } else {
       throw new Error('Group already exist')

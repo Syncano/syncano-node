@@ -352,7 +352,7 @@ describe('Data', () => {
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}}),
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {
           objects: [{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}],
@@ -382,7 +382,7 @@ describe('Data', () => {
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}}),
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {objects: [], next: null})
 
@@ -415,7 +415,7 @@ describe('Data', () => {
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}}),
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {
           objects: [{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}],
@@ -541,7 +541,7 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {
           objects: [
@@ -558,7 +558,7 @@ describe('Data', () => {
         .get(`/v2/instances/${instanceName}/users/`)
         .query({
           query: JSON.stringify({id: {_in: [1]}}),
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {objects: [{id: 1, name: 'John'}]})
 
@@ -580,7 +580,7 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {
           objects: [
@@ -605,7 +605,7 @@ describe('Data', () => {
         .get(`/v3/instances/${instanceName}/classes/comment/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [1, 2]}}),
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {
           objects: [{id: 1, content: 'Hello'}, {id: 2, content: 'World'}]
@@ -660,7 +660,7 @@ describe('Data', () => {
       api
         .post('/v2/instances/testInstance/classes/users/objects/', user)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, user)
 
@@ -702,7 +702,7 @@ describe('Data', () => {
           body.includes('name')
         )
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {name: 'John'})
 
@@ -830,7 +830,7 @@ describe('Data', () => {
       api
         .delete(`/v2/instances/${instanceName}/classes/users/objects/${id}/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {id})
 
@@ -865,7 +865,7 @@ describe('Data', () => {
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({likes: {_gt: 100}}),
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {
           objects: [{likes: 200, id: 1}, {likes: 300, id: 4}],
@@ -903,7 +903,7 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {objects: [{name: 'John', id: 2}]})
 
@@ -917,7 +917,7 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {objects: [{name: 'John', id: 2}]})
 
@@ -931,7 +931,7 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {objects: [{name: 'John', views: 100, id: 2}]})
 
@@ -945,7 +945,7 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {objects: [
           {
@@ -985,7 +985,7 @@ describe('Data', () => {
       api
         .post(`/v2/instances/${instanceName}/classes/posts/objects/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {title: 'Lorem ipsum', views: 0, id: 2})
 
@@ -1026,7 +1026,7 @@ describe('Data', () => {
       api
         .patch(`/v2/instances/${instanceName}/classes/posts/objects/10/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {title: 'Lorem ipsum', views: 0, id: 10})
 
@@ -1075,7 +1075,7 @@ describe('Data', () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({
-          page_size: 500,
+          page_size: 500
         })
         .reply(200, {objects: [{name: 'John', id: 2}, {name: 'Jane', id: 3}]})
 
