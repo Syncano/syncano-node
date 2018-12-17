@@ -56,7 +56,7 @@ export class User extends Data {
 
   protected authUrl () {
     const {instanceName} = this.instance
-    const url = `${this._getInstanceURL(instanceName)}/users/auth/`
+    const url = `${this.getInstanceURL(instanceName)}/users/auth/`
     const query = querystring.stringify(this.query)
 
     return query ? `${url}?${query}` : url
