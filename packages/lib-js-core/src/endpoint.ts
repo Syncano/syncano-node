@@ -69,7 +69,7 @@ export class Endpoint extends QueryBuilder {
   private url (endpoint: string) {
     const {instanceName} = this.instance
 
-    return `${this.getInstanceURL(instanceName)}/endpoints/sockets/${endpoint}/`
+    return `${this.getInstanceURL(instanceName, 'v3')}/endpoints/sockets/${endpoint}/`
   }
 
   private parseBody (body: any) {

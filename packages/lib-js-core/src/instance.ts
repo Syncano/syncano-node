@@ -97,7 +97,7 @@ export class InstanceClass extends QueryBuilder {
       const headers = {
         'X-API-KEY': this.instance.accountKey
       }
-      fetch(this.url(instanceName), {}, headers)
+      fetch(this.url(instanceName, 'v3'), {}, headers)
         .then(resolve)
         .catch(reject)
     })
@@ -117,7 +117,7 @@ export class InstanceClass extends QueryBuilder {
       const headers = {
         'X-API-KEY': this.instance.accountKey
       }
-      fetch(this.url(), {}, headers)
+      fetch(this.url(undefined, 'v3'), {}, headers)
         .then((res: any) => resolve(res.objects))
         .catch(reject)
     })
@@ -144,8 +144,8 @@ export class InstanceClass extends QueryBuilder {
     })
   }
 
-  private url (instanceName?: string) {
-    const baseUrl = `${this.getSyncanoURL()}/instances/`
+  private url (instanceName?: string, apiVersion?: string) {
+    const baseUrl = `${this.getSyncanoURL(apiVersion)}/instances/`
     return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
   }
 }

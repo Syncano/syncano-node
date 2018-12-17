@@ -36,7 +36,7 @@ describe('Data', () => {
         .which.is.Function()
     })
 
-    it('should be able to fetch objects list', () => {
+    it('should be able to fetch objects list', async () => {
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 10}) // eslint-disable-line camelcase
@@ -45,20 +45,7 @@ describe('Data', () => {
           next: null
         })
 
-      return data.users
-        .take(10)
-        .list()
-        .then((objects) => {
-          should(objects)
-            .be.Array()
-            .length(1)
-          should(objects)
-            .have.propertyByPath('0', 'name')
-            .which.is.String()
-          should(objects)
-            .have.propertyByPath('0', 'id')
-            .which.is.Number()
-        })
+      return expect(data.users.take(10).list()).resolves.toMatchSnapshot()
     })
 
     it('should be able to fetch objects list', () => {
@@ -67,7 +54,7 @@ describe('Data', () => {
       })
 
       const first100 = objects.slice(0, 100)
-      const first100last = first100.slice(-1).pop().id
+      const first100last = (first100.slice(-1).pop() as {id: number}).id
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/`)
         .reply(200, {
@@ -76,7 +63,7 @@ describe('Data', () => {
         })
 
       const second100 = objects.slice(100, 200)
-      const second100last = second100.slice(-1).pop().id
+      const second100last = (second100.slice(-1).pop() as {id: number}).id
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/?last_pk=${first100last}`)
         .reply(200, {
@@ -85,7 +72,7 @@ describe('Data', () => {
         })
 
       const third100 = objects.slice(100, 200)
-      const third100last = third100.slice(-1).pop().id
+      const third100last = (third100.slice(-1).pop() as {id: number}).id
       api
         .get(`/v3/instances/${instanceName}/classes/users/objects/?last_pk=${second100last}`)
         .reply(200, {

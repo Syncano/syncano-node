@@ -1,12 +1,13 @@
 // tslint:disable-next-line:no-var-requires
 const pjson = require('../package.json')
 import Account from './account'
-import Backups from './backups'
+import Backup from './backup'
 import Channel from './channel'
 import Class from './class'
 import Data from './data'
 import Endpoint from './endpoint'
 import Event from './event'
+import Group from './group'
 import Hosting from './hosting'
 import Instance from './instance'
 import Log, { Logger } from './logger'
@@ -14,14 +15,9 @@ import Response, { CustomResponse } from './response'
 import Settings from './settings'
 import Socket from './socket'
 import Trace from './trace'
-import Users from './users'
+import User from './user'
 
 class Server {
-  /**
-   * Manage Syncano Backups
-   */
-  public backups: Backups
-
   /**
    * Manage Syncano Classes
    */
@@ -79,9 +75,40 @@ class Server {
   public logger: Logger
 
   /**
+   * Manage Syncano Backups
+   */
+  public backup: Backup
+
+  /**
+   * Manage Syncano Backups
+   *
+   * @deprecated Use `backup`
+   */
+  public backups: Backup
+
+  /**
    * Manage Syncano Users
    */
-  public users: Users
+  public user: User
+
+  /**
+   * Manage Syncano Users
+   *
+   * @deprecated Use `user`
+   */
+  public users: User
+
+  /**
+   * Manage Syncano User Groups
+   */
+  public group: Group
+
+  /**
+   * Manage Syncano User Groups
+   *
+   * @deprecated Use `group`
+   */
+  public groups: Group
 
   /**
    * Manage Syncano Database. Create, update, query & list, delete objects.
@@ -111,14 +138,19 @@ class Server {
     this.account = new Account(config)
     this.instance = new Instance(config)
     this.logger = Log(config)
-    this.users = new Users(config)
-    this.groups = new Groups(config)
-    this.backups = new Backups(config)
+    this.user = new User(config)
+    this.group = new Group(config)
+    this.backup = new Backup(config)
     this.data = new Proxy(new Data(settings), {
       get (target, className: string) {
         return new Data(getConfig(className))
       }
     })
+
+    // Deprecated
+    this.users = new User(config)
+    this.groups = new Group(config)
+    this.backups = new Backup(config)
   }
 }
 

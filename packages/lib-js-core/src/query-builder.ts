@@ -112,13 +112,13 @@ export default class QueryBuilder {
     return this
   }
 
-  protected getSyncanoURL () {
-    const {apiVersion, host} = this.instance
+  protected getSyncanoURL (apiVersion: string = this.instance.apiVersion) {
+    const {host} = this.instance
 
     return `https://${host}/${apiVersion}`
   }
 
-  protected getInstanceURL (instanceName: string) {
-    return `${this.getSyncanoURL()}/instances/${instanceName}`
+  protected getInstanceURL (instanceName: string, apiVersion?: string) {
+    return `${this.getSyncanoURL(apiVersion)}/instances/${instanceName}`
   }
 }

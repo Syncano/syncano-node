@@ -31,7 +31,7 @@ export interface User {
   [fieldName: string]: any
 }
 
-export class Users extends Data {
+export class User extends Data {
   /**
    * Login Syncano user
    *
@@ -54,9 +54,9 @@ export class Users extends Data {
     })
   }
 
-  protected url (id?: number): string {
+  protected url (id?: number, apiVersion?: string): string {
     const {instanceName} = this.instance
-    const url = `${this.getInstanceURL(instanceName)}/users/${id
+    const url = `${this.getInstanceURL(instanceName, apiVersion)}/users/${id
       ? id + '/'
       : ''}`
     const query = querystring.stringify(this.query)
@@ -65,4 +65,4 @@ export class Users extends Data {
   }
 }
 
-export default Users
+export default User

@@ -1,3 +1,4 @@
+import { NotFoundError } from './errors'
 import QueryBuilder from './query-builder'
 import { BackupObject } from './types'
 
@@ -6,7 +7,7 @@ import { BackupObject } from './types'
  *
  * @property {Function}
  */
-class Backups extends QueryBuilder {
+class Backup extends QueryBuilder {
   /**
    * Backups list
    */
@@ -51,27 +52,46 @@ class Backups extends QueryBuilder {
     if (Array.isArray(id)) {
       return Promise.all(
         id.map((item) =>
-          fetch(`${this.url()}${item}/`, options, headers)
+          fetch(`${this.url()}${item}/`, options, headers).then(() => true).catch(() => false)
         )
       )
     }
 
-    return fetch(`${this.url()}${id}/`, options, headers)
-  }
+    await fetch(`${this.url()}${id}/`, options, headers)
 
-  /**
-   * Delete all backups
-   *
-   * @deprecated Use `delete` method without arguments
-   */
-  public async deleteAll () {
-    return this.delete()
+    return undefined
   }
 
   /**
    * Get backup
+   *
+   * @deprecated User `find`
    */
-  public async get (id: number): Promise<BackupObject> {
+  public async get (id: number): Promise<BackupObject | undefined> {
+    return this.find(id)
+  }
+
+  /**
+   *  Get backup by id
+   *
+   * @example
+   * const item = await backup.find(10)
+   */
+  public async find(id: number): Promise<BackupObject | undefined> {
+    try {
+      return this.findOrFail(id)
+    } catch (err) {
+      return undefined
+    }
+  }
+
+  /**
+   *  Get backup by id or throw error
+   *
+   * @example
+   * const item = await backup.findOrFail(10)
+   */
+  public async findOrFail(id: number): Promise<BackupObject> {
     const fetch = this.fetch.bind(this)
     const options = {
       method: 'GET'
@@ -80,7 +100,23 @@ class Backups extends QueryBuilder {
       'X-API-KEY': this.instance.accountKey
     }
 
-    return fetch(`${this.url()}${id}/`, options, headers)
+    try {
+      return fetch(`${this.url()}${id}/`, options, headers)
+    } catch (err) {
+      throw new NotFoundError(`Backup with id: "${id}" was not found.`)
+    }
+  }
+
+  /**
+   *  Get list of backups by id
+   *
+   * @example
+   * const items = await backup.findMany([10, 11])
+   */
+  public async findMany(ids: number[]): Promise<BackupObject[]> {
+    const groups = await this.list()
+
+    return groups.filter((item) => ids.includes(item.id))
   }
 
   /**
@@ -98,9 +134,6 @@ class Backups extends QueryBuilder {
     return `${this.getInstanceURL(instanceName)}/backups/full/`
   }
 
-  /**
-   * Backups list helper
-   */
   protected async getBackups (url: string) {
     const fetch = this.fetch.bind(this)
     const options = {
@@ -122,4 +155,4 @@ class Backups extends QueryBuilder {
   }
 }
 
-export default Backups
+export default Backup

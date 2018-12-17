@@ -1,7 +1,7 @@
 import * as logger from 'debug'
 import {parse, stringify} from 'querystring'
 import QueryBuilder from './query-builder'
-import { SyncanoResponse } from './types';
+import { SyncanoResponse } from './types'
 
 const debug = logger('core:hosting')
 
@@ -163,20 +163,23 @@ export default class HostingClass extends QueryBuilder {
     })
   }
 
-  private async loadNextFilesPage(response: SyncanoResponse<File>) {
+  private async loadNextFilesPage(response: SyncanoResponse<File>): Promise<File[]> {
     debug('loadNextFilesPage')
 
     if (response.next !== null) {
       const next = response.next.replace(/\?.*/, '')
       const nextParams = parse(response.next.replace(/.*\?/, ''))
       const q = stringify(nextParams)
-      const nextResponse: SyncanoResponse<File> = await this.fetch(`${this.baseUrl}${next}?${q}`, undefined, {
-        'X-API-KEY': this.instance.accountKey
-      })
+      const nextResponse: SyncanoResponse<File> = await this.fetch(
+        `${this.baseUrl}${next}?${q}`,
+        undefined, {
+          'X-API-KEY': this.instance.accountKey
+        }
+      )
 
-      await this.loadNextFilesPage(nextResponse)
+      nextResponse.objects = response.objects.concat(nextResponse.objects)
 
-      return response.objects.concat(nextResponse.objects)
+      return await this.loadNextFilesPage(nextResponse)
     }
 
     return response.objects

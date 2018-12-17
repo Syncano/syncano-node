@@ -1,0 +1,245 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Backup #create should create and return backup 1`] = `
+Object {
+  "author": Object {
+    "email": "test@user.com",
+    "first_name": "",
+    "has_password": true,
+    "id": 3124,
+    "is_active": false,
+    "last_name": "",
+    "metadata": Object {},
+  },
+  "created_at": "2018-11-13T10:29:32.598102Z",
+  "description": "",
+  "details": Object {},
+  "id": 703,
+  "instance": "testInstance",
+  "label": "",
+  "links": Object {
+    "self": "/v2/backups/full/703/",
+  },
+  "metadata": Object {},
+  "size": null,
+  "status": "success",
+  "status_info": "",
+  "updated_at": "2018-11-13T10:29:32.598126Z",
+}
+`;
+
+exports[`Backup #delete should delete all backups and return list of booleans 1`] = `
+Array [
+  true,
+  true,
+  true,
+]
+`;
+
+exports[`Backup #delete should delete backup and return undefined 1`] = `undefined`;
+
+exports[`Backup #delete should delete list of backups and return list of booleans 1`] = `
+Array [
+  true,
+  false,
+  true,
+]
+`;
+
+exports[`Backup #delete should throw error when backup was not found 1`] = `[Error: Not Found]`;
+
+exports[`Backup #find should find single backup by id  1`] = `
+Object {
+  "author": Object {
+    "email": "test@user.com",
+    "first_name": "",
+    "has_password": true,
+    "id": 3124,
+    "is_active": false,
+    "last_name": "",
+    "metadata": Object {},
+  },
+  "created_at": "2018-11-13T10:29:32.598102Z",
+  "description": "",
+  "details": Object {},
+  "id": 703,
+  "instance": "testInstance",
+  "label": "",
+  "links": Object {
+    "self": "/v2/backups/full/703/",
+  },
+  "metadata": Object {},
+  "size": null,
+  "status": "success",
+  "status_info": "",
+  "updated_at": "2018-11-13T10:29:32.598126Z",
+}
+`;
+
+exports[`Backup #findMany should find many backups by id  1`] = `
+Array [
+  Object {
+    "author": Object {
+      "email": "test@user.com",
+      "first_name": "",
+      "has_password": true,
+      "id": 3124,
+      "is_active": false,
+      "last_name": "",
+      "metadata": Object {},
+    },
+    "created_at": "2018-11-13T10:29:32.598102Z",
+    "description": "",
+    "details": Object {},
+    "id": 700,
+    "instance": "testInstance",
+    "label": "",
+    "links": Object {
+      "self": "/v2/backups/full/703/",
+    },
+    "metadata": Object {},
+    "size": null,
+    "status": "success",
+    "status_info": "",
+    "updated_at": "2018-11-13T10:29:32.598126Z",
+  },
+  Object {
+    "author": Object {
+      "email": "test@user.com",
+      "first_name": "",
+      "has_password": true,
+      "id": 3124,
+      "is_active": false,
+      "last_name": "",
+      "metadata": Object {},
+    },
+    "created_at": "2018-11-13T10:29:32.598102Z",
+    "description": "",
+    "details": Object {},
+    "id": 701,
+    "instance": "testInstance",
+    "label": "",
+    "links": Object {
+      "self": "/v2/backups/full/703/",
+    },
+    "metadata": Object {},
+    "size": null,
+    "status": "success",
+    "status_info": "",
+    "updated_at": "2018-11-13T10:29:32.598126Z",
+  },
+]
+`;
+
+exports[`Backup #findOrFail should return single backup by id  1`] = `
+Object {
+  "author": Object {
+    "email": "test@user.com",
+    "first_name": "",
+    "has_password": true,
+    "id": 3124,
+    "is_active": false,
+    "last_name": "",
+    "metadata": Object {},
+  },
+  "created_at": "2018-11-13T10:29:32.598102Z",
+  "description": "",
+  "details": Object {},
+  "id": 703,
+  "instance": "testInstance",
+  "label": "",
+  "links": Object {
+    "self": "/v2/backups/full/703/",
+  },
+  "metadata": Object {},
+  "size": null,
+  "status": "success",
+  "status_info": "",
+  "updated_at": "2018-11-13T10:29:32.598126Z",
+}
+`;
+
+exports[`Backup #findOrFail should throw error when backup was not found  1`] = `[Error: Not Found]`;
+
+exports[`Backup #last should return last backup 1`] = `
+Object {
+  "author": Object {
+    "email": "test@user.com",
+    "first_name": "",
+    "has_password": true,
+    "id": 3124,
+    "is_active": false,
+    "last_name": "",
+    "metadata": Object {},
+  },
+  "created_at": "2018-11-13T10:29:32.598102Z",
+  "description": "",
+  "details": Object {},
+  "id": 701,
+  "instance": "testInstance",
+  "label": "",
+  "links": Object {
+    "self": "/v2/backups/full/703/",
+  },
+  "metadata": Object {},
+  "size": null,
+  "status": "success",
+  "status_info": "",
+  "updated_at": "2018-11-13T10:29:32.598126Z",
+}
+`;
+
+exports[`Backup #list should return list of 2 backups 1`] = `
+Array [
+  Object {
+    "author": Object {
+      "email": "test@user.com",
+      "first_name": "",
+      "has_password": true,
+      "id": 3124,
+      "is_active": false,
+      "last_name": "",
+      "metadata": Object {},
+    },
+    "created_at": "2018-11-13T10:29:32.598102Z",
+    "description": "",
+    "details": Object {},
+    "id": 703,
+    "instance": "testInstance",
+    "label": "",
+    "links": Object {
+      "self": "/v2/backups/full/703/",
+    },
+    "metadata": Object {},
+    "size": null,
+    "status": "success",
+    "status_info": "",
+    "updated_at": "2018-11-13T10:29:32.598126Z",
+  },
+  Object {
+    "author": Object {
+      "email": "test@user.com",
+      "first_name": "",
+      "has_password": true,
+      "id": 3124,
+      "is_active": false,
+      "last_name": "",
+      "metadata": Object {},
+    },
+    "created_at": "2018-11-13T10:29:32.598102Z",
+    "description": "",
+    "details": Object {},
+    "id": 703,
+    "instance": "testInstance",
+    "label": "",
+    "links": Object {
+      "self": "/v2/backups/full/703/",
+    },
+    "metadata": Object {},
+    "size": null,
+    "status": "success",
+    "status_info": "",
+    "updated_at": "2018-11-13T10:29:32.598126Z",
+  },
+]
+`;

@@ -24,7 +24,7 @@ class Data extends QueryBuilder {
   public async list (): Promise<any> {
     debug('list')
     const self = this
-    const urls = [this.url()].concat(this.queries.map((query) => {
+    const urls = [this.url(undefined, 'v3')].concat(this.queries.map((query) => {
       this._query.query = query
       return this.url()
     }))
@@ -516,11 +516,11 @@ class Data extends QueryBuilder {
     return this
   }
 
-  protected url (id?: number): string {
+  protected url (id?: number, apiVersion?: string): string {
     debug('url', id)
     const {instanceName, className} = this.instance
     let url = `${this.getInstanceURL(
-      instanceName
+      instanceName, apiVersion
     )}/classes/${className}/objects/${id ? id + '/' : ''}`
 
     if (this._url !== undefined) {
