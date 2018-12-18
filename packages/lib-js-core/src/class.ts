@@ -28,15 +28,9 @@ export class Class extends QueryBuilder {
   }): Promise<SyncanoClass> {
     const fetch = this.fetch.bind(this)
 
-    return new Promise((resolve, reject) => {
-      const options = {
-        body: JSON.stringify(params),
-        method: 'POST'
-      }
-
-      fetch(this.url(), options)
-        .then(resolve)
-        .catch(reject)
+    return fetch(this.url(), {
+      body: JSON.stringify(params),
+      method: 'POST'
     })
   }
 
@@ -46,14 +40,8 @@ export class Class extends QueryBuilder {
   public delete (className: string): Promise<void> {
     const fetch = this.fetch.bind(this)
 
-    return new Promise((resolve, reject) => {
-      const options = {
-        method: 'DELETE'
-      }
-
-      fetch(this.url(className), options)
-        .then(resolve)
-        .catch(reject)
+    return fetch(this.url(className), {
+      method: 'DELETE'
     })
   }
 }

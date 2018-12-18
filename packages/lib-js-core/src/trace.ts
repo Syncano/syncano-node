@@ -10,13 +10,8 @@ export class TraceClass extends QueryBuilder {
    * @param traceId Id of trace object
    */
   public get (socketName: string, endpointName: string, traceId: string): Promise<Trace> {
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.url(socketName, endpointName, traceId), {}, headers)
-        .then(resolve)
-        .catch(reject)
+    return this.fetch(this.url(socketName, endpointName, traceId), {}, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 
@@ -31,13 +26,8 @@ export class TraceClass extends QueryBuilder {
     prev: string|null
     objects: Trace[]
   }> {
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.url(socketName, endpointName), {}, headers)
-        .then(resolve)
-        .catch(reject)
+    return this.fetch(this.url(socketName, endpointName), {}, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 

@@ -34,18 +34,12 @@ export class EventClass extends QueryBuilder {
     signalParams.push('.')
     signalParams.push(signal)
 
-    return new Promise((resolve, reject) => {
-      const options = {
-        body: JSON.stringify({
-          payload,
-          signal: signalParams.join('')
-        }),
-        method: 'POST'
-      }
-
-      fetch(this.url(), options)
-        .then(resolve)
-        .catch(reject)
+    return fetch(this.url(), {
+      body: JSON.stringify({
+        payload,
+        signal: signalParams.join('')
+      }),
+      method: 'POST'
     })
   }
 

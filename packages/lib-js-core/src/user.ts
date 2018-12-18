@@ -14,14 +14,9 @@ export class UserClass extends DataClass {
   ): Promise<User> {
     const fetch = this.fetch.bind(this)
 
-    return new Promise((resolve, reject) => {
-      const options = {
-        body: JSON.stringify({username, password}),
-        method: 'POST'
-      }
-      fetch(this.authUrl(), options)
-        .then((res: any) => resolve(res))
-        .catch((err: any) => reject(err))
+    return fetch(this.authUrl(), {
+      body: JSON.stringify({username, password}),
+      method: 'POST'
     })
   }
 

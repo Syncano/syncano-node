@@ -17,17 +17,11 @@ export class InstanceClass extends QueryBuilder {
   }): Promise<Instance> {
     const fetch = this.nonInstanceFetch.bind(this)
 
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      const options = {
-        body: JSON.stringify(params),
-        method: 'POST'
-      }
-      fetch(this.url(), options, headers)
-        .then(resolve)
-        .catch(reject)
+    return fetch(this.url(), {
+      body: JSON.stringify(params),
+      method: 'POST'
+    }, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
   /**
@@ -38,13 +32,8 @@ export class InstanceClass extends QueryBuilder {
   public get (instanceName: string): Promise<Instance> {
     const fetch = this.nonInstanceFetch.bind(this)
 
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      fetch(this.url(instanceName, 'v3'), {}, headers)
-        .then(resolve)
-        .catch(reject)
+    return fetch(this.url(instanceName, 'v3'), {}, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 
@@ -58,13 +47,8 @@ export class InstanceClass extends QueryBuilder {
   }> {
     const fetch = this.nonInstanceFetch.bind(this)
 
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      fetch(this.url(undefined, 'v3'), {}, headers)
-        .then((res: any) => resolve(res.objects))
-        .catch(reject)
+    return fetch(this.url(undefined, 'v3'), {}, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 
@@ -76,16 +60,10 @@ export class InstanceClass extends QueryBuilder {
   public delete (instanceName: string): Promise<void> {
     const fetch = this.nonInstanceFetch.bind(this)
 
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      const options = {
-        method: 'DELETE'
-      }
-      fetch(this.url(instanceName), options, headers)
-        .then(resolve)
-        .catch(reject)
+    return fetch(this.url(instanceName), {
+      method: 'DELETE'
+    }, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 

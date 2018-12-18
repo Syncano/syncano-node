@@ -14,14 +14,9 @@ export class ChannelClass extends QueryBuilder {
   public publish<T> (channelName: string, payload: T): Promise<ChannelResponse<T>> {
     const fetch = this.fetch.bind(this)
 
-    return new Promise((resolve, reject) => {
-      const options = {
-        body: JSON.stringify({room: channelName, payload}),
-        method: 'POST'
-      }
-      fetch(this.url(), options)
-        .then(resolve)
-        .catch(reject)
+    return fetch(this.url(), {
+      body: JSON.stringify({room: channelName, payload}),
+      method: 'POST'
     })
   }
 

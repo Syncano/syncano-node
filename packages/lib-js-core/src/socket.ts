@@ -11,13 +11,8 @@ export class SocketClass extends QueryBuilder {
    * @param socketName Name of socket to fetch
    */
   public get (socketName: string): Promise<Socket> {
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.url(socketName), {}, headers)
-        .then(resolve)
-        .catch(reject)
+    return this.fetch(this.url(socketName), {}, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 
@@ -27,16 +22,10 @@ export class SocketClass extends QueryBuilder {
    * @param socketName Name of socket to delete
    */
   public delete (socketName: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      const options = {
-        method: 'DELETE'
-      }
-      this.fetch(this.url(socketName), options, headers)
-        .then(resolve)
-        .catch(reject)
+    return this.fetch(this.url(socketName), {
+      method: 'DELETE'
+    }, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 
@@ -48,13 +37,8 @@ export class SocketClass extends QueryBuilder {
     prev: string|null
     objects: Socket[]
   }> {
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.url(), {}, headers)
-        .then(resolve)
-        .catch(reject)
+    return this.fetch(this.url(), {}, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 

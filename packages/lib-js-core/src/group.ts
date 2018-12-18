@@ -115,12 +115,11 @@ export class GroupClass extends QueryBuilder {
     description?: string
   }): Promise<UserGroup> {
     const fetch = this.fetch.bind(this)
-    const options = {
+
+    return fetch(`${this.url()}${id}/`, {
       method: 'PATCH',
       body: JSON.stringify(data)
-    }
-
-    return fetch(`${this.url()}${id}/`, options)
+    })
   }
 
   /**
@@ -230,10 +229,7 @@ export class GroupClass extends QueryBuilder {
 
   private async getGroups (url: string) {
     const fetch = this.fetch.bind(this)
-    const options = {
-      method: 'GET'
-    }
-    const res = await fetch(url, options)
+    const res = await fetch(url)
     let groups = res.objects
 
     if (res.next) {

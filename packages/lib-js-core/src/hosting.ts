@@ -13,14 +13,10 @@ export class HostingClass extends QueryBuilder {
    * @param fileId Id of file
    */
   public getFile (hostingName: string, fileId: string): Promise<HostingFile> {
-    debug('getFile')
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.urlFiles(hostingName, fileId), {}, headers)
-        .then(resolve)
-        .catch(reject)
+    debug('getFile %o', {hostingName, fileId})
+
+    return this.fetch(this.urlFiles(hostingName, fileId), {}, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 
@@ -29,15 +25,12 @@ export class HostingClass extends QueryBuilder {
    * @param hostingName Name of hosting
    */
   public async listFiles (hostingName: string): Promise<HostingFile[]> {
-    debug('listFiles')
+    debug('listFiles, %o', {hostingName})
 
     try {
-      const response: SyncanoResponse<HostingFile> = await this.fetch(
-        this.urlFiles(hostingName),
-        undefined, {
-          'X-API-KEY': this.instance.accountKey
-        }
-      )
+      const response = await this.fetch(this.urlFiles(hostingName), {}, {
+        'X-API-KEY': this.instance.accountKey
+      })
 
       return this.loadNextFilesPage(response)
     } catch (err) {
@@ -50,14 +43,10 @@ export class HostingClass extends QueryBuilder {
    * @param hostingName Name of hosting
    */
   public get (hostingName: string): Promise<Hosting> {
-    debug('get')
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      this.fetch(this.url(hostingName), {}, headers)
-        .then(resolve)
-        .catch(reject)
+    debug('get %o', {hostingName})
+
+    return this.fetch(this.url(hostingName), {}, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 
@@ -69,20 +58,15 @@ export class HostingClass extends QueryBuilder {
    * @param payload File payload
    */
   public updateFile (hostingName: string, fileId: string, payload: any): Promise<HostingFile> {
-    debug('updateFile')
-    return new Promise((resolve, reject) => {
-      const headers = payload.getHeaders()
-      headers['X-API-KEY'] = this.instance.accountKey
+    debug('updateFile %o', {hostingName, fileId})
 
-      const options = {
-        body: payload,
-        method: 'PATCH'
-      }
+    const headers = payload.getHeaders()
+    headers['X-API-KEY'] = this.instance.accountKey
 
-      this.fetch(this.urlFiles(hostingName, fileId), options, headers)
-        .then(resolve)
-        .catch(reject)
-    })
+    return this.fetch(this.urlFiles(hostingName, fileId), {
+      body: payload,
+      method: 'PATCH'
+    }, headers)
   }
 
   /**
@@ -93,16 +77,12 @@ export class HostingClass extends QueryBuilder {
    * @param payload File payload
    */
   public deleteFile (hostingName: string, fileId: string): Promise<void> {
-    debug('deleteFile')
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.instance.accountKey
-      }
-      const options = {method: 'DELETE'}
+    debug('deleteFile %o', {hostingName, fileId})
 
-      this.fetch(this.urlFiles(hostingName, fileId), options, headers)
-        .then(resolve)
-        .catch(reject)
+    return this.fetch(this.urlFiles(hostingName, fileId), {
+      method: 'DELETE'
+    }, {
+      'X-API-KEY': this.instance.accountKey
     })
   }
 
@@ -114,35 +94,27 @@ export class HostingClass extends QueryBuilder {
    * @param payload File payload
    */
   public uploadFile (hostingName: string, payload: any): Promise<HostingFile> {
-    debug('uploadFile')
-    return new Promise((resolve, reject) => {
-      const headers = payload.getHeaders()
-      headers['X-API-KEY'] = this.instance.accountKey
+    debug('uploadFile %o', {hostingName})
 
-      const options = {
-        body: payload,
-        method: 'POST'
-      }
+    const headers = payload.getHeaders()
+    headers['X-API-KEY'] = this.instance.accountKey
 
-      this.fetch(this.urlFiles(hostingName), options, headers)
-        .then(resolve)
-        .catch(reject)
-    })
+    return this.fetch(this.urlFiles(hostingName), {
+      body: payload,
+      method: 'POST'
+    }, headers)
   }
 
   private async loadNextFilesPage(response: SyncanoResponse<HostingFile>): Promise<HostingFile[]> {
-    debug('loadNextFilesPage')
-
     if (response.next !== null) {
+      debug('loadNextFilesPage')
+
       const next = response.next.replace(/\?.*/, '')
       const nextParams = parse(response.next.replace(/.*\?/, ''))
       const q = stringify(nextParams)
-      const nextResponse: SyncanoResponse<HostingFile> = await this.fetch(
-        `${this.baseUrl}${next}?${q}`,
-        undefined, {
-          'X-API-KEY': this.instance.accountKey
-        }
-      )
+      const nextResponse = await this.fetch(`${this.baseUrl}${next}?${q}`, {}, {
+        'X-API-KEY': this.instance.accountKey
+      })
 
       nextResponse.objects = response.objects.concat(nextResponse.objects)
 

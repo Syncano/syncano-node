@@ -15,14 +15,12 @@ export class BackupClass extends QueryBuilder {
    */
   public async create (): Promise<BackupObject> {
     const fetch = this.fetch.bind(this)
-    const options = {
-      method: 'POST'
-    }
-    const headers = {
-      'X-API-KEY': this.instance.accountKey
-    }
 
-    return fetch(this.url(), options, headers)
+    return fetch(this.url(), {
+      method: 'POST'
+    }, {
+      'X-API-KEY': this.instance.accountKey
+    })
   }
 
   /**
@@ -88,15 +86,11 @@ export class BackupClass extends QueryBuilder {
    */
   public async findOrFail(id: number): Promise<BackupObject> {
     const fetch = this.fetch.bind(this)
-    const options = {
-      method: 'GET'
-    }
-    const headers = {
-      'X-API-KEY': this.instance.accountKey
-    }
 
     try {
-      return fetch(`${this.url()}${id}/`, options, headers)
+      return fetch(`${this.url()}${id}/`, {}, {
+        'X-API-KEY': this.instance.accountKey
+      })
     } catch (err) {
       throw new NotFoundError(`Backup with id: "${id}" was not found.`)
     }
