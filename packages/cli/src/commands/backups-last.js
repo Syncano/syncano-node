@@ -2,7 +2,7 @@ import format from 'chalk'
 import { printNoBackupsInfo } from './helpers/backups'
 import { echo, error } from '../utils/print-tools'
 
-class BackupsLast{
+class BackupsLast {
   constructor (context) {
     this.session = context.session
     this.Backups = context.session.connection.backups
@@ -38,7 +38,7 @@ class BackupsLast{
   }
 
   dateParser (time) {
-    return `${time.substring(0,9)} ${time.substring(11, 19)}`
+    return `${time.substring(0, 9)} ${time.substring(11, 19)}`
   }
 }
 

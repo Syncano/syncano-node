@@ -3,7 +3,7 @@ import klawSync from 'klaw-sync'
 import glob from 'glob'
 import child from 'child_process'
 import FindKey from 'find-key'
-import md5 from 'md5'
+import md5File from 'md5-file/promise'
 import YAML from 'js-yaml'
 import axios from 'axios'
 import mkdirp from 'mkdirp'
@@ -24,9 +24,9 @@ import utils from './utils'
 import Hosting from '../hosting'
 import { p, echo } from '../print-tools'
 import { getTemplate } from '../templates'
-import { CompileError, CompatibilityError } from '../errors'
+import { CompileError, SocketUpdateError, CompatibilityError } from '../errors'
 
-const { debug } = logger('utils-sockets')
+const { debug, info } = logger('utils-sockets')
 
 class MetadataObject {
   constructor (name, metadata, socketName) {
@@ -76,70 +76,6 @@ class Handler extends MetadataObject {}
 
 class Event extends MetadataObject {}
 
-class Component extends MetadataObject {
-  constructor (name, metadata, socketName) {
-    super(name, metadata, socketName)
-    this.componentPath = path.join(Socket.getLocal(this.socketName).socketPath, this.metadata.path)
-    this.packageName = this.getRealName()
-  }
-  getRealName () {
-    debug('getRealComponentName')
-    return JSON.parse(fs.readFileSync(path.join(this.componentPath, 'package.json'))).name
-  }
-
-  linkWithProject (projectPath) {
-    debug('linkWithProject')
-    child.spawnSync(
-      'yarn',
-      ['link'],
-      {
-        cwd: this.componentPath,
-        maxBuffer: 2048 * 1024,
-        stdio: [process.stdio, 'pipe', 'pipe']
-      }
-    )
-    child.spawnSync(
-      'yarn',
-      ['link', this.packageName],
-      {
-        cwd: projectPath,
-        maxBuffer: 2048 * 1024,
-        stdio: [process.stdio, 'pipe', 'pipe']
-      }
-    )
-  }
-
-  isComponentFile (filePath) {
-    return filePath.includes(path.join(this.componentPath, 'src'))
-  }
-
-  build () {
-    debug(`component build: ${this.packageName}`)
-
-    return new Promise(async (resolve, reject) => {
-      const command = 'npm'
-      const args = 'run build -s'
-
-      process.env.FORCE_COLOR = true
-      const out = child.spawnSync(
-        command,
-        args.split(' '),
-        {
-          cwd: this.componentPath,
-          maxBuffer: 2048 * 1024,
-          stdio: [process.stdio, 'pipe', 'pipe']
-        }
-      )
-
-      if (out.status !== 0) {
-        reject(new CompileError(out.stderr.toString()))
-      } else {
-        resolve()
-      }
-    })
-  }
-}
-
 class Socket {
   constructor (socketName, socketPath) {
     debug('Sockets.constructor', socketName)
@@ -160,8 +96,7 @@ class Socket {
       spec: {
         endpoints: {},
         event_handlers: {},
-        events: {},
-        components: {}
+        events: {}
       },
       metadata: {}
     }
@@ -170,8 +105,7 @@ class Socket {
       spec: {
         endpoints: {},
         event_handlers: {},
-        events: {},
-        components: {}
+        events: {}
       }
     }
 
@@ -234,12 +168,12 @@ class Socket {
 
   // Creating Socket simple object
   static getLocal (socketName) {
-    debug('getLocal')
+    info('getLocal()', socketName)
     return new Socket(socketName)
   }
 
   static async get (socketName) {
-    debug(`Getting Socket: ${socketName}`)
+    info('get()', socketName)
     const socket = Socket.getLocal(socketName)
     await socket.loadRemote()
     return socket
@@ -255,10 +189,10 @@ class Socket {
     return socket.init(templateName)
   }
 
-  init (templateName) {
+  async init (templateName) {
     debug('init', templateName)
     return new Promise((resolve, reject) => {
-      const socketPath = this.getSocketPath()
+      const socketPath = this.socketPath
       if (!fs.existsSync(socketPath)) {
         mkdirp.sync(socketPath)
       }
@@ -304,7 +238,7 @@ class Socket {
   }
 
   async getRemote () {
-    debug('getRemote', this.name)
+    info('getRemote()', this.name)
     try {
       return await session.connection.socket.get(this.name)
     } catch (err) {
@@ -313,7 +247,7 @@ class Socket {
   }
 
   async getRemoteSpec () {
-    debug('getRemoteSpec')
+    info('getRemoteSpec()')
     if (this.remote.files['socket.yml']) {
       try {
         const spec = await axios.request({
@@ -327,6 +261,7 @@ class Socket {
   }
 
   setRemoteState (socket) {
+    info('setRemoteState()')
     this.existRemotely = true
     this.remote.name = socket.name
     this.remote.environment = socket.environment
@@ -341,7 +276,7 @@ class Socket {
   }
 
   async loadRemote () {
-    debug('loadRemote()')
+    info('loadRemote()')
     const socket = await this.getRemote()
     if (socket) {
       await this.setRemoteState(socket)
@@ -365,7 +300,7 @@ class Socket {
   }
 
   isSocketFile (fileFullPath) {
-    debug('isSocketFile', fileFullPath)
+    info('isSocketFile()', fileFullPath)
     return fileFullPath.includes(this.localPath)
   }
 
@@ -414,11 +349,11 @@ class Socket {
   }
 
   getSrcFolder () {
-    return path.join(this.getSocketPath(), 'src', path.sep)
+    return path.join(this.socketPath, 'src', path.sep)
   }
 
   getCompiledScriptsFolder () {
-    const folder = path.join(this.getSocketPath(), '.dist', 'src', path.sep)
+    const folder = path.join(this.socketPath, '.dist', 'src', path.sep)
     if (!fs.existsSync(folder)) {
       mkdirp.sync(folder)
     }
@@ -426,7 +361,7 @@ class Socket {
   }
 
   getSocketZipPath () {
-    const folder = path.join(this.getSocketPath(), '.zip')
+    const folder = path.join(this.socketPath, '.zip')
     if (!fs.existsSync(folder)) {
       mkdirp.sync(folder)
     }
@@ -434,17 +369,17 @@ class Socket {
   }
 
   getSocketZip () {
-    debug('getSocketZip')
+    info('getSocketZip()')
     return path.join(this.getSocketZipPath(), 'src.zip')
   }
 
   getSocketEnvZip () {
-    debug('getSocketEnvZip')
+    info('getSocketEnvZip()')
     return path.join(this.getSocketZipPath(), 'env.zip')
   }
 
   async isEmptyEnv () {
-    debug('isEmptyEnv')
+    info('isEmptyEnv()')
     if (fs.existsSync(this.getSocketEnvZip())) {
       const envZipFiles = await this.listZipFiles(this.getSocketEnvZip())
       return !(envZipFiles.length > 0)
@@ -452,18 +387,18 @@ class Socket {
     return true
   }
 
-  getSocketNodeModulesChecksum () {
-    debug('getSocketNodeModulesChecksum')
+  async getSocketNodeModulesChecksum () {
+    info('getSocketNodeModulesChecksum()')
     if (fs.existsSync(this.getSocketEnvZip())) {
-      return md5(fs.readFileSync(this.getSocketEnvZip()))
+      return md5File(this.getSocketEnvZip())
     }
     return 'none'
   }
 
-  getSocketSourcesZipChecksum () {
-    debug('getSocketSourcesZipChecksum')
+  async getSocketSourcesZipChecksum () {
+    debug('getSocketSourcesZipChecksum()')
     if (fs.existsSync(this.getSocketEnvZip())) {
-      return md5(fs.readFileSync(this.getSocketZip()))
+      return md5File(this.getSocketZip())
     }
     return 'none'
   }
@@ -473,7 +408,7 @@ class Socket {
   }
 
   composeFromSpec (objectType, ObjectClass) {
-    debug('composeFromSpec', objectType, ObjectClass)
+    info('composeFromSpec()', objectType)
     const objects = Object.assign({}, this.remote.spec[objectType])
     Object.assign(objects, this.spec[objectType])
 
@@ -497,47 +432,33 @@ class Socket {
     })
   }
 
-  composeComponentsFromSpec (objectType, ObjectClass) {
-    debug('composeComponentsFromSpec', objectType, ObjectClass)
-    const objects = Object.assign({}, this.spec[objectType])
-    Object.assign(objects, this.spec[objectType])
-
-    debug('objects to process', objects)
-    return Object.keys(objects).map(objectName => {
-      debug(`checking ${objectName}`)
-      const objectMetadata = objects[objectName]
-      debug('objectMetadata', objectMetadata)
-      const object = new ObjectClass(objectName, objectMetadata, this.name)
-      return object
-    })
-  }
-
   getEndpoints () {
-    debug('getEndpoints')
+    info('getEndpoints()')
     return this.composeFromSpec('endpoints', Endpoint)
   }
 
   getEndpoint (endpointName) {
-    debug('getEndpoints')
+    info('getEndpoints()')
     return _.find(this.getEndpoints(), { name: endpointName })
   }
 
   getEventHandlers () {
-    debug('getEventHandlers')
+    info('getEventHandlers()')
     return this.composeFromSpec('event_handlers', Handler)
   }
 
   getEvents () {
-    debug('getEvents')
+    info('getEvents()')
     return this.composeFromSpec('events', Event)
   }
 
   getEndpointTrace (endpointName, traceId) {
+    info('getEndpointTrace()', endpointName)
     return session.connection.trace.get(this.name, endpointName, traceId)
   }
 
   async getEndpointTraces (endpointName, lastId) {
-    debug('getEndpointTraces', endpointName, lastId)
+    info('getEndpointTraces()', endpointName, lastId)
     try {
       const traces = await session.connection.trace.get(this.name, endpointName)
       if (!lastId) {
@@ -554,6 +475,7 @@ class Socket {
   }
 
   getTraces (lastId) {
+    info('getTraces()')
     const url = [
       `https://${session.getHost()}/v2/instances/${session.project.instance}/channels/eventlog/poll/`,
       '?transport=websocket',
@@ -575,14 +497,8 @@ class Socket {
     return resp.data
   }
 
-  async getComponents () {
-    debug('getComponents')
-    debug('getEndpoints')
-    return this.composeComponentsFromSpec('components', Component)
-  }
-
-  listZipFiles (zipPath) {
-    debug('listZipFiles', zipPath)
+  async listZipFiles (zipPath) {
+    info('listZipFiles()', zipPath)
     const files = []
     if (!fs.existsSync(zipPath)) {
       return files
@@ -634,8 +550,8 @@ class Socket {
   }
 
   async createZip (params = {partial: true}) {
-    debug('createZip', params.partial)
-    return new Promise((resolve, reject) => {
+    info('createZip()')
+    return new Promise(async (resolve, reject) => {
       const archive = archiver('zip', { zlib: { level: 9 } })
       const output = fs.createWriteStream(this.getSocketZip(), { mode: 0o700 })
 
@@ -643,22 +559,22 @@ class Socket {
       archive.on('error', reject)
 
       // Adding socket.yml if needed
-      const localYMLChecksum = md5(fs.readFileSync(this.getSocketYMLFile()))
+      const localYMLChecksum = await md5File(this.getSocketYMLFile())
       const remoteYMLChecksum = this.remote.files && this.remote.files['socket.yml']
         ? this.remote.files['socket.yml'].checksum
         : ''
 
       const addMetaFiles = () => {
-        debug('Adding file to archive: \'socket.yml\'')
+        info('Adding file to archive: \'socket.yml\'')
         archive.file(this.getSocketYMLFile(), { name: 'socket.yml' })
       }
 
-      debug('Processing: \'socket.yml\'')
+      info('Processing: \'socket.yml\'')
       if (params.partial) {
         if (remoteYMLChecksum !== localYMLChecksum) {
           addMetaFiles()
         } else {
-          debug('Ignoring file: socket.yml')
+          info('Ignoring file: socket.yml')
         }
       } else {
         addMetaFiles()
@@ -667,13 +583,13 @@ class Socket {
       const files = this.getAllFiles()
 
       // Adding all files (besides those filtered out)
-      files.forEach(file => {
+      await Promise.all(files.map(async file => {
         // with "internal" path
         const fileNameWithPath = file.internalPath
         const remoteFile = this.remote.files ? this.remote.files[fileNameWithPath] : null
 
         if (remoteFile && params.partial) {
-          if (remoteFile.checksum !== md5(fs.readFileSync(file.fullPath))) {
+          if (remoteFile.checksum !== await md5File(file.fullPath)) {
             debug(`Adding file to archive: ${fileNameWithPath}`)
             archive.file(file.fullPath, { name: fileNameWithPath })
           } else {
@@ -682,7 +598,8 @@ class Socket {
         } else {
           archive.file(file.fullPath, { name: fileNameWithPath })
         }
-      })
+      }))
+
       archive.finalize()
 
       output.on('close', () => {
@@ -691,15 +608,16 @@ class Socket {
     })
   }
 
-  createEnvZip () {
+  async createEnvZip () {
     debug('createEnvZip')
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const output = fs.createWriteStream(this.getSocketEnvZip(), { mode: 0o700 })
       const archive = archiver('zip', { zlib: { level: 9 } })
 
-      const envFolder = path.join(this.getSocketPath(), '.dist', 'node_modules')
+      const envFolder = path.join(this.socketPath, '.dist', 'node_modules')
 
-      if (!fs.existsSync(envFolder)) {
+      const envExist = await fs.existsSync(envFolder)
+      if (!envExist) {
         mkdirp.sync(envFolder)
       }
 
@@ -734,12 +652,12 @@ class Socket {
   }
 
   async updateEnvCall (method) {
-    debug('updateEnvCall')
+    info('updateEnvCall()')
     if (await this.isEmptyEnv()) {
       return
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const form = new FormData()
 
       let endpointPath = `/v2/instances/${session.project.instance}/environments/`
@@ -749,7 +667,6 @@ class Socket {
 
       debug('endpointPath', endpointPath)
       form.append('name', this.name)
-      form.append('metadata', JSON.stringify({ checksum: this.getSocketNodeModulesChecksum() }))
       form.append('zip_file', fs.createReadStream(this.getSocketEnvZip()))
       debug('upload env zip')
       form.submit({
@@ -763,6 +680,12 @@ class Socket {
 
       }, (err, res) => {
         debug('end env upload')
+
+        if (err || res.statusCode === 404) {
+          debug(`environment ${this.name} was not found`)
+          return reject(err || res)
+        }
+
         if (res.statusCode === 200) {
           resolve()
         }
@@ -770,11 +693,6 @@ class Socket {
         if (res.statusCode === 413) {
           debug('error while updating environment - environment is to big :(')
           return reject(new Error('environment is to big'))
-        }
-
-        if (err || res.statusCode === 404) {
-          debug(`environment ${this.name} was not found`)
-          return reject(err || res)
         }
 
         res.on('data', (data) => {
@@ -793,7 +711,7 @@ class Socket {
   }
 
   async updateEnv () {
-    debug('updateEnv')
+    info('updateEnv()')
     const resp = await this.socketEnvShouldBeUpdated()
     if (resp) {
       if (!this.isDependency()) {
@@ -805,8 +723,9 @@ class Socket {
   }
 
   async updateSocketZip ({ config, install = false }) {
-    debug('updateSocketZip')
+    info('updateSocketZip()')
     let endpointPath = `/v2/instances/${session.project.instance}/sockets/`
+    // const zipChecksum = await md5File(this.getSocketZip())
 
     if (!install) {
       endpointPath += `${this.name}/`
@@ -818,8 +737,14 @@ class Socket {
 
     if (numberOfFiles === 0 && this.isConfigSynced(config)) {
       debug('config is synced and nothing to update')
-      return Promise.resolve()
+      return {status: 'stopped'}
     }
+
+    // if (this.remote.metadata.zip_checksum === zipChecksum) {
+    //   debug('zip is the same, not updating')
+    //   return {status: 'stopped'}
+    // }
+
     debug('preparing update')
 
     return new Promise(async (resolve, reject) => {
@@ -838,8 +763,8 @@ class Socket {
         form.append('config', JSON.stringify(config))
       }
 
-      const metadata = Object.assign({}, this.remote.metadata)
-      form.append('metadata', JSON.stringify(metadata))
+      // const metadata = Object.assign({}, this.remote.metadata)
+      // form.append('metadata', JSON.stringify(metadata))
 
       debug('zip_file_list', allFiles)
       form.append('zip_file_list', JSON.stringify(allFiles))
@@ -866,6 +791,7 @@ class Socket {
           responseCode = res.statusCode
         })
         res.on('end', () => {
+          responseData = JSON.parse(responseData)
           if (err || responseCode === 404) {
             debug(`socket ${this.name} was not found`)
             return reject(err || res)
@@ -883,12 +809,8 @@ class Socket {
     })
   }
 
-  getSocketPath () {
-    return this.socketPath
-  }
-
   getSocketYMLFile () {
-    return path.join(this.getSocketPath(), 'socket.yml')
+    return path.join(this.socketPath, 'socket.yml')
   }
 
   async createAllZips () {
@@ -897,9 +819,8 @@ class Socket {
     await this.createZip({partial: false})
   }
 
-  compile (params = { updateSocketNPMDeps: false }) {
-    debug(`compile: ${this.name}`)
-    debug(`compile socketPath: ${this.getSocketPath()}`)
+  async compile (params = { updateSocketNPMDeps: false }) {
+    info('compile()', this.name, this.socketPath)
 
     return new Promise(async (resolve, reject) => {
       const command = 'npm'
@@ -912,56 +833,50 @@ class Socket {
       }
 
       process.env.FORCE_COLOR = true
-      const out = child.spawnSync(
-        command,
-        args.split(' '),
-        {
-          cwd: this.getSocketPath(),
-          maxBuffer: 2048 * 4096,
-          stdio: [process.stdio, 'pipe', 'pipe']
-        }
-      )
-
-      if (out.status !== 0) {
-        reject(new CompileError(out.stderr.toString()))
-      } else {
-        resolve()
-      }
-    })
-  }
-
-  build () {
-    debug(`socket build: ${this.name}`)
-
-    return new Promise(async (resolve, reject) => {
-      const command = 'npm'
-      const args = 'install'
-
-      process.env.FORCE_COLOR = true
-      const out = child.spawnSync(
+      info('start compilation')
+      const out = child.spawn(
         command,
         args.split(' '),
         {
           cwd: this.socketPath,
-          maxBuffer: 2048 * 1024,
-          stdio: [process.stdio, 'pipe', 'pipe']
+          maxBuffer: 2048 * 4096,
+          stdio: ['pipe', 'pipe', 'pipe']
         }
       )
 
-      if (out.status !== 0) {
-        reject(new CompileError(out.stderr.toString()))
-      } else {
-        resolve()
-      }
+      let stderr = ''
+      out.stderr.on('data', (chunk) => {
+        stderr += chunk
+      })
+
+      let stdout = ''
+      out.stdout.on('data', (chunk) => {
+        stdout += chunk
+      })
+
+      out.on('error', () => {
+        reject(new CompileError(stderr))
+      })
+
+      out.on('close', (code) => {
+        info('compilation done', 'exit code:', code)
+        if (code !== 0) {
+          reject(new CompileError(stderr || stdout))
+        } else {
+          resolve()
+        }
+      })
     })
   }
 
   isConfigSynced (config) {
-    debug('isConfigSynced')
+    info('isConfigSynced()')
     return _.isEqual(config, this.remote.config)
   }
 
   updateConfig (config) {
+    info('updateConfig()')
+    debug('updateConfig()', config)
     if (this.isConfigSynced(config)) {
       return Promise.resolve()
     }
@@ -976,7 +891,8 @@ class Socket {
   }
 
   async update (params = { config: null, updateSocketNPMDeps: false, updateEnv: false }) {
-    debug(`Socket update: ${this.name}`, params)
+    info('update()', this.name)
+    debug('update', params)
     const config = Object.assign({}, this.remote.config, params.config)
 
     // Get options from the env
@@ -993,35 +909,44 @@ class Socket {
     await this.verify()
     if (!this.isDependency()) {
       await this.compile({ updateSocketNPMDeps: params.updateSocketNPMDeps })
-      await this.createZip()
+      await this.createZip({partial: this.remote.status !== 'error'})
     }
 
-    if (params.updateEnv) {
-      await this.updateEnv()
-    }
+    if (params.updateEnv) await this.updateEnv()
 
-    let resp = null
-    if (this.existRemotely) {
-      resp = await this.updateSocketZip({ config, install: false })
-    } else {
-      resp = await this.updateSocketZip({ config, install: true })
+    const resp = await this.updateSocketZip({ config, install: !this.existRemotely })
+    debug('resp after update Socket zip:', resp)
+
+    if (resp && resp.status === 'stopped') {
+      return { status: 'stopped' }
     }
 
     if (resp && resp.status !== 'ok') return this.waitForStatusInfo()
-    return { status: 'stopped' }
   }
 
   waitForStatusInfo () {
-    debug('waitForStatusInfo')
+    info('waitForStatusInfo()')
 
     return new Promise((resolve, reject) => {
       const getStatus = async () => {
         const socket = await this.getRemote()
+        if (socket.status === 'ok') {
+          resolve({status: socket.status})
+        }
         if (socket.status !== 'ok' && socket.status !== 'error') {
-          setTimeout(getStatus, 200)
+          setTimeout(getStatus, 400)
         } else {
           this.setRemoteState(socket)
-          resolve({ status: socket.status, message: socket.status_info })
+          if (socket.status === 'ok') {
+            resolve({status: socket.status})
+          }
+          let errorMsg
+          if (socket.status_info && socket.status_info.error) {
+            errorMsg = socket.status_info.error
+          } else {
+            errorMsg = socket.status_info
+          }
+          reject(new SocketUpdateError(errorMsg))
         }
       }
       getStatus()
@@ -1069,7 +994,7 @@ class Socket {
     const filePath = this.getFileForEndpoint(endpointName)
     const { base, dir } = path.parse(filePath)
     return path.join(
-      this.getSocketPath(),
+      this.socketPath,
       dir,
       '.bundles',
       `${base}.map`
@@ -1097,7 +1022,7 @@ class Socket {
       lines: [
         fs.readFileSync(
           // origFilePath,
-          path.join(this.getSocketPath(), '../', origFilePath),
+          path.join(this.socketPath, '../', origFilePath),
           { encoding: 'utf-8' }).split('\n')[origFileLine.line - 1],
         p(origFileLine.column)('^')
       ]
@@ -1137,7 +1062,7 @@ class Socket {
   }
 
   async socketEnvShouldBeUpdated () {
-    debug('socketEnvShouldBeUpdated')
+    info('socketEnvShouldBeUpdated()')
     try {
       const resp = await axios.request({
         url: `https://${session.getHost()}/v2/instances/${session.project.instance}/environments/${this.name}/`,
@@ -1148,8 +1073,12 @@ class Socket {
         }
       })
 
-      if (resp.data.metadata.checksum === this.getSocketNodeModulesChecksum()) {
-        debug('socketEnvShouldBeUpdated', 'env is up to date')
+      const nodeModulesChecksum = await this.getSocketNodeModulesChecksum()
+      debug('remote env checksum:', resp.data.checksum)
+      debug('local env checksum:', nodeModulesChecksum)
+
+      if (resp.data.checksum === nodeModulesChecksum) {
+        debug(`env "${this.name}" is up to date`)
         return false
       }
       return 'PATCH'

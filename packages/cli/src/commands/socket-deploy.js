@@ -1,15 +1,17 @@
 import format from 'chalk'
 import Promise from 'bluebird'
 
+import Listr from 'listr'
+
 import logger from '../utils/debug'
-import { SimpleSpinner } from './helpers/spinner'
 import { createInstance } from './helpers/create-instance'
 import { askQuestions } from './helpers/socket'
 import { p, error, echo } from '../utils/print-tools'
 import { currentTime, Timer } from '../utils/date-utils'
 import { CompileError } from '../utils/errors'
+import { printInstanceInfo } from './helpers/instance'
 
-const { debug } = logger('cmd-socket-deploy')
+const { debug, info } = logger('cmd-socket-deploy')
 
 const pendingUpdates = {}
 const timer = new Timer()
@@ -26,24 +28,21 @@ export default class SocketDeployCmd {
   async run ([socketName, cmd]) {
     this.cmd = cmd
 
-    // echo(2)(`♻️ ${format.grey(' Deploying...')}`);
-
     // Create Instance if --create-instance provided
     if (cmd.createInstance) {
       await createInstance(cmd.createInstance)
       await this.init.addConfigFiles({ instance: cmd.createInstance })
-      echo(4)(`Your project is attached to ${format.green(cmd.createInstance)} instance now!`)
     } else {
       // If not, we have to check if we have a project attached to any instance
       this.session.hasProject()
     }
 
+    printInstanceInfo(this.session, 11)
+    echo()
+
     if (socketName) {
-      debug(`Deploying Socket: ${socketName}`)
-      const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
-      const spinner = new SimpleSpinner(msg).start()
+      info('deploying socket', socketName)
       const socket = await this.Socket.get(socketName)
-      spinner.stop()
 
       if (!socket.existLocally) {
         echo()
@@ -53,75 +52,91 @@ export default class SocketDeployCmd {
       }
       this.socketList = [socket]
     } else {
-      const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
-      const spinner = new SimpleSpinner(msg).start()
       this.socketList = await this.Socket.list()
-      spinner.stop()
     }
 
     const configs = {}
 
     try {
+      const deployList = []
+      this.socketList.forEach(socket => {
+        deployList.push({
+          title: `${format.grey('        waiting:')} ${socket.name}`,
+          task: async (ctx, task) => {
+            task.title = `${format.grey(' syncing socket:')} ${socket.name}`
+            const deployStatus = await this.deploySocket(socket, configs[socket.name])
+            if (deployStatus.status !== 'pending') {
+              task.title = SocketDeployCmd.printSummary(socket.name, deployStatus)
+            }
+            if (deployStatus.status === 'error' || deployStatus.status === 'compile error') {
+              throw new Error()
+            }
+          }
+        })
+      })
+
+      const projectTasks = new Listr([
+        {
+          title: `${format.grey('        project:')} checking... `,
+          task: async (ctx, task) => {
+            const duration = await this.deployProject()
+            task.title = `${format.grey('        project:')} ${currentTime()} updated ${format.grey(duration)}`
+          }
+        }
+      ],
+      {
+        concurrent: false,
+        exitOnError: cmd.bail || false
+      })
+
+      const socketsTasks = new Listr(deployList, {
+        concurrent: cmd.parallel || false,
+        exitOnError: cmd.bail || false
+      })
+
+      // Ask for missing config options
       await Promise.each(this.socketList, async (socketFromList) => {
         const config = await askQuestions(socketFromList.getConfigOptionsToAsk())
         configs[socketFromList.name] = config
       })
-      await this.deployProject()
 
-      let index
-      for (index in this.socketList) {
-        const socket = this.socketList[index]
-        await this.deploySocket(socket, configs[socket.name])
+      const deployTimer = new Timer()
+      echo(2)('         settings:')
+      await projectTasks.run()
+      echo()
+
+      if (this.socketList.length > 0) {
+        echo(2)('          sockets:')
+        await socketsTasks.run()
+        echo()
       }
-
+      echo(2)(format.grey(`       total time: ${deployTimer.getDuration()}`))
       echo()
     } catch (err) {
-      if (err.response && err.response.data && err.response.data.detail) {
-        error(4)(err.response.data.detail)
-      } else if (err.response && err.response.data && Array.isArray(err.response.data)) {
-        err.response.data.forEach((msg) => {
-          error(4)(msg)
-        })
-      } else if (err.response && err.response.data && typeof err.response.data === 'object') {
-        Object.keys(err.response.data).forEach(key => {
-          error(4)(`${key}: ${err.response.data[key][0]}`)
-        })
-      } else {
-        error(4)(err)
-      }
-      process.exit(1)
+      SocketDeployCmd.bail()
     }
+    return this
   }
 
   async deployProject () {
     timer.reset()
-    const msg = p(4)(`${format.magenta('project deploy:')} ${currentTime()}`)
-    const spinner = new SimpleSpinner(msg).start()
     await this.session.deployProject()
-    spinner.stop()
-    const status = format.grey('project synced:')
-    const duration = timer.getDuration()
-    echo(5)(`${status} ${currentTime()} ${duration}`)
+    return timer.getDuration()
   }
 
   async deploySocket (socket, config) {
     debug(`deploySocket: ${socket.name}`)
     const deployTimer = new Timer()
-    const msg = p(4)(`${format.magenta('socket deploy:')} ${currentTime()} ${format.cyan(socket.name)}`)
-    const spinner = new SimpleSpinner(msg).start()
 
     // We have co count here updates
     if (!pendingUpdates[socket.name]) { pendingUpdates[socket.name] = 0 }
 
     pendingUpdates[socket.name] += 1
     if (pendingUpdates[socket.name] > 1) {
-      spinner.stop()
-      this.mainSpinner.start()
       debug(`not updating, update pending: ${pendingUpdates[socket.name]}`)
-      return
+      return {status: 'pending'}
     }
 
-    // Let's compile and update if it is not hot mode
     try {
       const updateStatus = await socket.update({
         config,
@@ -129,34 +144,25 @@ export default class SocketDeployCmd {
         updateSocketNPMDeps: true,
         updateEnv: true
       })
-      spinner.stop()
-      SocketDeployCmd.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
-      if (updateStatus.status !== 0 && this.cmd.bail) {
-        SocketDeployCmd.bail()
-      }
+      updateStatus.duration = deployTimer.getDuration()
+      return updateStatus
     } catch (err) {
       debug(err)
-      spinner.stop()
+      const errorStatus = {
+        status: 'error',
+        duration: deployTimer.getDuration()
+      }
       if (err instanceof CompileError) {
-        const status = format.red('    compile error:')
+        errorStatus.status = 'compile error'
         if (err.traceback) {
-          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+          errorStatus.message = err.traceback.split('\n').map(line => p(8)(line)).join('\n')
         } else {
-          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} Error while executing 'build' script!`)
+          errorStatus.message = 'Error while executing socket `build` script!'
         }
       } else {
-        const status = format.red('socket sync error:')
-        if (err.message) {
-          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
-        } else {
-          echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}`)
-          error(err)
-        }
+        errorStatus.message = err.message ? err.message : err
       }
-
-      if (this.cmd.bail) {
-        SocketDeployCmd.bail()
-      }
+      return errorStatus
     }
   }
 
@@ -164,29 +170,31 @@ export default class SocketDeployCmd {
     return this.localSockets.find((socket) => socket.isSocketFile(fileName))
   }
 
-  static bail () {
-    echo()
-    process.exit(1)
-  }
-
-  static printUpdateSuccessful (socketName, updateStatus, deployTimer) {
-    debug('printUpdateSuccessful', socketName, updateStatus)
-    const duration = format.dim(deployTimer.getDuration())
+  static printSummary (socketName, updateStatus) {
+    debug('printSummary()', socketName, updateStatus)
+    const duration = format.dim(updateStatus.duration)
     const socketNameStr = `${format.cyan(socketName)}`
 
     if (updateStatus.status === 'ok') {
-      const status = format.grey('socket synced:')
-      echo(6)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
+      const status = format.grey('  socket synced:')
+      return `${status} ${currentTime()} ${socketNameStr} ${duration}`
     } else if (updateStatus.status === 'stopped') {
-      const status = format.grey('socket in sync:')
-      echo(5)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
+      const status = format.grey(' socket in sync:')
+      return `${status} ${currentTime()} ${socketNameStr} ${duration}`
     } else if (updateStatus.status === 'error') {
-      const errDetail = format.red(updateStatus.message.error)
-      const status = format.red('socket not synced:')
-      echo(2)(`${status} ${currentTime()} ${socketNameStr} ${duration} ${errDetail}`)
+      const status = format.red(' socket not synced:')
+      return `${status} ${currentTime()} ${socketNameStr} ${duration} \n\n${updateStatus.message}`
+    } else if (updateStatus.status === 'compile error') {
+      const status = format.red('  compile error:')
+      return `${status} ${currentTime()} ${socketNameStr} ${duration} \n\n${updateStatus.message}`
     } else {
-      const status = format.red('socket not synced:')
-      echo(2)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
+      const status = format.red(' socket not synced:')
+      return `${status} ${currentTime()} ${socketNameStr} ${duration}`
     }
+  }
+
+  static bail () {
+    echo()
+    process.exit(1)
   }
 }

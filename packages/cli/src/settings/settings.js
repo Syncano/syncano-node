@@ -6,7 +6,7 @@ import logger from '../utils/debug'
 import ErrorResponse from '../utils/error-response'
 import { error, p } from '../utils/print-tools'
 
-const { warn, info, debug } = logger('settings')
+const { warn, info } = logger('settings')
 
 export default class Settings {
   constructor () {
@@ -23,10 +23,9 @@ export default class Settings {
       return false
     }
 
-    info(`Loading ${this.name} - ${this.configPath}`)
+    info(`loading: ${this.name} - ${this.configPath}`)
 
     try {
-      info(`Checking: ${this.configPath}`)
       fs.accessSync(this.configPath, fs.R_OK)
     } catch (err) {
       warn('Config doesn\'t exist!')
@@ -44,7 +43,7 @@ export default class Settings {
   }
 
   save () {
-    debug(`Saving ${this.configPath}`)
+    info('save()', this.configPath)
     try {
       fs.writeFileSync(this.configPath, YAML.dump(this.attributes))
     } catch (err) {
