@@ -65,7 +65,7 @@ export default class SocketDeployCmd {
           task: async (ctx, task) => {
             task.title = `${format.grey(' syncing socket:')} ${socket.name}`
             const deployStatus = await this.deploySocket(socket, configs[socket.name])
-            if (!deployStatus.status === 'pending') {
+            if (deployStatus.status !== 'pending') {
               task.title = SocketDeployCmd.printSummary(socket.name, deployStatus)
             }
             if (deployStatus.status === 'error' || deployStatus.status === 'compile error') {

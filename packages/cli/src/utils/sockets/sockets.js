@@ -680,6 +680,12 @@ class Socket {
 
       }, (err, res) => {
         debug('end env upload')
+
+        if (err || res.statusCode === 404) {
+          debug(`environment ${this.name} was not found`)
+          return reject(err || res)
+        }
+
         if (res.statusCode === 200) {
           resolve()
         }
@@ -687,11 +693,6 @@ class Socket {
         if (res.statusCode === 413) {
           debug('error while updating environment - environment is to big :(')
           return reject(new Error('environment is to big'))
-        }
-
-        if (err || res.statusCode === 404) {
-          debug(`environment ${this.name} was not found`)
-          return reject(err || res)
         }
 
         res.on('data', (data) => {
