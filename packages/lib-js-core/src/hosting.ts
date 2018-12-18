@@ -1,51 +1,18 @@
 import * as logger from 'debug'
 import {parse, stringify} from 'querystring'
-import QueryBuilder from './query-builder'
-import {SyncanoResponse} from './types'
+import {QueryBuilder} from './query-builder'
+import {Hosting, HostingFile, SyncanoResponse} from './types'
 
 const debug = logger('core:hosting')
 
-export interface File {
-  id: number
-  path: string
-  size: number
-  checksum: string
-  links: {
-    self: string
-    [x: string]: string
-  }
-}
-
-export interface Hosting {
-  name: string
-  is_default: boolean
-  description: string
-  created_at: string
-  updated_at: string
-  domains: string[]
-  is_active: boolean
-  ssl_status: string
-  auth: object
-  config: {
-    browser_router: boolean
-  }
-  links: {
-    self: string
-    files: string
-    set_default: string
-    enable_ssl: string
-    [x: string]: string
-  }
-}
-
-export default class HostingClass extends QueryBuilder {
+export class HostingClass extends QueryBuilder {
   /**
    * Get single hosting file.
    *
    * @param hostingName Name of hosting
    * @param fileId Id of file
    */
-  public getFile (hostingName: string, fileId: string): Promise<File> {
+  public getFile (hostingName: string, fileId: string): Promise<HostingFile> {
     debug('getFile')
     return new Promise((resolve, reject) => {
       const headers = {
@@ -61,11 +28,11 @@ export default class HostingClass extends QueryBuilder {
    * Get list of files in given hosting
    * @param hostingName Name of hosting
    */
-  public async listFiles (hostingName: string): Promise<File[]> {
+  public async listFiles (hostingName: string): Promise<HostingFile[]> {
     debug('listFiles')
 
     try {
-      const response: SyncanoResponse<File> = await this.fetch(
+      const response: SyncanoResponse<HostingFile> = await this.fetch(
         this.urlFiles(hostingName),
         undefined, {
           'X-API-KEY': this.instance.accountKey
@@ -101,7 +68,7 @@ export default class HostingClass extends QueryBuilder {
    * @param fileId Id of hosting
    * @param payload File payload
    */
-  public updateFile (hostingName: string, fileId: string, payload: any): Promise<File> {
+  public updateFile (hostingName: string, fileId: string, payload: any): Promise<HostingFile> {
     debug('updateFile')
     return new Promise((resolve, reject) => {
       const headers = payload.getHeaders()
@@ -146,7 +113,7 @@ export default class HostingClass extends QueryBuilder {
    * @param fileId Id of hosting
    * @param payload File payload
    */
-  public uploadFile (hostingName: string, payload: any): Promise<File> {
+  public uploadFile (hostingName: string, payload: any): Promise<HostingFile> {
     debug('uploadFile')
     return new Promise((resolve, reject) => {
       const headers = payload.getHeaders()
@@ -163,14 +130,14 @@ export default class HostingClass extends QueryBuilder {
     })
   }
 
-  private async loadNextFilesPage(response: SyncanoResponse<File>): Promise<File[]> {
+  private async loadNextFilesPage(response: SyncanoResponse<HostingFile>): Promise<HostingFile[]> {
     debug('loadNextFilesPage')
 
     if (response.next !== null) {
       const next = response.next.replace(/\?.*/, '')
       const nextParams = parse(response.next.replace(/.*\?/, ''))
       const q = stringify(nextParams)
-      const nextResponse: SyncanoResponse<File> = await this.fetch(
+      const nextResponse: SyncanoResponse<HostingFile> = await this.fetch(
         `${this.baseUrl}${next}?${q}`,
         undefined, {
           'X-API-KEY': this.instance.accountKey

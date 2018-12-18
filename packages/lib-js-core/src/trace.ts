@@ -1,30 +1,7 @@
-import QueryBuilder from './query-builder'
+import {QueryBuilder} from './query-builder'
+import {Trace} from './types'
 
-export interface Trace {
-  meta: {
-    REQUEST_METHOD: string
-    PATH_INFO: string
-    HTTP_HOST: string
-    HTTP_CONNECTION: string
-    HTTP_UPGRADE_INSECURE_REQUESTS: string
-    HTTP_USER_AGENT: string
-    HTTP_ACCEPT: string
-    HTTP_ACCEPT_ENCODING: string
-    HTTP_ACCEPT_LANGUAGE: string
-    HTTP_COOKIE: string
-    REMOTE_ADDR: string
-  },
-  id: number,
-  status: string,
-  executed_at: string,
-  duration: number,
-  links: {
-    self: string
-    [x: string]: string
-  }
-}
-
-export default class TraceClass extends QueryBuilder {
+export class TraceClass extends QueryBuilder {
   /**
    * Get single endpoint trace object.
    *

@@ -1,33 +1,5 @@
-import QueryBuilder from './query-builder'
-import {ACL} from './types'
-
-export interface ClassResponse {
-  name: string
-  description: string
-  schema: SchemaObject[]
-  status: string
-  created_at: string
-  updated_at: string
-  objects_count: number
-  revision: number
-  acl: ACL
-  metadata: object
-  links: {
-    self: string
-    objects: string
-    'endpoint-acl': string
-    [x: string]: string
-  }
-}
-
-export interface SchemaObject {
-  name: string
-  type: 'reference'|'relation'|'text'|'string'|'file'|'object'|'array'|'geopoint'|'integer'|'float'|'boolean'|'datetime'
-  order_index?: boolean
-  filter_index?: boolean
-  unique?: boolean
-  target?: string
-}
+import {QueryBuilder} from './query-builder'
+import {SchemaObject, SyncanoClass} from './types'
 
 export class Class extends QueryBuilder {
   public url (className?: string) {
@@ -53,7 +25,7 @@ export class Class extends QueryBuilder {
     description?: string
     schema?: SchemaObject[]
     metadata?: object
-  }): Promise<ClassResponse> {
+  }): Promise<SyncanoClass> {
     const fetch = this.fetch.bind(this)
 
     return new Promise((resolve, reject) => {

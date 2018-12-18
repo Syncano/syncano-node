@@ -1,15 +1,8 @@
+import {Settings} from './types'
+
 declare var global: any
 
 global.META = global.META || {}
-
-export interface Settings {
-  meta: any
-  token?: string
-  socket?: string
-  instanceName?: string
-  setResponse?: any
-  HttpResponse?: any
-}
 
 export default ({
   meta = {},

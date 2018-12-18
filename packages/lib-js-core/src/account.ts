@@ -1,20 +1,16 @@
 import {ResponseError} from './errors'
-import QueryBuilder from './query-builder'
-import {AccountData} from './types'
-
-export interface LoginData extends AccountData {
-  account_key: string
-}
+import {QueryBuilder} from './query-builder'
+import {AccountOwner, LoginData} from './types'
 
 /**
  * Syncano account query builder
  * @property {Function}
  */
-export class Account extends QueryBuilder {
+export class AccountClass extends QueryBuilder {
   /**
    * Get details of Syncano account
    */
-  public get (authKey: string): Promise<AccountData> {
+  public get (authKey: string): Promise<AccountOwner> {
     const fetch = this.nonInstanceFetch.bind(this)
     return new Promise((resolve, reject) => {
       const headers = {
@@ -22,7 +18,7 @@ export class Account extends QueryBuilder {
       }
 
       fetch(this.url(), {}, headers)
-        .then((res: AccountData)  => resolve(res))
+        .then((res: AccountOwner)  => resolve(res))
         .catch((err: ResponseError) => reject(err))
     })
   }
@@ -62,5 +58,3 @@ export class Account extends QueryBuilder {
     return `${this.getSyncanoURL()}/account/`
   }
 }
-
-export default Account

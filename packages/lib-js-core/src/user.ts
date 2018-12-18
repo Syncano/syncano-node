@@ -1,37 +1,8 @@
 import * as querystring from 'querystring'
-import Data from './data'
-import {ACL} from './types'
+import {DataClass} from './data'
+import {User} from './types'
 
-export interface Group {
-  id: number
-  label: string
-  links: {
-      self: string
-      users: string
-  }
-}
-
-export interface User {
-  id: number
-  created_at: string
-  updated_at: string
-  revision: number
-  acl: ACL
-  channel: string|null
-  channel_room: string|null
-  username: string
-  groups: Group[]
-  user_key: string
-  links: {
-    self: string
-    groups: string
-    'reset-key': string
-    [x: string]: string
-  }
-  [fieldName: string]: any
-}
-
-export class User extends Data {
+export class UserClass extends DataClass {
   /**
    * Login Syncano user
    *
@@ -72,5 +43,3 @@ export class User extends Data {
     return query ? `${url}?${query}` : url
   }
 }
-
-export default User

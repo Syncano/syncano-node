@@ -2,7 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
-import Group from '../../src/group'
+import {GroupClass} from '../../src/group'
 import {SyncanoResponse, UserGroup} from '../../src/types'
 
 chai.use(chaiAsPromised)
@@ -13,7 +13,7 @@ type ResponseTuple = [number, SyncanoResponse<UserGroup>]
 describe('Group', () => {
   const instanceName = 'testInstance'
   let api: nock.Scope
-  let groups: Group
+  let groups: GroupClass
 
   const USER = {
     id: 2,
@@ -186,15 +186,4 @@ describe('Group', () => {
       return expect(groups.getUserGroups(USER.id)).resolves.toMatchSnapshot()
     })
   })
-
-  // describe('#user', () => {
-  //   it('get user groups', async () => {
-  //     api.get(USER_GROUPS_URL).reply(200, {
-  //       objects: [testGroup]
-  //     })
-  //     const userGroups = await groups.user(1)
-
-  //     userGroups.should.be.a('array')
-  //   })
-  // })
 })

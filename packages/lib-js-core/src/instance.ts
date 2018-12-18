@@ -1,60 +1,5 @@
-import QueryBuilder from './query-builder'
-
-export interface InstanceOwner {
-  id: number,
-  email: string,
-  first_name: string,
-  last_name: string,
-  is_active: boolean,
-  has_password: boolean,
-  metadata: InstanceMetadata
-}
-
-export interface InstanceMetadata {
-  icon?: string
-  color?: string
-  [x: string]: any
-}
-
-export interface Instance {
-  name: string,
-  description: string,
-  owner: InstanceOwner,
-  created_at: string,
-  updated_at: string,
-  role: string,
-  metadata: InstanceMetadata,
-  links: {
-    self: string
-    admins: string
-    snippets: string
-    endpoints: string
-    push_notification: string
-    classes: string
-    invitations: string
-    api_keys: string
-    triggers: string
-    schedules: string
-    users: string
-    groups: string
-    channels: string
-    batch: string
-    rename: string
-    backups: string
-    restores: string
-    hosting: string
-    'classes-acl': string
-    'channels-acl': string
-    'script-endpoints-acl': string
-    'groups-acl': string
-    'users-schema': string
-    'triggers-emit': string
-    sockets: string
-    'sockets-install': string
-    environments: string
-    [x: string]: string
-  }
-}
+import {QueryBuilder} from './query-builder'
+import {Instance, InstanceMetadata} from './types'
 
 export class InstanceClass extends QueryBuilder {
   /**
@@ -149,5 +94,3 @@ export class InstanceClass extends QueryBuilder {
     return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
   }
 }
-
-export default InstanceClass

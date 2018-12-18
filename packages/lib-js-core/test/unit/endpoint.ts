@@ -2,7 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
-import {Endpoint} from '../../src/endpoint'
+import {EndpointClass} from '../../src/endpoint'
 
 chai.use(chaiAsPromised)
 chai.should()
@@ -11,7 +11,7 @@ describe('Endpoint', () => {
   const instanceName = 'testInstance'
   const testEndpoint = `/v3/instances/${instanceName}/endpoints/sockets/socket/endpoint/`
   let api: nock.Scope
-  let endpoint: Endpoint
+  let endpoint: EndpointClass
 
   beforeEach(() => {
     const server = new Server({

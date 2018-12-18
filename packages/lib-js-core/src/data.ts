@@ -3,14 +3,14 @@ import * as FormData from 'form-data'
 import * as querystring from 'querystring'
 import {MAX_BATCH_SIZE} from './constants'
 import {NotFoundError} from './errors'
-import QueryBuilder from './query-builder'
+import {QueryBuilder} from './query-builder'
 import {ClassObject} from './types'
 const get = require('lodash.get')
 const merge = require('lodash.merge')
 const set = require('lodash.set')
 const debug = logger('core:data')
 
-class Data extends QueryBuilder {
+export class DataClass extends QueryBuilder {
   // tslint:disable-next-line:variable-name
   private _url?: string
 
@@ -20,7 +20,7 @@ class Data extends QueryBuilder {
   /**
    * List objects matching query
    */
-  public async list (): Promise<any> {
+  public async list (): Promise<ClassObject[]> {
     debug('list')
     const self = this
     const urls = [this.url(undefined, 'v3')].concat(this.queries.map((query) => {
@@ -758,7 +758,7 @@ class Data extends QueryBuilder {
         throw new Error(`Column "${reference}" has no target`)
       }
 
-      const load = new Data(this.instance)
+      const load = new DataClass(this.instance)
       let ids = references.map((item: any) => item.value)
 
       ids = Array.isArray(ids[0]) ? [].concat.apply([], ids) : ids
@@ -800,7 +800,7 @@ class Data extends QueryBuilder {
 
   private async loadNextPage (response: any, objects: any[]) {
     const hasNextPageMeta = response.next
-    const hasNotEnoughResults = !this.query.limit || this.query.limit >= objects.length
+    const hasNotEnoughResults = !this.query.limit || this.query.limit > objects.length
 
     if (hasNextPageMeta && hasNotEnoughResults) {
       const next = response.next.replace(/\?.*/, '')
@@ -830,5 +830,3 @@ class Data extends QueryBuilder {
     }
   }
 }
-
-export default Data

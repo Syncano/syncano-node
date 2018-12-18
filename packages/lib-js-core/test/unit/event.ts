@@ -3,7 +3,7 @@ import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import * as should from 'should'
 import Server from '../../src'
-import {Event} from '../../src/event'
+import {EventClass} from '../../src/event'
 import {getRandomString} from '../utils'
 
 chai.use(chaiAsPromised)
@@ -12,7 +12,7 @@ chai.should()
 describe('Event', () => {
   const instanceName = 'testInstance'
   let api: nock.Scope
-  let event: Event
+  let event: EventClass
 
   beforeEach(() => {
     const server = new Server({
@@ -51,13 +51,13 @@ describe('Event', () => {
     const signalName = getRandomString()
 
     it('splitSignal properly spliting signalString with socket', () => {
-      const {socket, signal} = Event.splitSignal(`${socketName}.${signalName}`)
+      const {socket, signal} = EventClass.splitSignal(`${socketName}.${signalName}`)
       should(socket).be.equal(socketName)
       should(signal).be.equal(signalName)
     })
 
     it('splitSignal properly spliting signalString without socket', () => {
-      const {socket, signal} = Event.splitSignal(`${signalName}`)
+      const {socket, signal} = EventClass.splitSignal(`${signalName}`)
       should(socket).be.undefined()
       should(signal).be.equal(signalName)
     })

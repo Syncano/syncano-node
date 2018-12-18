@@ -1,58 +1,10 @@
-import QueryBuilder from './query-builder'
-
-export interface Socket {
-  name: string
-  description: string
-  created_at: string
-  updated_at: string
-  version: string
-  status: string
-  status_info: any
-  install_url: any
-  metadata: {
-    name: string
-    keywords: string[]
-    sources: {
-      [x: string]: string
-    }
-  }
-  config: object,
-  installed: {
-    endpoints: {
-      [endpointName: string]: {
-        script: string
-        runtime: string
-      }
-    }
-    classes: {
-      [className: string]: {
-        [fieldName: string]: string
-      }
-    }
-  }
-  files: {
-    [fileName: string]: {
-        checksum: string
-        size: number
-        file: string
-        helper: boolean
-    }
-  }
-  environment: string,
-  links: {
-    self: string
-    update: string
-    endpoints: string
-    handlers: string
-    zip_file: string
-    [x: string]: string
-  }
-}
+import {QueryBuilder} from './query-builder'
+import {Socket} from './types'
 
 /**
  * Connection between Sockets.
  */
-export default class SocketClass extends QueryBuilder {
+export class SocketClass extends QueryBuilder {
   /**
    * Get Syncano Socket configuration.
    *

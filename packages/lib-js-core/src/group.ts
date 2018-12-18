@@ -1,14 +1,8 @@
 import {NotFoundError} from './errors'
-import QueryBuilder from './query-builder'
+import {QueryBuilder} from './query-builder'
 import {SyncanoResponse, UserGroup} from './types'
 
-export type Primitive = undefined | null | boolean | string | number
-
-/**
- * Syncano groups
- * @property {Function}
- */
-class Group extends QueryBuilder {
+export class GroupClass extends QueryBuilder {
   /**
    * Get groups list
    *
@@ -255,5 +249,3 @@ class Group extends QueryBuilder {
     return `${this.getInstanceURL(instanceName)}/groups/`
   }
 }
-
-export default Group

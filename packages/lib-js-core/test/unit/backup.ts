@@ -2,7 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
-import Backup from '../../src/backup'
+import {BackupClass} from '../../src/backup'
 
 chai.use(chaiAsPromised)
 chai.should()
@@ -33,7 +33,7 @@ describe('Backup', () => {
     links: {self: '/v2/backups/full/703/'}
   }
   let api: nock.Scope
-  let backup: Backup
+  let backup: BackupClass
 
   beforeEach(() => {
     const server = new Server({

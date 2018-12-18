@@ -15,7 +15,7 @@ const generalOptions = {
   compress: true
 }
 
-export default class QueryBuilder {
+export class QueryBuilder {
   // tslint:disable-next-line:variable-name
   protected _mappedFields: any[] = []
   // tslint:disable-next-line:variable-name
@@ -97,7 +97,7 @@ export default class QueryBuilder {
   }
 
   protected withQuery (query: object) {
-    debug('withQuery', query)
+    debug('withQuery %o', query)
     this._query = Object.assign({}, this.query, query)
 
     return this

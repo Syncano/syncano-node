@@ -1,6 +1,6 @@
-import QueryBuilder from './query-builder'
+import {QueryBuilder} from './query-builder'
 
-export class Event extends QueryBuilder {
+export class EventClass extends QueryBuilder {
   public static splitSignal (signalString: string) {
     const splited = signalString.split('.')
     if (splited.length === 1) {
@@ -21,7 +21,7 @@ export class Event extends QueryBuilder {
    */
   public emit (eventName: string, payload?: any): Promise<void> {
     const fetch = this.fetch.bind(this)
-    const {socket, signal} = Event.splitSignal(eventName)
+    const {socket, signal} = EventClass.splitSignal(eventName)
 
     const signalParams: string[] = []
 
@@ -55,5 +55,3 @@ export class Event extends QueryBuilder {
     return `${this.getInstanceURL(instanceName)}/triggers/emit/`
   }
 }
-
-export default Event

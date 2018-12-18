@@ -1,22 +1,22 @@
 // tslint:disable-next-line:no-var-requires
 const pjson = require('../package.json')
 import * as logger from 'debug'
-import Account from './account'
-import Backup from './backup'
-import Channel from './channel'
+import {AccountClass} from './account'
+import {BackupClass} from './backup'
+import {ChannelClass} from './channel'
 import Class from './class'
-import Data from './data'
-import Endpoint from './endpoint'
-import Event from './event'
-import Group from './group'
-import Hosting from './hosting'
-import Instance from './instance'
+import {DataClass} from './data'
+import {EndpointClass} from './endpoint'
+import {EventClass} from './event'
+import {GroupClass} from './group'
+import {HostingClass} from './hosting'
+import {InstanceClass} from './instance'
 import Log, {Logger} from './logger'
 import Response, {CustomResponse} from './response'
 import Settings from './settings'
-import Socket from './socket'
-import Trace from './trace'
-import User from './user'
+import {SocketClass} from './socket'
+import {TraceClass} from './trace'
+import {UserClass} from './user'
 
 const debug = logger('syncano:core')
 
@@ -30,32 +30,32 @@ class Server {
   /**
    * Emit global events, to which other sockets can subscribe.
    */
-  public event: Event
+  public event: EventClass
 
   /**
    * Send XHR requests to Syncano Endpoints
    */
-  public endpoint: Endpoint
+  public endpoint: EndpointClass
 
   /**
    * Publish events to Syncano Channels
    */
-  public channel: Channel
+  public channel: ChannelClass
 
   /**
    * Manage Syncano Sockets
    */
-  public socket: Socket
+  public socket: SocketClass
 
   /**
    * Get Syncano Endpoint traces
    */
-  public trace: Trace
+  public trace: TraceClass
 
   /**
    * Manage Syncano Hostings
    */
-  public hosting: Hosting
+  public hosting: HostingClass
 
   /**
    * Format HTTP responses
@@ -65,12 +65,12 @@ class Server {
   /**
    * Manage Syncano Account
    */
-  public account: Account
+  public account: AccountClass
 
   /**
    * Manage Syncano Instances
    */
-  public instance: Instance
+  public instance: InstanceClass
 
   /**
    * Log debuging messages that can be viewed in Syncano CLI
@@ -80,44 +80,44 @@ class Server {
   /**
    * Manage Syncano Backups
    */
-  public backup: Backup
+  public backup: BackupClass
 
   /**
    * Manage Syncano Backups
    *
    * @deprecated Use `backup`
    */
-  public backups: Backup
+  public backups: BackupClass
 
   /**
    * Manage Syncano Users
    */
-  public user: User
+  public user: UserClass
 
   /**
    * Manage Syncano Users
    *
    * @deprecated Use `user`
    */
-  public users: User
+  public users: UserClass
 
   /**
    * Manage Syncano User Groups
    */
-  public group: Group
+  public group: GroupClass
 
   /**
    * Manage Syncano User Groups
    *
    * @deprecated Use `group`
    */
-  public groups: Group
+  public groups: GroupClass
 
   /**
    * Manage Syncano Database. Create, update, query & list, delete objects.
    */
   public data: {
-    [className: string]: Data
+    [className: string]: DataClass
   }
   protected version: any
   protected majorVersion: any
@@ -133,29 +133,29 @@ class Server {
     debug('%o', {version: this.version})
 
     this._class = new Class(config)
-    this.event = new Event(config)
-    this.endpoint = new Endpoint(config)
-    this.channel = new Channel(config)
-    this.socket = new Socket(config)
-    this.trace = new Trace(config)
-    this.hosting = new Hosting(config)
+    this.event = new EventClass(config)
+    this.endpoint = new EndpointClass(config)
+    this.channel = new ChannelClass(config)
+    this.socket = new SocketClass(config)
+    this.trace = new TraceClass(config)
+    this.hosting = new HostingClass(config)
     this.response = Response(config)
-    this.account = new Account(config)
-    this.instance = new Instance(config)
+    this.account = new AccountClass(config)
+    this.instance = new InstanceClass(config)
     this.logger = Log(config)
-    this.user = new User(config)
-    this.group = new Group(config)
-    this.backup = new Backup(config)
-    this.data = new Proxy(new Data(settings), {
+    this.user = new UserClass(config)
+    this.group = new GroupClass(config)
+    this.backup = new BackupClass(config)
+    this.data = new Proxy(new DataClass(settings), {
       get (target, className: string) {
-        return new Data(getConfig(className))
+        return new DataClass(getConfig(className))
       }
     })
 
     // Deprecated
-    this.users = new User(config)
-    this.groups = new Group(config)
-    this.backups = new Backup(config)
+    this.users = new UserClass(config)
+    this.groups = new GroupClass(config)
+    this.backups = new BackupClass(config)
   }
 }
 

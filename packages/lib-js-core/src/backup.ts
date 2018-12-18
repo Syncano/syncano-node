@@ -1,13 +1,8 @@
 import {NotFoundError} from './errors'
-import QueryBuilder from './query-builder'
+import {QueryBuilder} from './query-builder'
 import {BackupObject} from './types'
 
-/**
- * Syncano Backups
- *
- * @property {Function}
- */
-class Backup extends QueryBuilder {
+export class BackupClass extends QueryBuilder {
   /**
    * Backups list
    */
@@ -154,5 +149,3 @@ class Backup extends QueryBuilder {
     return backups
   }
 }
-
-export default Backup

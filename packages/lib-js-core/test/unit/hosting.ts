@@ -3,7 +3,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import * as should from 'should'
-import Hosting from '../../src/hosting'
+import {HostingClass} from '../../src/hosting'
 import Server from '../../src/server'
 
 chai.use(chaiAsPromised)
@@ -13,7 +13,7 @@ describe('Hosting', () => {
   const testUrl = `https://${process.env.SYNCANO_HOST || 'api.syncano.io'}`
   const instanceName = 'testInstance'
   const hostingId = 'testHosting'
-  let hosting: Hosting
+  let hosting: HostingClass
   let api: nock.Scope
 
   beforeEach(() => {

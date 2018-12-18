@@ -1,7 +1,7 @@
 import {RequestInit} from 'node-fetch'
-import QueryBuilder from './query-builder'
+import {QueryBuilder} from './query-builder'
 
-export class Endpoint extends QueryBuilder {
+export class EndpointClass extends QueryBuilder {
   public invalidate (endpoint: string) {
     return this.fetch(`${this.url(endpoint)}invalidate/`, {method: 'POST'})
   }
@@ -78,5 +78,3 @@ export class Endpoint extends QueryBuilder {
     return isBodyAnObject ? JSON.stringify({...body}) : body
   }
 }
-
-export default Endpoint

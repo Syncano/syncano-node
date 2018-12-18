@@ -1,24 +1,7 @@
-import QueryBuilder from './query-builder'
+import {QueryBuilder} from './query-builder'
+import {ChannelResponse} from './types'
 
-export interface ChannelResponse<T> {
-  id: number,
-  room: string,
-  created_at: string,
-  action: string,
-  author: {
-    admin: number
-  },
-  metadata: {
-    type: string
-  },
-  payload: T,
-  links: {
-    self: string
-    [x: string]: string
-  }
-}
-
-export class Channel extends QueryBuilder {
+export class ChannelClass extends QueryBuilder {
   /**
    * Publish any payload to channel
    *
@@ -48,5 +31,3 @@ export class Channel extends QueryBuilder {
     return `${this.getInstanceURL(instanceName)}/channels/default/publish/`
   }
 }
-
-export default Channel

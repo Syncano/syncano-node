@@ -1,5 +1,5 @@
 import * as should from 'should'
-import {Response} from '../../src/response'
+import {ResponseClass} from '../../src/response'
 import Server from '../../src/server'
 
 describe('Response', () => {
@@ -21,7 +21,7 @@ describe('Response', () => {
     }
   })
 
-  let res: Response
+  let res: ResponseClass
 
   beforeEach(() => {
     res = response()

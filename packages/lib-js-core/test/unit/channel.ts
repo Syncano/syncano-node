@@ -2,7 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
-import {Channel} from '../../src/channel'
+import {ChannelClass} from '../../src/channel'
 
 chai.use(chaiAsPromised)
 chai.should()
@@ -10,7 +10,7 @@ chai.should()
 describe('Channel', () => {
   const instanceName = 'testInstance'
   let api: nock.Scope
-  let channel: Channel
+  let channel: ChannelClass
 
   beforeEach(() => {
     const server = new Server({
