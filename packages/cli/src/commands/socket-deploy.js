@@ -2,6 +2,8 @@ import format from 'chalk'
 import Promise from 'bluebird'
 
 import Listr from 'listr'
+import VerboseRenderer from 'listr-verbose-renderer'
+
 
 import logger from '../utils/debug'
 import { createInstance } from './helpers/create-instance'
@@ -75,6 +77,12 @@ export default class SocketDeployCmd {
         })
       })
 
+      const listsOptions = {
+        concurrent: cmd.parallel || false,
+        renderer: process.env.CI ? VerboseRenderer : 'default',
+        exitOnError: cmd.bail || false
+      }
+
       const projectTasks = new Listr([
         {
           title: `${format.grey('        project:')} checking... `,
@@ -84,15 +92,10 @@ export default class SocketDeployCmd {
           }
         }
       ],
-      {
-        concurrent: false,
-        exitOnError: cmd.bail || false
-      })
+      listsOptions
+      )
 
-      const socketsTasks = new Listr(deployList, {
-        concurrent: cmd.parallel || false,
-        exitOnError: cmd.bail || false
-      })
+      const socketsTasks = new Listr(deployList, listsOptions)
 
       // Ask for missing config options
       await Promise.each(this.socketList, async (socketFromList) => {
