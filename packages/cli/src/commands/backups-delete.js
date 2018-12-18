@@ -13,11 +13,11 @@ class BackupsDelete {
         const spinner = new SimpleSpinner(p(2)('Deleting Backups...')).start()
         await this.Backups.deleteAll()
         spinner.stop()
-        spinner.succeed(p(2)(`Backups deleted`))
+        spinner.succeed(p(2)(`All backups deleted.`))
         echo()
       } else {
         await this.Backups.delete(option)
-        echo(4)(`Backup deleted`)
+        echo(4)(`Backup deleted.`)
         echo()
       }
     } catch (err) {

@@ -9,7 +9,7 @@ chai.should()
 
 describe('Endpoint', () => {
   const instanceName = 'testInstance'
-  const testEndpoint = `/v2/instances/${instanceName}/endpoints/sockets/socket/endpoint/`
+  const testEndpoint = `/v3/instances/${instanceName}/endpoints/sockets/socket/endpoint/`
   let api
   let endpoint
 
@@ -45,6 +45,24 @@ describe('Endpoint', () => {
         })
 
       return endpoint.get('socket/endpoint', {name: 'John'}).should.be.fulfilled
+    })
+
+    it('should pass headers', () => {
+      const testHeaderName = 'X-User-Key'
+      const testHeaderValue = 'test123'
+      const testHeader = {}
+      testHeader[testHeaderName] = testHeaderValue
+
+      api
+        .matchHeader(testHeaderName, testHeaderValue)
+        .post(testEndpoint, {name: 'John', _method: 'GET'})
+        .reply(200, `Hello world`, {
+          'Content-Type': 'text/plain'
+        })
+
+      return endpoint
+        .get('socket/endpoint', {name: 'John'}, {headers: testHeader})
+        .should.be.fulfilled
     })
 
     it.skip('should be able to parse buffer response')

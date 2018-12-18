@@ -53,8 +53,9 @@ describe('[utils] Session', function () {
   describe('getSpaceHost', function () {
     it('should return proper host', function () {
       session.project = { instance: instanceName }
+      session.getHost = sinon.stub().returns('api.syncano.rocks')
 
-      const expectedHostURL = `${instanceName}.${session.ENDPOINT_HOST}`
+      const expectedHostURL = `${instanceName}.syncano.link`
       const spaceHostResult = session.getSpaceHost()
 
       expect(spaceHostResult).to.equal(expectedHostURL)
@@ -559,7 +560,7 @@ describe('[utils] Session', function () {
 
   describe('notAlreadyInitialized', function () {
     it('should print instanceInformation about project if exists', function () {
-      const instanceInformation = `It is using ${format.cyan(instanceName)} Syncano instance.`
+      const instanceInformation = `It is attached to ${format.cyan(instanceName)} Syncano instance.`
       session.project = { instance: instanceName }
 
       session.notAlreadyInitialized()

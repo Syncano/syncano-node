@@ -1,4 +1,5 @@
 import format from 'chalk'
+import { printNoBackupsInfo } from './helpers/backups'
 import { echo, error } from '../utils/print-tools'
 
 class BackupsLast{
@@ -8,9 +9,16 @@ class BackupsLast{
   }
 
   async run () {
-    echo()
     try {
       const backup = await this.Backups.last()
+
+      if (!backup) {
+        printNoBackupsInfo()
+        echo()
+        process.exit(1)
+      }
+
+      echo()
       const {id, instance, author, created_at: createAt, updated_at: updatedAt, details} = backup
 
       echo(4)(`        ${format.dim('id')}: ${format.cyan.bold(id)}`)

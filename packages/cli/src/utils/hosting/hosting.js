@@ -280,7 +280,7 @@ class Hosting {
   }
 
   getURL () {
-    return `https://${this.name}--${session.project.instance}.${this.hostingHost}`
+    return `https://${this.name}--${session.project.instance}.${session.location}.${this.hostingHost}`
   }
 
   encodePath (pathToEncode) {

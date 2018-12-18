@@ -25,8 +25,26 @@ export class Session {
 
     this.majorVersion = pjson.version.split('.')[0]
 
-    this.HOST = process.env.SYNCANO_HOST || 'api.syncano.io'
-    this.ENDPOINT_HOST = this.HOST === 'api.syncano.io' ? 'syncano.space' : 'syncano.link'
+    this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION || 'us1' // default location
+    this.locations = {
+      'us1': 'api.syncano.io',
+      'eu1': 'api-eu1.syncano.io',
+    }
+  }
+
+  getHost () {
+    return process.env.SYNCANO_HOST || this.locations[this.location]
+  }
+
+  async setLocation (location) {
+    if (this.location !== location) {
+      this.location = location
+      await this.createConnection()
+    }
+  }
+
+  getLocation() {
+    return this.location
   }
 
   getFullName () {
@@ -34,8 +52,11 @@ export class Session {
   }
 
   getSpaceHost () {
+    if (this.getHost() === 'api.syncano.rocks') {
+      return `${this.project.instance}.syncano.link`
+    }
     if (this.project && this.project.instance) {
-      return `${this.project.instance}.${this.ENDPOINT_HOST}`
+      return `${this.project.instance}.${this.location}.syncano.space`
     }
   }
 
@@ -49,10 +70,6 @@ export class Session {
 
   getBaseURL () {
     return `https://${this.getHost()}`
-  }
-
-  getHost () {
-    return this.HOST
   }
 
   getDistPath () {
@@ -103,6 +120,7 @@ export class Session {
     }
 
     try {
+      debug('get user details')
       const details = await this.connection.account.get(this.settings.account.getAuthKey())
       this.userId = details.id
       this.userEmail = details.email
@@ -152,9 +170,13 @@ export class Session {
       this.projectPath = projectPath
       this.settings = getSettings(projectPath)
       this.project = this.settings.account.getProject(this.projectPath)
+      if (this.project && this.project.location) {
+        await this.setLocation(this.project.location)
+      }
     } catch (err) {
       this.settings = getSettings()
     }
+
     await this.createConnection()
     return this
   }
@@ -239,8 +261,8 @@ export class Session {
   notAlreadyInitialized () {
     if (this.projectPath && this.project) {
       echo()
-      echo(4)('You are fine! Project in this folder is already initiated!')
-      echo(4)(`It is using ${format.cyan(this.project.instance)} Syncano instance.`)
+      echo(4)('Project in this folder is already initiated!')
+      echo(4)(`It is attached to ${format.cyan(this.project.instance)} Syncano instance.`)
       echo()
       process.exit()
     }

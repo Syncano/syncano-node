@@ -165,21 +165,6 @@ const setup = async () => {
     })
 
   program
-    .command('add <socket_name>')
-    .group('Sockets')
-    .description('Add a Socket as a dependency of your project or local Socket')
-    .option('-s, --socket <socket>', 'Name of the Socket')
-    .action(async (...options) => {
-      const [name] = options
-      trackAndDebug(options, { socketName: name })
-      session.isAuthenticated()
-      session.hasProject()
-      await session.checkConnection()
-      echo()
-      new commands.SocketAdd(context).run(options)
-    })
-
-  program
     .command('remove <socket_name>')
     .group('Sockets')
     .description('Remove a Socket from your project')
@@ -256,7 +241,7 @@ const setup = async () => {
     })
 
   program
-    .command('backups', 'Menage your backups')
+    .command('backup', 'Menage your backups')
     .on('*', (commandsArr) => validateCommands(commandsArr))
 
   program

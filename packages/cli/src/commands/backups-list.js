@@ -1,4 +1,5 @@
 import format from 'chalk'
+import { printNoBackupsInfo } from './helpers/backups'
 import { echo, error } from '../utils/print-tools'
 
 class BackupsList {
@@ -13,20 +14,13 @@ class BackupsList {
       if (backup.length) {
         backup.forEach(elem => this.printBackups(elem))
       } else {
-        this.printNoBackupsInfo()
+        printNoBackupsInfo()
+        echo()
       }
-      echo()
     } catch (err) {
       error(err.message)
       process.exit(1)
     }
-  }
-
-  printNoBackupsInfo () {
-    echo()
-    echo(4)('You don\'t have any backups!')
-    echo(4)(`Type ${format.cyan('npx s backups create')} to add backups for your app!`)
-    echo()
   }
 
   async printBackups ({id, instance, author, created_at: createAt, updated_at: updatedAt, details}) {
@@ -43,7 +37,7 @@ class BackupsList {
   }
 
   dateParser (time) {
-    return `${time.substring(0,9)} ${time.substring(11, 19)}`
+    return new Date(time).toLocaleString()
   }
 }
 

@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+cd $INIT_CWD
+if [ -z "$CI" ]
+then
+  npx s init
+else
+  echo "CI detected - skipping post install."
+fi

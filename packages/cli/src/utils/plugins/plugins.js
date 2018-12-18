@@ -9,7 +9,7 @@ export default class Plugins {
     this.plugins = session.settings.project.getPlugins() || []
   }
 
-  load (program) {
+  load (program, context) {
     debug('load()')
     Object.keys(this.plugins).forEach((pluginName) => {
       /* eslint-disable import/no-dynamic-require */
@@ -19,11 +19,12 @@ export default class Plugins {
         const PluginImport = require(this.plugins[pluginName]).default
         program
           .command(pluginName)
-          .description(pluginName)
+          .description(`${pluginName} plugin`)
           .action((...options) => {
-            new PluginImport().run({ session: this.session, options })
+            new PluginImport(context).run(options)
           })
       } catch (err) {
+        console.log(err)
         warning('Error while loading plugin:', this.plugins[pluginName])
       }
     })

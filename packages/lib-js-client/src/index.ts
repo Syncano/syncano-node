@@ -5,7 +5,9 @@ const {default: request} = axios
 
 export interface SyncanoClientOptions {
   host?: string
+  location?: 'eu1' | 'us1'
   token?: string
+  apiVersion?: string
   transformResponse?: (response: axios.AxiosResponse) => void
 }
 
@@ -24,16 +26,27 @@ export default class SyncanoClient {
    */
   public instanceName?: string
   private host?: string
+  private location?: string
+  private apiVersion?: string
   private transformResponse?: (response: axios.AxiosResponse) => any
   private DEFAULT_HEADERS = {
     'Content-Type': 'application/json'
   }
 
+  private LOCATIONS = {
+    us1: 'api.syncano.io',
+    eu1: 'api-eu1.syncano.io'
+  }
+  private DEFAULT_LOCATION = 'us1'
+  private DEFAULT_HOST = this.LOCATIONS[this.DEFAULT_LOCATION]
+
   constructor(
     instanceName: string,
     options: SyncanoClientOptions = {}
   ) {
-    this.host = options.host || 'syncano.space'
+    this.location = options.location || this.DEFAULT_LOCATION
+    this.host = options.host || this.LOCATIONS[this.location] || this.DEFAULT_HOST
+    this.apiVersion = options.apiVersion || 'v3'
     this.token = options.token
     this.transformResponse = options.transformResponse
     this.instanceName = instanceName
@@ -51,7 +64,8 @@ export default class SyncanoClient {
   } = {
     protocol: 'https'
   }): string {
-    let baseURL = `${options.protocol}://${this.instanceName}.${this.host}/${path}/`
+    let baseURL = `${options.protocol}://${this.host}`
+    baseURL = `${baseURL}/${this.apiVersion}/instances/${this.instanceName}/endpoints/sockets/${path}/`
     if (path.startsWith('http') || path.startsWith('/')) {
       baseURL = path
     }
@@ -84,7 +98,7 @@ export default class SyncanoClient {
   public get(endpoint: string, params?: object, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.get(this.url(endpoint), this.options({params, ...options})).then(this.transform)
+    return request.get(this.url(endpoint), this.options({params: params || {}, ...options})).then(this.transform)
   }
 
   /**
@@ -98,7 +112,7 @@ export default class SyncanoClient {
   public patch(endpoint: string, data?: any, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.patch(this.url(endpoint), data, this.options(options)).then(this.transform)
+    return request.patch(this.url(endpoint), data || {}, this.options(options)).then(this.transform)
   }
 
   /**
@@ -112,7 +126,7 @@ export default class SyncanoClient {
   public post(endpoint: string, data?: any, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.post(this.url(endpoint), data, this.options(options)).then(this.transform)
+    return request.post(this.url(endpoint), data || {}, this.options(options)).then(this.transform)
   }
 
   /**
@@ -126,7 +140,7 @@ export default class SyncanoClient {
   public put(endpoint: string, data?: any, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.put(this.url(endpoint), data, this.options(options)).then(this.transform)
+    return request.put(this.url(endpoint), data || {}, this.options(options)).then(this.transform)
   }
 
   /**
@@ -140,7 +154,7 @@ export default class SyncanoClient {
   public delete(endpoint: string, params?: object, options?: axios.AxiosRequestConfig) {
     this.checkInstanceName()
 
-    return request.delete(this.url(endpoint), this.options({params, ...options})).then(this.transform)
+    return request.delete(this.url(endpoint), this.options({params: params || {}, ...options})).then(this.transform)
   }
 
   /**
