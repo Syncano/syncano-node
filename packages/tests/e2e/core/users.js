@@ -7,7 +7,7 @@ import {
   createInstance
 } from '@syncano/test-tools'
 
-import Server from '../../../lib-js-core/src'
+import Server from '../../../lib-js-core/lib'
 
 describe('Users', function () {
   let users

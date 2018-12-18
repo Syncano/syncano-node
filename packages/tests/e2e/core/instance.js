@@ -3,7 +3,7 @@
 import {expect} from 'chai'
 import {uniqueInstance} from '@syncano/test-tools'
 
-import Server from '../../../lib-js-core/src'
+import Server from '../../../lib-js-core/lib'
 
 describe('Instance', function () {
   let instance = null

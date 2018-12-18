@@ -2,71 +2,71 @@
   "name": "@syncano/core",
   "version": "0.15.0",
   "description": "A library to intereact with the Syncano API on a server side.",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/syncano-core.d.ts",
   "author": "Syncano Inc.",
   "license": "MIT",
-  "repository": "https://github.com/Syncano/syncano-node.git",
+  "repository": "https://github.com/syncano/syncano-node/tree/master/packages/lib-js-core",
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "syncano",
+    "core",
+    "socket",
+    "endpoint"
+  ],
   "scripts": {
     "prepublish": "npm run build",
     "prebuild": "rimraf ./lib",
-    "build": "npx babel src --out-dir lib",
-    "build:watch": "babel src --out-dir lib -w",
-    "test": "npm run test:unit && npm run test:e2e",
-    "test:base": "cross-env NODE_ENV=test mocha --reporter spec --require babel-register",
-    "test:unit": "npm run test:base -- test/unit/**/*.js",
-    "lint": "standard --fix --env mocha",
-    "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js"
+    "build": "npm run build:ts && npm run build:dts",
+    "build:ts": "npx tsc",
+    "build:dts": "dts-bundle --name '@syncano/core' --main ./lib/index.d.ts --out syncano-core.d.ts",
+    "test": "jest",
+    "lint": "tslint {src,test}/**/*.ts",
+    "format": "npm run lint -- --fix"
   },
   "dependencies": {
     "debug": "^4.1.0",
     "form-data": "^2.3.3",
-    "lodash.get": "^4.4.2",
+    "lodash.get": "4.4.2",
     "lodash.merge": "^4.6.1",
-    "lodash.set": "^4.3.2",
-    "node-fetch": "^2.3.0"
+    "lodash.set": "4.3.2",
+    "node-fetch": "2.3.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.1",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-strict-mode": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
+    "@types/chai": "4.1.7",
+    "@types/chai-as-promised": "7.1.0",
+    "@types/debug": "0.0.30",
+    "@types/form-data": "2.2.1",
+    "@types/jest": "^23.3.9",
+    "@types/should": "^13.0.0",
+    "@types/nock": "9.3.0",
+    "@types/node": "^10.12.10",
+    "@types/node-fetch": "^2.1.4",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cross-env": "^5.2.0",
+    "dts-bundle": "0.7.3",
     "isparta": "^4.1.0",
-    "lint-staged": "^6.1.0",
-    "mocha": "^5.2.0",
-    "nock": "^9.0.22",
-    "prettier": "^1.15.2",
+    "jest": "^23.6.0",
+    "nock": "10.0.4",
     "rimraf": "^2.6.2",
     "should": "^13.2.3",
-    "standard": "^11.0.1"
+    "ts-jest": "^23.10.5",
+    "tslint": "^5.11.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.1.6"
   },
-  "babel": {
-    "plugins": [
-      "transform-strict-mode",
-      "transform-export-extensions",
-      "transform-object-rest-spread",
-      "transform-class-properties",
-      "add-module-exports"
-    ],
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "node": "8"
-          }
-        }
-      ]
+  "jest": {
+    "testURL": "http://localhost/",
+    "transform": {
+      ".*": "ts-jest"
+    },
+    "testRegex": "(/test/unit/.*|\\.(test|spec))\\.(ts)$",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
     ]
   }
 }

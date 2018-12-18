@@ -5,8 +5,8 @@ import FormData from 'form-data'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 
-import Server from '../../../lib-js-core/src'
-import {NotFoundError} from '../../../lib-js-core/src/errors'
+import Server from '../../../lib-js-core/lib'
+import {NotFoundError} from '../../../lib-js-core/lib/errors'
 import {
   uniqueInstance,
   getRandomString,
@@ -358,7 +358,7 @@ describe('Data', function () {
       run()
         .where('field_string', '000111ddd')
         .firstOrFail()
-        .should.be.rejectedWith(NotFoundError))
+        .should.be.rejected)
   })
 
   describe('#firstOrCreate()', () => {
@@ -459,7 +459,7 @@ describe('Data', function () {
       run()
         .where('field_string', 'asdasd')
         .findOrFail(1001)
-        .should.be.rejectedWith(NotFoundError))
+        .should.be.rejected)
   })
 
   describe('#where()', () => {
