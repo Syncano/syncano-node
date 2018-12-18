@@ -110,7 +110,7 @@ export default class SocketDeployCmd {
         await socketsTasks.run()
         echo()
       }
-      echo(2)(format.grey(`        total time: ${deployTimer.getDuration()}`))
+      echo(2)(format.grey(`       total time: ${deployTimer.getDuration()}`))
       echo()
     } catch (err) {
       SocketDeployCmd.bail()
