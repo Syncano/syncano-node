@@ -1,6 +1,6 @@
 /* global it describe before after */
 import {expect} from 'chai'
-import Server from '../../../lib-js-core/src'
+import Server from '../../../lib-js-core/lib'
 
 import {
   uniqueInstance,

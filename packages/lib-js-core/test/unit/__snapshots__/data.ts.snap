@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Data #list() should be able to fetch objects list 1`] = `
+Array [
+  Object {
+    "id": 3,
+    "name": "John Doe",
+  },
+]
+`;
