@@ -65,7 +65,9 @@ export default class SocketDeployCmd {
           task: async (ctx, task) => {
             task.title = `${format.grey(' syncing socket:')} ${socket.name}`
             const deployStatus = await this.deploySocket(socket, configs[socket.name])
-            task.title = SocketDeployCmd.printSummary(socket.name, deployStatus)
+            if (!deployStatus.status === 'pending') {
+              task.title = SocketDeployCmd.printSummary(socket.name, deployStatus)
+            }
             if (deployStatus.status === 'error' || deployStatus.status === 'compile error') {
               throw new Error()
             }
@@ -108,7 +110,7 @@ export default class SocketDeployCmd {
         await socketsTasks.run()
         echo()
       }
-      echo(2)(format.grey(`      total time: ${deployTimer.getDuration()}`))
+      echo(2)(format.grey(`        total time: ${deployTimer.getDuration()}`))
       echo()
     } catch (err) {
       SocketDeployCmd.bail()
@@ -132,7 +134,7 @@ export default class SocketDeployCmd {
     pendingUpdates[socket.name] += 1
     if (pendingUpdates[socket.name] > 1) {
       debug(`not updating, update pending: ${pendingUpdates[socket.name]}`)
-      return
+      return {status: 'pending'}
     }
 
     try {
