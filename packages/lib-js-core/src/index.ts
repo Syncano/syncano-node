@@ -21,3 +21,4 @@ export {
 } from './types'
 export {SyncanoContext} from './context'
 export default Server
+module.exports = Server
