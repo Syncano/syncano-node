@@ -79,3 +79,9 @@ export function parseJSON(response: JSONResponse): Promise<JSONResponse> {
     return response
   })
 }
+
+export function chunkArray(items: any[], size: number): any[] {
+  return items
+    .map((e, i) => (i % size === 0 ? items.slice(i, i + size) : null))
+    .filter(Boolean)
+}

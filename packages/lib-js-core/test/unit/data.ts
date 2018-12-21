@@ -3,8 +3,9 @@ import * as chaiAsPromised from 'chai-as-promised'
 import * as FormData from 'form-data'
 import * as nock from 'nock'
 import * as should from 'should'
-import Server from '../../src/server'
-
+import Server from '../../src'
+import {MAX_COLUMN_IN_VALUES_LOOKUP} from '../../src/constants'
+import {chunkArray} from '../../src/utils'
 chai.use(chaiAsPromised)
 chai.should()
 
@@ -89,7 +90,7 @@ describe('Data', () => {
 
       return data.users
         .list()
-        .then((items) => {
+        .then((items: any) => {
           should(items)
             .be.Array()
             .length(1502)
@@ -111,7 +112,7 @@ describe('Data', () => {
       return data.users
         .take(5)
         .list()
-        .then((objects) => {
+        .then((objects: any) => {
           should(objects)
             .be.Array()
             .empty()
@@ -608,6 +609,50 @@ describe('Data', () => {
             comments: [{id: 2, content: 'World'}]
           }
         ])
+    })
+
+    it('should chunk queries into 128 element arrays', () => {
+      const comments = Array.from({length: 200}, (x, i) => i + 1)
+      const chunks = chunkArray(comments, MAX_COLUMN_IN_VALUES_LOOKUP)
+
+      api
+        .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
+        .query({
+          page_size: 500
+        })
+        .reply(200, {
+          objects: [{
+            comments: {
+              target: 'comments',
+              type: 'relation',
+              value: comments
+            }
+          }]
+        })
+        .get(`/v3/instances/${instanceName}/classes/comments/objects/`)
+        .query({
+          page_size: 500,
+          query: JSON.stringify({id: {_in: chunks[0]}})
+        })
+        .reply(200, {
+          objects: chunks[0].map((item: number) => ({
+            id: item,
+            content: `comment no. ${item}`
+          }))
+        })
+        .get(`/v3/instances/${instanceName}/classes/comments/objects/`)
+        .query({
+          page_size: 500,
+          query: JSON.stringify({id: {_in: chunks[1]}})
+        })
+        .reply(200, {
+          objects: chunks[1].map((item: number) => ({
+            id: item,
+            content: `comment no. ${item}`
+          }))
+        })
+
+      return expect(data.posts.with('comments').list()).resolves.toMatchSnapshot()
     })
 
     it('should throw error when extended field has no target', () => {
