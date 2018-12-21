@@ -774,11 +774,6 @@ export class DataClass extends QueryBuilder {
           return load.where('id', 'in', arr).list()
         }))
         .then((arr) => [].concat.apply([], arr as any))
-        .catch((err) => {
-          debug('resolveRelatedModels/error %o', err.message)
-
-          return [{id: 1}] as any
-        })
 
       debug('resolveRelatedModels items %o', items)
 
