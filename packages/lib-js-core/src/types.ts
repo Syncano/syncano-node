@@ -30,7 +30,6 @@ export interface ClassObject {
   created_at: string
   updated_at: string
   revision: number
-  [x: string]: any
 }
 
 export interface ClassObjectLinks {

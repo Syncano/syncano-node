@@ -10,7 +10,9 @@ const merge = require('lodash.merge')
 const set = require('lodash.set')
 const debug = logger('core:data')
 
-export class DataClass extends QueryBuilder {
+export class DataClass<ClassSchema = {
+  [fieldName: string]: any
+}> extends QueryBuilder {
   // tslint:disable-next-line:variable-name
   private _url?: string
 
@@ -20,7 +22,7 @@ export class DataClass extends QueryBuilder {
   /**
    * List objects matching query
    */
-  public async list (): Promise<ClassObject[]> {
+  public async list<T> (): Promise<Array<T & ClassObject & ClassSchema>> {
     debug('list')
     const self = this
     const urls = [this.url(undefined, 'v3')].concat(this.queries.map((query) => {
@@ -65,7 +67,7 @@ export class DataClass extends QueryBuilder {
    * data.posts.first()
    * data.posts.where('likes', '>', 100).first()
    */
-  public async first (): Promise<ClassObject|null> {
+  public async first (): Promise<ClassObject & ClassSchema | null> {
     const response = await this.take(1).list()
 
     return response[0] || null
@@ -82,7 +84,7 @@ export class DataClass extends QueryBuilder {
    *   // Handle not found post
    * }
    */
-  public async firstOrFail (): Promise<ClassObject> {
+  public async firstOrFail (): Promise<ClassObject & ClassSchema> {
     let object
 
     try {
@@ -105,7 +107,9 @@ export class DataClass extends QueryBuilder {
    * @example
    * data.tags.firstOrCreate({name: 'dogs'}, {firstUsedBy: 'authorID'})
    */
-  public firstOrCreate<T, I> (attributes: object&T, values?: object&I): Promise<T & I & ClassObject> {
+  public firstOrCreate<T, I> (
+    attributes: T & ClassSchema, values?: I & ClassSchema
+  ): Promise<T & I & ClassObject & ClassSchema> {
     const query = this.toWhereArray(attributes)
 
     return this.where(query)
@@ -116,7 +120,7 @@ export class DataClass extends QueryBuilder {
   /**
    * Create or update a record matching the attributes, and fill it with values
    */
-  public async updateOrCreate (attributes: object, values = {}) {
+  public async updateOrCreate (attributes: ClassSchema, values: ClassSchema = {} as ClassSchema) {
     const query = this.toWhereArray(attributes)
 
     try {
@@ -152,7 +156,7 @@ export class DataClass extends QueryBuilder {
    * @example
    * data.posts.findMany([1, 2])
    */
-  public async findMany (ids: number[]): Promise<ClassObject[]> {
+  public async findMany (ids: number[]): Promise<Array<ClassObject & ClassSchema>> {
     debug('findMany', ids)
 
     if (Array.from(ids).length === 0) {
@@ -171,7 +175,7 @@ export class DataClass extends QueryBuilder {
    * data.posts.findOrFail(1) // returns single object
    * data.posts.findOrFail([1, 2]) // returns array of objects
    */
-  public async findOrFail<T> (ids: T&number|T&number[]): Promise<ClassObject> {
+  public async findOrFail<T> (ids: T&number|T&number[]): Promise<ClassObject & ClassSchema> {
     try {
       const response  = await this.find(ids)
       const shouldThrow = Array.isArray(response) && Array.isArray(ids)
@@ -182,7 +186,7 @@ export class DataClass extends QueryBuilder {
         throw new NotFoundError()
       }
 
-      return response as ClassObject
+      return response as ClassObject & ClassSchema
     } catch (err) {
       throw new NotFoundError()
     }
@@ -221,7 +225,7 @@ export class DataClass extends QueryBuilder {
    * data.posts.where('id', 10).list()
    * data.posts.where('id', '>=', 10).list()
    */
-  public where (column: string | any[], operator?: any, value?: any) {
+  public where<T> (column: Extract<keyof (T&ClassSchema&ClassObject), string> | any[], operator?: any, value?: any) {
     debug('where', column, operator, value)
     if (Array.isArray(column)) {
       column.map(([itemColumn, itemOperator, itemValue]) =>
@@ -247,10 +251,10 @@ export class DataClass extends QueryBuilder {
 
     const currentQuery = JSON.parse(this.query.query || '{}')
 
-    const nextQuery = column
+    const nextQuery = (column as string)
       .split('.')
       .reverse()
-      .reduce((child, item) => ({
+      .reduce((child: any, item: string) => ({
         [item]: Object.keys(child).length === 0
           ? {[whereOperator]: whereValue}
           : {_is: child}
@@ -399,7 +403,9 @@ export class DataClass extends QueryBuilder {
    *   {title: 'Dolor sit amet'}
    * ])
    */
-  public create<T> (body: T): Promise<T extends any[] ? Array<ClassObject & T[0]> : ClassObject & T> {
+  public create<T> (body: T & ClassSchema): Promise<
+    T extends any[] ? Array<ClassObject & ClassSchema & T[0]> : ClassObject & ClassSchema & T
+  > {
     let headers
     const fetchObject: {
       method: string
@@ -438,7 +444,7 @@ export class DataClass extends QueryBuilder {
    *   [15, {title: 'Lorem ipsum'}]
    * ])
    */
-  public update (id: number | object, body?: object): Promise<any> {
+  public update (id: number | object, body?: ClassSchema): Promise<any> {
     let headers
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)

@@ -20,6 +20,9 @@ import {UserClass} from './user'
 
 const debug = logger('syncano:core')
 
+// tslint:disable-next-line:no-empty-interface
+export interface InstanceDataSchema {}
+
 class Server {
   /**
    * Manage Syncano Classes
@@ -118,7 +121,7 @@ class Server {
    */
   public data: {
     [className: string]: DataClass
-  }
+  } & InstanceDataSchema
   protected version: any
   protected majorVersion: any
 
