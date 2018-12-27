@@ -10,13 +10,21 @@ const merge = require('lodash.merge')
 const set = require('lodash.set')
 const debug = logger('core:data')
 
+type Operator = '<=' | '<' | '>' | '>=' | '!=' | '<>' | '='
+  | 'in' | 'nin' | 'contains' | 'exists'
+  | 'startswith' | 'endswith' | 'istartswith' | 'iendswith' | 'icontains' | 'ieq'
+  | 'eq' | 'neq' | 'gt' | 'lt' | 'lte' | 'gte'
+
+type Fields<T, ClassSchema> = Extract<keyof (T & ClassSchema & ClassObject), string>
+
 export class DataClass<ClassSchema = {
   [fieldName: string]: any
 }> extends QueryBuilder {
-  // tslint:disable-next-line:variable-name
-  private _url?: string
 
   [x: string]: any
+
+  // tslint:disable-next-line:variable-name
+  private _url?: string
 
   // TODO: Add better return type
   /**
@@ -107,9 +115,10 @@ export class DataClass<ClassSchema = {
    * @example
    * data.tags.firstOrCreate({name: 'dogs'}, {firstUsedBy: 'authorID'})
    */
-  public firstOrCreate<T, I> (
-    attributes: T & ClassSchema, values?: I & ClassSchema
-  ): Promise<T & I & ClassObject & ClassSchema> {
+  public firstOrCreate<T> (
+    attributes: T & ClassSchema,
+    values?: T & ClassSchema
+  ): Promise<T & ClassObject & ClassSchema> {
     const query = this.toWhereArray(attributes)
 
     return this.where(query)
@@ -120,7 +129,10 @@ export class DataClass<ClassSchema = {
   /**
    * Create or update a record matching the attributes, and fill it with values
    */
-  public async updateOrCreate (attributes: ClassSchema, values: ClassSchema = {} as ClassSchema) {
+  public async updateOrCreate<T> (
+    attributes: T & ClassSchema,
+    values: T extends FormData ? FormData : T & ClassSchema
+  ): Promise<T & ClassObject & ClassSchema> {
     const query = this.toWhereArray(attributes)
 
     try {
@@ -131,7 +143,8 @@ export class DataClass<ClassSchema = {
     }
   }
 
-  // TODO: Add return type
+  public async find (id: number): Promise<ClassObject & ClassSchema | null>
+  public async find (id: number[]): Promise<Array<ClassObject & ClassSchema>>
   /**
    * Get single object by ID
    *
@@ -139,7 +152,7 @@ export class DataClass<ClassSchema = {
    * @example
    * data.posts.find(1)
    */
-  public async find (id: number|number[]) {
+  public async find (id: any): Promise<any> {
     debug('find', id)
 
     if (Array.isArray(id)) {
@@ -166,6 +179,8 @@ export class DataClass<ClassSchema = {
     return this.where('id', 'in', ids).list()
   }
 
+  public async findOrFail<T> (ids: number): Promise<ClassObject & ClassSchema>
+  public async findOrFail<T> (ids: number[]): Promise<Array<ClassObject & ClassSchema>>
   /**
    * Same as `find` method but throws error for no results
    *
@@ -175,7 +190,7 @@ export class DataClass<ClassSchema = {
    * data.posts.findOrFail(1) // returns single object
    * data.posts.findOrFail([1, 2]) // returns array of objects
    */
-  public async findOrFail<T> (ids: T&number|T&number[]): Promise<ClassObject & ClassSchema> {
+  public async findOrFail<T> (ids: any): Promise<any> {
     try {
       const response  = await this.find(ids)
       const shouldThrow = Array.isArray(response) && Array.isArray(ids)
@@ -207,7 +222,10 @@ export class DataClass<ClassSchema = {
    * @param {string} column Name of class column
    * @param {string} direction Direction of order. Can be `ASC`(default) or `DESC`
    */
-  public orderBy (column: string, direction: 'ASC' | 'DESC' = 'ASC') {
+  public orderBy<T> (
+    column: Fields<T, ClassSchema>,
+    direction: 'ASC' | 'DESC' = 'ASC'
+  ) {
     const dir = direction.toUpperCase()
     const sign = dir === 'DESC' ? '-' : ''
 
@@ -216,6 +234,22 @@ export class DataClass<ClassSchema = {
     })
   }
 
+  // TODO: Add overload for string columns - should handle additional operators like startswith
+  public where<T> (
+    column: Fields<T, ClassSchema>,
+    // tslint:disable-next-line:unified-signatures
+    value: string | number | boolean | null
+  ): DataClass<ClassSchema>
+  public where<T> (
+    column: Fields<T, ClassSchema>,
+    // tslint:disable-next-line:unified-signatures
+    operator: Operator,
+    value: any
+  ): DataClass<ClassSchema>
+  public where<T> (
+    // tslint:disable-next-line:unified-signatures
+    queries: any[]
+  ): DataClass<ClassSchema>
   /**
    * Filter objects
    *
@@ -225,7 +259,7 @@ export class DataClass<ClassSchema = {
    * data.posts.where('id', 10).list()
    * data.posts.where('id', '>=', 10).list()
    */
-  public where<T> (column: Extract<keyof (T&ClassSchema&ClassObject), string> | any[], operator?: any, value?: any) {
+  public where<T> (column: any, operator?: any, value?: any) {
     debug('where', column, operator, value)
     if (Array.isArray(column)) {
       column.map(([itemColumn, itemOperator, itemValue]) =>
@@ -264,7 +298,17 @@ export class DataClass<ClassSchema = {
     return this.withQuery({query: JSON.stringify(query)})
   }
 
-  // TODO: Add better argument types
+  public orWhere<T> (
+    column: Fields<T, ClassSchema>,
+    // tslint:disable-next-line:unified-signatures
+    operator: Operator,
+    value: any
+  ): DataClass<ClassSchema>
+  public orWhere<T> (
+    column: Fields<T, ClassSchema>,
+    // tslint:disable-next-line:unified-signatures
+    value: string | number | boolean | null
+  ): DataClass<ClassSchema>
   /**
    * Execute "or where" query
    *
@@ -273,7 +317,7 @@ export class DataClass<ClassSchema = {
    *   .where('likes', '<=', 100)
    *   .orWhere('likes', '>=', 200).list()
    */
-  public orWhere (column: string | any[], operator?: any, value?: any) {
+  public orWhere (column: any, operator?: any, value?: any) {
     this._queries = [].concat(this.queries as [never], this._query.query)
     this._query.query = null
 
@@ -286,7 +330,7 @@ export class DataClass<ClassSchema = {
    * @example
    * data.posts.whereNotNull('title').list()
    */
-  public whereNotNull (column: string) {
+  public whereNotNull<T> (column: Fields<T, ClassSchema>) {
     return this.where(column, 'exists', true)
   }
 
@@ -296,7 +340,7 @@ export class DataClass<ClassSchema = {
    * @example
    * data.posts.whereIn('id', [100, 200]).list()
    */
-  public whereIn (column: string, arr: string[] | number[]) {
+  public whereIn<T> (column: Fields<T, ClassSchema>, arr: string[] | number[]) {
     return this.where(column, 'in', arr)
   }
 
@@ -306,7 +350,7 @@ export class DataClass<ClassSchema = {
    * @example
    * data.posts.whereNotIn('id', [10, 20]).list()
    */
-  public whereNotIn (column: string, arr: string[] | number[]) {
+  public whereNotIn<T> (column: Fields<T, ClassSchema>, arr: string[] | number[]) {
     return this.where(column, 'nin', arr)
   }
 
@@ -316,7 +360,7 @@ export class DataClass<ClassSchema = {
    * @example
    * data.posts.whereNull('title').list()
    */
-  public whereNull (column: string) {
+  public whereNull<T> (column: Fields<T, ClassSchema>) {
     return this.where(column, null)
   }
 
@@ -326,7 +370,7 @@ export class DataClass<ClassSchema = {
    * @example
    * data.posts.whereBetween('likes', 100, 200).list()
    */
-  public whereBetween (column: string, min: number, max: number) {
+  public whereBetween<T> (column: Fields<T, ClassSchema>, min: number, max: number) {
     return this.where([
       [column, 'gte', min],
       [column, 'lte', max]
@@ -376,7 +420,7 @@ export class DataClass<ClassSchema = {
    * @example
    * data.posts.pluck('title') // returns array of values
    */
-  public async pluck (column: string): Promise<any[]> {
+  public async pluck<T> (column: Fields<T, ClassSchema>): Promise<any[]> {
     const items = await this.list()
     return items.map((item: any) => item[column])
   }
@@ -387,9 +431,10 @@ export class DataClass<ClassSchema = {
    * @example
    * data.posts.where('id', 1).value('created_at') // returns first created_at value
    */
-  public async value (column: string): Promise<any> {
+  public async value<T> (column: Fields<T, ClassSchema>): Promise<any> {
     const item = await this.firstOrFail()
-    return item[column]
+
+    return item[column as any]
   }
 
   /**
@@ -433,6 +478,13 @@ export class DataClass<ClassSchema = {
       .then(this.mapFields.bind(this))
   }
 
+  public async update<T> (
+    id: number,
+    body: T extends FormData ? FormData : T & ClassSchema
+  ): Promise<T & ClassObject & ClassSchema>
+  public async update<T> (body: ClassSchema & T): Promise<Array<ClassObject & ClassSchema & T>>
+  // tslint:disable-next-line:unified-signatures
+  public async update<T> (body: Array<[number, ClassSchema & T]>): Promise<Array<ClassObject & ClassSchema & T>>
   /**
    * Update object in database
    *
@@ -444,20 +496,19 @@ export class DataClass<ClassSchema = {
    *   [15, {title: 'Lorem ipsum'}]
    * ])
    */
-  public update (id: number | object, body?: ClassSchema): Promise<any> {
+  public async update (id: any, body?: any): Promise<any> {
     let headers
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)
 
     if (isQueryUpdate) {
-      return this.list().then((items) => {
-        const ids = items.map((item: any) => [item.id, id])
+      const items = await this.list()
+      const ids = items.map((item: any) => [item.id, id])
 
-        return this.batch(ids)
-          .then(this.resolveRelatedModels.bind(this))
-          .then(this.replaceCustomTypesWithValue.bind(this))
-          .then(this.mapFields.bind(this))
-      })
+      return this.batch(ids)
+        .then(this.resolveRelatedModels.bind(this))
+        .then(this.replaceCustomTypesWithValue.bind(this))
+        .then(this.mapFields.bind(this))
     }
 
     const fetchObject: {
@@ -718,7 +769,9 @@ export class DataClass<ClassSchema = {
   }
 
   private toWhereArray<T> (attributes: T) {
-    return Object.keys(attributes).map((key) => [key, 'eq', attributes[key]])
+    return Object.keys(attributes).map((key) => [key, 'eq', attributes[key]]) as Array<[
+      Fields<T, ClassSchema>, 'eq', string | number | boolean | null
+    ]>
   }
 
   private async resolveRelatedModels (result: any) {
