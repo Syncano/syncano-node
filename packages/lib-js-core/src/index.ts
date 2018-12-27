@@ -1,4 +1,4 @@
-import Server from './server'
+import {default as Server} from './server'
 export {
   ClassObject,
   User,
@@ -21,5 +21,6 @@ export {
 } from './types'
 export {DataClass} from './data'
 export {SyncanoContext} from './context'
-export default Server
 module.exports = Server
+module.exports.default = Server
+export default Server

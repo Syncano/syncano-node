@@ -23,6 +23,7 @@
     "build:ts": "npx tsc",
     "build:dts": "dts-bundle --name '@syncano/core' --main ./lib/index.d.ts --out syncano-core.d.ts",
     "test": "jest",
+    "test:unit": "jest",
     "lint": "tslint {src,test}/**/*.ts",
     "format": "npm run lint -- --fix"
   },

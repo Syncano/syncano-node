@@ -1,10 +1,11 @@
 import * as logger from 'debug'
 import * as FormData from 'form-data'
 import * as querystring from 'querystring'
-import {MAX_BATCH_SIZE} from './constants'
+import {MAX_BATCH_SIZE, MAX_COLUMN_IN_VALUES_LOOKUP} from './constants'
 import {NotFoundError} from './errors'
 import {QueryBuilder} from './query-builder'
 import {ClassObject} from './types'
+import {chunkArray} from './utils'
 const get = require('lodash.get')
 const merge = require('lodash.merge')
 const set = require('lodash.set')
@@ -259,8 +260,8 @@ export class DataClass<ClassSchema = {
    * data.posts.where('id', 10).list()
    * data.posts.where('id', '>=', 10).list()
    */
-  public where<T> (column: any, operator?: any, value?: any) {
-    debug('where', column, operator, value)
+  public where (column: any, operator?: any, value?: any) {
+    debug('where %s %o %o', column, operator, value)
     if (Array.isArray(column)) {
       column.map(([itemColumn, itemOperator, itemValue]) =>
         this.where(itemColumn, itemOperator, itemValue)
@@ -711,17 +712,11 @@ export class DataClass<ClassSchema = {
     return items.find((obj) => obj.id === reference.value)
   }
 
-  private chunk (items: any[], size: number): any[] {
-    return items
-      .map((e, i) => (i % size === 0 ? items.slice(i, i + size) : null))
-      .filter(Boolean)
-  }
-
   private async batch (body: any, headers?: object): Promise<any> {
     const type = Array.isArray(body[0])
       ? 'PATCH'
       : isNaN(body[0]) === false ? 'DELETE' : 'POST'
-    const requests = this.chunk(body, MAX_BATCH_SIZE).map((chunk: any) => () => {
+    const requests = chunkArray(body, MAX_BATCH_SIZE).map((chunk: any) => () => {
       const fetchObject = this.batchFetchObject(chunk)
 
       return this.fetch(fetchObject.url, fetchObject, headers)
@@ -817,21 +812,30 @@ export class DataClass<ClassSchema = {
         throw new Error(`Column "${reference}" has no target`)
       }
 
-      const load = new DataClass(this.instance)
       let ids = references.map((item: any) => item.value)
-
       ids = Array.isArray(ids[0]) ? [].concat.apply([], ids) : ids
 
-      if (target === 'user') {
-        load._url = `${this.getInstanceURL(
-          this.instance.instanceName
-        )}/users/`
-      }
+      const chunks = chunkArray(ids, MAX_COLUMN_IN_VALUES_LOOKUP)
+      debug('resolveRelatedModels/chunks %o', chunks)
+      const items: ClassObject[] = await Promise
+        .all(chunks.map((arr) => {
+          const load = new DataClass(this.instance)
 
-      load.instance = this.instance
-      load.instance.className = target
+          if (target === 'user') {
+            load._url = `${this.getInstanceURL(
+              this.instance.instanceName
+            )}/users/`
+          }
 
-      const items = await load.where('id', 'in', ids).list()
+          load.instance = this.instance
+          load.instance.className = target
+
+          return load.where('id', 'in', arr).list()
+        }))
+        .then((arr) => [].concat.apply([], arr as any))
+
+      debug('resolveRelatedModels items %o', items)
+
       return {target: reference, items}
     })
 
