@@ -116,10 +116,10 @@ export class DataClass<ClassSchema = {
    * @example
    * data.tags.firstOrCreate({name: 'dogs'}, {firstUsedBy: 'authorID'})
    */
-  public firstOrCreate<T> (
+  public firstOrCreate<T, I> (
     attributes: T & ClassSchema,
-    values?: T & ClassSchema
-  ): Promise<T & ClassObject & ClassSchema> {
+    values?: I & ClassSchema
+  ): Promise<T & I & ClassObject & ClassSchema> {
     const query = this.toWhereArray(attributes)
 
     return this.where(query)
