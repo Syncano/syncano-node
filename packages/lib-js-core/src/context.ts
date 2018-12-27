@@ -41,6 +41,7 @@ export interface Request {
 export interface Metadata {
   description: string
   response: Response
+  [metaName: string]: any
 }
 
 export interface Response {

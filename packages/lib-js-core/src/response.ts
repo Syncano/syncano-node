@@ -43,7 +43,7 @@ export type ResponseFn = (
 
 export interface CustomResponse extends ResponseFn {
   header: (key: string, value: string) => CustomResponse
-  json: (content?: any, status?: 200) => ResponseClass
+  json: (content?: any, status?: HTTPStatus) => ResponseClass
   [x: string]: any
 }
 
