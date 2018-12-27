@@ -25,10 +25,30 @@ export default class {
 declare module '@syncano/core/server' {
   export interface InstanceDataSchema {
     ${Object.keys(classes).map((className) => `${className}: DataClass<{
-      ${classes[className].map((item: any) => `${item.name}: ${item.type}`).join('\n      ')}
+      ${classes[className].map((item: any) => `${item.name}?: ${this.getType(item.type)}`).join('\n      ')}
     }>`).join('\n    ')}
   }
 }`
+  }
+
+  private getType(type: string) {
+    return {
+      string: 'string',
+      text: 'string',
+      integer: 'number',
+      float: 'number',
+      boolean: 'boolean',
+      datetime: 'string',
+      file: 'any',
+      reference: 'any',
+      relation: 'any[]',
+      array: 'Array<string, boolean, number>',
+      object: 'object',
+      geopoint: `{
+      latitude: number
+      longitude: number
+    }`
+    }[type]
   }
 
   get syncanoTsConfig() {
