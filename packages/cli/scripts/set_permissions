@@ -1,0 +1,6 @@
+#!/bin/sh
+
+chmod +x lib/cli.js
+chmod +x lib/cli-backup.js
+chmod +x lib/cli-hosting.js
+chmod +x lib/cli-instance.js
