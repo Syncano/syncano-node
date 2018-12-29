@@ -24,6 +24,18 @@ describe('CLI Instance', function () {
       .end(done)
   })
 
+  it('can list instance via info command', function (done) {
+    const testInstance = uniqueInstance()
+
+    testNixt()
+      .before(async () => await createInstance(testInstance))
+      .after(async () => await deleteInstance(testInstance))
+      .run(`${cliLocation} info ${testInstance}`)
+      .stdout(new RegExp(testInstance))
+      .code(0)
+      .end(done)
+  })
+
   it('can\'t create an instance if already exist', function (done) {
     const testInstance = uniqueInstance()
 

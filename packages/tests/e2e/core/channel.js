@@ -1,4 +1,4 @@
-/* global it describe before after */
+/* global it describe beforeAll afterAll */
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'
@@ -24,14 +24,14 @@ describe.skip('Channel', function () {
     instanceName
   })
 
-  before(() =>
+  beforeAll(() =>
     createInstance(instanceName)
       .then(uploadEnvironment)
       .then(uploadSocket)
       .then(waitForSocket)
   )
 
-  after(() => deleteInstance(instanceName))
+  afterAll(() => deleteInstance(instanceName))
 
   describe('#publish()', () => {
     it('can publish to channel', () =>

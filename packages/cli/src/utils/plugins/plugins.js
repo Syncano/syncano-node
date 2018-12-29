@@ -1,3 +1,4 @@
+import path from 'path'
 import logger from '../debug'
 import { warning } from '../print-tools'
 
@@ -15,6 +16,9 @@ export default class Plugins {
       /* eslint-disable import/no-dynamic-require */
       /* eslint-disable global-require */
       debug('loading plugin:', pluginName)
+
+      // Add directory where CLI command is executed
+      module.paths.push(path.join(process.cwd(), 'node_modules'))
       try {
         const PluginImport = require(this.plugins[pluginName]).default
         program

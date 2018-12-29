@@ -1,4 +1,4 @@
-/* global it describe before after */
+/* global it describe beforeAll afterAll */
 import fs from 'fs'
 import path from 'path'
 import {expect} from 'chai'
@@ -18,11 +18,11 @@ describe('Registry', function () {
   let registry
   const testInstance = uniqueInstance()
 
-  before(async () => {
+  beforeAll(async () => {
     await createProject(testInstance, projectTestTemplate)
     registry = new Server({accountKey: process.env.E2E_ACCOUNT_KEY}).registry
   })
-  after(async () => deleteInstance(testInstance))
+  afterAll(async () => deleteInstance(testInstance))
 
   it('search non-existing Socket by keyword', async () => {
     try {

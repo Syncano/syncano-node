@@ -40,7 +40,7 @@
     "concurrently": "^4.1.0",
     "console.mute": "^0.3.0",
     "dirty-chai": "^2.0.1",
-    "mocha": "^5.2.0",
+    "jest": "^23.6.0",
     "mock-fs": "^4.7.0",
     "npm-cli-login": "^0.0.10",
     "prettier": "^1.15.2",
@@ -61,7 +61,7 @@
     "test:e2e:core:channel": "npm run test:e2e-single e2e/core/channel.js",
     "test:e2e:core:class": "npm run test:e2e-single e2e/core/class.js",
     "test:e2e:core:data": "npm run test:e2e-single e2e/core/data.js",
-    "test:e2e:core:endpoint": "npm run test:e2e-single e2e/core/endpoint.js",
+    "_test:e2e:core:endpoint": "npm run test:e2e-single e2e/core/endpoint.js",
     "test:e2e:core:event": "npm run test:e2e-single e2e/core/event.js",
     "test:e2e:core:instace": "npm run test:e2e-single e2e/core/instance.js",
     "test:e2e:core:server": "npm run test:e2e-single e2e/core/server.js",
@@ -78,7 +78,7 @@
     "test:e2e:cli:hosting": "npm run test:e2e-single e2e/cli/hosting.test-e2e.js",
     "test:e2e:cli:socket": "npm run test:e2e-single e2e/cli/socket.test-e2e.js",
     "test:e2e:cli:instance": "npm run test:e2e-single e2e/cli/instance.test-e2e.js",
-    "test:e2e-single": "npx mocha --require babel-register --timeout 100000 --slow 8000",
+    "test:e2e-single": "npx jest",
     "test:e2e:client": "concurrently \"npm:test:e2e:client:*\"",
     "test:e2e:client:main": "npm run test:e2e-single e2e/client/main.js",
     "lint": "standard --fix --env mocha e2e",
@@ -86,6 +86,24 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./jest.setup.js",
+    "testEnvironment": "node",
+    "globals": {
+      "ts-jest": {
+        "useBabelrc": true,
+        "ignoreCoverageForAllDecorators": true
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testMatch": [
+      "**/*js"
+    ],
+    "collectCoverage": false
   },
   "babel": {
     "plugins": [

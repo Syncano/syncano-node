@@ -1,4 +1,4 @@
-/* global describe it before after */
+/* global describe it beforeAll afterAll */
 import path from 'path'
 import {assert} from 'chai'
 import {
@@ -25,13 +25,13 @@ describe('Client', function () {
       .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
       .cwd(path.join(testsLocation, testInstance))
 
-  before(() => {
+  beforeAll(() => {
     client = new Syncano(testInstance, {host: 'api.syncano.rocks'})
     assert.isObject(client)
 
     return createProject(testInstance, projectTestTemplate)
   })
-  after(() => deleteInstance(testInstance))
+  afterAll(() => deleteInstance(testInstance))
 
   it('can create new socket', function (done) {
     testNixt()

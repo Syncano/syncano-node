@@ -20,14 +20,14 @@ process.env['MESSENGER-BOT_FACEBOOK_APP_TOKEN'] = 'test'
 describe('Building Facebook Weather Bot', function () {
   // let instaceName = null;
   let tutorialLocation = null
-  before(function () {
+  beforeAll(function () {
     tutorialLocation = setupLocation('tutorial-wather-bot')
     return createInstance()
       .then((resp) => {
         // instaceName = resp.name;
       })
   })
-  after(function () {
+  afterAll(function () {
     shutdownLocation(tutorialLocation)
     return cleanUpAccount()
     // return deleteInstance(instaceName);
