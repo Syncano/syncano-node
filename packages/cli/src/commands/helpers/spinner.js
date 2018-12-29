@@ -55,7 +55,7 @@ class SimpleSpinner {
   }
 }
 
-export default {
+export {
   GlobalSpinner,
   SimpleSpinner
 }

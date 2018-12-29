@@ -20,6 +20,10 @@ function getFiles (directory) {
   }))
 }
 
+export {
+  getFiles
+}
+
 export default {
   getFiles
 }

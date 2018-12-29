@@ -29,6 +29,39 @@ import BackupsList from './backups-list'
 import BackupsLast from './backups-last'
 import BackupsDelete from './backups-delete'
 
+export {
+  Attach,
+  Info,
+  Init,
+  Login,
+  Logout,
+  HostingAdd,
+  HostingDelete,
+  HostingList,
+  HostingFilesCmd,
+  HostingSync,
+  SocketDeployHot,
+  HostingConfig,
+  SocketDeploy,
+  SocketCompile,
+  SocketConfig,
+  SocketConfigSet,
+  SocketConfigShow,
+  SocketList,
+  SocketEndpointCall,
+  SocketTrace,
+  SocketCreate,
+  SocketUninstall,
+  InstanceList,
+  InstanceCreate,
+  InstanceDelete,
+  SysInfo,
+  BackupsCreate,
+  BackupsList,
+  BackupsLast,
+  BackupsDelete
+}
+
 export default {
   Attach,
   Info,

@@ -76,7 +76,7 @@ const trackCommand = (options, additionalParams = {}) => {
   track(eventName, props)
 }
 
-export default {
+export {
   identify,
   track,
   trackCommand

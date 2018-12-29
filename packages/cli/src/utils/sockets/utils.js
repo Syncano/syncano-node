@@ -125,6 +125,14 @@ const deleteFolderRecursive = (folder) => {
   }
 }
 
+export {
+  deleteFolderRecursive,
+  getTemplatesChoices,
+  findLocalPath,
+  listLocal,
+  getOrigFilePath
+}
+
 export default {
   deleteFolderRecursive,
   getTemplatesChoices,
