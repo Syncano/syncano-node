@@ -1,4 +1,4 @@
-/* global describe it before after */
+/* global describe it beforeAll afterAll */
 import path from 'path'
 import {
   nixt,
@@ -20,8 +20,8 @@ describe('CLI Socket', function () {
     .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
     .cwd(path.join(testsLocation, testInstance))
 
-  before(async () => createProject(testInstance, projectTestTemplate))
-  after(async () => deleteInstance(testInstance))
+  beforeAll(async () => createProject(testInstance, projectTestTemplate))
+  afterAll(async () => deleteInstance(testInstance))
 
   it('can create new socket', function (done) {
     testNixt()

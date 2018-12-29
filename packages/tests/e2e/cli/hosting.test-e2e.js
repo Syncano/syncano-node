@@ -1,4 +1,4 @@
-/* global describe it before after */
+/* global describe it beforeAll afterAll */
 import fs from 'fs-extra'
 import path from 'path'
 import {
@@ -25,8 +25,8 @@ describe('CLI Hosting', function () {
     fs.copySync(hostingAssets, path.join(testsLocation, testInstance, 'hosting'))
   }
 
-  before(async () => createProject(testInstance, projectTestTemplate))
-  after(async () => deleteInstance(testInstance))
+  beforeAll(async () => createProject(testInstance, projectTestTemplate))
+  afterAll(async () => deleteInstance(testInstance))
 
   it('can add hosting', function (done) {
     testNixt()
