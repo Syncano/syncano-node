@@ -13,7 +13,7 @@ describe('Instance', () => {
   let api: nock.Scope
   let instance: InstanceClass
 
-   beforeEach(() => {
+  beforeEach(() => {
     const server = new Server({
       token: 'testKey',
       instanceName
