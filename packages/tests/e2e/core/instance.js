@@ -1,4 +1,4 @@
-/* globals it describe before */
+/* globals it describe beforeAll */
 /* eslint-disable no-unused-expressions */
 import {expect} from 'chai'
 import {uniqueInstance} from '@syncano/test-tools'
@@ -11,7 +11,7 @@ describe('Instance', function () {
 
   this.timeout(5000)
 
-  before(function () {
+  beforeAll(function () {
     instance = new Server({accountKey: process.env.E2E_ACCOUNT_KEY}).instance
   })
 
