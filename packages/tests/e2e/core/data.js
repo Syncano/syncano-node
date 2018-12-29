@@ -1,4 +1,4 @@
-/* global it describe beforeAll afterAll beforeAllEach afterAllEach */
+/* global it describe beforeAll afterAll  beforeEach afterAllEach */
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'
@@ -44,7 +44,7 @@ describe('Data', function () {
     )
   })
 
-  beforeAllEach(() => {
+   beforeEach(() => {
     run = () => data[testClassName]
   })
 

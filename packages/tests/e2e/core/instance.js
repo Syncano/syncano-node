@@ -9,8 +9,6 @@ describe('Instance', function () {
   let instance = null
   const testInstanceName = uniqueInstance()
 
-  this.timeout(5000)
-
   beforeAll(function () {
     instance = new Server({accountKey: process.env.E2E_ACCOUNT_KEY}).instance
   })
