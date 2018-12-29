@@ -121,7 +121,7 @@
   "scripts": {
     "prepare": "npm run build",
     "postinstall": "scripts/postinstall || exit 0",
-    "build": "tsc --esModuleInterop && sh scripts/set_permissions",
+    "build": "tsc --build ./tsconfig.json && sh ./scripts/set_permissions",
     "build:watch": "npm run build -- -w",
     "clean": "rm -rf lib/",
     "unit": "mocha 'tests/unit/*.test.js' --require babel-register",
