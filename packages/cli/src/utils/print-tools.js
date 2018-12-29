@@ -90,7 +90,7 @@ const p = (padding) => (string) => {
   return _.repeat(' ', padding) + str
 }
 
-export default {
+export {
   MAP,
   getFormatMethod,
   printCode,

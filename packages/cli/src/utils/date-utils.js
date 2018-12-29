@@ -17,7 +17,7 @@ class Timer {
   }
 }
 
-export default {
+export {
   currentTime,
   Timer
 }
