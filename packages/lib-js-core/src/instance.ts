@@ -40,16 +40,13 @@ export class InstanceClass extends QueryBuilder {
   /**
    * List Syncano instances
    */
-  public list (): Promise<{
-    next: string|null
-    prev: string|null
-    objects: Instance[]
-  }> {
+  public async list (): Promise<Instance[]> {
     const fetch = this.nonInstanceFetch.bind(this)
 
-    return fetch(this.url(undefined, 'v3'), {}, {
+    const resp = await fetch(this.url(undefined, 'v3'), {}, {
       'X-API-KEY': this.instance.accountKey
     })
+    return resp.objects
   }
 
   /**
