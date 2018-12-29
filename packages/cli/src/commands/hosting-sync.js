@@ -36,7 +36,7 @@ class HostingSync {
       process.exit()
     }
 
-    return hosting.existRemotely && this.syncHosting(hosting, {delete: cmd.delete})
+    return this.syncHosting(hosting, {delete: cmd.delete})
   }
 
   async syncHosting (hosting, params) {
