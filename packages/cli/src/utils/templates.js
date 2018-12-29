@@ -58,7 +58,7 @@ const installedSocketTemplates = () => {
   return findInstalledTemplates('syncano-template-socket')
 }
 
-export default {
+export {
   getTemplate,
   getTemplateSpec,
   builtInSocketTemplates,
