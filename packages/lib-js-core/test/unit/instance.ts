@@ -33,14 +33,14 @@ describe('Instance', () => {
   describe('#list', () => {
     it('should list syncano instances', () => {
       const fakeResp = {
-        objects: <Instance[]>[
+        objects: [
           {
-            name: 'instance1',
+            name: 'instance1'
           },
           {
-            name: 'instance2',
+            name: 'instance2'
           }
-        ],
+        ] as Instance[],
         next: null,
         prev: null
       }

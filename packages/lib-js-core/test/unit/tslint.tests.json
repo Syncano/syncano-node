@@ -1,8 +1,0 @@
-{
-  "extends": [
-    "../tslint.defaults.json"
-  ],
-  "rules": {
-    "no-unused-expressions": false
-  }
-}
