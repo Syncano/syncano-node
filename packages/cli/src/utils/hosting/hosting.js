@@ -409,12 +409,14 @@ class Hosting {
       return false
     }
 
-    const localChecksums = await this.listLocalFiles().map(localFile => ({
+    const localFiles = await this.listLocalFiles()
+    const localChecksums = localFiles.map(localFile => ({
       filePath: localFile.path,
       checksum: localFile.checksum
     }))
 
-    const remoteChecksums = await this.listRemoteFiles().map(remoteFile => ({
+    const remoteFiles = await this.listRemoteFiles()
+    const remoteChecksums = remoteFiles.map(remoteFile => ({
       filePath: remoteFile.path,
       checksum: remoteFile.checksum
     }))
@@ -450,6 +452,7 @@ class Hosting {
   }
 
   async listFiles () {
+    debug('listFiles()')
     const remoteFiles = await this.listRemoteFiles()
     const listLocalFiles = await this.listLocalFiles()
 
