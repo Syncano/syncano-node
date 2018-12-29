@@ -35,7 +35,7 @@ export interface Request {
   HTTP_ACCEPT_ENCODING: string
   HTTP_ACCEPT_LANGUAGE: string
   HTTP_COOKIE: string
-  HTTP_ORIGIN: string
+  HTTP_ORIGIN?: string
   REMOTE_ADDR: string
 }
 
