@@ -102,7 +102,7 @@ export {
   p
 }
 
-export default {
+module.exports = {
   MAP,
   getFormatMethod,
   printCode,
