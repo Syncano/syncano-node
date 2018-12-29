@@ -61,7 +61,7 @@
     "test:e2e:core:channel": "npm run test:e2e-single e2e/core/channel.js",
     "test:e2e:core:class": "npm run test:e2e-single e2e/core/class.js",
     "test:e2e:core:data": "npm run test:e2e-single e2e/core/data.js",
-    "test:e2e:core:endpoint": "npm run test:e2e-single e2e/core/endpoint.js",
+    "_test:e2e:core:endpoint": "npm run test:e2e-single e2e/core/endpoint.js",
     "test:e2e:core:event": "npm run test:e2e-single e2e/core/event.js",
     "test:e2e:core:instace": "npm run test:e2e-single e2e/core/instance.js",
     "test:e2e:core:server": "npm run test:e2e-single e2e/core/server.js",
