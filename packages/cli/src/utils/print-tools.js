@@ -101,3 +101,15 @@ export {
   warning,
   p
 }
+
+module.exports = {
+  MAP,
+  getFormatMethod,
+  printCode,
+  printSourceCode,
+  echo,
+  echon,
+  error,
+  warning,
+  p
+}
