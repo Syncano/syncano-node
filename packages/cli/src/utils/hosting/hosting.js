@@ -192,7 +192,7 @@ class Hosting {
     return this
   }
 
-  async static get (hostingName) {
+  static get (hostingName) {
     debug(`get ${hostingName}`)
     const hosting = new Hosting(hostingName)
     return hosting.loadRemote()
