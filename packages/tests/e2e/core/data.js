@@ -1,4 +1,4 @@
-/* global it describe beforeAll afterAll  beforeEach afterAllEach */
+/* global it describe beforeAll afterAll  beforeEach afterEach */
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'
@@ -50,7 +50,7 @@ describe('Data', function () {
 
   afterAll(() => deleteInstance(instanceName))
 
-  afterAllEach(() => run().delete())
+  afterEach(() => run().delete())
 
   describe('#create()', () => {
     it('can create single object', () =>
