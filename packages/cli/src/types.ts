@@ -1,6 +1,18 @@
+import { SyncanoClass } from "@syncano/core";
+
 export interface CLIPlugin {
 }
 export interface CLIProgramContext {
+}
+
+export type Location = 'eu1' | 'us1'
+
+export interface SyncanoProject {
+  instance: string
+  location: Location
+}
+
+export interface SyncanoConnection {
 }
 
 export interface CLISession {
@@ -8,7 +20,7 @@ export interface CLISession {
   projectPath: string
   project: string
   userId: string
-  plugins: CLIPlugin[]
+  connection: SyncanoClass
 }
 
 export interface CLIProgramContext {

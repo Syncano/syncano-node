@@ -5,6 +5,7 @@ import { error, echo } from './print-tools'
 import { CLIProgramContext, CLISession } from '../types';
 import session from './session';
 
+// TODO: how solve this with typescript?
 // process.noDeprecation = true
 
 process.on('unhandledRejection', (reason, p) => {

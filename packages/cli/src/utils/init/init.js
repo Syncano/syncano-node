@@ -2,8 +2,8 @@ import fs from 'fs-extra'
 import format from 'chalk'
 import path from 'path'
 
-import session from '../session'
 import logger from '../debug'
+import session from '../session'
 import { echo } from '../print-tools'
 import {
   getTemplateSpec,
@@ -15,10 +15,6 @@ import {
 const { debug } = logger('utils-init')
 
 class Init {
-  constructor () {
-    this.session = session
-  }
-
   static projectTemplates () {
     const allTemplates = builtInProjectTemplates.concat(installedProjectTemplates())
     const installedTemplates = allTemplates.map(templateName => {
@@ -59,20 +55,20 @@ class Init {
   }
 
   checkConfigFiles () {
-    return !fs.existsSync(this.session.projectPath)
+    return !fs.existsSync(session.projectPath)
   }
 
   checkIfInitiated () {
-    return fs.existsSync(this.session.projectPath) && this.session.project
+    return fs.existsSync(session.projectPath) && session.project
   }
 
   async addConfigFiles (projectParams = {}, projectPath) {
     if (projectPath) {
-      this.session.settings.account.addProject(projectPath, projectParams)
+      session.settings.account.addProject(projectPath, projectParams)
     } else {
-      this.session.settings.account.addProject(path.join(process.cwd()), projectParams)
+      session.settings.account.addProject(path.join(process.cwd()), projectParams)
     }
-    await this.session.load()
+    await session.load()
   }
 
   noConfigFiles () {

@@ -2,7 +2,7 @@ import Syncano from '@syncano/core'
 import format from 'chalk'
 import path from 'path'
 import mkdirp from 'mkdirp'
-import Promise from 'bluebird'
+// import Promise from 'bluebird'
 
 import logger from './debug'
 import pjson from '../../package.json'
@@ -14,9 +14,27 @@ import Hosting from './hosting'
 import Plugins from './plugins'
 import { echo } from './print-tools'
 
+import {CLISession, SyncanoProject, SyncanoConnection, Location} from '../types'
+
 const { debug } = logger('utils-session')
 
-export class Session {
+const LOCATIONS = {
+  'us1': 'api.syncano.io',
+  'eu1': 'api-eu1.syncano.io'
+}
+
+export class Session<CLISession> {
+  settings: any
+  projectPath: string
+  project: SyncanoProject
+  userId: number
+  userEmail: string
+  userFirstName: string
+  userLastName: string
+  majorVersion: string
+  location: Location
+  connection: Syncano
+
   constructor () {
     this.settings = null
     this.projectPath = null
@@ -25,15 +43,11 @@ export class Session {
 
     this.majorVersion = pjson.version.split('.')[0]
 
-    this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION || 'us1' // default location
-    this.locations = {
-      'us1': 'api.syncano.io',
-      'eu1': 'api-eu1.syncano.io'
-    }
+    this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION as Location || 'us1' as Location  // default location
   }
 
   getHost () {
-    return process.env.SYNCANO_HOST || this.locations[this.location]
+    return process.env.SYNCANO_HOST || LOCATIONS[this.location]
   }
 
   async setLocation (location) {
@@ -61,11 +75,11 @@ export class Session {
   }
 
   getInitInstance () {
-    return new Init(this)
+    return new Init()
   }
 
   getPluginsInstance () {
-    return new Plugins(this)
+    return new Plugins()
   }
 
   getBaseURL () {
@@ -147,13 +161,12 @@ export class Session {
   }
 
   async checkAuth () {
-    const userDetails = await this.connection.Account.getUserDetails()
-    return new Promise((resolve, reject) => {
-      if (userDetails) {
-        return resolve(userDetails)
-      }
-      reject(new Error('No such user!'))
-    })
+    const userDetails = await this.connection.account.get(this.settings.account.getAuthKey())
+    if (userDetails) {
+      return userDetails
+    } else {
+      throw new Error('No such user!')
+    }
   }
 
   static findProjectPath () {
@@ -182,7 +195,7 @@ export class Session {
   }
 
   loadPlugins (program, context) {
-    new Plugins(this).load(program, context)
+    new Plugins().load(program, context)
   }
 
   isAuthenticated () {

@@ -1,8 +1,8 @@
 import path from 'path'
 import logger from '../debug'
 import { warning } from '../print-tools'
+import session from '../session'
 import {
-  CLISession,
   CLIPlugin,
   CLIProgramContext
 } from '../../types'
@@ -10,10 +10,8 @@ import {
 const { debug } = logger('utils-plugins')
 
 export default class Plugins {
-  session: CLISession
   plugins: CLIPlugin[]
-  constructor (session: CLISession) {
-    this.session = session
+  constructor () {
     this.plugins = session.settings.project.getPlugins() || []
   }
 
