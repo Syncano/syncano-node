@@ -166,54 +166,6 @@ describe('[commands] Delete Hosting', function () {
     })
   })
 
-  describe.skip('findSocketsWithHosting', function () {
-    let socketsHostings = null
-    const example = {
-      hello: {
-        test: {
-          src: '../hostings', cname: null
-        }
-      }
-    }
-    const key = Object.keys(example)[0]
-
-    beforeEach(function () {
-      socketsHostings = sinon.stub(hostingDelete.session.settings.project, 'getHostingsList')
-    })
-
-    afterEach(function () {
-      hostingDelete.session.settings.project.getHostingsList.restore()
-    })
-
-    it.skip('should print error if there are no sockets with hostings', async function () {
-      await hostingDelete.findSocketsWithHosting()
-
-      sinon.assert.calledOnce(warning)
-    })
-
-    it.skip('should exit process if there are no sockets with hostings', async function () {
-      socketsHostings.returns([])
-
-      await hostingDelete.findSocketsWithHosting()
-
-      sinon.assert.calledOnce(processExit)
-    })
-
-    it.skip('should sockethosting return socket', async function () {
-      socketsHostings.returns(example)
-
-      const socketsWithHosting = await hostingDelete.findSocketsWithHosting('test')
-
-      expect(socketsWithHosting).to.be.eql([key])
-    })
-
-    it.skip('should return an array', async function () {
-      const result = await hostingDelete.findSocketsWithHosting(hostingName)
-
-      expect(result).to.be.an.array // eslint-disable-line
-    })
-  })
-
   describe('getQuestions', function () {
     it('should return expected questions', function () {
       const questions = HostingDelete.getQuestions(hostingName)

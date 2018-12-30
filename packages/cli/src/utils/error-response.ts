@@ -32,6 +32,7 @@ class ErrorResponse {
   session: CLISession
   name: string
   contextName: string
+
   constructor (context: CLIProgramContext) {
     this.context = context
     this.name = context.name

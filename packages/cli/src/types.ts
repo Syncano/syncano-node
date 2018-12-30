@@ -32,3 +32,46 @@ export interface CLIProgramContext {
   session: CLISession
   plugins: CLIPlugin[]
 }
+
+export interface ProjectSettings {
+  instance?: string
+}
+
+export interface AccountSettingsAttributes {
+  auth_key: string
+  projects: Record<string, ProjectSettings>
+}
+
+export interface EndpointRecordConfig {
+  file?: string
+}
+
+export interface ConfigRecordAttrs {
+  value: string
+  default: string
+}
+
+export interface SocketSettingsAttributes {
+  version: string
+  config: Record<string, ConfigRecordAttrs>
+  endpoints: Record<string, EndpointRecordConfig>
+}
+
+export interface ProjectSettings {
+  instance?: string
+}
+
+export interface HostingRecordConfig {
+  browser_router: boolean
+}
+
+export interface HostingRecord {
+  src: string
+  config: HostingRecordConfig
+}
+
+export interface ProjectSettingsAttributes {
+  plugins: Record<string, string>
+  templates: Record<string, string>
+  hosting: Record<string, HostingRecord>
+}

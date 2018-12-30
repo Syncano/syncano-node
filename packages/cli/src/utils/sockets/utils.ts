@@ -26,7 +26,7 @@ const socketTemplates = () => {
 const getTemplatesChoices = () => socketTemplates().map(socketTemplate =>
   `${socketTemplate.description} - ${format.grey(`(${socketTemplate.name})`)}`)
 
-const searchForSockets = (socketsPath, maxDepth = 3) => {
+const searchForSockets = (socketsPath: string, maxDepth = 3) => {
   if (!fs.existsSync(socketsPath)) {
     return []
   }
@@ -48,7 +48,7 @@ const searchForSockets = (socketsPath, maxDepth = 3) => {
   return sockets
 }
 
-const findLocalPath = (socketName) => {
+const findLocalPath = (socketName: string) => {
   debug('findLocalPath')
   let socketPath = null
   const projectPath = session.projectPath || process.cwd()
@@ -111,7 +111,7 @@ const getOrigFilePath = (origFileLine) => {
   return origFilePath
 }
 
-const deleteFolderRecursive = (folder) => {
+const deleteFolderRecursive = (folder: string) => {
   if (fs.existsSync(folder)) {
     fs.readdirSync(folder).forEach((file, index) => {
       const curPath = path.join(folder, file)

@@ -5,11 +5,14 @@ import fs from 'fs'
 
 import logger from '../utils/debug'
 import Settings from './settings'
+import {ProjectSettingsAttributes, HostingRecord} from '../types'
 
 const { debug } = logger('settings-project')
 
 export default class ProjectSettings extends Settings {
-  constructor (projectPath) {
+  attributes: ProjectSettingsAttributes
+
+  constructor (projectPath?: string) {
     super()
     this.name = 'syncano'
     this.baseDir = projectPath
@@ -26,31 +29,19 @@ export default class ProjectSettings extends Settings {
     return new Promise((resolve, reject) => {
       const paths = []
       readdirp({ root: this.baseDir, fileFilter: 'socket.yml' })
-        .on('data', (entry) => {
+        .on('data', (entry: any) => {
           paths.push(entry.fullPath)
         })
         .on('end', () => {
           resolve(paths)
         })
-        .on('error', (err) => {
+        .on('error', (err: Error) => {
           reject(err)
         })
     })
   }
 
-  async getHostingsList () {
-    const socketYamls = await this.getAllSocketsYmlPath()
-    const hostingsList = {}
-
-    const socketsAttributes = socketYamls.map((yamlPath) => ProjectSettings.getAttributesFromYaml(yamlPath))
-    socketsAttributes.forEach((socketAttributes) => {
-      hostingsList[socketAttributes.name] = socketAttributes.hosting
-    })
-
-    return hostingsList
-  }
-
-  static getAttributesFromYaml (path) {
+  static getAttributesFromYaml (path: string) {
     const socketAttributes = YAML.load(fs.readFileSync(path, 'utf8'))
 
     return socketAttributes
@@ -65,24 +56,24 @@ export default class ProjectSettings extends Settings {
   }
 
   // Hosting
-  getHosting (hostingName) {
+  getHosting (hostingName: string) {
     debug('getHosting()')
     return this.attributes.hosting ? this.attributes.hosting[hostingName] : null
   }
 
-  addHosting (hostingName, params) {
+  addHosting (hostingName: string, params: HostingRecord) {
     if (!this.attributes.hosting) this.attributes.hosting = {}
     this.attributes.hosting[hostingName] = params
     this.save()
   }
 
-  updateHosting (hostingName, params) {
+  updateHosting (hostingName: string, params: HostingRecord) {
     if (!this.attributes.hosting) this.attributes.hosting = {}
     this.attributes.hosting[hostingName] = _.extend(this.attributes.hosting[hostingName], params)
     this.save()
   }
 
-  deleteHosting (hostingName) {
+  deleteHosting (hostingName: string) {
     if (this.attributes.hosting) {
       delete this.attributes.hosting[hostingName]
     }

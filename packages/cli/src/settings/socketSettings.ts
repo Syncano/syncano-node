@@ -2,12 +2,15 @@ import path from 'path'
 import semver from 'semver'
 import FindKey from 'find-key'
 
+import {SocketSettingsAttributes} from '../types'
+
 import logger from '../utils/debug'
 import Settings from './settings'
 
 const { info, debug } = logger('setting-socket')
 
 class SocketSettings extends Settings {
+  attributes: SocketSettingsAttributes
   constructor (socketPath, socketName) {
     info('SocketSettings.constructor', socketPath, socketName)
     super()
@@ -30,7 +33,7 @@ class SocketSettings extends Settings {
     return FindKey(this.attributes, 'file')
   }
 
-  getFileForEndpoint (endpointName) {
+  getFileForEndpoint (endpointName: string) {
     return this.attributes.endpoints[endpointName].file
   }
 

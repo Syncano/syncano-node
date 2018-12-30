@@ -1,10 +1,15 @@
 import os from 'os'
 import Settings from './settings'
 import logger from '../utils/debug'
+import {AccountSettingsAttributes} from '../types'
 
 const { debug } = logger('settings-account')
 
 export default class AccountSettings extends Settings {
+  name: string
+  baseDir: string
+  loaded: boolean
+  attributes: AccountSettingsAttributes
   constructor () {
     super()
     this.name = process.env.SYNCANO_ACCOUNT_FILE ? process.env.SYNCANO_ACCOUNT_FILE : 'syncano'
@@ -26,7 +31,7 @@ export default class AccountSettings extends Settings {
     return process.env.SYNCANO_AUTH_KEY || this.attributes.auth_key || null
   }
 
-  addProject (projectName, params = {}) {
+  addProject (projectName: string, params = {}) {
     debug('addProject()', projectName)
     if (!this.attributes.projects) {
       this.attributes.projects = {}
@@ -35,7 +40,7 @@ export default class AccountSettings extends Settings {
     this.save()
   }
 
-  getProject (projectName) {
+  getProject (projectName: string) {
     debug('getProject()', projectName)
     const envInstance = process.env.SYNCANO_PROJECT_INSTANCE
     if (envInstance) {

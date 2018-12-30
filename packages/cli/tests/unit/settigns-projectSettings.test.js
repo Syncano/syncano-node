@@ -41,39 +41,6 @@ describe('[settings] Project Settings', function () {
       })
     })
 
-    describe('getHostingsList', function () {
-      const ymlPath = getRandomString('projectSettings_hosting_getHostingsList_ymlPath')
-      const socketHostings = {
-        name: getRandomString('projectSettings_hosting_getHostingsList_socketHostings_name'),
-        hosting: {
-          staging: {
-            src: './',
-            cname: null
-          }
-        }
-      }
-
-      beforeEach(function () {
-        sinon.stub(settings, 'getAllSocketsYmlPath').returns([ymlPath])
-        sinon.stub(ProjectSettings, 'getAttributesFromYaml').returns(socketHostings)
-      })
-
-      afterEach(function () {
-        settings.getAllSocketsYmlPath.restore()
-        ProjectSettings.getAttributesFromYaml.restore()
-      })
-
-      it('should return proper object with all hostings in each socket', async function () {
-        const expectedResponse = {
-          [socketHostings.name]: socketHostings.hosting
-        }
-
-        const response = await settings.getHostingsList()
-
-        expect(response).to.be.eql(expectedResponse)
-      })
-    })
-
     describe('getAttributesFromYaml', function () {
       const example = {
         name: 'hello',

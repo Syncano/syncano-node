@@ -9,6 +9,12 @@ import { error, p } from '../utils/print-tools'
 const { warn, info } = logger('settings')
 
 export default class Settings {
+  attributes: object
+  configPath: string | null
+  baseDir: string
+  name: string
+  loaded: boolean
+
   constructor () {
     this.attributes = {}
     this.configPath = null
@@ -26,7 +32,7 @@ export default class Settings {
     info(`loading: ${this.name} - ${this.configPath}`)
 
     try {
-      fs.accessSync(this.configPath, fs.R_OK)
+      fs.accessSync(this.configPath, fs.constants.R_OK)
     } catch (err) {
       warn('Config doesn\'t exist!')
       return false
@@ -47,15 +53,16 @@ export default class Settings {
     try {
       fs.writeFileSync(this.configPath, YAML.dump(this.attributes))
     } catch (err) {
-      return new ErrorResponse(this).handle(err)
+      // TODO: handle error here
+      // return new ErrorResponse(this).handle(err)
     }
   }
 
-  get (key) {
+  get (key: string) {
     return this.attributes[key] || null
   }
 
-  set (key, value, save) {
+  set (key: any, value: any, save: boolean) {
     this.attributes[key] = value
     if (save !== false) this.save()
     return this
