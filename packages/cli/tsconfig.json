@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "outDir": "./lib",
     "allowJs": true,
-    "target": "es5"
+    "target": "es5",
+    "lib": ["es2015", "es2017", "dom"]
   },
   "include": [
     "./src/**/*"

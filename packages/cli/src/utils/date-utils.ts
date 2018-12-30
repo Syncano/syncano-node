@@ -3,6 +3,7 @@ function currentTime () {
 }
 
 class Timer {
+  startTime: number
   constructor () {
     this.reset()
   }

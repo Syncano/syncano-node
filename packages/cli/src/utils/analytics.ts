@@ -15,7 +15,7 @@ const PROD_KEY = 'fLDtpYXRjFYnHlp1gvzl4I3Gv8gDoQ8m'
 const ANALYTICS_WRITE_KEY = process.env.SYNCANO_ENV === 'test' ? STG_KEY : PROD_KEY
 const analytics = new Analytics(ANALYTICS_WRITE_KEY, {flushAt: 1})
 
-const identify = (details) => {
+const identify = (details: any) => {
   debug('identify')
   analytics.identify({
     userId: details.id,
@@ -33,12 +33,23 @@ const identify = (details) => {
   })
 }
 
-const track = (eventName, params = {}) => {
+interface TrackParams {
+  properties: any
+  event: string
+  userId?: string | number
+  instance?: string
+}
+interface TrackPops {
+  version: string
+  instance?: string
+}
+
+const track = (eventName: string, params = {}) => {
   debug('track')
 
   const props = Object.assign({
     version: pjson.version
-  }, params)
+  } as TrackPops, params)
 
   if (session.project) {
     props.instance = session.project.instance
@@ -47,7 +58,7 @@ const track = (eventName, params = {}) => {
   const trackParams = {
     properties: props,
     event: eventName
-  }
+  } as TrackParams
 
   if (session.userId) {
     trackParams.userId = session.userId

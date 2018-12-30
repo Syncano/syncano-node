@@ -1,16 +1,19 @@
 class CompileError {
-  constructor (traceback) {
+  traceback: string
+  constructor (traceback: string) {
     this.traceback = traceback
   }
 }
 class SocketUpdateError {
-  constructor (message) {
+  message: string
+  constructor (message: string) {
     this.message = message
   }
 }
 
 class CompatibilityError {
-  constructor (socketVersion, envVersion) {
+  message: string
+  constructor (socketVersion: string, envVersion: string) {
     this.message = `Socket major version (${socketVersion}) is not\
  comaptible with this Syncano environment major version (${envVersion}).`
   }
