@@ -3,7 +3,6 @@ import _ from 'lodash'
 import Analytics from 'analytics-node'
 import Command from 'commander'
 
-import pjson from '../../package.json'
 import logger from './debug'
 import session from './session'
 
@@ -48,7 +47,7 @@ const track = (eventName: string, params = {}) => {
   debug('track')
 
   const props = Object.assign({
-    version: pjson.version
+    version: session.CLIVersion
   } as TrackPops, params)
 
   if (session.project) {

@@ -5,7 +5,6 @@ import mkdirp from 'mkdirp'
 // import Promise from 'bluebird'
 
 import logger from './debug'
-import pjson from '../../package.json'
 import getSettings from '../settings'
 import genUniqueName from './unique-instance'
 import Socket from './sockets'
@@ -24,6 +23,7 @@ const LOCATIONS = {
 }
 
 export class Session<CLISession> {
+  CLIVersion: string
   settings: any
   projectPath: string
   project: SyncanoProject
@@ -41,6 +41,12 @@ export class Session<CLISession> {
     this.project = null
     this.userId = null
 
+    // TODO: fix this
+    // const pjson = require('../../package.json')
+    const pjson = {
+      version: '0.0.1'
+    }
+    this.CLIVersion = pjson.version
     this.majorVersion = pjson.version.split('.')[0]
 
     this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION as Location || 'us1' as Location  // default location

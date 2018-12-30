@@ -8,7 +8,6 @@ import validateCommands from './utils/validate-commands'
 import initRaven from './utils/raven'
 import session from './utils/session'
 import logger from './utils/debug'
-import pjson from '../package.json'
 import { echo } from './utils/print-tools'
 
 const { debug } = logger('main-cli')
@@ -24,11 +23,11 @@ const trackAndDebug = (options, additionalParams) => {
 }
 
 const setup = async () => {
-  debug(pjson.version)
+  debug(session.CLIVersion)
   await context.session.load()
 
   program
-    .version(pjson.version)
+    .version(session.CLIVersion)
 
   program
     .command('info')

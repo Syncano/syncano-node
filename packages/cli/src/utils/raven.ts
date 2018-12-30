@@ -1,5 +1,4 @@
 import Raven from 'raven'
-import pjson from '../../package.json'
 import session from './session'
 import logger from './debug'
 
@@ -24,7 +23,7 @@ export default () => {
   }
 
   const params = {
-    release: pjson.version,
+    release: session.CLIVersion,
     environment: process.env.NODE_ENV === 'test' ? 'staging' : 'production',
     dataCallback,
     captureUnhandledRejections: true

@@ -4,7 +4,6 @@ import format from 'chalk'
 
 import logger from '../utils/debug'
 import { echo, echon } from '../utils/print-tools'
-import pjson from '../../package.json'
 
 const { debug } = logger('cmd-sysinfo')
 
@@ -23,7 +22,7 @@ export default class SysInfoCmd {
 
     echo()
     echon(2)(` ${format.dim('cli version')}:`)
-    echo(` ${format.cyan(pjson.version)}`)
+    echo(` ${format.cyan(this.session.CLIVersion)}`)
     echon(2)(`${format.dim('node version')}:`)
     echo(` ${format.cyan(process.version)}`)
     echon(2)(` ${format.dim('npm version')}:`)
