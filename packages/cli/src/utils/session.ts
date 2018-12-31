@@ -13,7 +13,8 @@ import Hosting from './hosting'
 import Plugins from './plugins'
 import { echo } from './print-tools'
 
-import {CLISession, SyncanoProject, SyncanoConnection, Location} from '../types'
+import {CLISession, SyncanoProject, SyncanoConnection, Location, CLIContext} from '../types'
+import { CommanderStatic } from 'commander';
 
 const { debug } = logger('utils-session')
 
@@ -149,7 +150,7 @@ export class Session<CLISession> {
     } catch (err) {}
   }
 
-  async deleteInstance (name) {
+  async deleteInstance (name: string) {
     return this.connection.instance.delete(name)
   }
 
@@ -157,7 +158,7 @@ export class Session<CLISession> {
     return this.connection.instance.create({ name })
   }
 
-  async getInstance (instanceName) {
+  async getInstance (instanceName: string) {
     const instanceNameToGet = instanceName || (this.project && this.project.instance)
     return this.connection.instance.get(instanceNameToGet)
   }
@@ -200,7 +201,7 @@ export class Session<CLISession> {
     return this
   }
 
-  loadPlugins (program, context) {
+  loadPlugins (program: CommanderStatic, context: CLIContext) {
     new Plugins().load(program, context)
   }
 
@@ -222,7 +223,7 @@ export class Session<CLISession> {
     }
   }
 
-  async checkConnection (instanceName) {
+  async checkConnection (instanceName?: string) {
     let instance
 
     try {
@@ -266,7 +267,7 @@ export class Session<CLISession> {
     }
   }
 
-  hasSocket (socketName) { // eslint-disable-line class-methods-use-this
+  hasSocket (socketName: string) { // eslint-disable-line class-methods-use-this
     const socket = new Socket(socketName)
     if (!socket.existLocally) {
       echo()
@@ -288,7 +289,7 @@ export class Session<CLISession> {
   }
 
   async deployProject () { // eslint-disable-line class-methods-use-this
-    const hostings = await Hosting.list()
+    const hostings = await Hosting.list() as any
     return Promise.all(hostings.map((hosting) => hosting.deploy()))
   }
 }

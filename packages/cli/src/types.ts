@@ -2,8 +2,6 @@ import { SyncanoClass } from "@syncano/core";
 
 export interface CLIPlugin {
 }
-export interface CLIProgramContext {
-}
 
 export type Location = 'eu1' | 'us1'
 
@@ -23,15 +21,15 @@ export interface CLISession {
   connection: SyncanoClass
 }
 
-export interface CLIProgramContext {
-  name: string
-  settings: any
-  projectPath: string
-  project: string
-  userId: string
-  session: CLISession
-  plugins: CLIPlugin[]
-}
+// export interface CLIProgramContext {
+//   name: string
+//   settings: any
+//   projectPath: string
+//   project: string
+//   userId: string
+//   session: CLISession
+//   plugins: CLIPlugin[]
+// }
 
 export interface ProjectSettings {
   instance?: string
@@ -74,4 +72,15 @@ export interface ProjectSettingsAttributes {
   plugins: Record<string, string>
   templates: Record<string, string>
   hosting: Record<string, HostingRecord>
+}
+
+export interface InitClass {}
+export interface HostingClass {}
+export interface SocketClass {}
+
+export interface CLIContext {
+  Init: InitClass,
+  Hosting: HostingClass,
+  Socket: SocketClass,
+  session: CLISession,
 }

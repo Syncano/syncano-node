@@ -4,7 +4,6 @@ import { warning } from '../print-tools'
 import session from '../session'
 import {
   CLIPlugin,
-  CLIProgramContext
 } from '../../types'
 
 const { debug } = logger('utils-plugins')
@@ -15,7 +14,7 @@ export default class Plugins {
     this.plugins = session.settings.project.getPlugins() || []
   }
 
-  load (program, context: CLIProgramContext) {
+  load (program, context) {
     debug('load()')
     Object.keys(this.plugins).forEach((pluginName) => {
       /* eslint-disable import/no-dynamic-require */

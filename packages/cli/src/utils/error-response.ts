@@ -2,7 +2,7 @@ import Raven from 'raven'
 import format from 'chalk'
 import _ from 'lodash'
 import { error, echo } from './print-tools'
-import { CLIProgramContext, CLISession } from '../types';
+import { CLIContext, CLISession } from '../types';
 import session from './session';
 
 // TODO: how solve this with typescript?
@@ -28,12 +28,12 @@ process.on('unhandledRejection', (reason, p) => {
 })
 
 class ErrorResponse {
-  context: CLIProgramContext
+  context: CLIContext
   session: CLISession
   name: string
   contextName: string
 
-  constructor (context: CLIProgramContext) {
+  constructor (context) {
     this.context = context
     this.name = context.name
     this.contextName = context.constructor.name.toLowerCase()

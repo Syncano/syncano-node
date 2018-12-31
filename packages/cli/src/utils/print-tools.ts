@@ -17,7 +17,7 @@ function getFormatMethod (code) {
   return MAP[firstDigitOfCode] || MAP[0]
 }
 
-function printCode (code, str) {
+function printCode (code, str?: string) {
   return getFormatMethod(code)(str || code)
 }
 
@@ -82,7 +82,7 @@ function warning (...args) {
   process.stdout.write(util.format(format.yellow(args.join('\n\n'), '\n')))
 }
 
-const p = (padding) => (string) => {
+const p = (padding: number) => (string?: string) => {
   let str = ''
   if (string) {
     str = string.split('\n').join(`\n${_.repeat(' ', padding)}`)

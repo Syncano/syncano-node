@@ -28,7 +28,7 @@ export default class ProjectSettings extends Settings {
   getAllSocketsYmlPath () {
     return new Promise((resolve, reject) => {
       const paths = []
-      readdirp({ root: this.baseDir, fileFilter: 'socket.yml' })
+      readdirp({ root: this.baseDir, fileFilter: 'socket.yml' }, () => {}, () => {})
         .on('data', (entry: any) => {
           paths.push(entry.fullPath)
         })
