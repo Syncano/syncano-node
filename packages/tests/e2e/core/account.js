@@ -1,11 +1,11 @@
-/* global describe it before */
+/* global describe it beforeAll */
 import {expect} from 'chai'
 import Server from '../../../lib-js-core/lib'
 
 describe('Account', function () {
   let account = null
 
-  before(function () {
+  beforeAll(function () {
     account = new Server().account
   })
 

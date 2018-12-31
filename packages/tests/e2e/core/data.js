@@ -1,4 +1,4 @@
-/* global it describe before after beforeEach afterEach */
+/* global it describe beforeAll afterAll  beforeEach afterEach */
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'
@@ -26,7 +26,7 @@ describe('Data', function () {
   const testClassName = getRandomString()
   const instanceName = uniqueInstance()
 
-  before(function () {
+  beforeAll(function () {
     const server = new Server({
       instanceName,
       meta: {
@@ -44,11 +44,11 @@ describe('Data', function () {
     )
   })
 
-  beforeEach(() => {
+   beforeEach(() => {
     run = () => data[testClassName]
   })
 
-  after(() => deleteInstance(instanceName))
+  afterAll(() => deleteInstance(instanceName))
 
   afterEach(() => run().delete())
 
@@ -249,7 +249,7 @@ describe('Data', function () {
             .should.eventually.have.nested.property('author.username', 'john')
         }))
 
-    it('should expand reference with object after update', async () => {
+    it('should expand reference with object afterAll update', async () => {
       const username = getRandomString()
       const user = await users.create({username, password: 'test'})
       const obj = await run()
@@ -262,7 +262,7 @@ describe('Data', function () {
         .should.eventually.have.nested.property('author.username', username)
     })
 
-    it('should expand reference with object after create', async () => {
+    it('should expand reference with object afterAll create', async () => {
       const username = getRandomString()
       const user = await users.create({username, password: 'test'})
 

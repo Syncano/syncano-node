@@ -3,6 +3,7 @@ import * as chaiAsPromised from 'chai-as-promised'
 import * as nock from 'nock'
 import Server from '../../src'
 import {InstanceClass} from '../../src/instance'
+import {Instance} from '../../src/types'
 
 chai.use(chaiAsPromised)
 chai.should()
@@ -26,6 +27,29 @@ describe('Instance', () => {
       api.post(`/v2/instances/`, {name: 'my-insta'}).reply(200)
 
       return instance.create({name: 'my-insta'}).should.be.fulfilled
+    })
+  })
+
+  describe('#list', () => {
+    it('should list syncano instances', () => {
+      const fakeResp = {
+        objects: [
+          {
+            name: 'instance1'
+          },
+          {
+            name: 'instance2'
+          }
+        ] as Instance[],
+        next: null,
+        prev: null
+      }
+
+      api.get(`/v3/instances/`).reply(200, fakeResp)
+      instance.list().should.be.fulfilled
+
+      api.get(`/v3/instances/`).reply(200, fakeResp)
+      instance.list().should.be.eventually.equal(fakeResp.objects)
     })
   })
 

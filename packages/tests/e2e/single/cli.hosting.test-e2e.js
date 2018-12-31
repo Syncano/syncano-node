@@ -1,4 +1,4 @@
-/* global describe it before after */
+/* global describe it beforeAll afterAll */
 import {
   nixt,
   testsLocation,
@@ -12,8 +12,8 @@ const hostingName2 = 'tests2'
 const { email, password, syncanoYmlPath } = returnTestGlobals()
 
 describe('CLI Commands - Hosting', function () {
-  before(cleanUpAccount)
-  after(cleanUpAccount)
+  beforeAll(cleanUpAccount)
+  afterAll(cleanUpAccount)
 
   it('can run cli init with existing account', function (done) {
     nixt()

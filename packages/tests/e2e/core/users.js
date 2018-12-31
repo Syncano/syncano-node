@@ -1,4 +1,4 @@
-/* globals it describe before after */
+/* globals it describe beforeAll afterAll */
 import {expect} from 'chai'
 
 import {
@@ -13,7 +13,7 @@ describe('Users', function () {
   let users
   const instanceName = uniqueInstance()
 
-  before(function () {
+  beforeAll(function () {
     const server = new Server({
       instanceName,
       meta: {
@@ -27,7 +27,7 @@ describe('Users', function () {
     return createInstance(instanceName)
   })
 
-  after(() => deleteInstance(instanceName))
+  afterAll(() => deleteInstance(instanceName))
 
   it('can\'t log in with wrong credentials', async () => {
     const credentials = {
