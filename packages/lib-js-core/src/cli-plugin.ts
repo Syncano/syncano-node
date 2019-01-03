@@ -1,4 +1,6 @@
-import {writeFileSync} from 'fs'
+import * as crypto from 'crypto'
+import * as fs from 'fs'
+import * as mkdirp from 'mkdirp'
 
 export default class {
   public context: any
@@ -6,12 +8,33 @@ export default class {
   constructor (context: any) {
     this.context = context
   }
-  public async run ([out]: [string]) {
+
+  public async run () {
     const sockets = await this.context.Socket.list()
     const classes = Object.assign({}, ...sockets.map((item: any) => item.spec.classes))
+    const typePath = './syncano/typings/instance/index.d.ts'
+    const instanceInterface = this.instanceInterface(classes)
 
-    writeFileSync('./syncano.d.ts', this.instanceInterface(classes))
-    writeFileSync('./tsconfig.syncano.json', this.syncanoTsConfig)
+    mkdirp('./syncano/typings/instance', () => {
+      fs.readFile(typePath, (err, data) => {
+        if (!data) {
+          fs.writeFileSync(typePath, instanceInterface)
+          console.log('Instance schema type was created.')
+        } else if (this.checksum(data.toString()) !== this.checksum(instanceInterface)) {
+          fs.writeFileSync(typePath, instanceInterface)
+          console.log('Instance schema type was updated.')
+        } else {
+          console.log('Instance schema type is already up to date.')
+        }
+      })
+    })
+
+    if (!fs.existsSync('./syncano/tsconfig.json')) {
+      fs.writeFileSync('./syncano/tsconfig.json', this.syncanoTsConfig)
+      console.log('Syncano tsconfig.json file was created.')
+    } else {
+      console.log('Syncano tsconfig.json file already exists.')
+    }
   }
 
   private instanceInterface(classes: Array<{
@@ -42,7 +65,7 @@ declare module '@syncano/core/server' {
       file: 'any',
       reference: 'any',
       relation: 'any[]',
-      array: 'Array<string, boolean, number>',
+      array: 'Array<string | boolean | number>',
       object: 'object',
       geopoint: `{
       latitude: number
@@ -53,13 +76,21 @@ declare module '@syncano/core/server' {
 
   get syncanoTsConfig() {
     return `{
-  "files": [
-    "./syncano.d.ts"
-  ],
-  "include": [
-    "syncano/**/*"
-  ]
+  "compilerOptions": {
+    "lib": [
+      "es2015"
+    ],
+    "typeRoots": [
+      "./typings"
+    ]
+  }
 }
 `
+  }
+  private checksum(str: any, algorithm?: string, encoding?: crypto.HexBase64Latin1Encoding) {
+    return crypto
+      .createHash(algorithm || 'md5')
+      .update(str, 'utf8')
+      .digest(encoding || 'hex')
   }
 }
