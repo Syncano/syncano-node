@@ -9,15 +9,12 @@ import { echo, p, error } from '../utils/print-tools'
 
 const { debug } = logger('cmd-login')
 
-export default class Login {
-  context: any
-  session: any
+import Command from '../base_command'
 
-  constructor (context) {
-    debug('Login.constructor')
-    this.context = context
-    this.session = context.session
-  }
+
+export default class Login extends Command {
+  static description = 'Login to your account'
+  static flags = {}
 
   static loginQuestion = () => ({
     name: 'email',
@@ -65,7 +62,7 @@ export default class Login {
     if (confirm === false) return process.exit()
   }
 
-  async run ([]: any[]) {
+  async run () {
     try {
       const user = await this.session.checkAuth()
       await Login.displayWelcomeMessage(user)

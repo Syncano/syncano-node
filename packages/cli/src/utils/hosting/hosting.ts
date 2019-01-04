@@ -12,6 +12,8 @@ import logger from '../debug'
 import { getFiles } from './utils'
 import { echo, error } from '../print-tools'
 
+import {HostingParams} from '../../types'
+
 const { debug } = logger('utils-hosting')
 
 class HostingFile {
@@ -84,7 +86,7 @@ class Hosting {
     this.loadLocal()
   }
 
-  static async add (params) {
+  static async add (params: HostingParams): Promise<Hosting> {
     const configParams = {
       src: params.src,
       config: {
@@ -117,7 +119,8 @@ class Hosting {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-    return response.data
+
+    return new Hosting(params.name)
   }
 
   hasCNAME (cname: string) {

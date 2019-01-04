@@ -14,10 +14,16 @@ export interface SyncanoConnection {
 }
 
 export interface CLISession {
+  CLIVersion: string
   settings: any
   projectPath: string
-  project: string
-  userId: string
+  project: SyncanoProject
+  userId: number
+  userEmail: string
+  userFirstName: string
+  userLastName: string
+  majorVersion: string
+  location: Location
   connection: SyncanoClass
 }
 
@@ -83,4 +89,11 @@ export interface CLIContext {
   Hosting: HostingClass,
   Socket: SocketClass,
   session: CLISession,
+}
+
+export interface HostingParams {
+  name: string
+  src: string
+  cname?: string
+  browser_router?: boolean
 }

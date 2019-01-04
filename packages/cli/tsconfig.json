@@ -4,46 +4,11 @@
     "resolveJsonModule": true,
     "outDir": "./lib",
     "allowJs": true,
-    "target": "es5",
-    "lib": ["es2015", "es2017", "dom"]
+    "target": "es2017",
+    "module": "commonjs"
   },
   "include": [
     "./src/**/*"
   ]
 }
-// {
-//   "compilerOptions": {
-//     "module": "commonjs",
-//     "target": "es6",
-//     "strict": true,
-//     "sourceMap": false,
-//     "allowJs": true,
-//     "allowSyntheticDefaultImports": false,
-//     "moduleResolution": "node",
-//     "rootDir": "./src",
-//     "outDir": "./lib",
-//     "noImplicitReturns": true,
-//     "noImplicitThis": true,
-//     "noImplicitAny": true,
-//     "noUnusedLocals": true,
-//     "suppressImplicitAnyIndexErrors": true,
-//     "forceConsistentCasingInFileNames": true,
-//     // "declaration": true,
-//     "lib": [
-//       "es2015",
-//       "es2016"
-//     ],
-//     "typeRoots": [
-//       "node_modules/@types",
-//       "../../node_modules/@types"
-//     ]
-//   },
-//   "include": [
-//     "./src/**/*"
-//   ],
-//   "exclude": [
-//     "node_modules/**/*",
-//     "src/**/*.test.tsx",
-//     "test/**/*"
-//   ]
-// }
+

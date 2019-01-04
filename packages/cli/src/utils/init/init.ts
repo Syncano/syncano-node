@@ -65,7 +65,7 @@ class Init {
     return fs.existsSync(session.projectPath) && session.project
   }
 
-  async addConfigFiles (projectParams = {}, projectPath) {
+  async addConfigFiles (projectParams = {}, projectPath?: string) {
     if (projectPath) {
       session.settings.account.addProject(projectPath, projectParams)
     } else {

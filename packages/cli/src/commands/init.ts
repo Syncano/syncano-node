@@ -2,29 +2,29 @@ import format from 'chalk'
 import inquirer from 'inquirer'
 
 import logger from '../utils/debug'
-import { createInstance } from './helpers/create-instance'
+import { createInstance } from '../commands_helpers/create-instance'
 import { p, echo } from '../utils/print-tools'
 import { track } from '../utils/analytics'
 import Login from './login'
 
 const { debug } = logger('cmd-init')
 
-class InitCmd {
-  context: any
-  session: any
-  Init: any
-  init: any
+import Command, {Init} from '../base_command'
 
-  constructor (context) {
-    debug('InitCmd.constructor')
-    this.context = context
-    this.session = context.session
-    this.Init = context.Init
-  }
 
-  async run ([cmd]: any[]) {
+export default class InitCmd extends Command {
+  static description = 'Init Syncano instance'
+  static flags = {}
+  static args = [{
+    name: 'instance',
+    description: 'Instance Name'
+  }]
+
+  async run () {
+    const {args} = this.parse(InitCmd)
+
     const { project, settings } = this.session
-    const { instance } = cmd
+    const instance = args.instance
 
     if (process.env.INIT_CWD) {
       track('CLI: install')
@@ -33,24 +33,24 @@ class InitCmd {
     if (!settings.account.authenticated()) {
       echo()
       echo(4)(format.red('You have to be logged in to initialize a new project!'))
-      await new Login(this.context).run([])
+      await Login.run()
     }
 
-    this.init = new this.Init()
+    const init = new Init()
 
     const questions = [
       {
         name: 'Location',
         type: 'list',
         message: p(2)('Choose location for your instance'),
-        choices: this.Init.getLocationChoices().map(choice => p(4)(choice)),
+        choices: Init.getLocationChoices().map(choice => p(4)(choice)),
         default: 0
       },
       {
         name: 'Template',
         type: 'list',
         message: p(2)('Choose template for your project'),
-        choices: this.Init.getTemplatesChoices().map(choice => p(4)(choice)),
+        choices: Init.getTemplatesChoices().map(choice => p(4)(choice)),
         default: 1
       }
     ]
@@ -67,34 +67,34 @@ class InitCmd {
     }
 
     const promptResponses = await inquirer.prompt(questions) as any
-    this.init.templateName = promptResponses.Template.match(/\((.*)\)/)[1]
-    this.init.locationName = promptResponses.Location.match(/[a-z0-9]+/)[0]
+    init.templateName = promptResponses.Template.match(/\((.*)\)/)[1]
+    init.locationName = promptResponses.Location.match(/[a-z0-9]+/)[0]
 
-    await this.session.setLocation(this.init.locationName)
+    await this.session.setLocation(init.locationName)
 
     if (!project && instance) {
       await this.session.checkConnection(instance)
-      await this.init.addConfigFiles({ instance, location: this.init.locationName })
+      await init.addConfigFiles({ instance, location: init.locationName })
       echo(4)(`Your project is attached to ${format.green(instance.name)} instance now!`)
 
-      return this.init.createFilesAndFolders()
+      return init.createFilesAndFolders()
     }
 
     if (!project && !instance) {
       debug('no project, no instance')
       const newInstance = await createInstance()
 
-      await this.init.addConfigFiles({ instance: newInstance.name, location: this.init.locationName })
+      await init.addConfigFiles({ instance: newInstance.name, location: init.locationName })
       echo(4)(`Your project is attached to ${format.green(newInstance.name)} instance now!`)
 
-      this.init.createFilesAndFolders()
+      init.createFilesAndFolders()
       return this.session.load()
     }
 
-    if (this.init.checkConfigFiles()) {
-      return this.init.noConfigFiles()
+    if (init.checkConfigFiles()) {
+      return init.noConfigFiles()
     }
   }
 }
 
-export default InitCmd
+

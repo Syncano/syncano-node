@@ -3,21 +3,16 @@ import format from 'chalk'
 import logger from '../utils/debug'
 import { echo, echon, warning } from '../utils/print-tools'
 
+import Command from '../base_command'
+
 const { debug } = logger('cmd-info')
 
-export default class InfoCmd {
-  context: any
-  session: any
-  Init: any
 
-  constructor (context) {
-    debug('InfoCmd.constructor')
-    this.context = context
-    this.session = context.session
-    this.Init = context.Init
-  }
+export default class Info extends Command {
+  static description = 'Info about current project/instance/user etc.'
+  static flags = {}
 
-  async run ([]: any[]) {
+  async run () {
     echo()
     echon(2)(`        ${format.dim('username')}:`)
     echo(` ${format.cyan(this.session.userEmail)}`)

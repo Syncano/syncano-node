@@ -23,7 +23,7 @@ const LOCATIONS = {
   'eu1': 'api-eu1.syncano.io'
 }
 
-export class Session<CLISession> {
+export class Session {
   CLIVersion: string
   settings: any
   projectPath: string
@@ -77,6 +77,9 @@ export class Session<CLISession> {
       return `${this.project.instance}.syncano.link`
     }
     if (this.project && this.project.instance) {
+      if (this.location == 'us1') {
+        return `${this.project.instance}.syncano.space`
+      }
       return `${this.project.instance}.${this.location}.syncano.space`
     }
   }
@@ -147,7 +150,9 @@ export class Session<CLISession> {
       this.userEmail = details.email
       this.userFirstName = details.first_name
       this.userLastName = details.last_name
-    } catch (err) {}
+    } catch (err) {
+      debug('Error while getting user details!')
+    }
   }
 
   async deleteInstance (name: string) {

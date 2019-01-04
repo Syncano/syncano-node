@@ -25,6 +25,19 @@
     "type": "git",
     "url": "https://github.com/Syncano/syncano-node.git"
   },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "syncano-cli",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
   "bin": {
     "s": "./lib/cli.js",
     "syncano-cli": "./lib/cli.js",
@@ -47,7 +60,7 @@
     "@syncano/template-socket-vanilla": "0.15.0",
     "@syncano/validate": "0.15.0",
     "analytics-node": "^3.1.1",
-    "archiver": "^2.1.0",
+    "archiver": "^3.0.0",
     "axios": "^0.18.0",
     "bluebird": "^3.5.3",
     "chalk": "^2.4.1",
@@ -71,6 +84,7 @@
     "mkdirp": "^0.5.1",
     "node-dir": "^0.1.17",
     "node-walkup": "^1.1.1",
+    "oclif": "^1.12.8",
     "ora": "^1.3.0",
     "pretty-bytes": "^4.0.2",
     "raven": "^2.6.4",
@@ -87,7 +101,11 @@
     "yauzl": "^2.10.0"
   },
   "devDependencies": {
+    "@oclif/dev-cli": "^1.21.0",
+    "@oclif/plugin-legacy": "^1.1.3",
+    "@oclif/tslint": "^3.1.1",
     "@syncano/test-tools": "0.15.0",
+    "@types/archiver": "^2.1.2",
     "@types/bluebird": "^3.5.25",
     "@types/debug": "0.0.31",
     "@types/inquirer": "0.0.43",
@@ -98,6 +116,7 @@
     "@types/pretty-bytes": "^5.1.0",
     "@types/raven": "^2.5.1",
     "@types/strip-ansi": "^3.0.0",
+    "@types/yauzl": "^2.9.1",
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dynamic-import-node": "^1.0.2",
@@ -126,6 +145,8 @@
     "sinon": "^4.1.3",
     "sinon-test": "^2.4.0",
     "standard": "^11.0.1",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.0",
     "typescript": "^3.2.2"
   },
   "scripts": {

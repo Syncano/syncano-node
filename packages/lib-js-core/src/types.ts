@@ -197,6 +197,7 @@ export interface Instance {
   created_at: string
   updated_at: string
   role: string
+  location: string
   metadata: InstanceMetadata
   links: {
     self: string

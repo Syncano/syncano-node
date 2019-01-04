@@ -9,7 +9,7 @@ export class TraceClass extends QueryBuilder {
    * @param endpointName Name of traced endpoint
    * @param traceId Id of trace object
    */
-  public get (socketName: string, endpointName: string, traceId: string): Promise<Trace> {
+  public get (socketName: string, endpointName: string, traceId?: string): Promise<Trace> {
     return this.fetch(this.url(socketName, endpointName, traceId), {}, {
       'X-API-KEY': this.instance.accountKey
     })

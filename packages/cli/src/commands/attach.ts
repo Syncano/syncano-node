@@ -4,28 +4,26 @@ import logger from '../utils/debug'
 import format from 'chalk'
 import { p, echo } from '../utils/print-tools'
 import genUniqueInstanceName from '../utils/unique-instance'
-import { createInstance } from './helpers/create-instance'
-import { CLISession } from '../types';
-import { CommanderStatic } from 'commander';
+import { createInstance } from '../commands_helpers/create-instance'
+
+import Command, {Init} from '../base_command'
+import { flags } from '@oclif/command';
 
 
 const { debug } = logger('cmd-attach')
 
-class Attach {
-  session: any
-  Init: any
-  cmd: any
-  init: any
-
-  constructor (context) {
-    debug('Attach.constructor')
-    this.session = context.session
-    this.Init = context.Init
+export default class Attach extends Command {
+  static description = 'Info about current project/instance/user etc.'
+  static flags = {
+    'create-instance': flags.string(),
+    instance: flags.string()
   }
 
-  async run ([cmd = {}]: any[]) {
-    this.cmd = cmd
-    this.init = new this.Init()
+  async run () {
+    const init = new Init()
+
+    const {args} = this.parse(Attach)
+    const {flags} = this.parse(Attach)
 
     if (this.session.project) {
       const confirmQuestion = [{
@@ -42,8 +40,8 @@ class Attach {
     let instanceName
     let instance
 
-    if (cmd.createInstance) {
-      instance = await createInstance(cmd.createInstance)
+    if (flags['create-instance']) {
+      instance = await createInstance(flags['create-instance'])
       instanceName = instance.name
     } else {
       const questions = await this.getQuestions()
@@ -59,7 +57,7 @@ class Attach {
       instanceName = instance.name
     }
 
-    await this.init.addConfigFiles({ instance: instanceName }, this.session.projectPath)
+    await init.addConfigFiles({ instance: instanceName }, this.session.projectPath)
     echo(4)(`Your project is attached to ${format.green(instanceName)} instance now!`)
     echo()
 
@@ -84,23 +82,19 @@ class Attach {
     debug('getQuestions')
     const questions = []
 
-    if (!this.cmd.instance) {
-      const instances = await this.session.getInstances()
-      const instancesNames = instances.map((instance) => p(2)(instance.name))
-      instancesNames.unshift(p(2)('Create a new one...'))
+    const instances = await this.session.getInstances()
+    const instancesNames = instances.map((instance) => p(2)(instance.name))
+    instancesNames.unshift(p(2)('Create a new one...'))
 
-      questions.push({
-        name: 'instance',
-        type: 'list',
-        pageSize: 16,
-        message: p(2)('Choose instance for your project:'),
-        choices: instancesNames,
-        default: 0
-      })
-    }
+    questions.push({
+      name: 'instance',
+      type: 'list',
+      pageSize: 16,
+      message: p(2)('Choose instance for your project:'),
+      choices: instancesNames,
+      default: 0
+    })
 
     return questions
   }
 }
-
-export default Attach

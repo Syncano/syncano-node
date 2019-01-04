@@ -1,16 +1,14 @@
 import format from 'chalk'
 import { echo } from '../utils/print-tools'
 
-class Logout {
-  context: any
-  session: any
+import Command from '../base_command'
 
-  constructor (context) {
-    this.context = context
-    this.session = context.session
-  }
 
-  run ([cmd]: any[]) {
+export default class Logout extends Command {
+  static description = 'Login to your account'
+  static flags = {}
+
+  run () {
     const authenticated = this.session.settings.account.authenticated()
 
     if (!authenticated) {
@@ -28,4 +26,3 @@ class Logout {
   }
 }
 
-export default Logout
