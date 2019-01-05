@@ -2,7 +2,7 @@ import Command, {flags} from '@oclif/command'
 import session from './utils/session'
 import {Session} from './utils/session'
 import Socket from './utils/sockets'
-import Init from './utils/Init'
+import Init from './utils/init'
 
 export {
   Socket,
