@@ -21,7 +21,7 @@ export default class SocketConfig extends Command {
 
     if (!socket.existRemotely) {
       echo()
-      error(4)('That socket was not synced!')
+      error(4)('That Socket was not synced!')
       echo()
       process.exit(1)
     }

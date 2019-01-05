@@ -17,6 +17,7 @@ class SocketSettings extends Settings {
     this.name = 'socket'
     this.baseDir = socketPath
     this.loaded = this.load()
+
     this.attributes.version = this.readVersion()
   }
 

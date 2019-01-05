@@ -10,7 +10,6 @@ import mkdirp from 'mkdirp'
 import path from 'path'
 import FormData from 'form-data'
 import archiver from 'archiver'
-// import BlueBirdPromise from 'bluebird'
 import template from 'es6-template-strings'
 import _ from 'lodash'
 import SourceMap from 'source-map'
@@ -21,11 +20,10 @@ import Validator from '@syncano/validate'
 import logger from '../debug'
 import session from '../session'
 import utils from './utils'
-import Hosting from '../hosting'
-import { p, echo } from '../print-tools'
+import { p } from '../print-tools'
 import { getTemplate } from '../templates'
 import { CompileError, SocketUpdateError, CompatibilityError } from '../errors'
-import {Trace} from '@syncano/core'
+import {UpdateSocketZipReponse} from '../../types'
 
 const { debug, info } = logger('utils-sockets')
 
@@ -143,7 +141,7 @@ class Socket {
     return utils.getTemplatesChoices()
   }
 
-  static uninstall (socket? : Socket) {
+  static uninstall (socket?: Socket) {
     debug('uninstall', socket.name)
 
     if (socket.existLocally && socket.localPath) {
@@ -161,12 +159,12 @@ class Socket {
     return Promise.reject(new Error('Socket with given doesn\'t exist!'))
   }
 
-  static uninstallLocal (socket) {
+  static uninstallLocal (socket: Socket) {
     utils.deleteFolderRecursive(socket.localPath)
   }
 
   // TODO: check if the socket is installed (it may be not yet installed yet (before sync))
-  static async uninstallRemote (socketName) {
+  static async uninstallRemote (socketName: string) {
     debug('uninstallRemote', socketName)
     return session.connection.socket.delete(socketName)
   }
@@ -181,8 +179,8 @@ class Socket {
   static async list () {
     debug('list()')
     // Local Socket defined in folders and in project deps
-    const localSocketsList = utils.listLocal()
-    return Promise.all(localSocketsList.map((socketName) => Socket.get(socketName)))
+    const localSocketsList = await utils.listLocal()
+    return Promise.all(localSocketsList.map((socketName: string) => Socket.get(socketName)))
   }
 
   // Creating Socket simple object
@@ -198,14 +196,15 @@ class Socket {
     return socket
   }
 
-  static create (socketName: string, templateName: string) {
+  static async create (socketName: string, templateName: string) {
     debug('create socket', socketName, templateName)
     const newSocketPath = path.join(session.projectPath, 'syncano', socketName)
     const socket = new Socket(socketName, newSocketPath)
     if (socket.existLocally) {
-      return Promise.reject(new Error('Socket with given name already exist!'))
+      throw new Error('Socket with given name already exist!')
     }
-    return socket.init(templateName)
+    await socket.init(templateName)
+    return socket
   }
 
   async init (templateName: string) {
@@ -512,17 +511,17 @@ class Socket {
     return resp.data
   }
 
-  async listZipFiles (zipPath: string) {
+  async listZipFiles (zipPath: string): Promise<yauzl.ZipFile[]> {
     info('listZipFiles()', zipPath)
-    const files = [] as string[]
+    const files = [] as yauzl.ZipFile[]
     if (!fs.existsSync(zipPath)) {
       return files
     }
 
     return new Promise((resolve, reject) => {
       yauzl.open(zipPath, {lazyEntries: true}, (err, zipfile) => {
-        if (err) {
-          reject(err)
+        if (err || !zipfile) {
+          return reject(err)
         }
         zipfile.readEntry()
         zipfile.on('end', () => {
@@ -737,7 +736,8 @@ class Socket {
     return 'No need to update'
   }
 
-  async updateSocketZip ({ config, install = false }) {
+
+  async updateSocketZip ({ config, install = false }): Promise<UpdateSocketZipReponse> {
     info('updateSocketZip()')
     let endpointPath = `/v2/instances/${session.project.instance}/sockets/`
     // const zipChecksum = await md5File(this.getSocketZip())
@@ -799,14 +799,16 @@ class Socket {
 
       }, (err, res) => {
         debug('end upload')
-        let responseData: string
+        let responseData: string = ''
         let responseCode: number
+
         res.on('data', (data) => {
           responseData += data.toString()
           responseCode = res.statusCode
         })
+
         res.on('end', () => {
-          responseData = JSON.parse(responseData)
+          const responseDataObj = JSON.parse(responseData)
           if (err || responseCode === 404) {
             debug(`socket ${this.name} was not found`)
             return reject(err || res)
@@ -814,11 +816,11 @@ class Socket {
 
           if (responseCode > 299) {
             debug(`error while updating socket (${res.statusCode})`)
-            return reject(responseData)
+            return reject()
           }
 
           debug(`socket ${this.name} was found`)
-          resolve(responseData)
+          resolve(responseDataObj)
         })
       })
     })
@@ -875,6 +877,7 @@ class Socket {
       out.on('close', (code) => {
         info('compilation done', 'exit code:', code)
         if (code !== 0) {
+          console.log('XXX', stderr, stdout)
           reject(new CompileError(stderr || stdout))
         } else {
           resolve()

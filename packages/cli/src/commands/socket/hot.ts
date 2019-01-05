@@ -62,7 +62,7 @@ export default class SocketHotDeploy extends Command {
     this.mainSpinner.start()
 
     if (flags.trace) {
-      const traces = await SocketTrace.run(this.mainSpinner)
+      const traces = await SocketTrace.run()
       Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
     }
   }
@@ -172,7 +172,7 @@ export default class SocketHotDeploy extends Command {
     process.exit(1)
   }
 
-  static printUpdateSuccessful (socketName, updateStatus, deployTimer) {
+  static printUpdateSuccessful (socketName: string, updateStatus, deployTimer) {
     debug('printUpdateSuccessful', socketName, updateStatus)
     const duration = format.dim(deployTimer.getDuration())
     const socketNameStr = `${format.cyan(socketName)}`
@@ -193,7 +193,7 @@ export default class SocketHotDeploy extends Command {
     }
   }
 
-  static printUpdateFailed (socketName, err, deployTimer) {
+  static printUpdateFailed (socketName: string, err, deployTimer) {
     const duration = deployTimer.getDuration()
     const errDetail = JSON.parse(err).detail
     echo(3)(`${format.red('files not synced:')} ${currentTime()} ${socketName} ${duration} ${errDetail}`)

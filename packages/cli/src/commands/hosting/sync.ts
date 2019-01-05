@@ -57,7 +57,6 @@ export default class HostingSync extends Command {
       const output = await hosting.syncFiles(params)
       echo(output)
     } catch (err) {
-      console.log('err', err)
       error(8)(err)
       echo()
     }

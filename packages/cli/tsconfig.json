@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
+    "strict": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "outDir": "./lib",
-    "allowJs": true,
     "target": "es2017",
     "module": "commonjs"
   },

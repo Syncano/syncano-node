@@ -30,7 +30,8 @@ const searchForSockets = (socketsPath: string, maxDepth = 3) => {
   if (!fs.existsSync(socketsPath)) {
     return []
   }
-  const sockets = []
+
+  const sockets: any = []
 
   const options = {
     'follow_symlinks': true,
@@ -38,7 +39,7 @@ const searchForSockets = (socketsPath: string, maxDepth = 3) => {
   }
 
   // TODO: optimize only diging deeper scoped modues
-  walkdir.sync(socketsPath, options, (walkPath, stat) => {
+  walkdir.sync(socketsPath, options, (walkPath: string, stat: any) => {
     if (walkPath.match(/socket.yml$/) && !path.dirname(walkPath).match(/\/\./)) {
       const socket = YAML.load(fs.readFileSync(walkPath, 'utf8')) || {}
       sockets.push([walkPath, socket])
@@ -68,6 +69,7 @@ const findLocalPath = (socketName: string) => {
   // Search for syncano folder
   const socketsPath = path.join(session.projectPath, 'syncano')
   searchForSockets(socketsPath).forEach(([file, socket]) => {
+
     if (socket.name === socketName) {
       socketPath = path.dirname(file)
     }
@@ -87,17 +89,33 @@ const findLocalPath = (socketName: string) => {
 
 // Listing sockets
 // list sockets based on project path
-const listLocal = () => {
+// const listLocal = () => {
+//   debug('listLocal', session.projectPath)
+
+//   const singleSocketPath = path.join(session.projectPath)
+//   const singleSocket = searchForSockets(singleSocketPath, 1).map(([file, socket]) => socket.name)
+
+//   const localPath = path.join(session.projectPath, 'syncano')
+//   const localSockets = searchForSockets(localPath).map(([file, socket]) => socket.name)
+
+//   const nodeModPath = path.join(session.projectPath, 'node_modules')
+//   const nodeModSockets = searchForSockets(nodeModPath).map(([file, socket]) => socket.name)
+
+//   return localSockets.concat(singleSocket, nodeModSockets)
+// }
+
+const listLocal = async () => {
   debug('listLocal', session.projectPath)
 
   const singleSocketPath = path.join(session.projectPath)
-  const singleSocket = searchForSockets(singleSocketPath, 1).map(([file, socket]) => socket.name)
-
   const localPath = path.join(session.projectPath, 'syncano')
-  const localSockets = searchForSockets(localPath).map(([file, socket]) => socket.name)
-
   const nodeModPath = path.join(session.projectPath, 'node_modules')
-  const nodeModSockets = searchForSockets(nodeModPath).map(([file, socket]) => socket.name)
+
+  const [singleSocket, localSockets, nodeModSockets] = await Promise.all([
+    searchForSockets(singleSocketPath, 1).map(([file, socket]) => socket.name),
+    searchForSockets(localPath).map(([file, socket]) => socket.name),
+    searchForSockets(nodeModPath).map(([file, socket]) => socket.name),
+  ])
 
   return localSockets.concat(singleSocket, nodeModSockets)
 }

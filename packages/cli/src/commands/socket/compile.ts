@@ -9,7 +9,7 @@ import { CompileError } from '../../utils/errors'
 
 const { debug } = logger('cmd-socket-compile')
 
-import Command from '../../base_command'
+import Command, {Socket} from '../../base_command'
 
 const pendingUpdates = {}
 export default class SocketCompile extends Command {
@@ -38,7 +38,7 @@ export default class SocketCompile extends Command {
       debug(`Deploying Socket: ${args.socketName}`)
       const msg = p(2)(`${format.magenta('getting socket:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      const socket = await this.Socket.get(args.socketName)
+      const socket = await Socket.get(args.socketName)
       spinner.stop()
 
       if (!socket.existLocally) {
@@ -51,7 +51,7 @@ export default class SocketCompile extends Command {
     } else {
       const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
-      this.socketList = await this.Socket.list()
+      this.socketList = await Socket.list()
       spinner.stop()
     }
 

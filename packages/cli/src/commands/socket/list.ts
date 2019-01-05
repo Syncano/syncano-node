@@ -5,7 +5,7 @@ import { socketNotFound } from '../../commands_helpers/socket'
 import { printInstanceInfo } from '../../commands_helpers/instance'
 import responses from '../../commands_helpers/socket-list-responses'
 
-import Command from '../../base_command'
+import Command, {Socket} from '../../base_command'
 
 const { info, debug } = logger('cmd-socket-list')
 
@@ -39,7 +39,7 @@ export default class SocketListCmd extends Command {
 
     if (socketName) {
       try {
-        const socket = await this.Socket.get(socketName)
+        const socket = await Socket.get(socketName)
         if (!socket.existLocally && !socket.existRemotely) {
           socketNotFound()
           process.exit(1)
@@ -51,7 +51,7 @@ export default class SocketListCmd extends Command {
         process.exit(1)
       }
     } else {
-      const sockets = await this.Socket.list()
+      const sockets = await Socket.list()
       this.printSockets(sockets)
     }
   }

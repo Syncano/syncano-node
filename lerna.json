@@ -6,7 +6,10 @@
   ],
   "command": {
     "bootstrap": {
-      "hoist": true
+      "hoist": true,
+      "nohoist": [
+         "webpack-cli"
+      ]
     },
     "init": {
       "exact": true
@@ -15,10 +18,7 @@
       "publish": {
         "allowBranch": "master"
       },
-      "exact": true,
-      "ignore": [
-        "@syncano/registry*"
-      ]
+      "exact": true
     }
   },
   "changelog": {

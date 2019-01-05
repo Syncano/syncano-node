@@ -12,8 +12,9 @@ const { debug } = logger('settings-project')
 export default class ProjectSettings extends Settings {
   attributes: ProjectSettingsAttributes
 
-  constructor (projectPath?: string) {
+  constructor (projectPath: string) {
     super()
+    this.attributes = {}
     this.name = 'syncano'
     this.baseDir = projectPath
     if (projectPath) {
@@ -27,7 +28,7 @@ export default class ProjectSettings extends Settings {
 
   getAllSocketsYmlPath () {
     return new Promise((resolve, reject) => {
-      const paths = []
+      const paths = [] as string[]
       readdirp({ root: this.baseDir, fileFilter: 'socket.yml' }, () => {}, () => {})
         .on('data', (entry: any) => {
           paths.push(entry.fullPath)

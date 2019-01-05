@@ -6,7 +6,7 @@ import logger from '../../utils/debug'
 import {echon, printCode, printSourceCode} from '../../utils/print-tools'
 import { p, error, echo } from '../../utils/print-tools'
 
-import Command from '../../base_command'
+import Command, {Socket} from '../../base_command'
 
 const { debug } = logger('cmd-socket-compile')
 
@@ -37,7 +37,7 @@ export default class SocketEndpointCall extends Command {
     try {
       const bodyOnly = flags['body-only']
       const [, socketName, endpointName] = args.fullEndpointName.match(/([^/]*)\/(.*)/)
-      const socket = await this.Socket.get(socketName)
+      const socket = await Socket.get(socketName)
       const endpointObj = await socket.getEndpoint(endpointName)
 
       if (endpointObj && endpointObj.existRemotely) {
@@ -87,7 +87,6 @@ export default class SocketEndpointCall extends Command {
   }
 
   static listParams (endpointObj) {
-    console.log('XXX', endpointObj)
     const params = endpointObj.metadata.inputs || {}
     const paramsCount = Object.keys(params).length
     const questions = []

@@ -32,29 +32,29 @@ describe('CLI Config', function () {
       .before(function () {
         return moveTestSocket(configTestTemplate)
       })
-      .run(`${cliLocation} deploy hello-config`)
-      .stdout(/socket synced:/)
+      .run(`${cliLocation} socket:deploy hello-config`)
+      .stdout(/total time:/)
       .code(0)
       .end(done)
   })
 
   it('can set first config option', function (done) {
     testNixt()
-      .run(`${cliLocation} config-set hello-config TEST1 test1_value`)
+      .run(`${cliLocation} socket:config:set hello-config TEST1 test1_value`)
       .code(0)
       .end(done)
   })
 
   it('can set second config option', function (done) {
     testNixt()
-      .run(`${cliLocation} config-set hello-config TEST2 test2_value`)
+      .run(`${cliLocation} socket:config:set hello-config TEST2 test2_value`)
       .code(0)
       .end(done)
   })
 
   it('can show config of the socket', function (done) {
     testNixt()
-      .run(`${cliLocation} config-show hello-config`)
+      .run(`${cliLocation} socket:config:show hello-config`)
       .stdout(/value: test2_value/)
       .code(0)
       .end(done)
@@ -62,14 +62,14 @@ describe('CLI Config', function () {
 
   it('can change first config option of the socket', function (done) {
     testNixt()
-      .run(`${cliLocation} config-set hello-config TEST1 test1_value_new`)
+      .run(`${cliLocation} socket:config:set hello-config TEST1 test1_value_new`)
       .code(0)
       .end(done)
   })
 
   it('can see new config option of the socket', function (done) {
     testNixt()
-      .run(`${cliLocation} config-show hello-config`)
+      .run(`${cliLocation} socket:config:show hello-config`)
       .stdout(/value: test1_value_new/)
       .code(0)
       .end(done)
@@ -77,7 +77,7 @@ describe('CLI Config', function () {
 
   it('can configure the socket fully', function (done) {
     testNixt()
-      .run(`${cliLocation} config hello-config`)
+      .run(`${cliLocation} socket:config hello-config`)
       .on(/TEST1/)
       .respond('test1\n')
       .on(/TEST2/)
@@ -90,7 +90,7 @@ describe('CLI Config', function () {
 
   it('can call hello-config socket endpoint', function (done) {
     testNixt()
-      .run(`${cliLocation} call hello-config/hello`)
+      .run(`${cliLocation} socket:call hello-config/hello`)
       .stdout(/test1 test2/)
       .code(0)
       .end(done)

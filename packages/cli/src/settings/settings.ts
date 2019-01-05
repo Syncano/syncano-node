@@ -9,15 +9,18 @@ import { error, p } from '../utils/print-tools'
 const { warn, info } = logger('settings')
 
 export default class Settings {
-  attributes: object
+  attributes: any
   configPath: string | null
   baseDir: string
-  name: string
+  name: string | null
   loaded: boolean
 
   constructor () {
-    this.attributes = {}
     this.configPath = null
+    this.baseDir = '.'
+    this.name = null
+    this.loaded = false
+    this.attributes = {}
   }
 
   load () {

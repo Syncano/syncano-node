@@ -33,18 +33,10 @@ export default class SocketDeploy extends Command {
   }]
 
   firstRun: boolean
-  socketList: Socket[]
+  socketList: any[]
   localSockets: Socket[]
 
-  // constructor (context) {
-  //   this.context = context
-  //   this.session = context.session
-  //   this.Socket = context.Socket
-  //   this.init = new context.Init()
-  //   this.firstRun = true
-  // }
-
-  async run (mainSpinner) {
+  async run () {
     this.firstRun = true
     const {args} = this.parse(SocketDeploy)
     const {flags} = this.parse(SocketDeploy)

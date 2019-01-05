@@ -26,7 +26,7 @@ describe('CLI Deploy', function () {
 
   it('can list installed sockets', function (done) {
     testNixt()
-      .run(`${cliLocation} list`)
+      .run(`${cliLocation} socket:list`)
       .stdout(/No Socket was found on server nor in config!/)
       .code(0)
       .end(done)
@@ -34,7 +34,7 @@ describe('CLI Deploy', function () {
 
   it('can\'t list non existing Socket', function (done) {
     testNixt()
-      .run(`${cliLocation} list ${getRandomString()}`)
+      .run(`${cliLocation} socket:list ${getRandomString()}`)
       .stdout(/No Socket was found on server nor in config!/)
       .code(1)
       .end(done)
@@ -42,7 +42,7 @@ describe('CLI Deploy', function () {
 
   it('can create new socket', function (done) {
     testNixt()
-      .run(`${cliLocation} create hello`)
+      .run(`${cliLocation} socket:create hello`)
       .on(/Choose template for your Socket/)
       .respond('\n')
       .code(0)
@@ -51,7 +51,7 @@ describe('CLI Deploy', function () {
 
   it('can deploy hello socket', function (done) {
     testNixt()
-      .run(`${cliLocation} deploy hello`)
+      .run(`${cliLocation} socket:deploy hello`)
       .stdout(/socket synced:/)
       .code(0)
       .end(done)
@@ -59,7 +59,7 @@ describe('CLI Deploy', function () {
 
   it.skip('can call hello socket endpoint', function (done) {
     testNixt()
-      .run(`${cliLocation} call hello/hello`)
+      .run(`${cliLocation} socket:call hello/hello`)
       .on(/Type in value for "firstname" parameter/)
       .respond('TEST\n')
       .on(/Type in value for "lastname" parameter/)
@@ -83,7 +83,7 @@ describe('CLI Deploy', function () {
     testNixt()
       .before(() => moveTestProject(projectTestTemplate))
       .after(() => deleteInstance(testInstance))
-      .run(`${cliLocation} deploy --create-instance ${testInstance}`)
+      .run(`${cliLocation} socket:deploy --create-instance ${testInstance}`)
       .stdout(/has been created/)
       .code(0)
       .end(done)
@@ -106,7 +106,7 @@ describe('CLI Deploy', function () {
         await createInstance(testInstance)
       })
       .after(() => deleteInstance(testInstance))
-      .run(`${cliLocation} deploy --create-instance ${testInstance}`)
+      .run(`${cliLocation} socket:deploy --create-instance ${testInstance}`)
       .stdout(/Instance already exist!/)
       .code(1)
       .end(done)

@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "prepublish": "npm run build",
-    "build": "npx tsc && npx webpack",
+    "build": "#npx tsc && npx webpack",
     "test": "jest",
     "test:unit": "jest",
     "lint": "tslint src/**/*.ts",
@@ -42,6 +42,6 @@
     "tslint-eslint-rules": "^5.4.0",
     "typescript": "^3.2.2",
     "webpack": "^4.26.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.2.0"
   }
 }

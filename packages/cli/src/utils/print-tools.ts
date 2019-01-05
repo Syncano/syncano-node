@@ -29,18 +29,22 @@ function printSourceCode (contentType, source) {
   return source.toString()
 }
 
-function echo (...args) {
-  if (Number.isInteger(args[0])) {
+function echo (...args: any) {
+  if (!Number.isInteger(args[0])) {
+    process.stdout.write(`${util.format(args.join(' '))} \n`)
+    return (...nextArgs: any) => {
+      process.stdout.write(`${util.format(args.join(' '))} \n`)
+    }
+  } else {
     const padding = args[0]
-    return (...nextArgs) => {
+    return (...nextArgs: any) => {
       process.stdout.write(`${util.format(_.repeat(' ', padding) + nextArgs.join(' '))} \n`)
     }
   }
-  process.stdout.write(`${util.format(args.join(' '))} \n`)
 }
 
 function echon (...args) {
-  if (Number.isInteger(args[0])) {
+  if (!Number.isInteger(args[0])) {
     const padding = args[0]
     return (...nextArgs) => {
       process.stdout.write(`${util.format(_.repeat(' ', padding) + nextArgs.join(' '))}`)

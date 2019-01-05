@@ -75,9 +75,9 @@ export interface HostingRecord {
 }
 
 export interface ProjectSettingsAttributes {
-  plugins: Record<string, string>
-  templates: Record<string, string>
-  hosting: Record<string, HostingRecord>
+  plugins?: Record<string, string>
+  templates?: Record<string, string>
+  hosting?: Record<string, HostingRecord>
 }
 
 export interface InitClass {}
@@ -96,4 +96,16 @@ export interface HostingParams {
   src: string
   cname?: string
   browser_router?: boolean
+}
+
+export interface UpdateSocketZipReponse {
+  status: 'stopped' | 'ok'
+}
+
+export interface SocketJSON {
+  name: string
+  endpoints?: any
+  config?: any
+  event_handlers?: any
+  events?: any
 }
