@@ -19,8 +19,13 @@ export {
   SyncanoClass,
   Trace
 } from './types'
-export {DataClass} from './data'
-export {SyncanoContext} from './context'
+import {DataClass} from './data'
+export {Server as Core}
+export {DataClass}
+export {Context} from './context'
+export default Server
+
 module.exports = Server
 module.exports.default = Server
-export default Server
+module.exports.DataClass = DataClass
+module.exports.Core = Server

@@ -66,6 +66,9 @@ jobs:
       - run:
           command: npm install
           working_directory: ~/repo/packages/lib-js-client
+      - run:
+          command: npm run build
+          working_directory: ~/repo/packages/lib-js-core
 
       - save_cache:
           paths:

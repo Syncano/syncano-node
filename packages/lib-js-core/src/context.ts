@@ -1,4 +1,4 @@
-export interface SyncanoContext<Args = {}> {
+export interface Context<Args = {}> {
   args: Args
   meta: Meta
   config: Config
