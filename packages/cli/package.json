@@ -58,7 +58,6 @@
     "bluebird": "^3.5.3",
     "chalk": "^2.4.1",
     "cli-table3": "^0.5.1",
-    "commander": "^2.19.0",
     "create-error": "^0.3.1",
     "debug": "^4.1.1",
     "es6-template-strings": "^2.0.1",
