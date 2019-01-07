@@ -1,7 +1,6 @@
 /* global it describe beforeAll afterAll */
 import fs from 'fs'
 import {join} from 'path'
-import FormData from 'form-data'
 import fetch from 'node-fetch'
 import chai, {expect} from 'chai'
 import chaiAsPromised from 'chai-as-promised'
