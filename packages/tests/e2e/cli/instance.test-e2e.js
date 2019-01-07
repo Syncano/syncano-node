@@ -9,34 +9,30 @@ import {
 import {cliLocation} from '../utils'
 
 describe('CLI Instance', function () {
+  let testInstance = uniqueInstance()
   const testNixt = () => nixt()
     .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
 
   it('can create an instance', function (done) {
-    const testInstance = uniqueInstance()
+    testInstance = uniqueInstance()
 
     testNixt()
-      .before(async () => await createInstance(testInstance))
-      .after(async () => await deleteInstance(testInstance))
-      .run(`${cliLocation} instance:create ${testInstance}`)
-      .stdout(/Instance already exist!/)
-      .code(1)
-      .end(done)
-  })
-
-  it('can\'t create an instance if already exist', function (done) {
-    const testInstance = uniqueInstance()
-
-    testNixt()
-      .after(async () => await deleteInstance(testInstance))
       .run(`${cliLocation} instance:create ${testInstance}`)
       .stdout(/has been created/)
       .code(0)
       .end(done)
   })
 
+  it('can\'t create an instance if already exist', function (done) {
+    testNixt()
+      .run(`${cliLocation} instance:create ${testInstance}`)
+      .stdout(/Instance already exist!/)
+      .code(1)
+      .end(done)
+  })
+
   it('can list instance via info command', function (done) {
-    const testInstance = uniqueInstance()
+    testInstance = uniqueInstance()
 
     testNixt()
       .before(async () => await createInstance(testInstance))
@@ -77,12 +73,10 @@ describe('CLI Instance', function () {
   })
 
   it('can delete instance', function (done) {
-    const testInstance = uniqueInstance()
+    testInstance = uniqueInstance()
 
     testNixt()
-      .before(async () => {
-        await createInstance(testInstance)
-      })
+      .before(async () => await createInstance(testInstance))
       .run(`${cliLocation} instance:delete ${testInstance}`)
       .stdout(/Instance was deleted successfully!/)
       .code(0)
