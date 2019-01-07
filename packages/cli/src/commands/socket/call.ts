@@ -90,7 +90,8 @@ export default class SocketEndpointCall extends Command {
   }
 
   static listParams (endpointObj) {
-    const params = endpointObj.metadata.inputs.properties || {}
+    const inputs = endpointObj.metadata.inputs
+    const params = inputs ? inputs.properties || {} : {}
     const paramsCount = Object.keys(params).length
     const questions = []
 
