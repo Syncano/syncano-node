@@ -3,7 +3,7 @@ jobs:
   build:
     name: Build
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo
 
@@ -128,7 +128,7 @@ jobs:
   test_unit:
     name: Unit Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo
 
@@ -177,7 +177,7 @@ jobs:
   test_e2e_hosting:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo/packages/tests
 
@@ -201,7 +201,7 @@ jobs:
   test_e2e_socket:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo/packages/tests
 
@@ -213,7 +213,7 @@ jobs:
   test_e2e_anonymous:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo/packages/tests
 
@@ -225,7 +225,7 @@ jobs:
   test_e2e_instance:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo/packages/tests
 
@@ -237,7 +237,7 @@ jobs:
   test_e2e_deploy:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo/packages/tests
 
@@ -249,7 +249,7 @@ jobs:
   test_e2e_config:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo/packages/tests
 
@@ -261,7 +261,7 @@ jobs:
   test_e2e_schema:
     name: E2E Tests
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo/packages/tests
 
@@ -273,7 +273,7 @@ jobs:
   test_lint:
     name: Linter
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo
 
@@ -285,7 +285,7 @@ jobs:
   deploy_docs:
     name: Deploying Docs
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo
 
@@ -306,7 +306,7 @@ jobs:
   publish:
     name: Publish packages to NPM
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo
 
@@ -320,7 +320,7 @@ jobs:
   codecov:
     name: Send Codecov report
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo
 
