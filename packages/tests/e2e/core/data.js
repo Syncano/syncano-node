@@ -1,11 +1,10 @@
 /* global it describe beforeAll afterAll  beforeEach afterEach */
 import fs from 'fs'
 import {join} from 'path'
-import FormData from 'form-data'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 
-import Server from '../../../lib-js-core/lib'
+import Server, {FormData} from '../../../lib-js-core/lib'
 import {NotFoundError} from '../../../lib-js-core/lib/errors'
 import {
   uniqueInstance,
