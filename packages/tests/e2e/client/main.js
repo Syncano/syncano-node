@@ -1,6 +1,7 @@
 /* global describe it beforeAll afterAll */
 import path from 'path'
 import {assert} from 'chai'
+import {cliLocation, projectTestTemplate} from '../utils'
 import {
   nixt,
   testsLocation,
@@ -11,9 +12,6 @@ import {
 } from '@syncano/test-tools'
 
 import Syncano from '../../../lib-js-client/lib'
-
-const cliLocation = path.join(process.cwd(), '../cli/lib/cli.js')
-const projectTestTemplate = path.join(__dirname, '../../assets/project/empty/')
 
 describe('Client', function () {
   let testInstance = uniqueInstance()
@@ -35,7 +33,7 @@ describe('Client', function () {
 
   it('can create new socket', function (done) {
     testNixt()
-      .run(`${cliLocation} create hello`)
+      .run(`${cliLocation} socket:create hello`)
       .on(/Choose template for your Socket/)
       .respond('\n')
       .code(0)
@@ -44,7 +42,7 @@ describe('Client', function () {
 
   it('can deploy hello socket', function (done) {
     testNixt()
-      .run(`${cliLocation} deploy hello`)
+      .run(`${cliLocation} socket:deploy hello`)
       .stdout(/socket synced:/)
       .end(done)
   })
