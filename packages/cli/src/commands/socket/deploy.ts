@@ -38,7 +38,6 @@ export default class SocketDeploy extends Command {
 
   async run () {
     await this.session.isAuthenticated()
-    await this.session.hasProject()
 
     this.firstRun = true
     const {args} = this.parse(SocketDeploy)
@@ -51,7 +50,7 @@ export default class SocketDeploy extends Command {
       await init.addConfigFiles({ instance: flags['create-instance'] })
     } else {
       // If not, we have to check if we have a project attached to any instance
-      this.session.hasProject()
+      await this.session.hasProject()
     }
 
     echo()
