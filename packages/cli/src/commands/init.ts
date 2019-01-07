@@ -88,7 +88,7 @@ export default class InitCmd extends Command {
       await init.addConfigFiles({ instance: newInstance.name, location: init.locationName })
       echo(4)(`Your project is attached to ${format.green(newInstance.name)} instance now!`)
 
-      init.createFilesAndFolders()
+      await init.createFilesAndFolders()
       return this.session.load()
     }
 

@@ -41,14 +41,14 @@ class Init {
     ]
   }
 
-  createFilesAndFolders (pathToCopyTo = process.cwd()) {
+  async createFilesAndFolders (pathToCopyTo = process.cwd()) {
     debug('createFilesAndFolders()')
 
     try {
       debug('Template name:', this.templateName)
       debug('Loction name:', this.locationName)
       debug('Path to copy to:', pathToCopyTo)
-      fs.copySync(getTemplate(this.templateName), pathToCopyTo)
+      await fs.copy(getTemplate(this.templateName), pathToCopyTo)
       echo(4)(format.dim(`Project has been created from ${format.green(this.templateName)} template.`))
       echo()
     } catch (err) {
