@@ -27,6 +27,9 @@ export default class SocketListCmd extends Command {
 
   async run () {
     info('SocketListCmd.run')
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     const {args} = this.parse(SocketListCmd)
     const {flags} = this.parse(SocketListCmd)
 

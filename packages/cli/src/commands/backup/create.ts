@@ -9,6 +9,9 @@ export default class BackupsCreate extends Command {
   Backups: any
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     this.Backups = this.session.connection.backups
 
     echo()

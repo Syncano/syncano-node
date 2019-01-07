@@ -11,9 +11,11 @@ import Command from '../../base_command'
 export default class HostingConfig extends Command {
   static description = 'Configure hosting'
   static flags = {
-    cname: flags.string({char: 'c'}),
-    removeCname: flags.string(),
-    browserRouter: flags.boolean(),
+    'cname': flags.string({char: 'c'}),
+    'browser-router': flags.boolean({allowNo: true}),
+    'dont-sync': flags.boolean(),
+    'sync': flags.boolean(),
+    'remove-cname': flags.string(),
   }
   static args = [{
     name: 'hostingName',
@@ -25,30 +27,25 @@ export default class HostingConfig extends Command {
   cname: string
   fullPath: string
   removeCname: string
-  browser_router: boolean
   browserRouter: boolean
 
-  static toggleBrowserRouter (command, responses) {
-    if (responses.browser_router) {
-      return responses.browser_router
-    }
-    return command === 'true'
-  }
-
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
     const {args} = this.parse(HostingConfig)
     const {flags} = this.parse(HostingConfig)
 
     const hostingName = args.hostingName
-    
+
     this.cname = flags.cname
-    this.removeCname = flags.removeCname
-    this.browserRouter = flags.browserRouter
+    this.removeCname = flags['remove-cname']
+    this.browserRouter = flags['browser-router']
     this.fullPath = null
 
     try {
       this.hosting = await Hosting.get(hostingName)
 
+      echo()
       if (!this.hosting.existLocally) {
         warning(4)('No such hosting!')
         echo()
@@ -65,15 +62,16 @@ export default class HostingConfig extends Command {
         responses = await inquirer.prompt(this.getQuestions()) || {}
       }
 
+      console.log('response', responses, responses['browser_router'])
       const paramsToUpdate = {
         cname: this.cname || responses.CNAME,
         removeCNAME: this.removeCname,
-        browser_router: HostingConfig.toggleBrowserRouter(this.browserRouter, responses)
+        browser_router: responses['browser_router'] ? responses['browser_router'] : this.browserRouter
       }
 
+      console.log('XXx', paramsToUpdate)
       await this.hosting.configure(paramsToUpdate)
 
-      echo()
       echo(4)(format.green('Configuration successfully updated!'))
       echo()
       HostingListCmd.printHosting(this.hosting)
@@ -98,7 +96,7 @@ export default class HostingConfig extends Command {
         default: this.hosting.getCNAME()
       })
     }
-    if (!this.browser_router) {
+    if (!this.browserRouter) {
       questions.push({
         type: 'confirm',
         name: 'browser_router',

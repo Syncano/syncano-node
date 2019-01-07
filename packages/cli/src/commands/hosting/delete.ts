@@ -18,6 +18,8 @@ export default class HostingDelete extends Command {
   }]
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
     const {args} = this.parse(HostingDelete)
 
     const hostingName = args.hostingName

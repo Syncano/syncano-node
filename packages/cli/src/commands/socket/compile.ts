@@ -31,6 +31,9 @@ export default class SocketCompile extends Command {
 
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     const {args} = this.parse(SocketCompile)
 
     echo()

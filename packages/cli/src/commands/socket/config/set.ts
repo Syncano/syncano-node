@@ -24,6 +24,8 @@ export default class SocketConfigSet extends Command {
   }]
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
     const {args} = this.parse(SocketConfigSet)
 
     const socket = await Socket.get(args.socketName)

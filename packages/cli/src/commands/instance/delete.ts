@@ -18,7 +18,9 @@ export default class InstanceCreateCmd extends Command {
   ]
 
   async run () {
+    await this.session.isAuthenticated()
     const {args} = this.parse(InstanceCreateCmd)
+
     try {
       await this.session.deleteInstance(args.instanceName)
       echo()

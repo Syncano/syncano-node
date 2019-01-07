@@ -18,7 +18,7 @@ describe('CLI Anonymous User', function () {
 
   it('can run cli list command', function (done) {
     testNixt()
-      .run(`${cliLocation} list`)
+      .run(`${cliLocation} socket:list`)
       .stdout(/You are not logged in!/)
       .code(1)
       .end(done)
@@ -26,7 +26,7 @@ describe('CLI Anonymous User', function () {
 
   it('can run cli deploy command', function (done) {
     testNixt()
-      .run(`${cliLocation} list`)
+      .run(`${cliLocation} socket:deploy`)
       .stdout(/You are not logged in!/)
       .code(1)
       .end(done)

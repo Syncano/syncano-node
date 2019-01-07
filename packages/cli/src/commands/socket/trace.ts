@@ -34,6 +34,8 @@ export default class SocketTrace extends Command {
 
   async run (mainSpinner?: GlobalSpinner) {
     debug('SocketTrace run')
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
 
     this.traceTimers = []
     this.scriptWatch = false

@@ -13,6 +13,9 @@ export default class HostingListCmd extends Command {
   static args = []
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     const hostings = await Hosting.list()
     HostingListCmd.printHostings(hostings)
   }
@@ -67,7 +70,6 @@ export default class HostingListCmd extends Command {
       echo()
       echo(4)(errorResponses[hosting.error])
     }
-    echo()
   }
 }
 

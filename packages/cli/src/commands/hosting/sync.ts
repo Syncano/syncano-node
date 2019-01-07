@@ -27,6 +27,8 @@ export default class HostingSync extends Command {
 
   async run () {
     debug('HostingSync.run')
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
     const {args} = this.parse(HostingSync)
     const {flags} = this.parse(HostingSync)
 

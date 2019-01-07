@@ -18,7 +18,7 @@ describe('CLI Instance', function () {
     testNixt()
       .before(async () => await createInstance(testInstance))
       .after(async () => await deleteInstance(testInstance))
-      .run(`${cliLocation} instance create ${testInstance}`)
+      .run(`${cliLocation} instance:create ${testInstance}`)
       .stdout(/Instance already exist!/)
       .code(1)
       .end(done)
@@ -41,7 +41,7 @@ describe('CLI Instance', function () {
 
     testNixt()
       .after(async () => await deleteInstance(testInstance))
-      .run(`${cliLocation} instance create ${testInstance}`)
+      .run(`${cliLocation} instance:create ${testInstance}`)
       .stdout(/has been created/)
       .code(0)
       .end(done)
@@ -49,7 +49,7 @@ describe('CLI Instance', function () {
 
   it.skip('can list if there is no instances', function (done) {
     testNixt()
-      .run(`${cliLocation} instance list`)
+      .run(`${cliLocation} instance:list`)
       .stdout(/You don't have any instances!/)
       .code(0)
       .end(done)
@@ -68,7 +68,7 @@ describe('CLI Instance', function () {
         await deleteInstance(testInstance1)
         await deleteInstance(testInstance2)
       })
-      .run(`${cliLocation} instance list`)
+      .run(`${cliLocation} instance:list`)
       .stdout(/Instances:/)
       .stdout(new RegExp(testInstance1))
       .stdout(new RegExp(testInstance2))
@@ -83,7 +83,7 @@ describe('CLI Instance', function () {
       .before(async () => {
         await createInstance(testInstance)
       })
-      .run(`${cliLocation} instance delete ${testInstance}`)
+      .run(`${cliLocation} instance:delete ${testInstance}`)
       .stdout(/Instance was deleted successfully!/)
       .code(0)
       .end(done)

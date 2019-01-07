@@ -21,6 +21,7 @@ export default class InitCmd extends Command {
   }]
 
   async run () {
+    await this.session.isAuthenticated()
     const {args} = this.parse(InitCmd)
 
     const { project, settings } = this.session

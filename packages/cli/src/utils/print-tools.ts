@@ -43,14 +43,19 @@ function echo (...args: any) {
   }
 }
 
-function echon (...args) {
+function echon (...args: any) {
   if (!Number.isInteger(args[0])) {
     const padding = args[0]
     return (...nextArgs) => {
       process.stdout.write(`${util.format(_.repeat(' ', padding) + nextArgs.join(' '))}`)
     }
+  } else {
+    const padding = args[0]
+    return (...nextArgs: any) => {
+      process.stdout.write(`${util.format(_.repeat(' ', padding) + nextArgs.join(' '))}`)
+    }
   }
-  process.stdout.write(`${util.format(args.join(' '))}`)
+  // process.stdout.write(`${util.format(args.join(' '))}`)
 }
 
 function error (...args) {

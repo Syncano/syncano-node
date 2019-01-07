@@ -31,6 +31,9 @@ export default class SocketEndpointCall extends Command {
   localSockets: any
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     const {args} = this.parse(SocketEndpointCall)
     const {flags} = this.parse(SocketEndpointCall)
 
@@ -87,7 +90,7 @@ export default class SocketEndpointCall extends Command {
   }
 
   static listParams (endpointObj) {
-    const params = endpointObj.metadata.inputs || {}
+    const params = endpointObj.metadata.inputs.properties || {}
     const paramsCount = Object.keys(params).length
     const questions = []
 

@@ -37,6 +37,9 @@ export default class SocketDeploy extends Command {
   localSockets: Socket[]
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     this.firstRun = true
     const {args} = this.parse(SocketDeploy)
     const {flags} = this.parse(SocketDeploy)

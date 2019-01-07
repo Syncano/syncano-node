@@ -22,6 +22,9 @@ export default class BackupDelete extends Command {
   Backups: any
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     this.Backups = this.session.connection.backups
 
     const {args} = this.parse(BackupDelete)

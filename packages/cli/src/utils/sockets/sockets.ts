@@ -877,7 +877,6 @@ class Socket {
       out.on('close', (code) => {
         info('compilation done', 'exit code:', code)
         if (code !== 0) {
-          console.log('XXX', stderr, stdout)
           reject(new CompileError(stderr || stdout))
         } else {
           resolve()

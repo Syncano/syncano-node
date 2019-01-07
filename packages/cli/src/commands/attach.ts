@@ -20,6 +20,8 @@ export default class Attach extends Command {
   }
 
   async run () {
+    await this.session.isAuthenticated()
+
     const init = new Init()
 
     const {args} = this.parse(Attach)

@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "prepublish": "npm run build",
-    "build": "npx tsc && npx webpack",
+    "build": "tsc && webpack",
     "test": "jest",
     "test:unit": "jest",
     "lint": "tslint src/**/*.ts",

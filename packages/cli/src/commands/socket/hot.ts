@@ -40,6 +40,9 @@ export default class SocketHotDeploy extends Command {
   stalker: any
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     this.firstRun = {}
     const {args} = this.parse(SocketHotDeploy)
     const {flags} = this.parse(SocketHotDeploy)

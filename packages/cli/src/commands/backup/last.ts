@@ -15,6 +15,9 @@ export default class BackupsLast extends Command {
   Backups: any
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     this.Backups = this.session.connection.backups
     try {
       const backup = await this.Backups.last()

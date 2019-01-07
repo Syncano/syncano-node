@@ -22,6 +22,9 @@ export default class SocketCreate extends Command {
   }]
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     const {args} = this.parse(SocketCreate)
 
     let socketName = args.socketName

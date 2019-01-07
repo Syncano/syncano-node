@@ -31,7 +31,7 @@ describe('CLI Hosting', function () {
   it('can add hosting', function (done) {
     testNixt()
       .before(copyHosting)
-      .run(`${cliLocation} hosting add hosting`)
+      .run(`${cliLocation} hosting:add hosting`)
       .on(/Set hosting's name/)
       .respond(`${hostingName}\n`)
       .on(/Set CNAME/)
@@ -47,7 +47,7 @@ describe('CLI Hosting', function () {
 
   it('can add hosting with folder outside of syncano folder', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting add ${hostingAssets}`)
+      .run(`${cliLocation} hosting:add ${hostingAssets}`)
       .on(/Set hosting's name/)
       .respond(`${hostingName2}\n`)
       .on(/Set CNAME/)
@@ -63,7 +63,7 @@ describe('CLI Hosting', function () {
 
   it('can list hosting containers', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting list`)
+      .run(`${cliLocation} hosting:list`)
       .on(/Choose socket for which you you want to list hostings/)
       .respond('\n')
       .stdout(/name: tests/)
@@ -73,7 +73,7 @@ describe('CLI Hosting', function () {
 
   it('can check if there are hosting files', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting files ${hostingName}`)
+      .run(`${cliLocation} hosting:files ${hostingName}`)
       .on(/Choose a socket which hosting files you want to see/)
       .respond('\n')
       .stdout(/You have 1 files/)
@@ -83,7 +83,7 @@ describe('CLI Hosting', function () {
 
   it('can sync local hosting', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting sync ${hostingName}`)
+      .run(`${cliLocation} hosting:sync ${hostingName}`)
       .stdout(/files synchronized/)
       .code(0)
       .end(done)
@@ -91,7 +91,7 @@ describe('CLI Hosting', function () {
 
   it('can sync local hosting again', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting sync ${hostingName}`)
+      .run(`${cliLocation} hosting:sync ${hostingName}`)
       .stdout(/files synchronized/)
       .code(0)
       .end(done)
@@ -99,7 +99,7 @@ describe('CLI Hosting', function () {
 
   it('can set hosting config with prompt', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting config ${hostingName}`)
+      .run(`${cliLocation} hosting:config ${hostingName}`)
       .on(/Set CNAME now/)
       .respond('my.dom.ain\n')
       .on(/Do you want to use BrowserRouter for this hosting?/)
@@ -112,7 +112,7 @@ describe('CLI Hosting', function () {
 
   it('can set hosting config with flags', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting config ${hostingName} --browser-router false --remove-cname my.dom.ain`)
+      .run(`${cliLocation} hosting:config ${hostingName} --no-browser-router --remove-cname my.dom.ain`)
       .stdout(/^((?!CNAME: http:\/\/my.dom.ain)[\s\S])*$/)
       .stdout(/BrowserRouter: x/)
       .code(0)
@@ -121,7 +121,7 @@ describe('CLI Hosting', function () {
 
   it('can delete hosting container 1', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting delete ${hostingName}`)
+      .run(`${cliLocation} hosting:delete ${hostingName}`)
       .on(/Are you sure you/)
       .respond('Y\n')
       .stdout(/has been successfully deleted!/)
@@ -131,7 +131,7 @@ describe('CLI Hosting', function () {
 
   it('can delete hosting container 2', function (done) {
     testNixt()
-    .run(`${cliLocation} hosting delete ${hostingName2}`)
+    .run(`${cliLocation} hosting:delete ${hostingName2}`)
     .on(/Are you sure you/)
     .respond('Y\n')
     .stdout(/has been successfully deleted!/)
@@ -141,7 +141,7 @@ describe('CLI Hosting', function () {
 
   it('can see there is not hosting containers', function (done) {
     testNixt()
-      .run(`${cliLocation} hosting list`)
+      .run(`${cliLocation} hosting:list`)
       .stdout(/You don't have any hostings/)
       .code(0)
       .end(done)

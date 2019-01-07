@@ -25,7 +25,7 @@ describe('CLI Socket', function () {
 
   it('can create new socket', function (done) {
     testNixt()
-      .run(`${cliLocation} create hello`)
+      .run(`${cliLocation} socket:create hello`)
       .on(/Choose template for your Socket/)
       .respond('\n')
       .code(0)
@@ -34,7 +34,7 @@ describe('CLI Socket', function () {
 
   it('can list installed sockets', function (done) {
     testNixt()
-      .run(`${cliLocation} list`)
+      .run(`${cliLocation} socket:list`)
       .stdout(/Description of hello/)
       .code(0)
       .end(done)
@@ -42,7 +42,7 @@ describe('CLI Socket', function () {
 
   it('can list single installed socket with docs', function (done) {
     testNixt()
-      .run(`${cliLocation} list hello`)
+      .run(`${cliLocation} socket:list hello`)
       .stdout(/endpoint:/)
       .code(0)
       .end(done)
@@ -50,7 +50,7 @@ describe('CLI Socket', function () {
 
   it('can\'t list non existing Socket', function (done) {
     testNixt()
-      .run(`${cliLocation} list ${getRandomString()}`)
+      .run(`${cliLocation} socket:list ${getRandomString()}`)
       .stdout(/No Socket was found on server nor in config!/)
       .code(1)
       .end(done)
@@ -58,7 +58,7 @@ describe('CLI Socket', function () {
 
   it('can deploy hello socket', function (done) {
     testNixt()
-      .run(`${cliLocation} deploy hello`)
+      .run(`${cliLocation} socket:deploy hello`)
       .stdout(/socket synced:/)
       .code(0)
       .end(done)
@@ -66,14 +66,14 @@ describe('CLI Socket', function () {
 
   it('can set config of socket', function (done) {
     testNixt()
-      .run(`${cliLocation} config-set hello name test`)
+      .run(`${cliLocation} socket:config:set hello name test`)
       .code(0)
       .end(done)
   })
 
   it('can create new socket', function (done) {
     testNixt()
-      .run(`${cliLocation} create ${createdSocketName}`)
+      .run(`${cliLocation} socket:create ${createdSocketName}`)
       .on(/Choose template for your Socket/)
       .respond('\n')
       .code(0)
@@ -82,7 +82,7 @@ describe('CLI Socket', function () {
 
   it('can\'t create new socket with the name of existing socket', function (done) {
     testNixt()
-      .run(`${cliLocation} create ${createdSocketName}`)
+      .run(`${cliLocation} socket:create ${createdSocketName}`)
       .on(/Choose template for your Socket/)
       .respond('\n')
       .stdout(/Socket with given name already exist!/)

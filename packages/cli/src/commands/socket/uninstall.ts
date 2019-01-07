@@ -17,6 +17,9 @@ export default class SocketUnInstall extends Command {
   }]
 
   async run () {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
+
     const {args} = this.parse(SocketUnInstall)
     const {flags} = this.parse(SocketUnInstall)
 

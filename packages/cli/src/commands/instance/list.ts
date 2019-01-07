@@ -8,7 +8,9 @@ export default class InstanceCreateCmd extends Command {
   static args = []
 
   async run () {
+    await this.session.isAuthenticated()
     const instances = await this.session.getInstances()
+
     if (instances.length < 1) {
       echo()
       echo(4)('You don\'t have any instances!')
