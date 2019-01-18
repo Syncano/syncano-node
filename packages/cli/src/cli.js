@@ -117,6 +117,7 @@ const setup = async () => {
     .description('Synchronize your project to Syncano')
     .option('--hot', 'Enable Hot deploy')
     .option('-b, --bail', 'Bail after first deploy failure')
+    .option('-p, --parallel', 'Run Socket deploys in parallel')
     .option('-i, --create-instance <instance>', 'Create instance if it doesn\'t exist')
     .option('-t, --trace', 'Turn on showing traces')
     .action(async (...options) => {

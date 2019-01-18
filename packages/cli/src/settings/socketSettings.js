@@ -5,11 +5,11 @@ import FindKey from 'find-key'
 import logger from '../utils/debug'
 import Settings from './settings'
 
-const { debug } = logger('setting-socket')
+const { info, debug } = logger('setting-socket')
 
 class SocketSettings extends Settings {
   constructor (socketPath, socketName) {
-    debug('SocketSettings.constructor', socketPath, socketName)
+    info('SocketSettings.constructor', socketPath, socketName)
     super()
     this.name = 'socket'
     this.baseDir = socketPath

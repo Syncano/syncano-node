@@ -35,9 +35,9 @@ class SocketCreate {
     try {
       const spinner = new SimpleSpinner(p(2)('Creating Socket...')).start()
       const socket = await this.Socket.create(socketName, template)
-      await socket.build()
+      await socket.compile({ updateSocketNPMDeps: true })
       spinner.stop()
-      spinner.succeed(p(2)(`Your Socket configuration is stored at ${format.cyan(socket.getSocketPath())}`))
+      spinner.succeed(p(2)(`Your Socket configuration is stored at ${format.cyan(socket.socketPath)}`))
       echo()
     } catch (err) {
       debug(err)

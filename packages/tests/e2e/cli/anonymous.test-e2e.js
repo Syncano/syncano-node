@@ -1,4 +1,4 @@
-/* global describe it before after */
+/* global describe it beforeAll afterAll */
 import {cliLocation, projectTestTemplate} from '../utils'
 import {
   nixt,
@@ -13,8 +13,8 @@ describe('CLI Anonymous User', function () {
 
   const testNixt = () => nixt()
 
-  before(async () => createProject(testInstance, projectTestTemplate))
-  after(async () => deleteInstance(testInstance))
+  beforeAll(async () => createProject(testInstance, projectTestTemplate))
+  afterAll(async () => deleteInstance(testInstance))
 
   it('can run cli list command', function (done) {
     testNixt()

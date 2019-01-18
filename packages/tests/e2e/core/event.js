@@ -1,4 +1,4 @@
-/* global it describe before after */
+/* global it describe beforeAll afterAll */
 import {expect} from 'chai'
 import {
   getRandomString,
@@ -7,7 +7,7 @@ import {
   createInstance
 } from '@syncano/test-tools'
 
-import Server from '../../../lib-js-core/src'
+import Server from '../../../lib-js-core/lib'
 
 describe('Event', function () {
   let event = null
@@ -22,7 +22,7 @@ describe('Event', function () {
     }
   }
 
-  before(function (done) {
+  beforeAll(function (done) {
     createInstance(instanceName)
       .then(instanceObj => {
         ctx.meta.instance = instanceObj.name
@@ -38,7 +38,7 @@ describe('Event', function () {
       })
   })
 
-  after(function (done) {
+  afterAll(function (done) {
     deleteInstance(instanceName)
       .then(() => {
         done()

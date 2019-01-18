@@ -1,4 +1,4 @@
-/* global describe before after */
+/* global describe beforeAll afterAll */
 import {
   uniqueInstance,
   deleteInstance,
@@ -8,7 +8,7 @@ import {
 describe('Endpoint', function () {
   const instanceName = uniqueInstance()
 
-  before(function (done) {
+  beforeAll(function (done) {
     createInstance(instanceName)
       .then(instanceObj => {
         done()
@@ -22,7 +22,7 @@ describe('Endpoint', function () {
       })
   })
 
-  after(function (done) {
+  afterAll(function (done) {
     deleteInstance(instanceName).then(() => {
       done()
     })

@@ -1,4 +1,4 @@
-/* global describe it before after */
+/* global describe it beforeAll afterAll */
 import path from 'path'
 
 import {
@@ -21,8 +21,8 @@ const tempEmail = createTempEmail(process.env.E2E_CLI_TEMP_EMAIL, tempPass)
 describe('CLI User', function () {
   let testInstance = uniqueInstance()
 
-  before(cleanUpAccount)
-  after(cleanUpAccount)
+  beforeAll(cleanUpAccount)
+  afterAll(cleanUpAccount)
 
   const testNixt = () => nixt()
     .cwd(path.join(testsLocation))

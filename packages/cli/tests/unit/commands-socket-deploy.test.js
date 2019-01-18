@@ -2,6 +2,7 @@
 import sinon from 'sinon'
 import sinonTestFactory from 'sinon-test'
 import format from 'chalk'
+import {expect} from 'chai'
 import createError from 'create-error'
 
 import { SocketDeploy } from '../../src/commands'
@@ -26,15 +27,13 @@ describe('[commands] Trace Sockets', function () {
     error.restore()
   })
 
-  describe('printUpdateSuccessful', function () {
+  describe('printSummary', function () {
     it('should echo properly formatted message', function () {
       const socketNameStr = format.cyan('foo')
-      const timer = new Timer()
-      sinon.stub(timer, 'getDurationTime').callsFake(() => 42)
 
-      SocketDeploy.printUpdateSuccessful('foo', { status: 'ok' }, timer)
+      const resp = SocketDeploy.printSummary('foo', {status: 'ok', duration: '42 ms'})
 
-      sinon.assert.calledWith(interEcho, `${format.grey('socket synced:')} ${currentTime()} ${socketNameStr} ${format.dim(42, 'ms')}`)
+      expect(resp).to.be.equal(`  ${format.grey('socket synced:')} ${currentTime()} ${socketNameStr} ${format.dim(42, 'ms')}`)
     })
   })
 

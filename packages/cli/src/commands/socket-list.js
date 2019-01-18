@@ -1,14 +1,15 @@
-import format from 'chalk'
 import logger from '../utils/debug'
 import { echo } from '../utils/print-tools'
 import { socketNotFound } from './helpers/socket'
+import { printInstanceInfo } from './helpers/instance'
 import responses from './socket-list-responses'
 
 const { info, debug } = logger('cmd-socket-list')
 
 class SocketListCmd {
   constructor (context) {
-    info('SocketListCmd.constructor', context)
+    info('SocketListCmd.constructor')
+    debug(context)
     this.session = context.session
     this.Socket = context.Socket
     this.responses = responses(this.session)
@@ -19,8 +20,7 @@ class SocketListCmd {
     this.fullPrint = cmd.full || !!socketName
 
     echo()
-    echo(4)(`instance: ${format.yellow(this.session.project.instance)}`)
-    echo(4)(`location: ${format.yellow(this.session.location)}`)
+    printInstanceInfo(this.session)
 
     if (socketName) {
       try {
@@ -29,6 +29,7 @@ class SocketListCmd {
           socketNotFound()
           process.exit(1)
         }
+        echo()
         this.printSocket(socket)
       } catch (err) {
         socketNotFound()
@@ -119,7 +120,7 @@ class SocketListCmd {
   }
 
   async printSocket (socket) {
-    debug('printSocket')
+    info('printSocket')
 
     const endpoints = socket.getEndpoints()
     const eventHandlers = socket.getEventHandlers()

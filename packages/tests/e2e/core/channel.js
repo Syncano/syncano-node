@@ -1,4 +1,4 @@
-/* global it describe before after */
+/* global it describe beforeAll afterAll */
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'
@@ -6,8 +6,8 @@ import fetch from 'node-fetch'
 import chai, {expect} from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 
-import Server from '../../../lib-js-core/src'
-import {parseJSON, checkStatus} from '../../../lib-js-core/src/utils'
+import Server from '../../../lib-js-core/lib'
+import {parseJSON, checkStatus} from '../../../lib-js-core/lib/utils'
 
 import {
   getRandomString,
@@ -24,14 +24,14 @@ describe.skip('Channel', function () {
     instanceName
   })
 
-  before(() =>
+  beforeAll(() =>
     createInstance(instanceName)
       .then(uploadEnvironment)
       .then(uploadSocket)
       .then(waitForSocket)
   )
 
-  after(() => deleteInstance(instanceName))
+  afterAll(() => deleteInstance(instanceName))
 
   describe('#publish()', () => {
     it('can publish to channel', () =>

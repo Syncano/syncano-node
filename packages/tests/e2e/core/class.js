@@ -1,6 +1,6 @@
-/* global it describe before after */
+/* global it describe beforeAll afterAll */
 import {expect} from 'chai'
-import Server from '../../../lib-js-core/src'
+import Server from '../../../lib-js-core/lib'
 
 import {
   uniqueInstance,
@@ -14,7 +14,7 @@ describe('Class', function () {
   const testClassName = getRandomString()
   const instanceName = uniqueInstance()
 
-  before(function (done) {
+  beforeAll(function (done) {
     const ctx = {
       meta: {
         socket: 'test-socket',
@@ -33,7 +33,7 @@ describe('Class', function () {
       })
   })
 
-  after(function (done) {
+  afterAll(function (done) {
     deleteInstance(instanceName)
       .then(() => {
         done()

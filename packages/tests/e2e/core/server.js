@@ -2,7 +2,7 @@
 import {expect} from 'chai'
 
 import pjson from '../../../lib-js-core/package.json'
-import Server from '../../../lib-js-core/src'
+import Server from '../../../lib-js-core/lib'
 
 describe('Server', function () {
   it('get major version', async () => {

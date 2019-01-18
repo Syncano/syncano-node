@@ -15,14 +15,14 @@ process.env.SYNCANO_ENV = 'test'
 describe('Quickstart', function () {
   let instaceName = null
   let tutorialLocation = null
-  before(function () {
+  beforeAll(function () {
     tutorialLocation = setupLocation('tutorial-quickstart')
     return createInstance()
       .then((resp) => {
         instaceName = resp.name
       })
   })
-  after(function () {
+  afterAll(function () {
     shutdownLocation(tutorialLocation)
     return cleanUpAccount()
     // return deleteInstance(instaceName);

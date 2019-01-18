@@ -1,4 +1,4 @@
-/* global describe it before after */
+/* global describe it beforeAll afterAll */
 import fs from 'fs-extra'
 import path from 'path'
 import {
@@ -21,8 +21,8 @@ describe('CLI Deploy', function () {
     .env('SYNCANO_AUTH_KEY', process.env.E2E_CLI_ACCOUNT_KEY)
     .cwd(path.join(testsLocation, testInstance))
 
-  before(async () => createProject(testInstance, projectTestTemplate))
-  after(async () => deleteInstance(testInstance))
+  beforeAll(async () => createProject(testInstance, projectTestTemplate))
+  afterAll(async () => deleteInstance(testInstance))
 
   it('can list installed sockets', function (done) {
     testNixt()
@@ -84,7 +84,7 @@ describe('CLI Deploy', function () {
       .before(() => moveTestProject(projectTestTemplate))
       .after(() => deleteInstance(testInstance))
       .run(`${cliLocation} deploy --create-instance ${testInstance}`)
-      .stdout(/project synced:/)
+      .stdout(/has been created/)
       .code(0)
       .end(done)
   })
