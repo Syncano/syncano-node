@@ -1,13 +1,13 @@
-import fs from 'fs'
 import {flags} from '@oclif/command'
-import path from 'path'
 import format from 'chalk'
+import fs from 'fs'
 import inquirer from 'inquirer'
-import { p, echo, error } from '../../utils/print-tools'
-import HostingSync from './sync'
-import Hosting from '../../utils/hosting'
+import path from 'path'
 
 import Command from '../../base_command'
+import Hosting from '../../utils/hosting'
+
+import HostingSync from './sync'
 
 export default class HostingConfig extends Command {
   static description = 'Add hosting'
@@ -16,9 +16,9 @@ export default class HostingConfig extends Command {
     'browser-router-on': flags.boolean(),
     'browser-router-off': flags.boolean(),
     'dont-sync': flags.boolean(),
-    'sync': flags.boolean(),
+    sync: flags.boolean(),
     'without-cname': flags.boolean(),
-    'cname': flags.string(),
+    cname: flags.string(),
   }
   static args = [{
     name: 'folder',
@@ -34,7 +34,9 @@ export default class HostingConfig extends Command {
   browserRouter: boolean
   sync: boolean
 
-  async run () {
+  async run() {
+    await this.session.isAuthenticated()
+    await this.session.hasProject()
     const {args} = this.parse(HostingConfig)
     const {flags} = this.parse(HostingConfig)
 
@@ -46,11 +48,11 @@ export default class HostingConfig extends Command {
     this.fullPath = null
 
     if (!fs.existsSync(this.folder)) {
-      echo()
-      error(4)('Provided path doesn\'t exist.')
-      echo(4)(`Type ${format.green('mkdir <folder_name>')} to create a folder.`)
-      echo()
-      process.exit(1)
+      this.echo()
+      this.error(this.p('Provided path doesn\'t exist.'))
+      this.echo(4)(`Type ${format.green('mkdir <folder_name>')} to create a folder.`)
+      this.echo()
+      this.exit(1)
     }
 
     const responses = await inquirer.prompt(this.getQuestions()) || {} as any
@@ -70,22 +72,22 @@ export default class HostingConfig extends Command {
       const hosting = await Hosting.add(params)
       await this.syncNewHosting(hosting)
     } catch (err) {
-      echo()
+      this.echo()
       try {
-        error(4)(err.response.data.detail)
+        this.error(this.p(4)(err.response.data.detail))
       } catch (printErr) {
-        error(4)(printErr.message)
+        this.error(this.p(4)(printErr.message))
       }
-      echo()
+      this.echo()
     }
   }
 
-  async syncNewHosting (hosting) {
-    if (this.sync == null) {
+  async syncNewHosting(hosting) {
+    if (this.sync === null) {
       const syncQuestion = [{
         type: 'confirm',
         name: 'confirm',
-        message: p(2)('Do you want to sync files now?'),
+        message: this.p(2)('Do you want to sync files now?'),
         default: true
       }]
 
@@ -93,24 +95,24 @@ export default class HostingConfig extends Command {
       this.sync = response.confirm || this.sync
     }
 
-    echo()
+    this.echo()
     if (!this.sync) {
-      echo(4)(`To sync files use: ${format.cyan(`npx s hosting sync ${hosting.hostingName}`)}`)
-      echo()
-      return process.exit()
+      this.echo(4)(`To sync files use: ${format.cyan(`npx s hosting sync ${hosting.hostingName}`)}`)
+      this.echo()
+      return this.exit()
     }
 
     await HostingSync.syncHosting(hosting)
   }
 
-  getQuestions () {
+  getQuestions() {
     const questions = []
     if (!this.hostingName) {
       questions.push({
         name: 'name',
-        message: p(2)("Set hosting's name"),
+        message: this.p(2)("Set hosting's name"),
         default: 'staging',
-        validate: (value) => {
+        validate: value => {
           if (!value) {
             return 'This parameter is required!'
           }
@@ -119,21 +121,20 @@ export default class HostingConfig extends Command {
       })
     }
 
-    if (this.cname == null) {
+    if (this.cname === null) {
       questions.push({
         name: 'CNAME',
-        message: p(2)('Set CNAME now (your own domain) or leave it empty')
+        message: this.p(2)('Set CNAME now (your own domain) or leave it empty')
       })
     }
     if (!this.browserRouter) {
       questions.push({
         type: 'confirm',
         name: 'browser_router',
-        message: p(2)('Do you want to use BrowserRouter for this hosting?')
+        message: this.p(2)('Do you want to use BrowserRouter for this hosting?')
       })
     }
 
     return questions
   }
 }
-

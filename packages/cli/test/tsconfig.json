@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "noEmit": true,
+    "sourceMap": true,
+    "inlineSourceMap": true,
+    "inlineSources": true
+  },
+  "references": [
+    {
+      "path": ".."
+    }
+  ]
+}

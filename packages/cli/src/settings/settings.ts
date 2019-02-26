@@ -1,12 +1,12 @@
 import fs from 'fs'
-import path from 'path'
 import YAML from 'js-yaml'
+import path from 'path'
 
 import logger from '../utils/debug'
 import ErrorResponse from '../utils/error-response'
-import { error, p } from '../utils/print-tools'
+import {error, p} from '../utils/print-tools'
 
-const { warn, info } = logger('settings')
+const {warn, info} = logger('settings')
 
 export default class Settings {
   attributes: any
@@ -15,7 +15,7 @@ export default class Settings {
   name: string | null
   loaded: boolean
 
-  constructor () {
+  constructor() {
     this.configPath = null
     this.baseDir = '.'
     this.name = null
@@ -23,7 +23,7 @@ export default class Settings {
     this.attributes = {}
   }
 
-  load () {
+  load() {
     this.configPath = path.join(this.baseDir, `${this.name}.yml`)
 
     try {
@@ -45,13 +45,13 @@ export default class Settings {
       this.attributes = YAML.load(fs.readFileSync(this.configPath, 'utf8')) || {}
     } catch (err) {
       error(err, p(10)(`at file: ${this.configPath}`))
-      process.exit(1)
+      // this.exit(1)
     }
 
     return true
   }
 
-  save () {
+  save() {
     info('save()', this.configPath)
     try {
       fs.writeFileSync(this.configPath, YAML.dump(this.attributes))
@@ -61,11 +61,11 @@ export default class Settings {
     }
   }
 
-  get (key: string) {
+  get(key: string) {
     return this.attributes[key] || null
   }
 
-  set (key: any, value: any, save: boolean) {
+  set(key: any, value: any, save: boolean) {
     this.attributes[key] = value
     if (save !== false) this.save()
     return this

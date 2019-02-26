@@ -1,28 +1,25 @@
 import format from 'chalk'
-import { echo } from '../utils/print-tools'
 
 import Command from '../base_command'
-
 
 export default class Logout extends Command {
   static description = 'Login to your account'
   static flags = {}
 
-  run () {
+  run() {
     const authenticated = this.session.settings.account.authenticated()
 
     if (!authenticated) {
-      echo()
-      echo(4)(`${format.red('You are not logged in!')}`)
-      echo()
-      return process.exit(1)
+      this.echo()
+      this.echo(4)(`${format.red('You are not logged in!')}`)
+      this.echo()
+      return this.exit(1)
     }
 
-    echo()
-    echo(4)(`${format.green('You have been logged out!')}`)
-    echo()
+    this.echo()
+    this.echo(4)(`${format.green('You have been logged out!')}`)
+    this.echo()
 
     this.session.settings.account.logout()
   }
 }
-

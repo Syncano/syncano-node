@@ -1,8 +1,9 @@
-import Command, {flags} from '@oclif/command'
-import session from './utils/session'
-import {Session} from './utils/session'
-import Socket from './utils/sockets'
+import Command from '@oclif/command'
+
 import Init from './utils/init'
+import {echo, echon, p} from './utils/print-tools'
+import session, {Session} from './utils/session'
+import Socket from './utils/sockets'
 
 export {
   Socket,
@@ -11,33 +12,16 @@ export {
 
 export default abstract class extends Command {
   session: Session
+  echo: any
+  echon: any
+  p: any
 
   async init() {
     this.session = session
     await this.session.load()
+
+    this.echo = echo
+    this.echon = echon
+    this.p = p
   }
-  // static flags = {
-  //   loglevel: flags.string({options: ['error', 'warn', 'info', 'debug']})
-  // }
-
-  // log(msg, level) {
-  //   switch (this.flags.loglevel) {
-  //   case 'error':
-  //     if (level === 'error') console.error(msg)
-  //     break
-  //   // a complete example would need to have all the levels
-  //   }
-  // }
-
-  // async init(err) {
-  //   // do some initialization
-  //   const {flags} = this.parse(this.constructor)
-  //   this.flags = flags
-  // }
-  // async catch(err) {
-  //   // handle any error from the command
-  // }
-  // async finally(err) {
-  //   // called after run and catch regardless of whether or not the command errored
-  // }
 }

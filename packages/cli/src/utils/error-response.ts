@@ -1,9 +1,10 @@
-import Raven from 'raven'
 import format from 'chalk'
 import _ from 'lodash'
-import { error, echo } from './print-tools'
-import { CLIContext, CLISession } from '../types';
-import session from './session';
+import Raven from 'raven'
+
+import {CLIContext, CLISession} from '../types'
+
+import {echo, error} from './print-tools'
 
 // TODO: how solve this with typescript?
 // process.noDeprecation = true
@@ -28,24 +29,13 @@ process.on('unhandledRejection', (reason, p) => {
 })
 
 class ErrorResponse {
-  context: CLIContext
-  session: CLISession
-  name: string
-  contextName: string
-
-  constructor (context) {
-    this.context = context
-    this.name = context.name
-    this.contextName = context.constructor.name.toLowerCase()
-    this.session = this.context.session || null
-  }
-  static checkErrorType (err) {
+  static checkErrorType(err) {
     if (err.name === 'RequestError') return 'requestError'
     if (err.errno < 0) return 'systemError'
 
     return 'default'
   }
-  static handleRequestError (err, name, contextName) {
+  static handleRequestError(err, name, contextName) {
     if (err.status === 404) {
       const errorMessage = `"${name}" ${contextName} could not be found on your remote Syncano account!`
 
@@ -60,30 +50,41 @@ class ErrorResponse {
     error(err)
   }
 
-  static handleSystemError (err, name, contextName) {
+  static handleSystemError(err, name, contextName) {
     if (err.code === 'ENOENT') {
       error('File or directory not found at:', err.path)
       return
     }
     error(err)
   }
+  context: CLIContext
+  session: CLISession
+  name: string
+  contextName: string
 
-  captureException (err) {
+  constructor(context) {
+    this.context = context
+    this.name = context.name
+    this.contextName = context.constructor.name.toLowerCase()
+    this.session = this.context.session || null
+  }
+
+  captureException(err) {
     const context = this.context
     const session = context.session
 
     if (session) {
       const account = session.settings.account
       delete account.attributes.auth_key
-      Raven.setContext({ user: { session, account } })
+      Raven.setContext({user: {session, account}})
     } else {
-      Raven.setContext({ user: { context } })
+      Raven.setContext({user: {context}})
     }
 
     Raven.captureException(err)
   }
 
-  handle (err) {
+  handle(err) {
     const name = this.name
     const contextName = this.contextName
     const errorType = ErrorResponse.checkErrorType(err)

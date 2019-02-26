@@ -1,13 +1,14 @@
-import _ from 'lodash'
 import fs from 'fs'
+import _ from 'lodash'
 import path from 'path'
+
 import logger from './debug'
 
-const { debug } = logger('template')
+const {debug} = logger('template')
 
 const getTemplatePath = (templateName: string) => {
   debug('getTemplatePath', templateName)
-  const options = { paths: [path.join(process.cwd(), 'node_modules')] }
+  const options = {paths: [path.join(process.cwd(), 'node_modules')]}
   return path.dirname(require.resolve(templateName, options))
 }
 
@@ -19,7 +20,7 @@ const getTemplateSpec = (templateName: string) => {
   )
 }
 
-function getTemplate (templateName: string) {
+function getTemplate(templateName: string) {
   debug('getTemplate', templateName)
   const templatePath = getTemplatePath(templateName)
   return path.join(templatePath, 'template')

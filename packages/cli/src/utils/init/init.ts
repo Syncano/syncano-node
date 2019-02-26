@@ -1,47 +1,46 @@
-import fs from 'fs-extra'
 import format from 'chalk'
+import fs from 'fs-extra'
 import path from 'path'
 
 import logger from '../debug'
+import {echo} from '../print-tools'
 import session from '../session'
-import { echo } from '../print-tools'
 import {
-  getTemplateSpec,
-  getTemplate,
   builtInProjectTemplates,
+  getTemplate,
+  getTemplateSpec,
   installedProjectTemplates
 } from '../templates'
 
-const { debug } = logger('utils-init')
+const {debug} = logger('utils-init')
 
 class Init {
-  templateName: string
-  locationName: string
-
-  static projectTemplates () {
+  static projectTemplates() {
     const allTemplates = builtInProjectTemplates.concat(installedProjectTemplates())
     const installedTemplates = allTemplates.map(templateName => {
       debug('loading template:', templateName)
       const templateSpec = getTemplateSpec(templateName)
 
-      return { name: templateName, description: templateSpec.description }
+      return {name: templateName, description: templateSpec.description}
     })
     return installedTemplates
   }
 
-  static getTemplatesChoices () {
+  static getTemplatesChoices() {
     return Init.projectTemplates()
       .map(template => `${template.description} ${format.grey(`- (${template.name})`)}`)
   }
 
-  static getLocationChoices () {
+  static getLocationChoices() {
     return [
-      `eu1 ${format.grey(`- (Europe Belgium)`)}`,
-      `us1 ${format.grey(`- (US Virginia)`)}`
+      `eu1 ${format.grey('- (Europe Belgium)')}`,
+      `us1 ${format.grey('- (US Virginia)')}`
     ]
   }
+  templateName: string
+  locationName: string
 
-  async createFilesAndFolders (pathToCopyTo = process.cwd()) {
+  async createFilesAndFolders(pathToCopyTo = process.cwd()) {
     debug('createFilesAndFolders()')
 
     try {
@@ -57,15 +56,15 @@ class Init {
     }
   }
 
-  checkConfigFiles () {
+  checkConfigFiles() {
     return !fs.existsSync(session.projectPath)
   }
 
-  checkIfInitiated () {
+  checkIfInitiated() {
     return fs.existsSync(session.projectPath) && session.project
   }
 
-  async addConfigFiles (projectParams = {}, projectPath?: string) {
+  async addConfigFiles(projectParams = {}, projectPath?: string) {
     if (projectPath) {
       session.settings.account.addProject(projectPath, projectParams)
     } else {
@@ -74,7 +73,7 @@ class Init {
     await session.load()
   }
 
-  noConfigFiles () {
+  noConfigFiles() {
     debug('noConfigFiles()')
     this.createFilesAndFolders()
   }

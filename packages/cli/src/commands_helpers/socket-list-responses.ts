@@ -1,31 +1,32 @@
 import format from 'chalk'
-import { p, printCode } from '../utils/print-tools'
 
-const renderStatus = (object) => {
-  const { status, type } = object.getStatus()
+import {p, printCode} from '../utils/print-tools'
+
+const renderStatus = object => {
+  const {status, type} = object.getStatus()
 
   switch (type) {
-    case 'ok':
-      return format.dim.green(status)
-    case 'warn':
-      return format.dim.yellow(status)
-    case 'fail':
-      return format.dim.red(status)
-    default:
-      return status
+  case 'ok':
+    return format.dim.green(status)
+  case 'warn':
+    return format.dim.yellow(status)
+  case 'fail':
+    return format.dim.red(status)
+  default:
+    return status
   }
 }
 
-const socketListResponses = (session) => ({
+const socketListResponses = () => ({
   lackSockets: 'No Socket was found on server nor in config!',
-  lackSocket: ({ name }) => (
+  lackSocket: ({name}) => (
     `${name ? format.yellow(name) : 'This Socket'} was not found on server nor in config!`
   ),
   createNewOne: `Type ${format.cyan('npx s create <name>')} to create new one.`,
   installNewOne: `Type ${format.cyan('npm install <name>')} to install new one from NPM registry.`,
   params: `${format.white('input')}:`,
   responses: `${format.white('output')}:`,
-  socket: (socket) => {
+  socket: socket => {
     let description = ''
     if (socket.existRemotely) {
       description = socket.remote.spec.description || ''
@@ -41,7 +42,7 @@ const socketListResponses = (session) => ({
       status: `${format.dim('status')}: ${renderStatus(socket)}`
     }
   },
-  endpoint: (endpoint) => {
+  endpoint: endpoint => {
     const metadata = endpoint.metadata
 
     return endpoint && {
@@ -49,19 +50,19 @@ const socketListResponses = (session) => ({
       description: `${format.dim('description')}: ${metadata.description || ''}`,
       url: `${format.dim('url')}: ${endpoint.getURL()}`,
       notSynced: `${format.dim('status')}: ${renderStatus(endpoint)}`,
-      parameter: (param) => param && ({
+      parameter: param => param && ({
         name: `${format.dim('name')}: ${format.cyan(param) || ''}`,
         description: `${format.dim('description')}: ${metadata.parameters[param].description || ''}`,
         example: `${format.dim('example')}: ${format.cyan.dim(metadata.parameters[param].example)}`
       }),
-      response: (example) => {
+      response: example => {
         const exitCode = example.exit_code || '200'
         const mimetype = example.mimetype || 'application/json'
-        const { description } = example || ''
+        const {description} = example || ''
 
         let exampleLines = ''
         if (example && example.example) {
-          exampleLines = example.example.split('\n').map((line) => p(12)(line)).join('\n')
+          exampleLines = example.example.split('\n').map(line => p(12)(line)).join('\n')
         }
 
         return {
@@ -73,23 +74,23 @@ const socketListResponses = (session) => ({
       }
     }
   },
-  handler: (handler) => {
+  handler: handler => {
     const metadata = handler.metadata
 
     return handler && {
       name: `${format.white('event handler')}: ${format.cyan(handler.name)}`,
       description: `${format.dim('description')}: ${metadata.description || ''}`,
-      parameter: (param) => param && ({
+      parameter: param => param && ({
         name: `${format.dim('name')}: ${format.cyan(param) || ''}`,
         description: `${format.dim('description')}: ${metadata.parameters[param].description || ''}`,
         example: `${format.dim('example')}: ${format.cyan.dim(metadata.parameters[param].example)}`
       })
     }
   },
-  event: (event) => event && {
+  event: event => event && {
     name: `${format.white('event')}: ${format.cyan(event.name)}`,
     description: `${format.dim('description')}: ${event.metadata.description || ''}`,
-    parameter: (param) => param && ({
+    parameter: param => param && ({
       name: `${format.dim('name')}: ${format.cyan(param) || ''}`,
       description: `${format.dim('description')}: ${event.metadata.parameters[param].description || ''}`,
       example: `${format.dim('example')}: ${format.grey(event.metadata.parameters[param].example)}`

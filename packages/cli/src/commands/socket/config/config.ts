@@ -1,8 +1,5 @@
-import { askQuestions } from '../../../commands_helpers/socket'
-import { echo, warning, error } from '../../../utils/print-tools'
-
 import Command, {Socket} from '../../../base_command'
-
+import {askQuestions} from '../../../commands_helpers/socket'
 
 export default class SocketConfig extends Command {
   static description = 'Configure Socket'
@@ -14,31 +11,32 @@ export default class SocketConfig extends Command {
     description: 'name of the Socket',
   }]
 
-  async run () {
-    await this.session.isAuthenticated()
-    await this.session.hasProject()
+  async run() {
+    await this.session.isAuthenticated() || this.exit(1)
+    await this.session.hasProject() || this.exit(1)
+
     const {args} = this.parse(SocketConfig)
 
     const socket = await Socket.get(args.socketName)
 
     if (!socket.existRemotely) {
-      echo()
-      error(4)('That Socket was not synced!')
-      echo()
-      process.exit(1)
+      this.echo()
+      this.error(this.p(4)('That Socket was not synced!'))
+      this.echo()
+      this.exit(1)
     }
 
     if (!socket.spec.config) {
-      echo()
-      warning('That Socket doesn\'t have any configuration options.')
-      echo()
-      process.exit(1)
+      this.echo()
+      this.warn('That Socket doesn\'t have any configuration options.')
+      this.echo()
+      this.exit(1)
     }
 
-    echo()
+    this.echo()
 
     const config = await askQuestions(socket.getConfigOptions())
     await socket.updateConfig(config)
-    echo()
+    this.echo()
   }
 }

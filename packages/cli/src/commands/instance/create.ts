@@ -1,8 +1,5 @@
-import logger from '../../utils/debug'
-import { createInstance } from '../../commands_helpers/create-instance'
 import Command from '../../base_command'
-
-const { debug } = logger('cmd-instance-create')
+import {createInstance} from '../../commands_helpers/create-instance'
 
 export default class InstanceCreateCmd extends Command {
   static description = 'Create new instance'
@@ -21,14 +18,15 @@ export default class InstanceCreateCmd extends Command {
     },
   ]
 
-  async run () {
-    await this.session.isAuthenticated()
+  async run() {
+    await this.session.isAuthenticated() || this.exit(1)
     const {args} = this.parse(InstanceCreateCmd)
 
     if (args.location) {
       await this.session.setLocation(args.location)
     }
 
-    return createInstance(args.instanceName)
+    await createInstance(args.instanceName)
+    this.exit(0)
   }
 }

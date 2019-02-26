@@ -1,18 +1,25 @@
+import fs from 'fs'
+import YAML from 'js-yaml'
 import _ from 'lodash'
 import readdirp from 'readdirp'
-import YAML from 'js-yaml'
-import fs from 'fs'
 
+import {HostingRecord, ProjectSettingsAttributes} from '../types'
 import logger from '../utils/debug'
-import Settings from './settings'
-import {ProjectSettingsAttributes, HostingRecord} from '../types'
 
-const { debug } = logger('settings-project')
+import Settings from './settings'
+
+const {debug} = logger('settings-project')
 
 export default class ProjectSettings extends Settings {
+
+  static getAttributesFromYaml(path: string) {
+    const socketAttributes = YAML.load(fs.readFileSync(path, 'utf8'))
+
+    return socketAttributes
+  }
   attributes: ProjectSettingsAttributes
 
-  constructor (projectPath: string) {
+  constructor(projectPath: string) {
     super()
     this.attributes = {}
     this.name = 'syncano'
@@ -22,14 +29,14 @@ export default class ProjectSettings extends Settings {
     }
   }
 
-  getPlugins () {
+  getPlugins() {
     return this.attributes.plugins
   }
 
-  getAllSocketsYmlPath () {
+  getAllSocketsYmlPath() {
     return new Promise((resolve, reject) => {
       const paths = [] as string[]
-      readdirp({ root: this.baseDir, fileFilter: 'socket.yml' }, () => {}, () => {})
+      readdirp({root: this.baseDir, fileFilter: 'socket.yml'}, () => {}, () => {})
         .on('data', (entry: any) => {
           paths.push(entry.fullPath)
         })
@@ -42,13 +49,7 @@ export default class ProjectSettings extends Settings {
     })
   }
 
-  static getAttributesFromYaml (path: string) {
-    const socketAttributes = YAML.load(fs.readFileSync(path, 'utf8'))
-
-    return socketAttributes
-  }
-
-  getSocketTemplates () {
+  getSocketTemplates() {
     try {
       return this.attributes.templates.sockets
     } catch (err) {
@@ -57,24 +58,24 @@ export default class ProjectSettings extends Settings {
   }
 
   // Hosting
-  getHosting (hostingName: string) {
+  getHosting(hostingName: string) {
     debug('getHosting()')
     return this.attributes.hosting ? this.attributes.hosting[hostingName] : null
   }
 
-  addHosting (hostingName: string, params: HostingRecord) {
+  addHosting(hostingName: string, params: HostingRecord) {
     if (!this.attributes.hosting) this.attributes.hosting = {}
     this.attributes.hosting[hostingName] = params
     this.save()
   }
 
-  updateHosting (hostingName: string, params: HostingRecord) {
+  updateHosting(hostingName: string, params: HostingRecord) {
     if (!this.attributes.hosting) this.attributes.hosting = {}
     this.attributes.hosting[hostingName] = _.extend(this.attributes.hosting[hostingName], params)
     this.save()
   }
 
-  deleteHosting (hostingName: string) {
+  deleteHosting(hostingName: string) {
     if (this.attributes.hosting) {
       delete this.attributes.hosting[hostingName]
     }
@@ -85,7 +86,7 @@ export default class ProjectSettings extends Settings {
     this.save()
   }
 
-  listHosting () {
+  listHosting() {
     debug('list()')
     const hostings = this.attributes.hosting
     const list = []

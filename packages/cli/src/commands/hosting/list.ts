@@ -1,44 +1,23 @@
 import format from 'chalk'
-import logger from '../../utils/debug'
-import { echo, echon } from '../../utils/print-tools'
-import Hosting from '../../utils/hosting'
 
 import Command from '../../base_command'
+import Hosting from '../../utils/hosting'
+import {echo, echon} from '../../utils/print-tools'
 
-const { info, debug } = logger('cmd-hosting-list')
 
 export default class HostingListCmd extends Command {
   static description = 'List hostings'
   static flags = {}
   static args = []
 
-  async run () {
-    await this.session.isAuthenticated()
-    await this.session.hasProject()
-
-    const hostings = await Hosting.list()
-    HostingListCmd.printHostings(hostings)
-  }
-
-  static printNoHostingsInfo () {
+  static printNoHostingsInfo() {
     echo()
     echo(4)('You don\'t have any hostings!')
     echo(4)(`Type ${format.cyan('npx s hosting add')} to add hosting for your app!`)
     echo()
   }
 
-  static printHostings (hostings = []) {
-    if (!hostings.length) {
-      HostingListCmd.printNoHostingsInfo()
-      process.exit(0)
-    }
-    echo()
-    echo(4)('Your hostings:')
-    echo()
-    hostings.forEach(HostingListCmd.printHosting.bind(this))
-  }
-
-  static printHosting (hosting) {
+  static printHosting(hosting) {
     const cname = typeof hosting.getCnameURL === 'function' && hosting.getCnameURL()
     echo(11)(`${format.dim('name')}: ${format.cyan(hosting.name)}`)
 
@@ -71,5 +50,24 @@ export default class HostingListCmd extends Command {
       echo(4)(errorResponses[hosting.error])
     }
   }
-}
 
+  async run() {
+    await this.session.isAuthenticated() || this.exit(1)
+    await this.session.hasProject() || this.exit(1)
+
+    const hostings = await Hosting.list()
+    this.printHostings(hostings)
+    this.exit(0)
+  }
+
+  printHostings(hostings = []) {
+    if (!hostings.length) {
+      HostingListCmd.printNoHostingsInfo()
+      this.exit(0)
+    }
+    echo()
+    echo(4)('Your hostings:')
+    echo()
+    hostings.forEach(HostingListCmd.printHosting.bind(this))
+  }
+}

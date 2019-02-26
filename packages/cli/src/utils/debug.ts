@@ -2,7 +2,7 @@
 // import logger from '../utils/debug';
 // const { info, debug } = logger('<my_logger_name>');
 
-import printDebug, { IDebugger } from 'debug'
+import printDebug, {IDebugger} from 'debug'
 
 // TODO: find how to simplify it
 interface Logger {

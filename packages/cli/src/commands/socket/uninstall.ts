@@ -1,11 +1,8 @@
 import format from 'chalk'
 import inquirer from 'inquirer'
 
-import { socketNotFound } from '../../commands_helpers/socket'
-import { echo, warning, p } from '../../utils/print-tools'
-
 import Command, {Socket} from '../../base_command'
-
+import {socketNotFound} from '../../commands_helpers/socket'
 
 export default class SocketUnInstall extends Command {
   static description = 'Uninstall Socket'
@@ -16,7 +13,7 @@ export default class SocketUnInstall extends Command {
     description: 'name of the Socket',
   }]
 
-  async run () {
+  async run() {
     await this.session.isAuthenticated()
     await this.session.hasProject()
 
@@ -26,7 +23,7 @@ export default class SocketUnInstall extends Command {
     const confirmation = [{
       type: 'confirm',
       name: 'confirm',
-      message: p(2)(`Are you sure you want to remove: ${format.red(args.socketName)}`),
+      message: this.p(2)(`Are you sure you want to remove: ${format.red(args.socketName)}`),
       default: false
     }]
 
@@ -34,32 +31,32 @@ export default class SocketUnInstall extends Command {
 
     if (!socket.existLocally && !socket.existRemotely) {
       socketNotFound()
-      process.exit(1)
+      this.exit(1)
     }
 
-    echo()
+    this.echo()
     const promptResponse = await inquirer.prompt(confirmation) as any
-    if (!promptResponse.confirm) process.exit()
-    echo()
+    if (!promptResponse.confirm) this.exit()
+    this.echo()
 
     try {
       await Socket.uninstall(socket)
 
       if (socket.isProjectRegistryDependency) {
-        echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the project config file...`)
+        this.echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the project config file...`)
       }
       if (socket.existLocally) {
-        echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the project folder...`)
+        this.echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the project folder...`)
       }
       if (socket.existRemotely) {
-        echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the server...`)
+        this.echo(4)(`Socket ${format.cyan(socket.name)} has been removed from the server...`)
       }
 
-      echo(4)(`Socket ${format.cyan(socket.name)} has been ${format.green('successfully')} removed!`)
-      echo()
+      this.echo(4)(`Socket ${format.cyan(socket.name)} has been ${format.green('successfully')} removed!`)
+      this.echo()
     } catch (err) {
-      warning(err)
-      echo()
+      this.warn(err)
+      this.echo()
     }
   }
 }

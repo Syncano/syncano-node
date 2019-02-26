@@ -1,18 +1,12 @@
-import format from 'chalk'
-import logger from '../../utils/debug'
-import { SimpleSpinner } from '../../commands_helpers/spinner'
-import { p, echo, error } from '../../utils/print-tools'
+import {flags} from '@oclif/command'
 
 import Command from '../../base_command'
-import { flags } from '@oclif/command';
-
-const { debug } = logger('cmd-info')
-
+import {SimpleSpinner} from '../../commands_helpers/spinner'
 
 export default class BackupDelete extends Command {
   static description = 'Delete backup'
   static flags = {
-    'all': flags.boolean()
+    all: flags.boolean()
   }
   static args = [{
     name: 'id',
@@ -21,9 +15,9 @@ export default class BackupDelete extends Command {
 
   Backups: any
 
-  async run () {
-    await this.session.isAuthenticated()
-    await this.session.hasProject()
+  async run() {
+    await this.session.isAuthenticated() || this.exit(1)
+    await this.session.hasProject() || this.exit(1)
 
     this.Backups = this.session.connection.backups
 
@@ -31,25 +25,25 @@ export default class BackupDelete extends Command {
     const {flags} = this.parse(BackupDelete)
 
     try {
-      echo()
+      this.echo()
       if (flags.all) {
-        const spinner = new SimpleSpinner(p(2)('Deleting Backups...')).start()
-        await this.Backups.deleteAll()
+        const spinner = new SimpleSpinner(this.p(2)('Deleting Backups...')).start()
+        await this.Backups.delete()
         spinner.stop()
-        spinner.succeed(p(2)(`All backups deleted.`))
-        echo()
+        spinner.succeed(this.p(2)('All backups deleted.'))
+        this.echo()
       } else if (!args.id) {
-        echo(4)(`Please provide backup id.`)
+        this.echo(4)('Please provide backup id.')
       } else {
         await this.Backups.delete(args.id)
-        echo(4)(`Backup deleted.`)
-        echo()
+        this.echo(4)('Backup deleted.')
+        this.echo()
       }
     } catch (err) {
-      echo()
-      error(err.message)
-      process.exit(1)
+      this.echo()
+      this.error(err.message)
+      this.exit(1)
     }
+    this.exit(0)
   }
 }
-

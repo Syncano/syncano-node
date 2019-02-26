@@ -1,15 +1,12 @@
 import format from 'chalk'
-import _ from 'lodash'
-
-import logger from '../../utils/debug'
-import { SimpleSpinner } from '../../commands_helpers/spinner'
-import { p, error, echo } from '../../utils/print-tools'
-import { currentTime, Timer } from '../../utils/date-utils'
-import { CompileError } from '../../utils/errors'
-
-const { debug } = logger('cmd-socket-compile')
 
 import Command, {Socket} from '../../base_command'
+import {SimpleSpinner} from '../../commands_helpers/spinner'
+import {currentTime, Timer} from '../../utils/date-utils'
+import logger from '../../utils/debug'
+import {CompileError} from '../../utils/errors'
+
+const {debug} = logger('cmd-socket-compile')
 
 const pendingUpdates = {}
 export default class SocketCompile extends Command {
@@ -29,30 +26,29 @@ export default class SocketCompile extends Command {
   cmd: any
   localSockets: any
 
-
-  async run () {
+  async run() {
     await this.session.isAuthenticated()
     await this.session.hasProject()
 
     const {args} = this.parse(SocketCompile)
 
-    echo()
+    this.echo()
     if (args.socketName) {
       debug(`Deploying Socket: ${args.socketName}`)
-      const msg = p(2)(`${format.magenta('getting socket:')} ${currentTime()}`)
+      const msg = this.p(2)(`${format.magenta('getting socket:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
       const socket = await Socket.get(args.socketName)
       spinner.stop()
 
       if (!socket.existLocally) {
-        echo()
-        error(4)(`Socket ${format.cyan(args.socketName)} cannot be found!`)
-        echo()
-        process.exit(1)
+        this.echo()
+        this.error(this.p(4)(`Socket ${format.cyan(args.socketName)} cannot be found!`))
+        this.echo()
+        this.exit(1)
       }
       this.socketList = [socket]
     } else {
-      const msg = p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
+      const msg = this.p(2)(`${format.magenta('getting sockets:')} ${currentTime()}`)
       const spinner = new SimpleSpinner(msg).start()
       this.socketList = await Socket.list()
       spinner.stop()
@@ -69,21 +65,21 @@ export default class SocketCompile extends Command {
         }
       }
 
-      echo()
+      this.echo()
     } catch (err) {
       if (err.response && err.response.data && err.response.data.detail) {
-        error(4)(err.response.data.detail)
+        this.error(this.p(4)(err.response.data.detail))
       } else {
-        error(4)(err)
+        this.error(this.p(4)(err))
       }
-      process.exit(1)
+      this.exit(1)
     }
   }
 
-  async compileSocket (socket, config) {
+  async compileSocket(socket, config) {
     debug(`compileSocket: ${socket.name}`)
     const deployTimer = new Timer()
-    const msg = p(4)(`${format.magenta('socket compile:')} ${currentTime()} ${format.cyan(socket.name)}`)
+    const msg = this.p(4)(`${format.magenta('socket compile:')} ${currentTime()} ${format.cyan(socket.name)}`)
     const spinner = new SimpleSpinner(msg).start()
 
     // We have co count here updates
@@ -105,56 +101,30 @@ export default class SocketCompile extends Command {
       spinner.stop()
       const status = format.grey('socket compiled:')
       const duration = format.dim(deployTimer.getDuration())
-      echo(6)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
+      this.echo(6)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
     } catch (err) {
       debug(err)
       spinner.stop()
       if (err instanceof CompileError) {
         const status = format.red('    compile error:')
         if (err.traceback) {
-          echo(2)(`${status} ${currentTime()} ${socketNameStr}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+          this.echo(2)(`${status} ${currentTime()} ${socketNameStr}\n\n${err.traceback.split('\n').map(line => this.p(8)(line)).join('\n')}`)
         } else {
-          echo(2)(`${status} ${currentTime()} ${socketNameStr} Error while executing 'build' script!`)
+          this.echo(2)(`${status} ${currentTime()} ${socketNameStr} Error while executing 'build' script!`)
         }
       } else {
         const status = format.red('socket sync error:')
         if (err.message) {
-          echo(2)(`${status} ${currentTime()} ${socketNameStr} ${format.red(err.message)}`)
+          this.echo(2)(`${status} ${currentTime()} ${socketNameStr} ${format.red(err.message)}`)
         } else {
-          echo(2)(`${status} ${currentTime()} ${socketNameStr}`)
-          error(err)
+          this.echo(2)(`${status} ${currentTime()} ${socketNameStr}`)
+          this.error(err)
         }
       }
     }
   }
 
-  getSocketToUpdate (fileName) {
-    return this.localSockets.find((socket) => socket.isSocketFile(fileName))
-  }
-
-  static bail () {
-    echo()
-    process.exit(1)
-  }
-
-  static printUpdateSuccessful (socketName, updateStatus, deployTimer) {
-    debug('printUpdateSuccessful', socketName, updateStatus)
-    const duration = format.dim(deployTimer.getDuration())
-    const socketNameStr = `${format.cyan(socketName)}`
-
-    if (updateStatus.status === 'ok') {
-      const status = format.grey('socket synced:')
-      echo(6)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
-    } else if (updateStatus.status === 'stopped') {
-      const status = format.grey('socket in sync:')
-      echo(5)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
-    } else if (updateStatus.status === 'error') {
-      const errDetail = format.red(updateStatus.message.error)
-      const status = format.red('socket not synced:')
-      echo(2)(`${status} ${currentTime()} ${socketNameStr} ${duration} ${errDetail}`)
-    } else {
-      const status = format.red('socket not synced:')
-      echo(2)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
-    }
+  getSocketToUpdate(fileName) {
+    return this.localSockets.find(socket => socket.isSocketFile(fileName))
   }
 }

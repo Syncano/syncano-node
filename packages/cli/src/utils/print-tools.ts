@@ -1,5 +1,5 @@
-import _ from 'lodash'
 import format from 'chalk'
+import _ from 'lodash'
 import util from 'util'
 
 const MAP = {
@@ -11,25 +11,25 @@ const MAP = {
   5: format.red.dim
 }
 
-function getFormatMethod (code) {
+function getFormatMethod(code) {
   const firstDigitOfCode = code.toString()[0]
 
   return MAP[firstDigitOfCode] || MAP[0]
 }
 
-function printCode (code, str?: string) {
+function printCode(code, str?: string) {
   return getFormatMethod(code)(str || code)
 }
 
-function printSourceCode (contentType, source) {
+function printSourceCode(contentType, source) {
   if (contentType === 'application/json') {
     const object = JSON.parse(source)
-    return util.inspect(object, { depth: null, colors: true })
+    return util.inspect(object, {depth: null, colors: true})
   }
   return source.toString()
 }
 
-function echo (...args: any) {
+function echo(...args: any) {
   if (!Number.isInteger(args[0])) {
     process.stdout.write(`${util.format(args.join(' '))} \n`)
     return (...nextArgs: any) => {
@@ -43,7 +43,7 @@ function echo (...args: any) {
   }
 }
 
-function echon (...args: any) {
+function echon(...args: any) {
   if (!Number.isInteger(args[0])) {
     const padding = args[0]
     return (...nextArgs) => {
@@ -58,7 +58,7 @@ function echon (...args: any) {
   // process.stdout.write(`${util.format(args.join(' '))}`)
 }
 
-function error (...args) {
+function error(...args) {
   if (args.length === 1 && !Number.isInteger(args[0])) {
     // args.unshift('ERROR:');
     process.stdout.write(util.format(format.red(args.join(' '), '\n')))
@@ -75,7 +75,7 @@ function error (...args) {
   process.stdout.write(util.format(format.red(args.join('\n\n'), '\n')))
 }
 
-function warning (...args) {
+function warning(...args) {
   if (args.length === 1 && !Number.isInteger(args[0])) {
     process.stdout.write(util.format(format.yellow(args.join(' '), '\n')))
     return

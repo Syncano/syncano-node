@@ -1,5 +1,6 @@
 import format from 'chalk'
-import { echo } from '../utils/print-tools'
+
+import {echo} from '../utils/print-tools'
 
 export const printNoBackupsInfo = () => {
   echo(4)('You don\'t have any backups!')

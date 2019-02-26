@@ -1,5 +1,4 @@
 
-import { echo } from '../../utils/print-tools'
 import Command from '../../base_command'
 
 export default class InstanceCreateCmd extends Command {
@@ -7,21 +6,23 @@ export default class InstanceCreateCmd extends Command {
   static flags = {}
   static args = []
 
-  async run () {
-    await this.session.isAuthenticated()
+  async run() {
+    await this.session.isAuthenticated() || this.exit(1)
     const instances = await this.session.getInstances()
 
     if (instances.length < 1) {
-      echo()
-      echo(4)('You don\'t have any instances!')
-      echo()
+      this.echo()
+      this.echo(4)('You don\'t have any instances!')
+      this.echo()
+      this.exit(1)
     } else {
-      echo()
-      echo(4)('Instances:')
+      this.echo()
+      this.echo(4)('Instances:')
       instances.forEach(instance => {
-        echo(6)(`- ${instance.name}`)
+        this.echo(6)(`- ${instance.name}`)
       })
-      echo()
+      this.echo()
+      this.exit()
     }
   }
 }

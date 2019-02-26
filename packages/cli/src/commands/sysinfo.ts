@@ -1,31 +1,31 @@
 import format from 'chalk'
-import os from 'os'
 import childProcess from 'child_process'
+import os from 'os'
 
-import { echo, echon } from '../utils/print-tools'
 import Command from '../base_command'
 
 export default class Logout extends Command {
-  static description = 'Sys info for debug purpose'
+  static description = 'System info for debug purpose'
   static flags = {}
 
-  async run () {
+  async run() {
     const npmVersion = childProcess.spawnSync('npm', ['-v'])
       .stdout
       .toString()
       .trim()
 
-    echo()
-    echon(2)(` ${format.dim('cli version')}:`)
-    echo(` ${format.cyan(this.session.CLIVersion)}`)
-    echon(2)(`${format.dim('node version')}:`)
-    echo(` ${format.cyan(process.version)}`)
-    echon(2)(` ${format.dim('npm version')}:`)
-    echo(` ${format.cyan(npmVersion)}`)
-    echon(2)(`    ${format.dim('platform')}:`)
-    echo(` ${format.cyan(os.platform())}`)
-    echon(2)(`        ${format.dim('arch')}:`)
-    echo(` ${format.cyan(process.arch)}`)
-    echo()
+    this.echo()
+    this.echon(2)(` ${format.dim('cli version')}:`)
+    this.echo(` ${format.cyan(this.session.CLIVersion)}`)
+    this.echon(2)(`${format.dim('node version')}:`)
+    this.echo(` ${format.cyan(process.version)}`)
+    this.echon(2)(` ${format.dim('npm version')}:`)
+    this.echo(` ${format.cyan(npmVersion)}`)
+    this.echon(2)(`    ${format.dim('platform')}:`)
+    this.echo(` ${format.cyan(os.platform())}`)
+    this.echon(2)(`        ${format.dim('arch')}:`)
+    this.echo(` ${format.cyan(process.arch)}`)
+    this.echo()
+    this.exit(0)
   }
 }

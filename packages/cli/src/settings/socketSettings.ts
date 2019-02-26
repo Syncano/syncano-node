@@ -1,17 +1,17 @@
+import FindKey from 'find-key'
 import path from 'path'
 import semver from 'semver'
-import FindKey from 'find-key'
 
 import {SocketSettingsAttributes} from '../types'
-
 import logger from '../utils/debug'
+
 import Settings from './settings'
 
-const { info, debug } = logger('setting-socket')
+const {info, debug} = logger('setting-socket')
 
 class SocketSettings extends Settings {
   attributes: SocketSettingsAttributes
-  constructor (socketPath, socketName) {
+  constructor(socketPath, socketName) {
     info('SocketSettings.constructor', socketPath, socketName)
     super()
     this.name = 'socket'
@@ -21,7 +21,7 @@ class SocketSettings extends Settings {
     this.attributes.version = this.readVersion()
   }
 
-  readVersion () {
+  readVersion() {
     try {
       const pjson = require(`${path.join(this.baseDir, 'package.json')}`)
       return pjson.version
@@ -30,22 +30,22 @@ class SocketSettings extends Settings {
     }
   }
 
-  getScripts () {
+  getScripts() {
     return FindKey(this.attributes, 'file')
   }
 
-  getFileForEndpoint (endpointName: string) {
+  getFileForEndpoint(endpointName: string) {
     return this.attributes.endpoints[endpointName].file
   }
 
-  getConfigOptions () {
+  getConfigOptions() {
     return this.attributes.config || {}
   }
 
-  getConfig () {
+  getConfig() {
     const config = {}
     const configMetadata = this.getConfigOptions()
-    Object.keys(configMetadata).forEach((key) => {
+    Object.keys(configMetadata).forEach(key => {
       if (configMetadata[key].value) {
         config[key] = configMetadata[key].default
       }
@@ -53,15 +53,15 @@ class SocketSettings extends Settings {
     return config
   }
 
-  getFull () {
+  getFull() {
     return this.attributes
   }
 
-  getVersion () {
+  getVersion() {
     return this.attributes.version || '0.0.0'
   }
 
-  bumpVersion (bumpType) {
+  bumpVersion(bumpType) {
     const newVersion = semver.inc(this.getVersion(), bumpType)
     debug('newVersion', this.getVersion(), bumpType, newVersion)
     this.set('version', newVersion, true)
@@ -69,6 +69,6 @@ class SocketSettings extends Settings {
   }
 }
 
-export default function getSocketSettings (socketPath, socketName) {
+export default function getSocketSettings(socketPath, socketName) {
   return new SocketSettings(socketPath, socketName)
 }

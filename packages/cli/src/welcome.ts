@@ -1,5 +1,6 @@
 import format from 'chalk'
-import { echo } from './utils/print-tools'
+
+import {echo} from './utils/print-tools'
 
 setTimeout(() => {
   echo()

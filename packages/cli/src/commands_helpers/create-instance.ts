@@ -1,10 +1,10 @@
 import format from 'chalk'
 
 import logger from '../utils/debug'
+import {echo, echon, error} from '../utils/print-tools'
 import session from '../utils/session'
-import { echo, echon, error } from '../utils/print-tools'
 
-const { debug } = logger('cmd-helpers-create-instance')
+const {debug} = logger('cmd-helpers-create-instance')
 
 export const createInstance = async (instanceName?: string) => {
   let newInstance = null
@@ -27,7 +27,7 @@ export const createInstance = async (instanceName?: string) => {
       error(4)(err.message || 'Error while creating instance. Try again!')
     }
     echo()
-    process.exit(1)
+    throw new Error('Error while creating instance.')
   } finally {
     echo(`${format.green('Done')}`)
     echo(4)(`Syncano Instance ${format.cyan(newInstance.name)} has been created!`)

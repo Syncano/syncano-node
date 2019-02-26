@@ -1,4 +1,4 @@
-import { SyncanoClass } from "@syncano/core";
+import {SyncanoClass} from '@syncano/core'
 
 export interface CLIPlugin {
 }

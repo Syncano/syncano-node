@@ -1,8 +1,6 @@
 import format from 'chalk'
-import { echo, warning, error } from '../../../utils/print-tools'
 
 import Command, {Socket} from '../../../base_command'
-
 
 export default class SocketConfigShow extends Command {
   static description = 'Configure Socket'
@@ -13,34 +11,34 @@ export default class SocketConfigShow extends Command {
     description: 'name of the Socket',
   }]
 
-  async run () {
+  async run() {
     await this.session.isAuthenticated()
     await this.session.hasProject()
     const {args} = this.parse(SocketConfigShow)
     const socket = await Socket.get(args.socketName)
 
     if (!socket.existRemotely) {
-      error(4)('That socket was not synced!')
-      echo()
-      process.exit(1)
+      this.error(this.p(4)('That socket was not synced!'))
+      this.echo()
+      this.exit(1)
     }
 
-    echo()
+    this.echo()
     if (socket.spec.config) {
-      Object.keys(socket.spec.config).forEach((optionName) => {
+      Object.keys(socket.spec.config).forEach(optionName => {
         const params = socket.spec.config[optionName]
         const required = params.required ? format.dim('(required)') : ''
         const currentValue = socket.remote.config[optionName]
 
-        echo(format.dim('         name:'), `${format.bold(optionName)} ${required}`)
-        echo(format.dim('  description:'), params.description)
-        echo(format.dim('        value:'), currentValue)
-        echo()
+        this.echo(format.dim('         name:'), `${format.bold(optionName)} ${required}`)
+        this.echo(format.dim('  description:'), params.description)
+        this.echo(format.dim('        value:'), currentValue)
+        this.echo()
       })
     } else {
-      echo(4)('This Socket doesn\'t have any config options.')
-      echo()
-      process.exit(0)
+      this.echo(4)('This Socket doesn\'t have any config options.')
+      this.echo()
+      this.exit(0)
     }
   }
 }

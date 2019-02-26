@@ -1,29 +1,30 @@
 import Syncano from '@syncano/core'
 import format from 'chalk'
-import path from 'path'
 import mkdirp from 'mkdirp'
-// import Promise from 'bluebird'
+import path from 'path'
+
+import getSettings from '../settings'
+import {Location, SyncanoProject} from '../types'
 
 import logger from './debug'
-import getSettings from '../settings'
-import genUniqueName from './unique-instance'
-import Socket from './sockets'
-import Init from './init'
 import Hosting from './hosting'
+import Init from './init'
 import Plugins from './plugins'
-import { echo } from './print-tools'
+import {echo} from './print-tools'
+import Socket from './sockets'
+import genUniqueName from './unique-instance'
 
-import {CLISession, SyncanoProject, SyncanoConnection, Location, CLIContext} from '../types'
-import { CommanderStatic } from 'commander';
-
-const { debug } = logger('utils-session')
+const {debug} = logger('utils-session')
 
 const LOCATIONS = {
-  'us1': 'api.syncano.io',
-  'eu1': 'api-eu1.syncano.io'
+  us1: 'api.syncano.io',
+  eu1: 'api-eu1.syncano.io'
 }
 
 export class Session {
+  static findProjectPath() {
+    return process.cwd()
+  }
   CLIVersion: string
   settings: any
   projectPath: string
@@ -36,7 +37,7 @@ export class Session {
   location: Location
   connection: Syncano
 
-  constructor () {
+  constructor() {
     this.settings = null
     this.projectPath = null
     this.project = null
@@ -53,50 +54,50 @@ export class Session {
     this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION as Location || 'us1' as Location  // default location
   }
 
-  getHost () {
+  getHost() {
     return process.env.SYNCANO_HOST || LOCATIONS[this.location]
   }
 
-  async setLocation (location) {
+  async setLocation(location) {
     if (this.location !== location) {
       this.location = location
       await this.createConnection()
     }
   }
 
-  getLocation () {
+  getLocation() {
     return this.location
   }
 
-  getFullName () {
+  getFullName() {
     return `${this.userFirstName} ${this.userLastName}`
   }
 
-  getSpaceHost () {
+  getSpaceHost() {
     if (this.getHost() === 'api.syncano.rocks') {
       return `${this.project.instance}.syncano.link`
     }
     if (this.project && this.project.instance) {
-      if (this.location == 'us1') {
+      if (this.location === 'us1') {
         return `${this.project.instance}.syncano.space`
       }
       return `${this.project.instance}.${this.location}.syncano.space`
     }
   }
 
-  getInitInstance () {
+  getInitInstance() {
     return new Init()
   }
 
-  getPluginsInstance () {
+  getPluginsInstance() {
     return new Plugins()
   }
 
-  getBaseURL () {
+  getBaseURL() {
     return `https://${this.getHost()}`
   }
 
-  getDistPath () {
+  getDistPath() {
     let distPath = '.dist'
     if (this.projectPath) {
       distPath = path.join(this.projectPath, '.dist')
@@ -105,28 +106,28 @@ export class Session {
     return distPath
   }
 
-  getBuildPath () {
+  getBuildPath() {
     const buildPath = path.join(this.projectPath, '.build')
     mkdirp.sync(buildPath)
     return buildPath
   }
 
-  getAnonymousConnection () {
+  getAnonymousConnection() {
     return new Syncano({
       meta: {
-        'api_host': this.getHost()
+        api_host: this.getHost()
       }
     })
   }
 
-  async createConnection () {
+  async createConnection() {
     debug('createConnection')
     if (this.settings.account.authenticated()) {
       debug('user is authenticated')
       this.connection = new Syncano({
         accountKey: this.settings.account.getAuthKey(),
         meta: {
-          'api_host': this.getHost()
+          api_host: this.getHost()
         }
       })
 
@@ -135,7 +136,7 @@ export class Session {
           instanceName: this.project.instance,
           accountKey: this.settings.account.getAuthKey(),
           meta: {
-            'api_host': this.getHost()
+            api_host: this.getHost()
           }
         })
       }
@@ -155,24 +156,24 @@ export class Session {
     }
   }
 
-  async deleteInstance (name: string) {
+  async deleteInstance(name: string) {
     return this.connection.instance.delete(name)
   }
 
-  async createInstance (name = genUniqueName()) {
-    return this.connection.instance.create({ name })
+  async createInstance(name = genUniqueName()) {
+    return this.connection.instance.create({name})
   }
 
-  async getInstance (instanceName: string) {
+  async getInstance(instanceName: string) {
     const instanceNameToGet = instanceName || (this.project && this.project.instance)
     return this.connection.instance.get(instanceNameToGet)
   }
 
-  async getInstances () {
+  async getInstances() {
     return this.connection.instance.list()
   }
 
-  async checkAuth () {
+  async checkAuth() {
     const userDetails = await this.connection.account.get(this.settings.account.getAuthKey())
     if (userDetails) {
       return userDetails
@@ -181,11 +182,7 @@ export class Session {
     }
   }
 
-  static findProjectPath () {
-    return process.cwd()
-  }
-
-  async load () {
+  async load() {
     debug('load')
 
     // Checking all folders up
@@ -206,21 +203,22 @@ export class Session {
     return this
   }
 
-  loadPlugins (program: CommanderStatic, context: CLIContext) {
-    new Plugins().load(program, context)
-  }
+  // loadPlugins(program: CommanderStatic, context: CLIContext) {
+  //   new Plugins().load(program, context)
+  // }
 
-  isAuthenticated () {
+  isAuthenticated() {
     if (!this.settings.account.authenticated()) {
       echo()
       echo(4)('You are not logged in!')
       echo(4)(`Type ${format.cyan('npx s login')} for login to your account.`)
       echo()
-      process.exit(1)
+      return false
     }
+    return true
   }
 
-  isAuthenticatedToInit () {
+  isAuthenticatedToInit() {
     if (!this.settings.account.authenticated()) {
       echo()
       echo(4)(format.red('You have to be a logged in to be able an initialize a new project!'))
@@ -228,7 +226,7 @@ export class Session {
     }
   }
 
-  async checkConnection (instanceName?: string) {
+  async checkConnection(instanceName?: string) {
     let instance
 
     try {
@@ -240,18 +238,18 @@ export class Session {
         echo(4)(`Instance ${format.cyan(instanceName || this.project.instance)} was not found on your account!`)
         echo()
 
-        if (instanceName) return process.exit()
+        if (instanceName) return false
 
         echo(4)(`Type ${format.cyan('npx s attach')} to choose one of the existing instances.`)
         echo()
       }
-      process.exit(1)
+      return false
     }
 
     return instance
   }
 
-  hasProject () {
+  hasProject() {
     this.hasProjectPath()
 
     if (!this.project) {
@@ -259,43 +257,47 @@ export class Session {
       echo(4)('You have to attach this project to one of your instances.')
       echo(4)(`Try ${format.cyan('npx s attach')}.`)
       echo()
-      process.exit()
+      return false
     }
+    return true
   }
 
-  hasProjectPath () {
+  hasProjectPath() {
     if (!this.projectPath) {
       echo()
       echo(4)(`I don't see any project here. Try ${format.cyan('npx s init')}.`)
       echo()
-      process.exit()
+      return false
     }
+    return true
   }
 
-  hasSocket (socketName: string) { // eslint-disable-line class-methods-use-this
+  hasSocket(socketName: string) { // eslint-disable-line class-methods-use-this
     const socket = new Socket(socketName)
     if (!socket.existLocally) {
       echo()
       echo(4)('File socket.yml was not found in a project directory!')
       echo(4)(`Check your directory or try ${format.cyan('npx s create')} to create a new Socket.`)
       echo()
-      process.exit()
+      return false
     }
+    return true
   }
 
-  notAlreadyInitialized () {
+  notAlreadyInitialized() {
     if (this.projectPath && this.project) {
       echo()
       echo(4)('Project in this folder is already initiated!')
       echo(4)(`It is attached to ${format.cyan(this.project.instance)} Syncano instance.`)
       echo()
-      process.exit()
+      return false
     }
+    return true
   }
 
-  async deployProject () { // eslint-disable-line class-methods-use-this
+  async deployProject() { // eslint-disable-line class-methods-use-this
     const hostings = await Hosting.list() as any
-    return Promise.all(hostings.map((hosting) => hosting.deploy()))
+    return Promise.all(hostings.map(hosting => hosting.deploy()))
   }
 }
 

@@ -1,8 +1,6 @@
 import format from 'chalk'
-import { echo, warning, error } from '../../../utils/print-tools'
 
 import Command, {Socket} from '../../../base_command'
-
 
 export default class SocketConfigSet extends Command {
   static description = 'Configure Socket'
@@ -23,7 +21,7 @@ export default class SocketConfigSet extends Command {
     description: 'config option value',
   }]
 
-  async run () {
+  async run() {
     await this.session.isAuthenticated()
     await this.session.hasProject()
     const {args} = this.parse(SocketConfigSet)
@@ -31,28 +29,28 @@ export default class SocketConfigSet extends Command {
     const socket = await Socket.get(args.socketName)
 
     if (!socket.existRemotely) {
-      echo()
-      error(4)('That socket was not synced!')
-      echo()
-      process.exit(1)
+      this.echo()
+      this.error(this.p(4)('That socket was not synced!'))
+      this.echo()
+      this.exit(1)
     }
 
     if (!(socket.spec.config && socket.spec.config[args.configOptionName])) {
-      warning('No such config option!')
-      process.exit()
+      this.warn('No such config option!')
+      this.exit()
     }
 
-    const config = Object.assign({}, socket.remote.config)
+    const config = {...socket.remote.config}
 
     config[args.configOptionName] = args.configOptionValue
     try {
       await socket.updateConfig(config)
-      echo()
-      echo(4)(format.green('Config updated!'))
-      echo()
-      process.exit()
+      this.echo()
+      this.echo(4)(format.green('Config updated!'))
+      this.echo()
+      this.exit()
     } catch (err) {
-      error(err.message)
+      this.error(err.message)
     }
   }
 }

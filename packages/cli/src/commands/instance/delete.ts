@@ -1,9 +1,4 @@
-import logger from '../../utils/debug'
-import { echo, error } from '../../utils/print-tools'
-
 import Command from '../../base_command'
-
-const { debug } = logger('cmd-instance-delete')
 
 export default class InstanceCreateCmd extends Command {
   static description = 'Delete an instance'
@@ -17,17 +12,18 @@ export default class InstanceCreateCmd extends Command {
     }
   ]
 
-  async run () {
-    await this.session.isAuthenticated()
+  async run() {
+    await this.session.isAuthenticated() || this.exit(1)
     const {args} = this.parse(InstanceCreateCmd)
 
     try {
       await this.session.deleteInstance(args.instanceName)
-      echo()
-      echo(4)('Instance was deleted successfully!')
-      echo()
+      this.echo()
+      this.echo(4)(`Syncano Instance ${args.instanceName} has been deleted successfuly.`)
+      this.echo()
     } catch (err) {
-      error('Deleting instance failed!')
+      this.error('Deleting instance failed!', {exit: 1})
     }
+    this.exit(0)
   }
 }

@@ -1,0 +1,25 @@
+{
+  "all": true,
+  "cache": false,
+  "exclude": [
+      "lib",
+      "e2e-tests",
+      "tests-old",
+      "coverage",
+      "**/editor.js",
+      "**/gulpfile.js",
+      "**/tasks.js",
+      "**/test/**",
+      "**/*_test.js"
+  ],
+  "extensions": [
+      ".ts"
+  ],
+  "report-dir": "./coverage",
+  "reporter": [
+      "html",
+      "text",
+      "text-summary"
+  ],
+  "temp-directory": "./coverage/.nyc_output"
+}

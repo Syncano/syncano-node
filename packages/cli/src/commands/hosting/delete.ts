@@ -1,12 +1,8 @@
-import inquirer from 'inquirer'
 import format from 'chalk'
-import logger from '../../utils/debug'
-import { p, echo, warning, error} from '../../utils/print-tools'
-import Hosting from '../../utils/hosting'
+import inquirer from 'inquirer'
 
 import Command from '../../base_command'
-
-const { info, debug } = logger('cmd-hosting-list')
+import Hosting from '../../utils/hosting'
 
 export default class HostingDelete extends Command {
   static description = 'Delete hosting'
@@ -17,45 +13,46 @@ export default class HostingDelete extends Command {
     required: true
   }]
 
-  async run () {
+  getQuestions(hostingName: string) {
+    const questions = [
+      {
+        type: 'confirm',
+        name: 'delete',
+        message: this.p(2)(`Are you sure you want to remove: ${format.red(hostingName)}`),
+        default: false
+      }
+    ]
+
+    return questions
+  }
+
+  async run() {
     await this.session.isAuthenticated()
     await this.session.hasProject()
     const {args} = this.parse(HostingDelete)
 
     const hostingName = args.hostingName
 
-    echo()
-    const resp = await inquirer.prompt(HostingDelete.getQuestions(hostingName)) as any
+    this.echo()
+    const resp = await inquirer.prompt(this.getQuestions(hostingName)) as any
     if (!resp.delete) {
-      echo()
-      process.exit(0)
+      this.echo()
+      this.exit(0)
     }
 
     const hosting = await Hosting.get(hostingName)
     if (!hosting.existLocally) {
-      warning(p(4)(`Couldn't find any hosting named ${format.cyan(hostingName)}!`))
-      echo()
-      process.exit(1)
+      this.warn(this.p(4)(`Couldn't find any hosting named ${format.cyan(hostingName)}!`))
+      this.echo()
+      this.exit(1)
     }
 
     try {
       const deletedHosting = await hosting.delete()
-      echo(4)(`Hosting ${format.cyan(deletedHosting.name)} has been ${format.green('successfully')} deleted!`)
-      echo()
+      this.echo(4)(`Hosting ${format.cyan(deletedHosting.name)} has been ${format.green('successfully')} deleted!`)
+      this.echo()
     } catch (err) {
-      error('Deleting hosting failed!')
+      this.error('Deleting hosting failed!')
     }
-  }
-  static getQuestions (hostingName:string ) {
-    const questions = [
-      {
-        type: 'confirm',
-        name: 'delete',
-        message: p(2)(`Are you sure you want to remove: ${format.red(hostingName)}`),
-        default: false
-      }
-    ]
-
-    return questions
   }
 }

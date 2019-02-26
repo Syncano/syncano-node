@@ -1,15 +1,15 @@
-import inquirer from 'inquirer'
 import format from 'chalk'
+import inquirer from 'inquirer'
 
 import logger from '../utils/debug'
-import { p, echo, echon, error, warning } from '../utils/print-tools'
+import {echo, echon, error, warning} from '../utils/print-tools'
 
-const { debug } = logger('cmd-helpers-socket')
+const {debug} = logger('cmd-helpers-socket')
 
-export const askQuestions = (configOptions) => {
+export const askQuestions = configOptions => {
   const questions = []
 
-  Object.keys(configOptions).forEach((paramName) => {
+  Object.keys(configOptions).forEach(paramName => {
     const param = configOptions[paramName]
     const longDesc = param.long_description ? param.long_description.split('\n').join('\n    ') : ' '
     let shortDesc = format.bold(paramName)
@@ -19,12 +19,12 @@ export const askQuestions = (configOptions) => {
     questions.push({
       name: paramName,
       message: [
-        p(2)(shortDesc),
-        p(4)(format.reset(longDesc)),
-        p(4)('Type in value:')
+        this.p(2)(shortDesc),
+        this.p(4)(format.reset(longDesc)),
+        this.p(4)('Type in value:')
       ].join('\n'),
       default: param.default,
-      validate: (value) => {
+      validate: value => {
         if (param.required && !value) {
           return 'This config value is required!'
         }
@@ -41,7 +41,7 @@ export const updateSocket = async (socket, config) => {
   const startTime = new Date().getTime()
 
   try {
-    const updateStatus = await socket.update({ config })
+    const updateStatus = await socket.update({config})
     const endTime = new Date().getTime()
     if (updateStatus.status === 'ok') {
       echon(4)(`${format.green('✓')} ${format.cyan(socket.name)} `)
@@ -73,7 +73,7 @@ export const updateConfig = async (socket, config) => {
   echon(4)(`Updating Socket's ${format.cyan(socket.name)} config... `)
 
   try {
-    const updateStatus = await socket.update({ config })
+    const updateStatus = await socket.update({config})
     if (updateStatus === 'ok') {
       echo(format.green('Done'))
       echo()

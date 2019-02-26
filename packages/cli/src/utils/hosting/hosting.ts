@@ -1,20 +1,20 @@
-import fs from 'fs'
-import FormData from 'form-data'
+import axios from 'axios'
 import format from 'chalk'
-import path from 'path'
-import prettyBytes from 'pretty-bytes'
+import FormData from 'form-data'
+import fs from 'fs'
 import _ from 'lodash'
 import md5 from 'md5'
-import axios from 'axios'
-
-import session from '../session'
-import logger from '../debug'
-import { getFiles } from './utils'
-import { echo, error } from '../print-tools'
+import path from 'path'
+import prettyBytes from 'pretty-bytes'
 
 import {HostingParams} from '../../types'
+import logger from '../debug'
+import { echo, error } from '../print-tools'
+import session from '../session'
 
-const { debug } = logger('utils-hosting')
+import {getFiles } from './utils'
+
+const {debug} = logger('utils-hosting')
 
 class HostingFile {
   id: string
@@ -26,7 +26,7 @@ class HostingFile {
   isSynced: boolean
   isUpToDate: boolean
 
-  loadRemote (fileRemoteData: any) {
+  loadRemote(fileRemoteData: any) {
     debug('loadRemote')
     this.id = fileRemoteData.id
     this.instanceName = fileRemoteData.instanceName
@@ -35,7 +35,7 @@ class HostingFile {
     this.size = fileRemoteData.size
     return this
   }
-  loadLocal (fileLocalData: any) {
+  loadLocal(fileLocalData: any) {
     debug('loadLocal')
     this.localPath = fileLocalData.localPath
     this.path = fileLocalData.path
@@ -46,47 +46,8 @@ class HostingFile {
 }
 
 class Hosting {
-  name: string
-  path: string
-  existRemotely: boolean | null
-  existLocally: boolean | null
-  hostingURL: string
-  editHostingURL: string
-  hostingHost: string
-  config: any
-  remote: any
-  src: string
-  cname: string
-  browser_router: string
-  domains: string[]
-  auth: any
-  url: string
-  error: string
-  isUpToDate: boolean
 
-  constructor (hostingName: string) {
-    debug('Hosting.constructor', hostingName)
-
-    this.name = hostingName
-    this.path = null
-
-    this.existRemotely = null
-    this.existLocally = null
-
-    this.hostingURL = `/v2/instances/${session.project.instance}/hosting/`
-    this.editHostingURL = `https://${session.getHost()}${this.hostingURL}${this.name}/`
-    this.hostingHost = session.getHost() === 'api.syncano.rocks' ? 'syncano.ninja' : 'syncano.site'
-    this.config = {}
-
-    // Remote state
-    this.remote = {
-      domains: []
-    }
-
-    this.loadLocal()
-  }
-
-  static async add (params: HostingParams): Promise<Hosting> {
+  static async add(params: HostingParams): Promise<Hosting> {
     const configParams = {
       src: params.src,
       config: {
@@ -111,7 +72,7 @@ class Hosting {
       domains
     }
 
-    const response = await axios.request({
+    await axios.request({
       url: addHostingURL,
       method: 'POST',
       data: paramsToAdd,
@@ -123,11 +84,90 @@ class Hosting {
     return new Hosting(params.name)
   }
 
-  hasCNAME (cname: string) {
+  static get(hostingName) {
+    debug(`get ${hostingName}`)
+    const hosting = new Hosting(hostingName)
+    return hosting.loadRemote()
+  }
+
+  static listFromProject() {
+    return session.settings.project.listHosting()
+  }
+
+  // list all hostings (mix of locally definde and installed on server)
+  static async list() {
+    debug('list()')
+    const projectHostings = Hosting.listFromProject()
+    debug('projectHostings', projectHostings)
+    return Promise.all(projectHostings.map(hosting => Hosting.get(hosting.name)))
+  }
+
+  static getDirectories() {
+    const excluded = ['node_modules', 'src', 'syncano']
+
+    function notExcluded(dirname) {
+      if (dirname.startsWith('.')) {
+        return
+      }
+      if (excluded.indexOf(dirname) !== -1) {
+        return
+      }
+      return dirname
+    }
+
+    return fs.readdirSync(process.cwd()).filter(file => {
+      const dirs = []
+      if (fs.statSync(`${process.cwd()}/${file}`).isDirectory()) {
+        dirs.push(file)
+      }
+      return dirs.find(notExcluded)
+    })
+  }
+  name: string
+  path: string
+  existRemotely: boolean | null
+  existLocally: boolean | null
+  hostingURL: string
+  editHostingURL: string
+  hostingHost: string
+  config: any
+  remote: any
+  src: string
+  cname: string
+  browser_router: string
+  domains: string[]
+  auth: any
+  url: string
+  error: string
+  isUpToDate: boolean
+
+  constructor(hostingName: string) {
+    debug('Hosting.constructor', hostingName)
+
+    this.name = hostingName
+    this.path = null
+
+    this.existRemotely = null
+    this.existLocally = null
+
+    this.hostingURL = `/v2/instances/${session.project.instance}/hosting/`
+    this.editHostingURL = `https://${session.getHost()}${this.hostingURL}${this.name}/`
+    this.hostingHost = session.getHost() === 'api.syncano.rocks' ? 'syncano.ninja' : 'syncano.site'
+    this.config = {}
+
+    // Remote state
+    this.remote = {
+      domains: []
+    }
+
+    this.loadLocal()
+  }
+
+  hasCNAME(cname: string) {
     return this.remote.domains.indexOf(cname) > -1
   }
 
-  updateHosting () {
+  updateHosting() {
     const params = {
       src: this.src,
       cname: this.cname,
@@ -141,7 +181,7 @@ class Hosting {
     session.settings.project.updateHosting(this.name, params)
   }
 
-  async configure (params) {
+  async configure(params) {
     const domains = this.remote.domains
     if (params.cname && domains.indexOf(params.cname) < 0) {
       domains.push(params.cname)
@@ -177,7 +217,7 @@ class Hosting {
     return this.setRemoteState(response.data)
   }
 
-  async deploy () {
+  async deploy() {
     debug('deploy')
 
     if (!this.existRemotely) {
@@ -209,7 +249,7 @@ class Hosting {
     return this.setRemoteState(response.data)
   }
 
-  async delete () {
+  async delete() {
     await axios.request({
       url: this.editHostingURL,
       method: 'DELETE',
@@ -221,47 +261,7 @@ class Hosting {
     return this
   }
 
-  static get (hostingName) {
-    debug(`get ${hostingName}`)
-    const hosting = new Hosting(hostingName)
-    return hosting.loadRemote()
-  }
-
-  static listFromProject () {
-    return session.settings.project.listHosting()
-  }
-
-  // list all hostings (mix of locally definde and installed on server)
-  static async list () {
-    debug('list()')
-    const projectHostings = Hosting.listFromProject()
-    debug('projectHostings', projectHostings)
-    return Promise.all(projectHostings.map((hosting) => Hosting.get(hosting.name)))
-  }
-
-  static getDirectories () {
-    const excluded = ['node_modules', 'src', 'syncano']
-
-    function notExcluded (dirname) {
-      if (dirname.startsWith('.')) {
-        return
-      }
-      if (excluded.indexOf(dirname) !== -1) {
-        return
-      }
-      return dirname
-    }
-
-    return fs.readdirSync(process.cwd()).filter((file) => {
-      const dirs = []
-      if (fs.statSync(`${process.cwd()}/${file}`).isDirectory()) {
-        dirs.push(file)
-      }
-      return dirs.find(notExcluded)
-    })
-  }
-
-  async setRemoteState (hosting) {
+  async setRemoteState(hosting) {
     debug('setRemoteState', hosting.name)
     if (hosting && typeof hosting === 'object') {
       this.existRemotely = true
@@ -279,7 +279,7 @@ class Hosting {
     return Promise.resolve()
   }
 
-  async loadRemote () {
+  async loadRemote() {
     debug('loadRemote()')
     try {
       const hosting = await this.getRemote()
@@ -290,7 +290,7 @@ class Hosting {
     return this
   }
 
-  loadLocal () {
+  loadLocal() {
     debug('loadLocal()')
     const localHostingSettings = session.settings.project.getHosting(this.name)
 
@@ -308,22 +308,22 @@ class Hosting {
     }
   }
 
-  getURL () {
+  getURL() {
     return `https://${this.name}--${session.project.instance}.${session.location}.${this.hostingHost}`
   }
 
-  encodePath (pathToEncode) {
+  encodePath(pathToEncode) {
     return pathToEncode.split(path.sep).map(part => encodeURI(part)).join(path.sep)
   }
 
-  decodePath (pathToEncode) {
+  decodePath(pathToEncode) {
     return pathToEncode.split('/').map(part => decodeURI(part)).join('/')
   }
 
   // Verify local file if it should be created or updated
-  async getFilesToUpload (file, remoteFiles) {
+  async getFilesToUpload(file, remoteFiles) {
     debug('getFilesToUpload')
-    const fileToUpdate = _.find(remoteFiles, { path: file.path }) as any
+    const fileToUpdate = _.find(remoteFiles, {path: file.path}) as any
     const payload = new FormData()
     payload.append('file', fs.createReadStream(file.localPath))
     payload.append('path', this.encodePath(file.path))
@@ -365,7 +365,7 @@ class Hosting {
   }
 
   // Verify remote file if it deleted
-  getFilesToDelete (remoteFiles, localFiles) {
+  getFilesToDelete(remoteFiles, localFiles) {
     debug('getFilesToDelete')
 
     const filesToDelete = remoteFiles.filter(file => !_.find(localFiles, {path: file.path}))
@@ -378,7 +378,7 @@ class Hosting {
   }
 
   // Files upload report
-  generateUploadFilesResult (result) {
+  generateUploadFilesResult(result) {
     if (!result) {
       return `\n\t${format.red('No files synchronized!')}\n`
     }
@@ -388,7 +388,7 @@ class Hosting {
     \t${format.green(this.name)} is available at: ${format.green(this.getURL())}\n`
   }
 
-  async uploadFiles (files, params) {
+  async uploadFiles(files, params) {
     let uploadedFilesCount = 0
     let uploadedSize = 0
     let promises = []
@@ -413,12 +413,12 @@ class Hosting {
       await Promise.all(this.getFilesToDelete(files, localFiles))
     }
 
-    return { uploadedFilesCount, uploadedSize }
+    return {uploadedFilesCount, uploadedSize}
   }
 
   // Run this to synchronize hosted files
   // first we are getting remote files
-  async syncFiles (params) {
+  async syncFiles(params) {
     debug('syncFiles()')
 
     if (!fs.existsSync(this.path)) {
@@ -430,7 +430,7 @@ class Hosting {
     return this.generateUploadFilesResult(result)
   }
 
-  async areFilesUpToDate () {
+  async areFilesUpToDate() {
     debug('areFilesUpToDate()')
 
     // Check if local folder exist
@@ -454,7 +454,7 @@ class Hosting {
   }
 
   // Get list of the hostings first, then get the files list for given one
-  async listRemoteFiles () {
+  async listRemoteFiles() {
     debug('listRemoteFiles()')
     const files = await session.connection.hosting.listFiles(this.name)
     return Promise.all(files.map(async file => {
@@ -467,7 +467,7 @@ class Hosting {
   }
 
   // Get info about hostings first, then get the files list for given one
-  async listLocalFiles () {
+  async listLocalFiles() {
     debug('listLocalFiles')
     const localHostingFiles = this.path ? await getFiles(this.path) : []
     if (!Array.isArray(localHostingFiles)) return localHostingFiles
@@ -480,14 +480,14 @@ class Hosting {
     }) : []
   }
 
-  async listFiles () {
+  async listFiles() {
     debug('listFiles()')
     const remoteFiles = await this.listRemoteFiles()
     const listLocalFiles = await this.listLocalFiles()
 
     const files = []
     listLocalFiles.forEach(file => {
-      const remoteCopy = _.find(remoteFiles, { path: file.path }) as any
+      const remoteCopy = _.find(remoteFiles, {path: file.path}) as any
 
       if (remoteCopy) {
         file.isUpToDate = file.checksum === remoteCopy.checksum
@@ -499,21 +499,21 @@ class Hosting {
     return files
   }
 
-  getCNAME () {
-    return _.find(this.remote.domains, (domain) => domain.indexOf('.') !== -1)
+  getCNAME() {
+    return _.find(this.remote.domains, domain => domain.indexOf('.') !== -1)
   }
 
-  getCnameURL () {
+  getCnameURL() {
     const cname = this.getCNAME()
     if (cname) {
       return `http://${cname}`
     }
   }
 
-  getRemote () {
+  getRemote() {
     debug('getRemote()', this)
     return session.connection.hosting.get(this.name)
   }
 }
 
-export { Hosting as default, HostingFile }
+export {Hosting as default, HostingFile}

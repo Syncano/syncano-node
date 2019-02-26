@@ -1,25 +1,23 @@
 
+import {flags} from '@oclif/command'
+import format from 'chalk'
 import _ from 'lodash'
 import watchr from 'watchr'
-import format from 'chalk'
-
-import logger from '../../utils/debug'
-import { SimpleSpinner, GlobalSpinner } from '../../commands_helpers/spinner'
-import { p, echo } from '../../utils/print-tools'
-import { currentTime, Timer } from '../../utils/date-utils'
-import SocketTrace from './trace'
-import SocketDeploy from './deploy'
-import { CompileError } from '../../utils/errors'
-
-import { flags } from '@oclif/command';
 
 import Command, {Socket} from '../../base_command'
+import {GlobalSpinner, SimpleSpinner} from '../../commands_helpers/spinner'
+import {currentTime, Timer} from '../../utils/date-utils'
+import logger from '../../utils/debug'
+import {CompileError} from '../../utils/errors'
+import {echo, p} from '../../utils/print-tools'
 
-const { debug, info } = logger('cmd-socket-deploy')
+import SocketDeploy from './deploy'
+import SocketTrace from './trace'
+
+const {debug, info} = logger('cmd-socket-deploy')
 
 const pendingUpdates = {}
 const timer = new Timer()
-
 
 export default class SocketHotDeploy extends Command {
   static description = 'Create Socket'
@@ -39,7 +37,34 @@ export default class SocketHotDeploy extends Command {
   cmd: any
   stalker: any
 
-  async run () {
+  printUpdateFailed(socketName: string, err, deployTimer) {
+    const duration = deployTimer.getDuration()
+    const errDetail = JSON.parse(err).detail
+    this.echo(3)(`${format.red('files not synced:')} ${currentTime()} ${socketName} ${duration} ${errDetail}`)
+  }
+
+  printUpdateSuccessful(socketName: string, updateStatus, deployTimer) {
+    debug('printUpdateSuccessful', socketName, updateStatus)
+    const duration = format.dim(deployTimer.getDuration())
+    const socketNameStr = `${format.cyan(socketName)}`
+
+    if (updateStatus.status === 'ok') {
+      const status = format.grey('socket synced:')
+      this.echo(6)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
+    } else if (updateStatus.status === 'stopped') {
+      // const status = format.grey('socket in sync:');
+      // this.echo(5)(`${status} ${currentTime()} ${socketNameStr} ${duration}`);
+    } else if (updateStatus.status === 'error') {
+      const errDetail = format.red(updateStatus.message.error)
+      const status = format.red('socket not synced:')
+      this.echo(2)(`${status} ${currentTime()} ${socketNameStr} ${duration} ${errDetail}`)
+    } else {
+      const status = format.red('socket not synced:')
+      this.echo(2)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
+    }
+  }
+
+  async run() {
     await this.session.isAuthenticated()
     await this.session.hasProject()
 
@@ -49,14 +74,14 @@ export default class SocketHotDeploy extends Command {
 
     this.mainSpinner = new GlobalSpinner(p(3)(`${format.grey('waiting...')}`))
 
-    echo()
-    echo(1)(`🚀 ${format.grey(' Initial sync started...')}`)
+    this.echo()
+    this.echo(1)(`🚀 ${format.grey(' Initial sync started...')}`)
 
     const deployCmd = await SocketDeploy.run([args.socketName || ''])
     this.socketList = deployCmd.socketList
 
-    echo(1)(`🔥 ${format.grey(' Hot deploy started')} ${format.dim('(Hit Ctrl-C to stop)')}`)
-    echo()
+    this.echo(1)(`🔥 ${format.grey(' Hot deploy started')} ${format.dim('(Hit Ctrl-C to stop)')}`)
+    this.echo()
 
     info('Starting stalker')
     this.runStalker()
@@ -66,11 +91,11 @@ export default class SocketHotDeploy extends Command {
 
     if (flags.trace) {
       const traces = await SocketTrace.run()
-      Promise.all(this.socketList.map((socket) => traces.startCollectingTraces(socket)))
+      Promise.all(this.socketList.map(socket => traces.startCollectingTraces(socket)))
     }
   }
 
-  async deployProject () {
+  async deployProject() {
     timer.reset()
     const msg = p(4)(`${format.magenta('project deploy:')} ${currentTime()}`)
     const spinner = new SimpleSpinner(msg).start()
@@ -78,10 +103,10 @@ export default class SocketHotDeploy extends Command {
     spinner.stop()
     const status = format.grey('project synced:')
     const duration = timer.getDuration()
-    echo(5)(`${status} ${currentTime()} ${duration}`)
+    this.echo(5)(`${status} ${currentTime()} ${duration}`)
   }
 
-  async deploySocket (socket, config?) {
+  async deploySocket(socket, config?) {
     debug(`deploySocket: ${socket.name}`)
     const deployTimer = new Timer()
     const msg = p(4)(`${format.magenta('socket deploy:')} ${currentTime()} ${format.cyan(socket.name)}`)
@@ -111,10 +136,10 @@ export default class SocketHotDeploy extends Command {
 
     try {
       const updateEnv = !(this.firstRun[socket.name])
-      const updateStatus = await socket.update({ config, updateEnv })
+      const updateStatus = await socket.update({config, updateEnv})
 
       spinner.stop()
-      SocketHotDeploy.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
+      this.printUpdateSuccessful(socket.name, updateStatus, deployTimer)
       await updateEnds()
       this.firstRun[socket.name] = true
     } catch (err) {
@@ -122,27 +147,27 @@ export default class SocketHotDeploy extends Command {
       spinner.stop()
       if (err instanceof CompileError) {
         const status = format.red('    compile error:')
-        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
+        this.echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)}\n\n${err.traceback.split('\n').map(line => p(8)(line)).join('\n')}`)
       } else {
         const status = format.red('socket sync error:')
-        echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
+        this.echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
       }
 
       if (this.cmd.bail) {
-        SocketHotDeploy.bail()
+        this.bail()
       }
       updateEnds()
     }
   }
 
-  getSocketToUpdate (fileName) {
+  getSocketToUpdate(fileName) {
     if (fileName.match(/\/test\//)) {
       return false
     }
-    return this.localSockets.find((socket) => socket.isSocketFile(fileName))
+    return this.localSockets.find(socket => socket.isSocketFile(fileName))
   }
 
-  runStalker () {
+  runStalker() {
     // Stalking files
     debug('watching:', this.session.projectPath)
     this.stalker = watchr.create(this.session.projectPath)
@@ -167,38 +192,11 @@ export default class SocketHotDeploy extends Command {
     // First start of the stalker
     this.stalker.watch(() => {})
 
-    this.localSockets = _.filter(this.socketList, { existLocally: true })
+    this.localSockets = _.filter(this.socketList, {existLocally: true})
   }
 
-  static bail () {
-    echo()
-    process.exit(1)
-  }
-
-  static printUpdateSuccessful (socketName: string, updateStatus, deployTimer) {
-    debug('printUpdateSuccessful', socketName, updateStatus)
-    const duration = format.dim(deployTimer.getDuration())
-    const socketNameStr = `${format.cyan(socketName)}`
-
-    if (updateStatus.status === 'ok') {
-      const status = format.grey('socket synced:')
-      echo(6)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
-    } else if (updateStatus.status === 'stopped') {
-      // const status = format.grey('socket in sync:');
-      // echo(5)(`${status} ${currentTime()} ${socketNameStr} ${duration}`);
-    } else if (updateStatus.status === 'error') {
-      const errDetail = format.red(updateStatus.message.error)
-      const status = format.red('socket not synced:')
-      echo(2)(`${status} ${currentTime()} ${socketNameStr} ${duration} ${errDetail}`)
-    } else {
-      const status = format.red('socket not synced:')
-      echo(2)(`${status} ${currentTime()} ${socketNameStr} ${duration}`)
-    }
-  }
-
-  static printUpdateFailed (socketName: string, err, deployTimer) {
-    const duration = deployTimer.getDuration()
-    const errDetail = JSON.parse(err).detail
-    echo(3)(`${format.red('files not synced:')} ${currentTime()} ${socketName} ${duration} ${errDetail}`)
+  bail() {
+    this.echo()
+    this.exit(1)
   }
 }

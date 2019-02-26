@@ -1,14 +1,14 @@
+import format from 'chalk'
 import fs from 'fs'
 import YAML from 'js-yaml'
 import path from 'path'
-import format from 'chalk'
 import walkdir from 'walkdir'
 
 import logger from '../debug'
 import session from '../session'
-import { getTemplateSpec, builtInSocketTemplates, installedSocketTemplates } from '../templates'
+import {builtInSocketTemplates, getTemplateSpec, installedSocketTemplates} from '../templates'
 
-const { debug } = logger('utils-sockets-utils')
+const {debug} = logger('utils-sockets-utils')
 
 const socketTemplates = () => {
   const installedTemplatesNames = installedSocketTemplates()
@@ -18,7 +18,7 @@ const socketTemplates = () => {
     debug('loading template:', templateName)
     const templateSpec = getTemplateSpec(templateName)
 
-    return { name: templateName, description: templateSpec.templateLongDesc }
+    return {name: templateName, description: templateSpec.templateLongDesc}
   })
   return installedTemplates
 }
@@ -34,8 +34,8 @@ const searchForSockets = (socketsPath: string, maxDepth = 3) => {
   const sockets: any = []
 
   const options = {
-    'follow_symlinks': true,
-    'max_depth': maxDepth
+    follow_symlinks: true,
+    max_depth: maxDepth
   }
 
   // TODO: optimize only diging deeper scoped modues
@@ -120,7 +120,7 @@ const listLocal = async () => {
   return localSockets.concat(singleSocket, nodeModSockets)
 }
 
-const getOrigFilePath = (origFileLine) => {
+const getOrigFilePath = origFileLine => {
   let origFilePath = origFileLine.source.match(/webpack:\/\/\/(.*\.js)(\?|$)/)[1]
 
   if (origFilePath.match(/~\//)) {

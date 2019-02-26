@@ -1,5 +1,6 @@
 import format from 'chalk'
-import { echo } from '../utils/print-tools'
+
+import {echo} from '../utils/print-tools'
 
 export const printInstanceInfo = (session, indent = 4) => {
   echo(indent)(`${format.grey('instance:')} ${format.yellow(session.project.instance)}`)
