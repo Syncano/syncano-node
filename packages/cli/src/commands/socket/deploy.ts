@@ -18,7 +18,7 @@ const pendingUpdates = {}
 const timer = new Timer()
 
 export default class SocketDeploy extends Command {
-  static description = 'Create Socket'
+  static description = 'Deploy Socket'
   static flags = {
     'create-instance': flags.string(),
     parallel: flags.boolean(),

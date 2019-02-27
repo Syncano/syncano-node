@@ -8,7 +8,7 @@ const {debug} = logger('template')
 
 const getTemplatePath = (templateName: string) => {
   debug('getTemplatePath', templateName)
-  const options = {paths: [path.join(process.cwd(), 'node_modules')]}
+  const options = {paths: [path.join(process.cwd(), 'node_modules'), path.join(__dirname, '../../', 'node_modules')]}
   return path.dirname(require.resolve(templateName, options))
 }
 

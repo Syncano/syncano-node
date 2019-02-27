@@ -3,7 +3,7 @@ import format from 'chalk'
 import Command, {Socket} from '../../../base_command'
 
 export default class SocketConfigShow extends Command {
-  static description = 'Configure Socket'
+  static description = 'Show Socket Config'
   static flags = {}
   static args = [{
     name: 'socketName',

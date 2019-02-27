@@ -20,7 +20,7 @@ const pendingUpdates = {}
 const timer = new Timer()
 
 export default class SocketHotDeploy extends Command {
-  static description = 'Create Socket'
+  static description = 'Hot Deploy Socket'
   static flags = {
     trace: flags.boolean(),
   }
