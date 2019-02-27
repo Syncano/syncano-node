@@ -24,11 +24,12 @@ describe('CLI Deploy', function () {
   beforeAll(async () => createProject(testInstance, projectTestTemplate))
   afterAll(async () => deleteInstance(testInstance))
 
+  // TODO: Lack of sockets is not an error
   it('can list installed sockets', function (done) {
     testNixt()
       .run(`${cliLocation} socket:list`)
       .stdout(/No Socket was found on server nor in config!/)
-      .code(0)
+      .code(1)
       .end(done)
   })
 

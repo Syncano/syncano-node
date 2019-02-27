@@ -17,7 +17,7 @@ describe('info', () => {
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .command(['info'])
     .exit(0)
-    .it('runs info when user is loggen in', ctx => {
+    .it('runs info when user is logged in', ctx => {
       expect(ctx.stdout).to.contain(`username: ${process.env.E2E_CLI_EMAIL}`)
     })
 

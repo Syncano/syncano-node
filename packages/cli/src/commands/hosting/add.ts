@@ -73,13 +73,15 @@ export default class HostingConfig extends Command {
       await this.syncNewHosting(hosting)
     } catch (err) {
       this.echo()
-      try {
+      if (err.response && err.response.data && err.response.data.detail) {
         this.error(this.p(4)(err.response.data.detail))
-      } catch (printErr) {
-        this.error(this.p(4)(printErr.message))
+      } else {
+        this.error(this.p(4)(err.message))
       }
       this.echo()
+      this.exit(1)
     }
+    this.exit(0)
   }
 
   async syncNewHosting(hosting) {
@@ -97,12 +99,11 @@ export default class HostingConfig extends Command {
 
     this.echo()
     if (!this.sync) {
-      this.echo(4)(`To sync files use: ${format.cyan(`npx s hosting sync ${hosting.hostingName}`)}`)
+      this.echo(4)(`To sync files use: ${format.cyan(`npx s hosting:sync ${hosting.name}`)}`)
       this.echo()
-      return this.exit()
+    } else {
+      await HostingSync.syncHosting(hosting)
     }
-
-    await HostingSync.syncHosting(hosting)
   }
 
   getQuestions() {

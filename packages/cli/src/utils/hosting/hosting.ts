@@ -46,8 +46,8 @@ class HostingFile {
 }
 
 class Hosting {
-
   static async add(params: HostingParams): Promise<Hosting> {
+    debug('Adding hosting')
     const configParams = {
       src: params.src,
       config: {
@@ -67,7 +67,7 @@ class Hosting {
     const paramsToAdd = {
       name: params.name,
       config: {
-        browser_router: params.browser_router
+        browser_router: params.browser_router || false
       },
       domains
     }
