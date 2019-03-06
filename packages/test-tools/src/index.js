@@ -95,14 +95,16 @@ const createConnection = () => {
 const createInstance = (instanceName) =>
   createConnection().instance.create({ name: instanceName || uniqueInstance() })
 
-const deleteInstance = (instanceName) => createConnection().instance.delete(instanceName)
+  const createBackup = () => createConnection().backup.create()
 
-const deleteEachInstance = (instances) => {
-  const list = []
+  const deleteInstance = (instanceName) => createConnection().instance.delete(instanceName)
 
-  _.each(instances, (item) => list.push(deleteInstance(item)))
-  return Promise.all(list)
-}
+  const deleteEachInstance = (instances) => {
+    const list = []
+
+    _.each(instances, (item) => list.push(deleteInstance(item)))
+    return Promise.all(list)
+  }
 
 const cleanUpAccount = () =>
   createConnection().instance
@@ -221,6 +223,7 @@ export {
   createInstance,
   deleteInstance,
   uniqueInstance,
+  createBackup,
   cleanUpAccount,
   generateContext,
   generateResponse
