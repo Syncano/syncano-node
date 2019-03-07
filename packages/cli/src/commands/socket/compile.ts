@@ -74,6 +74,7 @@ export default class SocketCompile extends Command {
       }
       this.exit(1)
     }
+    this.exit(0)
   }
 
   async compileSocket(socket, config) {

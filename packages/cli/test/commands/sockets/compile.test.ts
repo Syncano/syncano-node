@@ -15,8 +15,9 @@ describe('socket:compile', () => {
   test
     .stdin('\n', 10000)
     .stdout()
-    .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
-    .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
+    .env({
+      SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY,
+      SYNCANO_PROJECT_INSTANCE: testInstanceName})
     .do(async () => createProject(testInstanceName, projectTestTemplate))
     .do(async () => process.chdir(path.join(testsLocation, testInstanceName)))
     .command(['socket:create', 'test_socket'])
@@ -31,11 +32,13 @@ describe('socket:compile', () => {
 
   test
     .stdout()
-    .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
-    .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
+    .env({
+      SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY,
+      SYNCANO_PROJECT_INSTANCE: testInstanceName})
     .do(async () => process.chdir(path.join(testsLocation, testInstanceName)))
     .finally(async () => deleteInstance(testInstanceName))
     .command(['socket:compile', 'test_socket'])
+    .exit(0)
     .it('compile successful', ctx => {
       expect(ctx.stdout).to.contain('socket compiled:')
     })
