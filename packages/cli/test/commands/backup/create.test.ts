@@ -3,7 +3,6 @@ import {createInstance, deleteInstance, uniqueInstance} from '@syncano/test-tool
 
 describe('backup:create', () => {
   let testInstanceName = uniqueInstance()
-
   test
     .stdout()
     .command(['backup:create'])
@@ -22,14 +21,14 @@ describe('backup:create', () => {
     })
 
   test
-    .stderr()
+    .stdout()
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
     .do(async () => createInstance(testInstanceName))
     .command(['backup:create'])
     .exit(0)
     .it('create', ctx => {
-      expect(ctx.stderr).to.contain('Backup was created')
+      expect(ctx.stdout).to.contain('')
     })
 
   test
