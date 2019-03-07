@@ -1,8 +1,11 @@
 import {expect, test} from '@oclif/test'
-import {createBackup, createInstance, deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {createBackup, createInstance, deleteBackup, deleteInstance, uniqueInstance} from '@syncano/test-tools'
 
 describe('backup:last', () => {
   let testInstanceName = uniqueInstance()
+  let backupId
+
+  const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
 
   test
     .stdout()
@@ -44,11 +47,19 @@ describe('backup:last', () => {
       SYNCANO_INSTANCE_NAME: testInstanceName,
       SYNCANO_PROJECT_INSTANCE: testInstanceName
     })
-    .do(async () => createBackup())
-    .finally(async () => deleteInstance(testInstanceName))
+    .do(async () => {
+      const {id} = await createBackup()
+      backupId = id
+    })
+    .finally(async () => {
+      return Promise.all([
+        deleteBackup(backupId).then(() => deleteInstance(testInstanceName))
+      ])
+    })
     .command(['backup:last'])
     .exit(2)
-    .it('when there are backups', ctx => {
+    .it('when there are backups', async ctx => {
+      await timeout(5000)
       expect(ctx.stdout).to.contain('id:')
     })
 })
