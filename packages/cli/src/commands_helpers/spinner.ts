@@ -38,7 +38,7 @@ class SimpleSpinner {
   spinner: Ora
 
   constructor (spinnerLabel: string) {
-    this.spinner = ora(spinnerLabel)
+    this.spinner = ora({text: spinnerLabel, stream: process.stdout})
   }
 
   start () {

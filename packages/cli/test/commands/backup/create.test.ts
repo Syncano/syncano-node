@@ -3,7 +3,6 @@ import {createInstance, deleteInstance, uniqueInstance} from '@syncano/test-tool
 
 describe('backup:create', () => {
   let testInstanceName = uniqueInstance()
-
   test
     .stdout()
     .command(['backup:create'])
