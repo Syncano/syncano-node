@@ -14,6 +14,7 @@ describe('logout', () => {
     .stdout()
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .command(['logout'])
+    .exit(0)
     .it('when logged in', ctx => {
       expect(ctx.stdout).to.contain('You have been logged out!')
     })
