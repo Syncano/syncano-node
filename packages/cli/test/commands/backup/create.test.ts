@@ -22,25 +22,29 @@ describe('backup:create', () => {
     })
 
   test
-    .stderr()
-    .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
-    .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
+    .stdout()
+    .env({
+      SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY,
+      SYNCANO_PROJECT_INSTANCE: testInstanceName
+    })
     .do(async () => createInstance(testInstanceName))
     .command(['backup:create'])
     .exit(0)
     .it('create', ctx => {
-      expect(ctx.stderr).to.contain('Backup was created')
+      expect(ctx.stdout).to.contain('Backup was created')
     })
 
   test
     .stdout()
-    .stderr()
-    .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
+    .env({
+      SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY,
+      SYNCANO_PROJECT_INSTANCE: testInstanceName
+    })
     .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
     .finally(async () => deleteInstance(testInstanceName))
     .command(['backup:delete', '--all'])
     .exit(0)
     .it('delete', ctx => {
-      expect(ctx.stderr).to.contain('All backups deleted.')
+      expect(ctx.stdout).to.contain('All backups deleted.')
     })
 })
