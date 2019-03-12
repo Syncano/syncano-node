@@ -158,7 +158,7 @@ export class GroupClass extends QueryBuilder {
    * @example
    * const isUserInGroup = await groups.isUserAttachedTo('admin', 10)
    */
-  public async isUserAttachedTo(groupIdOrName: number | string, userId: number) {
+  public async isUserAttachedTo (groupIdOrName: number | string, userId: number) {
     const groups = await this.getUserGroups(userId)
     const paramName = typeof groupIdOrName === 'string' ? 'name' : 'id'
 
@@ -171,11 +171,16 @@ export class GroupClass extends QueryBuilder {
    * @example
    * const userGroups = await groups.getUserGroups(1)
    */
-  public async getUserGroups(userId: number) {
+  public async getUserGroups (userId: number) {
     const url = `${this.getInstanceURL(this.instance.instanceName)}/users/${userId}/groups/`
-    const {objects}: SyncanoResponse<UserGroup> = await this.fetch.bind(this)(url)
+    const res: SyncanoResponse<{
+      group: UserGroup,
+      links: {
+        self: string
+      }
+    }> = await this.fetch.bind(this)(url)
 
-    return objects
+    return res.objects.map((item) => item.group)
   }
 
   /**
