@@ -172,7 +172,7 @@ export class GroupClass extends QueryBuilder {
    * const userGroups = await groups.getUserGroups(1)
    */
   public async getUserGroups(userId: number) {
-    const url = `${this.getInstanceURL(this.instance.instanceName)}/users/${userId}/groups/`
+    const url = `${this.getInstanceURL(this.instance.instanceName, 'v3')}/users/${userId}/groups/`
     const {objects}: SyncanoResponse<UserGroup> = await this.fetch.bind(this)(url)
 
     return objects

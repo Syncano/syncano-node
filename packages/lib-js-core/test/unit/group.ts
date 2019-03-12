@@ -23,8 +23,8 @@ describe('Group', () => {
     created_at: '2018-07-16T16:01:15.736047Z',
     updated_at: '2018-07-31T15:16:31.259745Z'
   }
-  const GROUPS_URL = `/v2/instances/${instanceName}/groups/`
-  const USER_GROUPS_URL = `/v2/instances/${instanceName}/users/${USER.id}/groups/`
+  const GROUPS_URL_V2 = `/v2/instances/${instanceName}/groups/`
+  const USER_GROUPS_URL_V3 = `/v3/instances/${instanceName}/users/${USER.id}/groups/`
   const ADMIN_GROUP: UserGroup = {
     id: 1,
     name: 'admin',
@@ -54,7 +54,7 @@ describe('Group', () => {
 
   describe('#find', () => {
     it('should find single group by id ', async () => {
-      api.get(GROUPS_URL).reply(...LIST_RESPONSE)
+      api.get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
 
       const group = await groups.find(MANAGER_GROUP.id)
 
@@ -62,7 +62,7 @@ describe('Group', () => {
     })
 
     it('should find single group by name', async () => {
-      api.get(GROUPS_URL).reply(...LIST_RESPONSE)
+      api.get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
 
       const group = await groups.find(MANAGER_GROUP.name)
 
@@ -73,8 +73,8 @@ describe('Group', () => {
   describe('#findMany', () => {
     it('should find many groups by id ', async () => {
       api
-        .get(GROUPS_URL).reply(...LIST_RESPONSE)
-        .get(GROUPS_URL).reply(...LIST_RESPONSE)
+        .get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
+        .get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
 
       const res = await groups.findMany([ADMIN_GROUP.id, MANAGER_GROUP.id])
       const res2 = await groups.findMany([MANAGER_GROUP.id])
@@ -87,8 +87,8 @@ describe('Group', () => {
 
     it('should find many groups by name', async () => {
       api
-        .get(GROUPS_URL).reply(...LIST_RESPONSE)
-        .get(GROUPS_URL).reply(...LIST_RESPONSE)
+        .get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
+        .get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
       const group = await groups.find(MANAGER_GROUP.name)
 
       expect(group).toMatchSnapshot()
@@ -97,7 +97,7 @@ describe('Group', () => {
 
   describe('#list', () => {
     it('should get list of groups', async () => {
-      api.get(GROUPS_URL).reply(...LIST_RESPONSE)
+      api.get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
 
       const list = await groups.list()
 
@@ -107,7 +107,7 @@ describe('Group', () => {
 
   describe('#create', () => {
     it('should create a group', async () => {
-      api.post(GROUPS_URL).reply(200, ADMIN_GROUP)
+      api.post(GROUPS_URL_V2).reply(200, ADMIN_GROUP)
 
       const group = await groups.create(ADMIN_GROUP)
 
@@ -117,7 +117,7 @@ describe('Group', () => {
 
   describe('#update', () => {
     it('should update a group by id', () => {
-      api.patch(`${GROUPS_URL}${MANAGER_GROUP.id}/`).reply(200, ADMIN_GROUP)
+      api.patch(`${GROUPS_URL_V2}${MANAGER_GROUP.id}/`).reply(200, ADMIN_GROUP)
 
       return expect(groups.update(MANAGER_GROUP.id, ADMIN_GROUP)).resolves.toMatchSnapshot()
     })
@@ -125,7 +125,7 @@ describe('Group', () => {
 
   describe('#delete', () => {
     it('should delete a group by id', () => {
-      api.delete(`${GROUPS_URL}${ADMIN_GROUP.id}/`).reply(200)
+      api.delete(`${GROUPS_URL_V2}${ADMIN_GROUP.id}/`).reply(200)
 
       return expect(groups.delete(ADMIN_GROUP.id)).resolves.toMatchSnapshot()
     })
@@ -133,14 +133,14 @@ describe('Group', () => {
 
   describe('#attachUser', () => {
     it('should attach user to a group with given id', () => {
-      api.post(`${GROUPS_URL}${ADMIN_GROUP.id}/users/`).reply(200, USER)
+      api.post(`${GROUPS_URL_V2}${ADMIN_GROUP.id}/users/`).reply(200, USER)
 
       return expect(groups.attachUser(ADMIN_GROUP.id, USER.id)).resolves.toMatchSnapshot()
     })
 
     it('should attach user to a group with given name', () => {
-      api.get(GROUPS_URL).reply(...LIST_RESPONSE)
-      api.post(`${GROUPS_URL}${ADMIN_GROUP.id}/users/`).reply(200, USER)
+      api.get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
+      api.post(`${GROUPS_URL_V2}${ADMIN_GROUP.id}/users/`).reply(200, USER)
 
       return expect(groups.attachUser(ADMIN_GROUP.name, USER.id)).resolves.toMatchSnapshot()
     })
@@ -148,14 +148,14 @@ describe('Group', () => {
 
   describe('#detachUser', () => {
     it('should detach user from a group with given id', () => {
-      api.delete(`${GROUPS_URL}${ADMIN_GROUP.id}/users/${USER.id}/`).reply(200)
+      api.delete(`${GROUPS_URL_V2}${ADMIN_GROUP.id}/users/${USER.id}/`).reply(200)
 
       return expect(groups.detachUser(ADMIN_GROUP.id, USER.id)).resolves.toMatchSnapshot()
     })
 
     it('should detach user from a group with given name', () => {
-      api.get(GROUPS_URL).reply(...LIST_RESPONSE)
-      api.delete(`${GROUPS_URL}${ADMIN_GROUP.id}/users/${USER.id}/`).reply(200)
+      api.get(GROUPS_URL_V2).reply(...LIST_RESPONSE)
+      api.delete(`${GROUPS_URL_V2}${ADMIN_GROUP.id}/users/${USER.id}/`).reply(200)
 
       return expect(groups.detachUser(ADMIN_GROUP.name, USER.id)).resolves.toMatchSnapshot()
     })
@@ -163,13 +163,13 @@ describe('Group', () => {
 
   describe('#isUserAttahcedTo', () => {
     it('should return true when user belongs to a group', () => {
-      api.get(USER_GROUPS_URL).reply(...LIST_RESPONSE)
+      api.get(USER_GROUPS_URL_V3).reply(...LIST_RESPONSE)
 
       return expect(groups.isUserAttachedTo(ADMIN_GROUP.id, USER.id)).resolves.toMatchSnapshot()
     })
 
     it('should return false when user doesn\'t belong to a group', () => {
-      api.get(USER_GROUPS_URL).reply(200, {
+      api.get(USER_GROUPS_URL_V3).reply(200, {
         next: null,
         prev: null,
         objects: [MANAGER_GROUP]
@@ -181,7 +181,7 @@ describe('Group', () => {
 
   describe('#getUserGroups', () => {
     it('should return list of user groups', () => {
-      api.get(USER_GROUPS_URL).reply(...LIST_RESPONSE)
+      api.get(USER_GROUPS_URL_V3).reply(...LIST_RESPONSE)
 
       return expect(groups.getUserGroups(USER.id)).resolves.toMatchSnapshot()
     })
