@@ -24,7 +24,7 @@ describe('CLI Instance', function () {
       .end(done)
   })
 
-  it('can list instance via info command', function (done) {
+  it.skip('can list instance via info command', function (done) {
     const testInstance = uniqueInstance()
 
     testNixt()
