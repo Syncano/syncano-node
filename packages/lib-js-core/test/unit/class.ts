@@ -41,4 +41,22 @@ describe('Class', () => {
       return _class.delete('posts').should.be.fulfilled
     })
   })
+
+  describe('#get', () => {
+    it('should return single class details', () => {
+      api.get(`/v3/instances/${instanceName}/classes/posts/`).reply(200, {name: 'posts'})
+
+      return expect(_class.get('posts')).resolves.toMatchSnapshot()
+    })
+  })
+
+  describe('#list', () => {
+    it('should return list of syncano classes', () => {
+      api
+        .get(`/v3/instances/${instanceName}/classes/`)
+        .reply(200, {objects: [{name: 'posts'}, {name: 'comments'}]})
+
+      return expect(_class.list()).resolves.toMatchSnapshot()
+    })
+  })
 })
