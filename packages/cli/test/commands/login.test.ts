@@ -18,6 +18,18 @@ describe('login', () => {
     .command([
       'login',
       `-e ${process.env.E2E_CLI_EMAIL}`,
+      '-p TestPasswrod'
+    ])
+    .exit(1)
+    .it('runs login with invalid password', ctx => {
+      expect(ctx.stdout).to.contain('Invalid password.')
+    })
+
+  test
+    .stdout()
+    .command([
+      'login',
+      `-e ${process.env.E2E_CLI_EMAIL}`,
       `-p ${process.env.E2E_CLI_PASSWORD}`
     ])
     .exit(0)
