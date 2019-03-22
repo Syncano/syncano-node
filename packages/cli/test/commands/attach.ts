@@ -9,8 +9,21 @@ describe('attach', () => {
     .stdout()
     .command(['attach'])
     .exit(1)
-    .it('runs info when not logged in', ctx => {
+    .it('runs when not logged in', ctx => {
       expect(ctx.stdout).to.contain('You are not logged in!')
+    })
+
+  test
+    .stdout()
+    .stdin('no\n', 1000)
+    .env({
+      SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY,
+      SYNCANO_PROJECT_INSTANCE: testInstanceName
+    })
+    .command(['attach'])
+    .exit(1)
+    .it('runs when project is already attached', ctx => {
+      expect(ctx.stdout).to.contain('')
     })
 
   test
