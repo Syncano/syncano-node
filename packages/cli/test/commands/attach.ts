@@ -22,7 +22,7 @@ describe('attach', () => {
     })
     .command(['attach'])
     .exit(1)
-    .it('runs when project is already attached', ctx => {
+    .it('project is already attached', ctx => {
       expect(ctx.stdout).to.contain('')
     })
 
