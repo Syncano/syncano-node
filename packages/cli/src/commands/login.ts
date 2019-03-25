@@ -1,3 +1,4 @@
+import {flags} from '@oclif/command'
 import format from 'chalk'
 import inquirer from 'inquirer'
 import validator from 'validator'
@@ -10,7 +11,16 @@ const {debug} = logger('cmd-login')
 
 export default class Login extends Command {
   static description = 'Login to your account'
-  static flags = {}
+  static flags = {
+    email: flags.string({
+      char: 'e',
+      description: 'account email',
+    }),
+    password: flags.string({
+      char: 'p',
+      description: 'account password',
+    }),
+  }
 
   loginQuestion = () => ({
     name: 'email',
@@ -55,15 +65,21 @@ export default class Login extends Command {
     }]
 
     const {confirm = false} = await inquirer.prompt(confirmQuestion) || {}
-    if (confirm === false) return this.exit()
+    if (confirm === false) return this.exit(1)
   }
 
   async run() {
+    const {flags} = this.parse(Login)
+
     try {
       const user = await this.session.checkAuth()
       await this.displayWelcomeMessage(user)
     } catch (err) {
-      await this.promptLogin()
+      if (flags && flags.email && flags.password) {
+        await this.loginOrRegister(flags)
+      } else {
+        await this.promptLogin()
+      }
     }
   }
 
@@ -79,6 +95,7 @@ export default class Login extends Command {
     this.echo()
     this.echo(4)(`${format.green('You\'re in! Enjoy!')} 👍`)
     this.echo()
+    this.exit(0)
   }
 
   async register({email, password}) {
@@ -90,7 +107,7 @@ export default class Login extends Command {
       this.echo()
       this.error(this.p(4)(err.message))
       this.echo()
-      this.exit()
+      this.exit(1)
     }
   }
 
