@@ -1,5 +1,5 @@
 import {expect, test} from '@oclif/test'
-import {createInstance, deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {deleteInstance, uniqueInstance} from '@syncano/test-tools'
 
 describe('attach', () => {
   const testInstanceName = uniqueInstance()
