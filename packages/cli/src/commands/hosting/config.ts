@@ -33,7 +33,7 @@ export default class HostingConfig extends Command {
     await this.session.hasProject() || this.exit(1)
     const {args} = this.parse(HostingConfig)
     const {flags} = this.parse(HostingConfig)
-    
+
     const hostingName = args.hostingName
 
     this.cname = flags.cname
