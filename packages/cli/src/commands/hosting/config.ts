@@ -11,10 +11,10 @@ export default class HostingConfig extends Command {
   static description = 'Configure hosting'
   static flags = {
     cname: flags.string({char: 'c'}),
-    'browser-router': flags.boolean({allowNo: true}),
+    'browser-router': flags.boolean({allowNo: true, char: 'b'}),
     'dont-sync': flags.boolean(),
     sync: flags.boolean(),
-    'remove-cname': flags.string(),
+    'remove-cname': flags.string({char: 'd'}),
   }
   static args = [{
     name: 'hostingName',
@@ -29,8 +29,8 @@ export default class HostingConfig extends Command {
   browserRouter: boolean
 
   async run() {
-    await this.session.isAuthenticated()
-    await this.session.hasProject()
+    await this.session.isAuthenticated() || this.exit(1)
+    await this.session.hasProject() || this.exit(1)
     const {args} = this.parse(HostingConfig)
     const {flags} = this.parse(HostingConfig)
 
@@ -41,21 +41,21 @@ export default class HostingConfig extends Command {
     this.browserRouter = flags['browser-router']
     this.fullPath = null
 
-    try {
-      this.hosting = await Hosting.get(hostingName)
+    this.hosting = await Hosting.get(hostingName)
 
+    this.echo()
+    if (!this.hosting.existLocally) {
+      this.warn(this.p(4)('No such hosting!'))
       this.echo()
-      if (!this.hosting.existLocally) {
-        this.warn(this.p(4)('No such hosting!'))
-        this.echo()
-        this.exit(1)
-      }
-      if (this.removeCname && !this.hosting.hasCNAME(this.removeCname)) {
-        this.warn(this.p(4)('This hosting doesn\'t have such CNAME!'))
-        this.echo()
-        this.exit(1)
-      }
+      this.exit(1)
+    }
+    if (this.removeCname && !this.hosting.hasCNAME(this.removeCname)) {
+      this.warn(this.p(4)('This hosting doesn\'t have such CNAME!'))
+      this.echo()
+      this.exit(1)
+    }
 
+    try {
       let responses = {} as any
       if (!(this.removeCname || this.cname || this.browserRouter)) {
         responses = await inquirer.prompt(this.getQuestions()) || {}
@@ -80,7 +80,9 @@ export default class HostingConfig extends Command {
         this.error(this.p(4)(err.message))
       }
       this.echo()
+      this.exit(1)
     }
+    this.exit(0)
   }
 
   getQuestions() {
