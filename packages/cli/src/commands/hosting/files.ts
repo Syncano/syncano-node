@@ -28,8 +28,6 @@ export default class HostingFilesCmd extends Command {
     return table
   }
 
-  attributes: any
-
   echoResponse(hostingName, files, filledTable, totalSize) {
     if (!files.length) {
       return this.warn('There are no files in this hosting')
@@ -44,17 +42,16 @@ export default class HostingFilesCmd extends Command {
   }
 
   async run() {
-    await this.session.isAuthenticated()
-    await this.session.hasProject()
+    await this.session.isAuthenticated() || this.exit(1)
+    await this.session.hasProject() || this.exit(1)
     const {args} = this.parse(HostingFilesCmd)
-    const {flags} = this.parse(HostingFilesCmd)
 
     const hostingName = args.hostingName
     const hosting = await Hosting.get(hostingName)
 
     if (!hosting) {
-      this.error(`There are no hostings configured for the "${this.attributes.name}" socket!`)
-      this.exit()
+      this.echo(`There is no hosting ${hostingName}!`)
+      this.exit(1)
     }
 
     const table = new Table({
