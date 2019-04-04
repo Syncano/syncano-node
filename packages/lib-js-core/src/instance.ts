@@ -65,7 +65,8 @@ export class InstanceClass extends QueryBuilder {
   }
 
   private url (instanceName?: string, apiVersion?: string) {
-    const baseUrl = `${this.getSyncanoURL(apiVersion)}/instances/`
-    return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
+    return instanceName ?
+      `${this.getInstanceURL(instanceName, apiVersion)}/` :
+      `${this.getSyncanoURL(apiVersion)}/instances/`
   }
 }
