@@ -1,3 +1,4 @@
+import {flags} from '@oclif/command'
 import format from 'chalk'
 import inquirer from 'inquirer'
 
@@ -6,7 +7,12 @@ import Hosting from '../../utils/hosting'
 
 export default class HostingDelete extends Command {
   static description = 'Delete hosting'
-  static flags = {}
+  static flags = {
+    confirm: flags.boolean({
+      char: 'c',
+      description: 'confirms deletion of a hosting'
+    })
+  }
   static args = [{
     name: 'hostingName',
     description: 'name of the hosting to delete',
@@ -27,24 +33,25 @@ export default class HostingDelete extends Command {
   }
 
   async run() {
-    await this.session.isAuthenticated()
-    await this.session.hasProject()
-    const {args} = this.parse(HostingDelete)
-
+    await this.session.isAuthenticated() || this.exit(1)
+    await this.session.hasProject() || this.exit(1)
+    const {args, flags} = this.parse(HostingDelete)
     const hostingName = args.hostingName
+    const hosting = await Hosting.get(hostingName)
 
-    this.echo()
-    const resp = await inquirer.prompt(this.getQuestions(hostingName)) as any
-    if (!resp.delete) {
+    if (!hosting || hosting && !hosting.existLocally) {
+      this.echo(this.p(4)(`Couldn't find any hosting named ${format.cyan(hostingName)}!`))
       this.echo()
-      this.exit(0)
+      return this.exit(1)
     }
 
-    const hosting = await Hosting.get(hostingName)
-    if (!hosting.existLocally) {
-      this.warn(this.p(4)(`Couldn't find any hosting named ${format.cyan(hostingName)}!`))
-      this.echo()
-      this.exit(1)
+    this.echo()
+    if (!flags.confirm) {
+      const resp = await inquirer.prompt(this.getQuestions(hostingName)) as any
+      if (!resp.delete) {
+        this.echo()
+        this.exit(0)
+      }
     }
 
     try {
