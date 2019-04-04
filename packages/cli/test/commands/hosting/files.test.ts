@@ -50,7 +50,7 @@ describe('hosting:files', () => {
       }])
     }))
     .command(['hosting:files', 'hostyng'])
-    .it('when no hostinfdfggs', ctx => {
+    .it('when there are hostings', ctx => {
       expect(ctx.stdout).to.contain('Hosting hostyng has 1 files:')
     })
 })
