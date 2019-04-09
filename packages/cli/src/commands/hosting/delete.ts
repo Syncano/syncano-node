@@ -42,7 +42,7 @@ export default class HostingDelete extends Command {
     if (!hosting || hosting && !hosting.existLocally) {
       this.echo(this.p(4)(`Couldn't find any hosting named ${format.cyan(hostingName)}!`))
       this.echo()
-      return this.exit(1)
+      this.exit(1)
     }
 
     this.echo()
