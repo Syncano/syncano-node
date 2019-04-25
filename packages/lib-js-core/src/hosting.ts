@@ -128,19 +128,19 @@ export class HostingClass extends QueryBuilder {
     const {instanceName} = this.instance
 
     if (fileId) {
-      return `${this.getSyncanoURL()}/instances/${instanceName}/hosting/${hostingName}/files/${fileId}/`
+      return `${this.getInstanceURL(instanceName)}/hosting/${hostingName}/files/${fileId}/`
     }
 
-    return `${this.getSyncanoURL()}/instances/${instanceName}/hosting/${hostingName}/files/`
+    return `${this.getInstanceURL(instanceName)}/hosting/${hostingName}/files/`
   }
 
   private url (hostingName: string) {
     const {instanceName} = this.instance
 
     if (hostingName) {
-      return `${this.getSyncanoURL()}/instances/${instanceName}/hosting/${hostingName}/`
+      return `${this.getInstanceURL(instanceName)}/hosting/${hostingName}/`
     }
 
-    return `${this.getSyncanoURL()}/instances/${instanceName}/hosting/`
+    return `${this.getInstanceURL(instanceName)}/hosting/`
   }
 }
