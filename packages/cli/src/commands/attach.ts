@@ -12,19 +12,23 @@ const {debug} = logger('cmd-attach')
 export default class Attach extends Command {
   static description = 'Info about current project/instance/user etc.'
   static flags = {
-    'create-instance': flags.string(),
-    instance: flags.string()
+    'create-instance': flags.string({
+      char: 'c',
+      description: 'create instance',
+    }),
+    instance: flags.string({
+      char: 'n',
+      description: 'attach to instance',
+    })
   }
 
   async run() {
     await this.session.isAuthenticated() || this.exit(1)
 
     const init = new Init()
-
-    const {args} = this.parse(Attach)
     const {flags} = this.parse(Attach)
 
-    if (this.session.project) {
+    if (this.session.project && !(flags['create-instance'] || flags.instance)) {
       const confirmQuestion = [{
         type: 'confirm',
         name: 'confirm',
@@ -33,16 +37,16 @@ export default class Attach extends Command {
       }]
 
       const {confirm = false} = await inquirer.prompt(confirmQuestion) || {}
-      if (confirm === false) return this.exit()
+      if (confirm === false) return this.exit(1)
     }
 
-    let instanceName
+    let instanceName = flags.instance || null
     let instance
 
     if (flags['create-instance']) {
       instance = await createInstance(flags['create-instance'])
       instanceName = instance.name
-    } else {
+    } else if (!instanceName) {
       const questions = await this.getQuestions()
       const answer = await inquirer.prompt(questions) || {} as any
 
@@ -59,6 +63,7 @@ export default class Attach extends Command {
     await init.addConfigFiles({instance: instanceName}, this.session.projectPath)
     this.echo(4)(`Your project is attached to ${format.green(instanceName)} instance now!`)
     this.echo()
+    this.exit(0)
 
     return this.session.load()
   }
