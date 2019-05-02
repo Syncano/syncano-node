@@ -104,6 +104,10 @@ const deleteEachInstance = (instances) => {
   return Promise.all(list)
 }
 
+const createBackup = () => createConnection().backup.create()
+
+const deleteBackup = (id) => createConnection().backup.delete(id)
+
 const cleanUpAccount = () =>
   createConnection().instance
     .list()
@@ -221,6 +225,8 @@ export {
   createInstance,
   deleteInstance,
   uniqueInstance,
+  createBackup,
+  deleteBackup,
   cleanUpAccount,
   generateContext,
   generateResponse
