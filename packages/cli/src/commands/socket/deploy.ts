@@ -19,6 +19,7 @@ const timer = new Timer()
 
 export default class SocketDeploy extends Command {
   static description = 'Deploy Socket'
+  static aliases = ['deploy']
   static flags = {
     'create-instance': flags.string(),
     parallel: flags.boolean(),
@@ -34,7 +35,7 @@ export default class SocketDeploy extends Command {
     const duration = format.dim(updateStatus.duration)
     const socketNameStr = `${format.cyan(socketName)}`
 
-    if (updateStatus.status === 'ok') {
+    if (updateStatus.status === 'ok' || updateStatus.status === 'pending' ) {
       const status = format.grey('  socket synced:')
       return `${status} ${currentTime()} ${socketNameStr} ${duration}`
     } else if (updateStatus.status === 'stopped') {
@@ -102,11 +103,11 @@ export default class SocketDeploy extends Command {
           task: async (ctx, task) => {
             task.title = `${format.grey(' syncing socket:')} ${socket.name}`
             const deployStatus = await this.deploySocket(socket, configs[socket.name])
-            if (deployStatus.status !== 'pending') {
-              task.title = SocketDeploy.printSummary(socket.name, deployStatus)
-            }
+        
             if (deployStatus.status === 'error' || deployStatus.status === 'compile error') {
               throw new Error()
+            } else {
+              task.title = SocketDeploy.printSummary(socket.name, deployStatus)
             }
           }
         })

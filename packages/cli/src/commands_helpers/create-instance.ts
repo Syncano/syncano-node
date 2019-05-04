@@ -13,6 +13,10 @@ export const createInstance = async (instanceName?: string) => {
     echo()
     echon(4)('Creating Syncano Instance... ')
     newInstance = await session.createInstance(instanceName)
+    echo(`${format.green('Done')}`)
+    echo(4)(`Syncano Instance ${format.cyan(newInstance.name)} has been created!`)
+    echo()
+    return newInstance
   } catch (err) {
     debug(err)
     echo()
@@ -28,10 +32,5 @@ export const createInstance = async (instanceName?: string) => {
     }
     echo()
     throw new Error('Error while creating instance.')
-  } finally {
-    echo(`${format.green('Done')}`)
-    echo(4)(`Syncano Instance ${format.cyan(newInstance.name)} has been created!`)
-    echo()
-  }
-  return newInstance
+  } 
 }

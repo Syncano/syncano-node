@@ -78,13 +78,17 @@ export default class InitCmd extends Command {
 
     if (!project && !instance) {
       // debug('no project, no instance')
-      const newInstance = await createInstance()
+      try {
+        const newInstance = await createInstance()
 
-      await init.addConfigFiles({instance: newInstance.name, location: init.locationName})
-      this.echo(4)(`Your project is attached to ${format.green(newInstance.name)} instance now!`)
+        await init.addConfigFiles({instance: newInstance.name, location: init.locationName})
+        this.echo(4)(`Your project is attached to ${format.green(newInstance.name)} instance now!`)
 
-      await init.createFilesAndFolders()
-      return this.session.load()
+        await init.createFilesAndFolders()
+        return this.session.load()
+      } catch (err) {
+        this.exit(1)
+      }
     }
 
     if (init.checkConfigFiles()) {

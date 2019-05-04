@@ -50,7 +50,6 @@ describe('hosting:config', () => {
     .it('when hosting doesn\'t exist', ctx => {
       const expectedMessage = 'No such hosting'
       expect(ctx.stderr).to.contain(expectedMessage)
-
     })
 
   test
