@@ -1,3 +1,5 @@
+import format from 'chalk'
+
 import Command, {Socket} from '../../../base_command'
 import {askQuestions} from '../../../commands_helpers/socket'
 
@@ -36,7 +38,14 @@ export default class SocketConfig extends Command {
     this.echo()
 
     const config = await askQuestions(socket.getConfigOptions())
-    await socket.updateConfig(config)
-    this.echo()
+    try {
+      await socket.updateConfig(config)
+      this.echo()
+      this.echo(4)(format.green('Config updated!'))
+      this.echo()
+    } catch (err) {
+      this.error(err.message, {exit: 1})
+    }
+      this.exit(0)
   }
 }

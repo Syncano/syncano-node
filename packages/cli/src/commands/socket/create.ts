@@ -55,8 +55,7 @@ export default class SocketCreate extends Command {
       spinner.succeed(this.p(2)(`Your Socket configuration is stored at ${format.cyan(socket.socketPath)}`))
       this.echo()
     } catch (err) {
-      this.error(err)
-      this.exit(1)
+      this.error(err.message, {exit: 1})
     }
     this.exit(0)
   }

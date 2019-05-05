@@ -23,8 +23,7 @@ export default class BackupsCreate extends Command {
       spinner.stop()
       spinner.succeed(this.p(2)(`Backup was created (${status.id}).`))
     } catch (err) {
-      this.error(err.message)
-      this.exit(1)
+      this.error(err.message, {exit: 1})
     }
     this.exit(0)
   }

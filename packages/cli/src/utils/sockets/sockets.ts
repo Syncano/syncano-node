@@ -163,6 +163,7 @@ class Socket {
     await socket.init(templateName)
     return socket
   }
+
   name: string
   metadata: any
   settings: any

@@ -2,7 +2,7 @@ import format from 'chalk'
 import inquirer from 'inquirer'
 
 import logger from '../utils/debug'
-import {echo, echon, error, warning} from '../utils/print-tools'
+import {echo, echon, error, warning, p} from '../utils/print-tools'
 
 const {debug} = logger('cmd-helpers-socket')
 
@@ -19,9 +19,9 @@ export const askQuestions = configOptions => {
     questions.push({
       name: paramName,
       message: [
-        this.p(2)(shortDesc),
-        this.p(4)(format.reset(longDesc)),
-        this.p(4)('Type in value:')
+        p(2)(shortDesc),
+        p(4)(format.reset(longDesc)),
+        p(4)('Type in value:')
       ].join('\n'),
       default: param.default,
       validate: value => {

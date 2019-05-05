@@ -49,7 +49,7 @@ export default class HostingConfig extends Command {
 
     if (!fs.existsSync(this.folder)) {
       this.echo()
-      this.error(this.p('Provided path doesn\'t exist.'))
+      this.echo(4)(this.p('Provided path doesn\'t exist.'))
       this.echo(4)(`Type ${format.green('mkdir <folder_name>')} to create a folder.`)
       this.echo()
       this.exit(1)

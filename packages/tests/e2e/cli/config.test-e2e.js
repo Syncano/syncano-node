@@ -41,13 +41,15 @@ describe('CLI Config', function () {
   it('can set first config option', function (done) {
     testNixt()
       .run(`${cliLocation} socket:config:set hello-config TEST1 test1_value`)
-      .code(0)
+      .stdout(/Config updated!/)
+      // .code(0)
       .end(done)
   })
 
   it('can set second config option', function (done) {
     testNixt()
       .run(`${cliLocation} socket:config:set hello-config TEST2 test2_value`)
+      .stdout(/Config updated!/)
       .code(0)
       .end(done)
   })
@@ -63,6 +65,7 @@ describe('CLI Config', function () {
   it('can change first config option of the socket', function (done) {
     testNixt()
       .run(`${cliLocation} socket:config:set hello-config TEST1 test1_value_new`)
+      .stdout(/Config updated!/)
       .code(0)
       .end(done)
   })
@@ -84,6 +87,7 @@ describe('CLI Config', function () {
       .respond('test2\n')
       .on(/TEST3/)
       .respond('test2\n')
+      .stdout(/Config updated!/)
       .code(0)
       .end(done)
   })

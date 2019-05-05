@@ -30,14 +30,12 @@ export default class SocketConfigSet extends Command {
 
     if (!socket.existRemotely) {
       this.echo()
-      this.error(this.p(4)('That socket was not synced!'))
-      this.echo()
-      this.exit(1)
+      this.error(this.p(4)('That socket was not synced!'), {exit: 1})
     }
 
     if (!(socket.spec.config && socket.spec.config[args.configOptionName])) {
-      this.warn('No such config option!')
-      this.exit()
+      this.echo()
+      this.error('No such config option!', {exit: 1})
     }
 
     const config = {...socket.remote.config}
@@ -48,9 +46,9 @@ export default class SocketConfigSet extends Command {
       this.echo()
       this.echo(4)(format.green('Config updated!'))
       this.echo()
-      this.exit()
     } catch (err) {
-      this.error(err.message)
+      this.error(err.message, {exit: 1})
     }
+    this.exit(0)
   }
 }

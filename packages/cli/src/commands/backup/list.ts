@@ -25,8 +25,7 @@ export default class BackupsList extends Command {
         this.echo()
       }
     } catch (err) {
-      this.error(err.message)
-      this.exit(1)
+      this.error(err.message, {exit: 1})
     }
   }
 

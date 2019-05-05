@@ -41,8 +41,7 @@ export default class BackupDelete extends Command {
       }
     } catch (err) {
       this.echo()
-      this.error(err.message)
-      this.exit(1)
+      this.error(err.message, {exit: 1})
     }
     this.exit(0)
   }
