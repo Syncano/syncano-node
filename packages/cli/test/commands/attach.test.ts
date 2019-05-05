@@ -1,5 +1,5 @@
 import {expect, test} from '@oclif/test'
-import {deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {deleteInstance, uniqueInstance, deleteConfigFile} from '@syncano/test-tools'
 
 describe('attach', () => {
   const testInstanceName = uniqueInstance()
@@ -30,7 +30,8 @@ describe('attach', () => {
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .command([
       'attach',
-      `-c ${testInstanceName}`
+      '-c',
+      testInstanceName
     ])
     .exit(0)
     .it('create new instance', ctx => {
@@ -40,13 +41,17 @@ describe('attach', () => {
   test
     .stdout()
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
-    .finally(async () => deleteInstance(testInstanceName))
+    .finally(async () => {
+      deleteConfigFile()
+      await deleteInstance(testInstanceName)
+    })
     .command([
       'attach',
-      `-n ${testInstanceName}`
+      '-n',
+      testInstanceName
     ])
     .exit(0)
     .it('attach to existing instance', ctx => {
-      expect(ctx.stdout).to.contain(`Your project is attached to  ${testInstanceName} instance now!`)
+      expect(ctx.stdout).to.contain(`Your project is attached to ${testInstanceName} instance now!`)
     })
 })

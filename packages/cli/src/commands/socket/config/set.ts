@@ -35,7 +35,8 @@ export default class SocketConfigSet extends Command {
 
     if (!(socket.spec.config && socket.spec.config[args.configOptionName])) {
       this.echo()
-      this.error('No such config option!', {exit: 1})
+      this.warn('No such config option!')
+      this.exit(1)
     }
 
     const config = {...socket.remote.config}

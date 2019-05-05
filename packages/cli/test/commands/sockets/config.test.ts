@@ -52,14 +52,15 @@ describe('socket:config', () => {
     .it('deploy socket')
 
   test
+    .stdout()
     .stderr()
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
     .do(async () => process.chdir(path.join(testsLocation, testInstanceName)))
     .command(['socket:config:set', 'test_socket', 'TEST_VAR', 'test_value'])
-    .exit(0)
+    .exit(1)
     .it('set variable which doesn\'t exist in config file', ctx => {
-      expect(ctx.stderr).to.contain('Warning: No such config option!')
+      expect(ctx.stderr).to.contain('No such config option!')
     })
 
   test

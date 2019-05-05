@@ -22,6 +22,10 @@ const returnTestGlobals = () => {
   }
 }
 
+const deleteConfigFile = () => {
+  fs.unlinkSync(returnTestGlobals()['syncanoYmlPath'])
+}
+
 const splitTestBaseEmail = (tempEmail) => {
   const splittedEmail = {};
 
@@ -229,5 +233,6 @@ export {
   deleteBackup,
   cleanUpAccount,
   generateContext,
-  generateResponse
+  generateResponse,
+  deleteConfigFile
 }
