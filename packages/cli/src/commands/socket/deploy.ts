@@ -14,8 +14,35 @@ import {CompileError} from '../../utils/errors'
 
 const {debug, info} = logger('cmd-socket-deploy')
 
-const pendingUpdates = {}
+
+type TUpdateStatus = {
+  duration: string;
+  status: string;
+  message: any;
+}
+
+type TTask = {
+  title: string;
+  task: (ctx: any, task: any) => Promise<void>;
+}
+
+type TSocketConfig = {
+  [s in string]: string
+}
+
+type TPendingUpdates = {
+  [s in string]: string
+}
+
+type SocketConfig = {
+
+}
+
+const pendingUpdates: TPendingUpdates = {}
 const timer = new Timer()
+
+
+// { name: string | number; update: (arg0: { config: any; withCompilation: boolean; updateSocketNPMDeps: boolean; updateEnv: boolean; }) => void; }
 
 export default class SocketDeploy extends Command {
   static description = 'Deploy Socket'
@@ -30,7 +57,7 @@ export default class SocketDeploy extends Command {
     description: 'Socket name'
   }]
 
-  static printSummary(socketName, updateStatus) {
+  static printSummary(socketName: string, updateStatus: TUpdateStatus) {
     debug('printSummary()', socketName, updateStatus)
     const duration = format.dim(updateStatus.duration)
     const socketNameStr = `${format.cyan(socketName)}`
@@ -53,9 +80,9 @@ export default class SocketDeploy extends Command {
     }
   }
 
-  firstRun: boolean
-  socketList: any[]
-  localSockets: Socket[]
+  firstRun: boolean = true
+  socketList: Socket[] = []
+  localSockets: Socket[] = []
 
   async run() {
     await this.session.isAuthenticated()
@@ -93,17 +120,17 @@ export default class SocketDeploy extends Command {
       this.socketList = await Socket.list()
     }
 
-    const configs = {}
+    const configs: TSocketConfig = {}
 
     try {
-      const deployList = []
+      const deployList: TTask[] = []
       this.socketList.forEach(socket => {
         deployList.push({
           title: `${format.grey('        waiting:')} ${socket.name}`,
-          task: async (ctx, task) => {
+          task: async (ctx: any, task: { title: string; }) => {
             task.title = `${format.grey(' syncing socket:')} ${socket.name}`
             const deployStatus = await this.deploySocket(socket, configs[socket.name])
-        
+
             if (deployStatus.status === 'error' || deployStatus.status === 'compile error') {
               throw new Error()
             } else {
@@ -134,7 +161,7 @@ export default class SocketDeploy extends Command {
       const socketsTasks = new Listr(deployList, listsOptions)
 
       // Ask for missing config options
-      await BluebirdPromise.each(this.socketList, async (socketFromList: any) => {
+      await BluebirdPromise.each(this.socketList, async (socketFromList: Socket) => {
         const config = await askQuestions(socketFromList.getConfigOptionsToAsk())
         configs[socketFromList.name] = config
       })
@@ -154,8 +181,8 @@ export default class SocketDeploy extends Command {
     } catch (err) {
       this.bail()
     }
-    this.exit(0)
-    // return this
+    // this.exit(0)
+    return this
   }
 
   async deployProject() {
@@ -164,7 +191,7 @@ export default class SocketDeploy extends Command {
     return timer.getDuration()
   }
 
-  async deploySocket(socket, config) {
+  async deploySocket(socket: Socket, config: SocketConfig) {
     debug(`deploySocket: ${socket.name}`)
     const deployTimer = new Timer()
 
@@ -207,7 +234,7 @@ export default class SocketDeploy extends Command {
     }
   }
 
-  getSocketToUpdate(fileName) {
+  getSocketToUpdate(fileName: any) {
     return this.localSockets.find(socket => socket.isSocketFile(fileName))
   }
 

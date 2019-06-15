@@ -23,19 +23,26 @@ import {CompatibilityError, CompileError, SocketUpdateError} from '../errors'
 import {p} from '../print-tools'
 import session from '../session'
 import {getTemplate} from '../templates'
+import {Trace, Socket as RemoteSocket} from "@syncano/core/types"
 
 import utils from './utils'
 
 const {debug, info} = logger('utils-sockets')
 
+type TMetadata = {}
+
+interface TMetadataObject {
+  new (name: string): MetadataObject;
+}
+
 class MetadataObject {
   name: string
   metadata: any
   socketName: string
-  existRemotely: boolean
-  existLocally: boolean
+  existRemotely: boolean | null
+  existLocally: boolean | null
 
-  constructor(name: string, metadata, socketName: string) {
+  constructor(name: string, metadata: TMetadata, socketName: string) {
     this.name = name
     this.metadata = metadata
     this.socketName = socketName
@@ -57,8 +64,14 @@ class MetadataObject {
   }
 }
 
+type TEndointParams = {
+
+}
+
 class Endpoint extends MetadataObject {
-  call(params) {
+  static type = 'endpoints'
+
+  call(params: TEndointParams) {
     return axios.request({
       url: this.getURL(),
       method: 'POST',
@@ -78,9 +91,13 @@ class Endpoint extends MetadataObject {
   }
 }
 
-class Handler extends MetadataObject {}
+class Handler extends MetadataObject {
+  static type = 'event_handlers'
+}
 
-class Event extends MetadataObject {}
+class Event extends MetadataObject {
+  static type = 'events'
+}
 
 class Socket {
   static async getEndpointTraceByUrl(url: string) {
@@ -98,7 +115,7 @@ class Socket {
     return utils.getTemplatesChoices()
   }
 
-  static uninstall(socket?: Socket) {
+  static uninstall(socket: Socket) {
     debug('uninstall', socket.name)
 
     if (socket.existLocally && socket.localPath) {
@@ -133,20 +150,21 @@ class Socket {
   }
 
   // list all sockets (mix of locally definde and installed on server)
-  static async list() {
+  static async list(): Promise<Socket[]> {
     debug('list()')
     // Local Socket defined in folders and in project deps
     const localSocketsList = await utils.listLocal()
+
     return Promise.all(localSocketsList.map((socketName: string) => Socket.get(socketName)))
   }
 
   // Creating Socket simple object
-  static getLocal(socketName: string) {
+  static getLocal(socketName: string): Socket {
     info('getLocal()', socketName)
     return new Socket(socketName)
   }
 
-  static async get(socketName: string) {
+  static async get(socketName: string): Promise<Socket> {
     info('get()', socketName)
     const socket = Socket.getLocal(socketName)
     await socket.loadRemote()
@@ -168,27 +186,27 @@ class Socket {
   metadata: any
   settings: any
   socketPath: string
-  existLocally: boolean
-  existRemotely: boolean
-  fromNPM: boolean
+  existLocally: boolean | null = null
+  existRemotely: boolean | null = null
+  fromNPM: boolean | null = null
   remote: any
   spec: any
-  localPath: string
-  isProjectRegistryDependency: boolean
+  localPath: string = ''
+  isProjectRegistryDependency: boolean = false
 
   constructor(socketName: string, socketPath?: string) {
     debug('Sockets.constructor', socketName)
     this.name = socketName
     this.settings = {loaded: false}
-    this.socketPath = socketPath || utils.findLocalPath(socketName)
+    this.socketPath = socketPath || utils.findLocalPath(socketName) || ''
 
     if (this.socketPath) {
       this.settings = session.settings.getSocketSettings(this.socketPath, this.name)
     }
 
-    this.existRemotely = null
-    this.existLocally = null
-    this.fromNPM = null
+    // this.existRemotely = null
+    // this.existLocally = null
+    // this.fromNPM = null
 
     // that looks stupid
     this.remote = {
@@ -214,7 +232,7 @@ class Socket {
   isDependency() {
     debug('isDependency')
     // TODO: better way to dermine that?
-    if (this.socketPath.match(/node_modules/)) {
+    if (this.socketPath && this.socketPath.match(/node_modules/)) {
       return true
     }
   }
@@ -223,6 +241,9 @@ class Socket {
     debug('init', templateName)
     return new Promise((resolve, reject) => {
       const socketPath = this.socketPath
+      if (!socketPath) {
+        return reject()
+      }
       if (!fs.existsSync(socketPath)) {
         mkdirp.sync(socketPath)
       }
@@ -257,7 +278,8 @@ class Socket {
   }
 
   async verify() {
-    if (!fs.existsSync(this.getSrcFolder())) {
+    const srcFolder = this.getSrcFolder()
+    if (srcFolder && !fs.existsSync(srcFolder)) {
       throw new Error('No src folder!')
     }
     this.verifySchema()
@@ -286,7 +308,7 @@ class Socket {
     }
   }
 
-  setRemoteState(socket) {
+  setRemoteState(socket: RemoteSocket) {
     info('setRemoteState()')
     this.existRemotely = true
     this.remote.name = socket.name
@@ -304,8 +326,8 @@ class Socket {
   async loadRemote() {
     info('loadRemote()')
     try {
-      const socket = await this.getRemote()
-      await this.setRemoteState(socket)
+      const remoteSocket = await this.getRemote()
+      await this.setRemoteState(remoteSocket)
       await this.getRemoteSpec()
     } catch (err) {
       this.existRemotely = false
@@ -325,7 +347,7 @@ class Socket {
     }
   }
 
-  isSocketFile(fileFullPath) {
+  isSocketFile(fileFullPath: { includes: (arg0: string) => void; }) {
     info('isSocketFile()', fileFullPath)
     return fileFullPath.includes(this.localPath)
   }
@@ -387,11 +409,14 @@ class Socket {
   }
 
   getSocketZipPath() {
-    const folder = path.join(this.socketPath, '.zip')
-    if (!fs.existsSync(folder)) {
-      mkdirp.sync(folder)
+    if (this.socketPath) {
+      const folder = path.join(this.socketPath, '.zip')
+      if (!fs.existsSync(folder)) {
+        mkdirp.sync(folder)
+      }
+      return folder
     }
-    return folder
+    throw new Error('No socketPath!')
   }
 
   getSocketZip() {
@@ -433,8 +458,10 @@ class Socket {
     return path.join(session.projectPath, this.name, 'socket.yml')
   }
 
-  composeFromSpec(objectType, ObjectClass) {
-    info('composeFromSpec()', objectType)
+  composeFromSpec(ObjectClass: typeof Event | typeof Handler | typeof Endpoint) {
+    info('composeFromSpec()', ObjectClass.type)
+
+    const objectType = ObjectClass.type
     const objects = {...this.remote.spec[objectType]}
     Object.assign(objects, this.spec[objectType])
 
@@ -443,6 +470,7 @@ class Socket {
       debug(`checking ${objectName}`)
       const objectMetadata = objects[objectName]
       debug('objectMetadata', objectMetadata)
+
       const object = new ObjectClass(objectName, objectMetadata, this.name)
 
       debug('existRemotely', this.remote.spec[objectType], objectName)
@@ -460,37 +488,37 @@ class Socket {
 
   getEndpoints() {
     info('getEndpoints()')
-    return this.composeFromSpec('endpoints', Endpoint)
+    return this.composeFromSpec(Endpoint) as Endpoint[]
   }
 
-  getEndpoint(endpointName) {
+  getEndpoint(endpointName: string) {
     info('getEndpoints()')
     return _.find(this.getEndpoints(), {name: endpointName})
   }
 
   getEventHandlers() {
     info('getEventHandlers()')
-    return this.composeFromSpec('event_handlers', Handler)
+    return this.composeFromSpec(Handler) as Handler[]
   }
 
   getEvents() {
     info('getEvents()')
-    return this.composeFromSpec('events', Event)
+    return this.composeFromSpec(Event) as Event[]
   }
 
-  getEndpointTrace(endpointName, traceId) {
+  getEndpointTrace(endpointName: string, traceId: string | undefined) {
     info('getEndpointTrace()', endpointName)
     return session.connection.trace.get(this.name, endpointName, traceId)
   }
 
-  async getEndpointTraces(endpointName, lastId: number) {
+  async getEndpointTraces(endpointName: string, lastId: number) {
     info('getEndpointTraces()', endpointName, lastId)
     try {
       const traces = await session.connection.trace.list(this.name, endpointName)
       if (!lastId) {
         return traces
       }
-      const filteredTraces = []
+      const filteredTraces: Trace[] = []
       traces.objects.forEach(trace => {
         if (trace.id > lastId) {
           filteredTraces.push(trace)
@@ -500,7 +528,7 @@ class Socket {
     } catch (err) {}
   }
 
-  getTraces(lastId) {
+  getTraces(lastId: any) {
     info('getTraces()')
     const url = [
       `https://${session.getHost()}/v2/instances/${session.project.instance}/channels/eventlog/poll/`,
@@ -546,7 +574,7 @@ class Socket {
 
   getAllFiles() {
     // Ignore patterns from .syncanoignore file
-    let ignore = []
+    let ignore: string[] | never[] = []
     try {
       ignore = fs.readFileSync(`${this.getCompiledScriptsFolder()}/.syncanoignore`, 'utf8').split('\n')
     } catch (err) {}
@@ -666,7 +694,7 @@ class Socket {
     })
   }
 
-  async updateEnvCall(method) {
+  async updateEnvCall(method: string) {
     info('updateEnvCall()')
     if (await this.isEmptyEnv()) {
       return
@@ -693,7 +721,7 @@ class Socket {
         },
         path: endpointPath
 
-      }, (err, res) => {
+      }, (err: any, res: { statusCode: number; on: (arg0: string, arg1: (data: any) => void) => void; }) => {
         debug('end env upload')
 
         if (err || res.statusCode === 404) {
@@ -710,7 +738,7 @@ class Socket {
           return reject(new Error('environment is to big'))
         }
 
-        res.on('data', data => {
+        res.on('data', (data: { toString: () => void; }) => {
           const message = data.toString()
 
           if (res.statusCode > 299) {
@@ -737,7 +765,7 @@ class Socket {
     return 'No need to update'
   }
 
-  async updateSocketZip({config, install = false}): Promise<UpdateSocketZipReponse> {
+  async updateSocketZip({config = {}, install = false}): Promise<UpdateSocketZipReponse> {
     info('updateSocketZip()')
     let endpointPath = `/v2/instances/${session.project.instance}/sockets/`
     // const zipChecksum = await md5File(this.getSocketZip())
@@ -797,12 +825,12 @@ class Socket {
         },
         path: endpointPath
 
-      }, (err, res) => {
+      }, (err: any, res: { on: { (arg0: string, arg1: (data: any) => void): void; (arg0: string, arg1: () => void): void; }; statusCode: number; }) => {
         debug('end upload')
         let responseData = ''
         let responseCode: number
 
-        res.on('data', data => {
+        res.on('data', (data: { toString: () => string; }) => {
           responseData += data.toString()
           responseCode = res.statusCode
         })
@@ -885,12 +913,12 @@ class Socket {
     })
   }
 
-  isConfigSynced(config) {
+  isConfigSynced(config: any) {
     info('isConfigSynced()')
     return _.isEqual(config, this.remote.config)
   }
 
-  updateConfig(config) {
+  updateConfig(config: unknown) {
     info('updateConfig()')
     debug('updateConfig()', config)
     if (this.isConfigSynced(config)) {
@@ -906,7 +934,7 @@ class Socket {
     })
   }
 
-  async update(params = {config: null, updateSocketNPMDeps: false, updateEnv: false}) {
+  async update(params = {config: {}, updateSocketNPMDeps: false, updateEnv: false}) {
     info('update()', this.name)
     debug('update', params)
     const config = {...this.remote.config, ...params.config}
@@ -995,7 +1023,7 @@ class Socket {
   //   this.echo(4)(`Hosting ${hostingName} of ${this.name} has been deleted from config...`)
   // }
 
-  getScriptObject(fileFullPath) {
+  getScriptObject(fileFullPath: { replace: (arg0: string, arg1: string) => void; }) {
     const srcFile = fileFullPath
     const compiledFile = fileFullPath.replace(this.getSrcFolder(), this.getCompiledScriptsFolder())
     return {
@@ -1004,14 +1032,14 @@ class Socket {
     }
   }
 
-  getFileForEndpoint(endpointName) {
+  getFileForEndpoint(endpointName: string) {
     if (endpointName.startsWith('events')) {
       return this.spec.event_handlers[endpointName].file
     }
     return this.spec.endpoints[endpointName].file
   }
 
-  getSourceMapPath(endpointName) {
+  getSourceMapPath(endpointName: string) {
     const filePath = this.getFileForEndpoint(endpointName)
     const {base, dir} = path.parse(filePath)
     return path.join(
@@ -1022,7 +1050,7 @@ class Socket {
     )
   }
 
-  async getOrigFileLine(traceData, endpointName: string) {
+  async getOrigFileLine(traceData: { lineNumber: number; columnNumber: number; }, endpointName: string) {
     const smc = await new SourceMap.SourceMapConsumer(
       fs.readFileSync(this.getSourceMapPath(endpointName), {encoding: 'utf-8'})
     )
@@ -1032,22 +1060,25 @@ class Socket {
     })
   }
 
-  async getPrettyTrace(traceData, endpointName: string) {
+  async getPrettyTrace(traceData: any, endpointName: string) {
     const origFileLine = await this.getOrigFileLine(traceData, endpointName)
     const origFilePath = await utils.getOrigFilePath(origFileLine)
 
-    return {
-      origFilePath,
-      lineNumber: origFileLine.line,
-      columnNumber: origFileLine.column,
-      lines: [
-        fs.readFileSync(
-          // origFilePath,
-          path.join(this.socketPath, '../', origFilePath),
-          {encoding: 'utf-8'}).split('\n')[origFileLine.line - 1],
-        p(origFileLine.column)('^')
-      ]
+    if (origFilePath && origFileLine.column && origFileLine.line) {
+      return {
+        origFilePath,
+        lineNumber: origFileLine.line,
+        columnNumber: origFileLine.column,
+        lines: [
+          fs.readFileSync(
+            // origFilePath,
+            path.join(this.socketPath, '../', origFilePath),
+            {encoding: 'utf-8'}).split('\n')[origFileLine.line - 1],
+          p(origFileLine.column)('^')
+        ]
+      }
     }
+    throw new Error('No pretty trace!')
   }
 
   // Config
@@ -1055,7 +1086,7 @@ class Socket {
     return this.spec.config
   }
 
-  getConfigOptionFromEnv(optionName) {
+  getConfigOptionFromEnv(optionName: string) {
     const socketVarName = this.name.replace('-', '_').toUpperCase()
     const optionVarName = optionName.replace('-', '_').toUpperCase()
     return process.env[`${socketVarName}__${optionVarName}`] ||
@@ -1066,7 +1097,7 @@ class Socket {
     // If there is not options in spec it is always no options to ask
     if (this.spec && !this.spec.config) { return {} }
 
-    const options = {}
+    const options: Record<string, string> = {}
 
     if (this.existLocally) {
       Object.keys(this.spec.config).forEach(optionName => {

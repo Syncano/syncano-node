@@ -13,11 +13,6 @@ const {debug} = logger('cmd-trace')
 export default class SocketTrace extends Command {
   static description = 'Trace Socket calls'
   static flags = {}
-  static args = [{
-    name: 'instanceName',
-    required: true,
-    description: 'name of the instance',
-  }]
 
   static getFirstTrace(errorMsg: string) {
     const err = new Error(errorMsg)

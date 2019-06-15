@@ -3,7 +3,7 @@
     "declaration": true,
     "importHelpers": true,
     "composite": true,
-    "strict": false,
+    "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,

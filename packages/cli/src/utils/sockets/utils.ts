@@ -7,6 +7,7 @@ import walkdir from 'walkdir'
 import logger from '../debug'
 import session from '../session'
 import {builtInSocketTemplates, getTemplateSpec, installedSocketTemplates} from '../templates'
+import SourceMap from 'source-map'
 
 const {debug} = logger('utils-sockets-utils')
 
@@ -26,12 +27,16 @@ const socketTemplates = () => {
 const getTemplatesChoices = () => socketTemplates().map(socketTemplate =>
   `${socketTemplate.description} - ${format.grey(`(${socketTemplate.name})`)}`)
 
-const searchForSockets = (socketsPath: string, maxDepth = 3) => {
+type SocketLocalConfig = {
+  name: string
+}
+
+const searchForSockets = (socketsPath: string, maxDepth = 3): Record<string, SocketLocalConfig> => {
   if (!fs.existsSync(socketsPath)) {
-    return []
+    return {}
   }
 
-  const sockets: any = []
+  const sockets: Record<string, SocketLocalConfig> = {}
 
   const options = {
     follow_symlinks: true,
@@ -39,10 +44,10 @@ const searchForSockets = (socketsPath: string, maxDepth = 3) => {
   }
 
   // TODO: optimize only diging deeper scoped modues
-  walkdir.sync(socketsPath, options, (walkPath: string, stat: any) => {
+  walkdir.sync(socketsPath, options, (walkPath) => {
     if (walkPath.match(/socket.yml$/) && !path.dirname(walkPath).match(/\/\./)) {
-      const socket = YAML.load(fs.readFileSync(walkPath, 'utf8')) || {}
-      sockets.push([walkPath, socket])
+      const socketYML = YAML.load(fs.readFileSync(walkPath, 'utf8')) || {}
+      sockets[walkPath] = <SocketLocalConfig>socketYML
     }
   })
 
@@ -68,16 +73,16 @@ const findLocalPath = (socketName: string) => {
 
   // Search for syncano folder
   const socketsPath = path.join(session.projectPath, 'syncano')
-  searchForSockets(socketsPath).forEach(([file, socket]) => {
+  Object.entries(searchForSockets(socketsPath)).forEach(([walkPath, socket]) => {
 
     if (socket.name === socketName) {
-      socketPath = path.dirname(file)
+      socketPath = path.dirname(walkPath)
     }
   })
 
   if (!socketPath) {
     const nodeModPath = path.join(session.projectPath, 'node_modules')
-    searchForSockets(nodeModPath).forEach(([file, socket]) => {
+    Object.entries(searchForSockets(nodeModPath)).forEach(([file, socket]) => {
       if (socket.name === socketName) {
         socketPath = path.dirname(file)
       }
@@ -104,7 +109,7 @@ const findLocalPath = (socketName: string) => {
 //   return localSockets.concat(singleSocket, nodeModSockets)
 // }
 
-const listLocal = async () => {
+const listLocal = async (): Promise<string[]> => {
   debug('listLocal', session.projectPath)
 
   const singleSocketPath = path.join(session.projectPath)
@@ -112,21 +117,27 @@ const listLocal = async () => {
   const nodeModPath = path.join(session.projectPath, 'node_modules')
 
   const [singleSocket, localSockets, nodeModSockets] = await Promise.all([
-    searchForSockets(singleSocketPath, 1).map(([file, socket]) => socket.name),
-    searchForSockets(localPath).map(([file, socket]) => socket.name),
-    searchForSockets(nodeModPath).map(([file, socket]) => socket.name),
+    Object.entries(searchForSockets(singleSocketPath, 1)).map(([, socket]) => socket.name),
+    Object.entries(searchForSockets(localPath)).map(([, socket]) => socket.name),
+    Object.entries(searchForSockets(nodeModPath)).map(([, socket]) => socket.name),
   ])
 
   return localSockets.concat(singleSocket, nodeModSockets)
 }
 
-const getOrigFilePath = origFileLine => {
-  let origFilePath = origFileLine.source.match(/webpack:\/\/\/(.*\.js)(\?|$)/)[1]
+const getOrigFilePath = (origFileLine: SourceMap.NullableMappedPosition) => {
+  let origFilePath
+  if (origFileLine && origFileLine.source) {
+      const match = origFileLine.source.match(/webpack:\/\/\/(.*\.js)(\?|$)/)
+    if (match && match.length > 1) {
+      origFilePath = match[1]
+    }
 
-  if (origFilePath.match(/~\//)) {
-    origFilePath = origFilePath.replace('~', 'node_modules')
+    if (origFilePath && origFilePath.match(/~\//)) {
+      origFilePath = origFilePath.replace('~', 'node_modules')
+    }
+    return origFilePath
   }
-  return origFilePath
 }
 
 const deleteFolderRecursive = (folder: string) => {
