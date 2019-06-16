@@ -7,7 +7,7 @@ import md5 from 'md5'
 import path from 'path'
 import prettyBytes from 'pretty-bytes'
 
-import {HostingParams} from '../../types'
+import {HostingParams, HostingRecord} from '../../types'
 import logger from '../debug'
 import { echo, error } from '../print-tools'
 import session from '../session'
@@ -17,14 +17,14 @@ import {getFiles } from './utils'
 const {debug} = logger('utils-hosting')
 
 class HostingFile {
-  id: string
-  instanceName: string
-  path: string
-  checksum: string | number[]
-  size: number
-  localPath: string
-  isSynced: boolean
-  isUpToDate: boolean
+  id: string | null = null
+  instanceName: string | null = null
+  path: string | null = null
+  checksum: string | number[] | null = null
+  size: number | null = null
+  localPath: string | null = null
+  isSynced: boolean | null = null
+  isUpToDate: boolean | null = null
 
   loadRemote(fileRemoteData: any) {
     debug('loadRemote')
@@ -38,14 +38,58 @@ class HostingFile {
   loadLocal(fileLocalData: any) {
     debug('loadLocal')
     this.localPath = fileLocalData.localPath
-    this.path = fileLocalData.path
-    this.checksum = md5(fs.readFileSync(this.localPath))
-    this.size = fs.statSync(this.localPath).size
-    return this
+    if (this.localPath) {
+      this.path = fileLocalData.path
+      this.checksum = md5(fs.readFileSync(this.localPath))
+      this.size = fs.statSync(this.localPath).size
+      return this
+    }
+    throw new Error('Failed to load local hosting file!')
   }
 }
 
 class Hosting {
+  name: string
+  description?: string
+  path: string
+  existRemotely: boolean | null
+  existLocally: boolean | null
+  hostingURL: string
+  editHostingURL: string
+  hostingHost: string
+  config: any
+  remote: any
+  src: string | null = null
+  cname: string | null = null
+  browser_router: string | null = null
+  domains: string[] | null = null
+  auth: any
+  url: string | null = null
+  error: string | null = null
+  isUpToDate: boolean | null = null
+
+  constructor(hostingName: string) {
+    debug('Hosting.constructor', hostingName)
+
+    this.name = hostingName
+    this.path = null
+
+    this.existRemotely = null
+    this.existLocally = null
+
+    this.hostingURL = `/v2/instances/${session.project.instance}/hosting/`
+    this.editHostingURL = `https://${session.getHost()}${this.hostingURL}${this.name}/`
+    this.hostingHost = session.getHost() === 'api.syncano.rocks' ? 'syncano.ninja' : 'syncano.site'
+    this.config = {}
+
+    // Remote state
+    this.remote = {
+      domains: []
+    }
+
+    this.loadLocal()
+  }
+
   static async add(params: HostingParams): Promise<Hosting> {
     debug('Adding hosting')
     const configParams = {
@@ -84,14 +128,14 @@ class Hosting {
     return new Hosting(params.name)
   }
 
-  static get(hostingName) {
+  static get(hostingName: string) {
     debug(`get ${hostingName}`)
     const hosting = new Hosting(hostingName)
     return hosting.loadRemote()
   }
 
   static listFromProject() {
-    return session.settings.project.listHosting()
+    return session.settings.project.listHosting() as HostingRecord[] || []
   }
 
   // list all hostings (mix of locally definde and installed on server)
@@ -105,7 +149,7 @@ class Hosting {
   static getDirectories() {
     const excluded = ['node_modules', 'src', 'syncano']
 
-    function notExcluded(dirname) {
+    function notExcluded(dirname: string) {
       if (dirname.startsWith('.')) {
         return
       }
@@ -123,45 +167,7 @@ class Hosting {
       return dirs.find(notExcluded)
     })
   }
-  name: string
-  path: string
-  existRemotely: boolean | null
-  existLocally: boolean | null
-  hostingURL: string
-  editHostingURL: string
-  hostingHost: string
-  config: any
-  remote: any
-  src: string
-  cname: string
-  browser_router: string
-  domains: string[]
-  auth: any
-  url: string
-  error: string
-  isUpToDate: boolean
 
-  constructor(hostingName: string) {
-    debug('Hosting.constructor', hostingName)
-
-    this.name = hostingName
-    this.path = null
-
-    this.existRemotely = null
-    this.existLocally = null
-
-    this.hostingURL = `/v2/instances/${session.project.instance}/hosting/`
-    this.editHostingURL = `https://${session.getHost()}${this.hostingURL}${this.name}/`
-    this.hostingHost = session.getHost() === 'api.syncano.rocks' ? 'syncano.ninja' : 'syncano.site'
-    this.config = {}
-
-    // Remote state
-    this.remote = {
-      domains: []
-    }
-
-    this.loadLocal()
-  }
 
   hasCNAME(cname: string) {
     return this.remote.domains.indexOf(cname) > -1
@@ -181,7 +187,7 @@ class Hosting {
     session.settings.project.updateHosting(this.name, params)
   }
 
-  async configure(params) {
+  async configure(params: HostingParams) {
     const domains = this.remote.domains
     if (params.cname && domains.indexOf(params.cname) < 0) {
       domains.push(params.cname)
@@ -195,7 +201,7 @@ class Hosting {
       }
     }
 
-    this.cname = params.cname
+    this.cname = params.cname || null
     this.domains = domains
     this.config.browser_router = params.browser_router
     this.updateHosting()
@@ -220,7 +226,7 @@ class Hosting {
   async deploy() {
     debug('deploy')
 
-    if (!this.existRemotely) {
+    if (!this.existRemotely && this.src) {
       debug('adding hosting')
       return Hosting.add({
         name: this.name,
@@ -261,7 +267,7 @@ class Hosting {
     return this
   }
 
-  async setRemoteState(hosting) {
+  async setRemoteState(hosting: Hosting) {
     debug('setRemoteState', hosting.name)
     if (hosting && typeof hosting === 'object') {
       this.existRemotely = true
@@ -294,13 +300,13 @@ class Hosting {
     debug('loadLocal()')
     const localHostingSettings = session.settings.project.getHosting(this.name)
 
-    if (localHostingSettings) {
+    if (localHostingSettings && session.getProjectPath() && this.src) {
       if (Object.keys(localHostingSettings).length > 0) {
         this.existLocally = true
         this.src = localHostingSettings.src
         this.cname = localHostingSettings.cname
         this.auth = localHostingSettings.auth
-        this.path = path.join(session.projectPath, this.src, path.sep)
+        this.path = path.join(session.getProjectPath(), this.src, path.sep)
         this.url = this.getURL()
 
         this.config = localHostingSettings.config || {}
@@ -312,11 +318,11 @@ class Hosting {
     return `https://${this.name}--${session.project.instance}.${session.location}.${this.hostingHost}`
   }
 
-  encodePath(pathToEncode) {
+  encodePath(pathToEncode: string) {
     return pathToEncode.split(path.sep).map(part => encodeURI(part)).join(path.sep)
   }
 
-  decodePath(pathToEncode) {
+  decodePath(pathToEncode: string) {
     return pathToEncode.split('/').map(part => decodeURI(part)).join('/')
   }
 
@@ -485,7 +491,7 @@ class Hosting {
     const remoteFiles = await this.listRemoteFiles()
     const listLocalFiles = await this.listLocalFiles()
 
-    const files = []
+    const files: HostingFile[] = []
     listLocalFiles.forEach(file => {
       const remoteCopy = _.find(remoteFiles, {path: file.path}) as any
 

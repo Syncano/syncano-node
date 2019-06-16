@@ -23,7 +23,7 @@ import {CompatibilityError, CompileError, SocketUpdateError} from '../errors'
 import {p} from '../print-tools'
 import session from '../session'
 import {getTemplate} from '../templates'
-import {Trace, Socket as RemoteSocket} from "@syncano/core/types"
+import {Trace, Socket as RemoteSocket} from "@syncano/core"
 
 import utils from './utils'
 
@@ -100,88 +100,6 @@ class Event extends MetadataObject {
 }
 
 class Socket {
-  static async getEndpointTraceByUrl(url: string) {
-    const resp = await axios.request({
-      url: `https://${session.getHost()}${url}`,
-      method: 'GET',
-      headers: {
-        'X-Api-Key': session.settings.account.getAuthKey()
-      }
-    })
-    return resp.data
-  }
-
-  static getTemplatesChoices() {
-    return utils.getTemplatesChoices()
-  }
-
-  static uninstall(socket: Socket) {
-    debug('uninstall', socket.name)
-
-    if (socket.existLocally && socket.localPath) {
-      Socket.uninstallLocal(socket)
-      if (socket.existRemotely) {
-        this.uninstallRemote(socket.name)
-      }
-      return Promise.resolve()
-    }
-
-    if (socket.existRemotely) {
-      return this.uninstallRemote(socket.name)
-    }
-
-    return Promise.reject(new Error('Socket with given doesn\'t exist!'))
-  }
-
-  static uninstallLocal(socket: Socket) {
-    utils.deleteFolderRecursive(socket.localPath)
-  }
-
-  // TODO: check if the socket is installed (it may be not yet installed yet (before sync))
-  static async uninstallRemote(socketName: string) {
-    debug('uninstallRemote', socketName)
-    return session.connection.socket.delete(socketName)
-  }
-
-  // list sockets based on call to Syncano (sockets are installed on Synano)
-  static listRemote() {
-    debug('listRemote()')
-    return session.connection.socket.list()
-  }
-
-  // list all sockets (mix of locally definde and installed on server)
-  static async list(): Promise<Socket[]> {
-    debug('list()')
-    // Local Socket defined in folders and in project deps
-    const localSocketsList = await utils.listLocal()
-
-    return Promise.all(localSocketsList.map((socketName: string) => Socket.get(socketName)))
-  }
-
-  // Creating Socket simple object
-  static getLocal(socketName: string): Socket {
-    info('getLocal()', socketName)
-    return new Socket(socketName)
-  }
-
-  static async get(socketName: string): Promise<Socket> {
-    info('get()', socketName)
-    const socket = Socket.getLocal(socketName)
-    await socket.loadRemote()
-    return socket
-  }
-
-  static async create(socketName: string, templateName: string) {
-    debug('create socket', socketName, templateName)
-    const newSocketPath = path.join(session.projectPath, 'syncano', socketName)
-    const socket = new Socket(socketName, newSocketPath)
-    if (socket.existLocally) {
-      throw new Error('Socket with given name already exist!')
-    }
-    await socket.init(templateName)
-    return socket
-  }
-
   name: string
   metadata: any
   settings: any
@@ -227,6 +145,88 @@ class Socket {
     }
 
     this.loadLocal()
+  }
+
+  static async getEndpointTraceByUrl(url: string) {
+    const resp = await axios.request({
+      url: `https://${session.getHost()}${url}`,
+      method: 'GET',
+      headers: {
+        'X-Api-Key': session.settings.account.getAuthKey()
+      }
+    })
+    return resp.data
+  }
+
+  static getTemplatesChoices() {
+    return utils.getTemplatesChoices()
+  }
+
+  static uninstall(socket: Socket) {
+    debug('uninstall', socket.name)
+
+    if (socket.existLocally && socket.localPath) {
+      Socket.uninstallLocal(socket)
+      if (socket.existRemotely) {
+        this.uninstallRemote(socket.name)
+      }
+      return Promise.resolve()
+    }
+
+    if (socket.existRemotely) {
+      return this.uninstallRemote(socket.name)
+    }
+
+    return Promise.reject(new Error('Socket with given doesn\'t exist!'))
+  }
+
+  static uninstallLocal(socket: Socket) {
+    utils.deleteFolderRecursive(socket.localPath)
+  }
+
+  // TODO: check if the socket is installed (it may be not yet installed yet (before sync))
+  static async uninstallRemote(socketName: string) {
+    debug('uninstallRemote', socketName)
+    return session.getConnection().socket.delete(socketName)
+  }
+
+  // list sockets based on call to Syncano (sockets are installed on Synano)
+  static listRemote() {
+    debug('listRemote()')
+    return session.getConnection().socket.list()
+  }
+
+  // list all sockets (mix of locally definde and installed on server)
+  static async list(): Promise<Socket[]> {
+    debug('list()')
+    // Local Socket defined in folders and in project deps
+    const localSocketsList = await utils.listLocal()
+
+    return Promise.all(localSocketsList.map((socketName: string) => Socket.get(socketName)))
+  }
+
+  // Creating Socket simple object
+  static getLocal(socketName: string): Socket {
+    info('getLocal()', socketName)
+    return new Socket(socketName)
+  }
+
+  static async get(socketName: string): Promise<Socket> {
+    info('get()', socketName)
+    const socket = Socket.getLocal(socketName)
+    await socket.loadRemote()
+    return socket
+  }
+
+  static async create(socketName: string, templateName: string) {
+    debug('create socket', socketName, templateName)
+    const newSocketPath = path.join(session.getProjectPath(), 'syncano', socketName)
+    const socket = new Socket(socketName, newSocketPath)
+    if (socket.existLocally) {
+      throw new Error('Socket with given name already exist!')
+    }
+    await socket.init(templateName)
+    return socket
   }
 
   isDependency() {
@@ -291,7 +291,7 @@ class Socket {
 
   async getRemote() {
     info('getRemote()', this.name)
-    return session.connection.socket.get(this.name)
+    return session.getConnection().socket.get(this.name)
   }
 
   async getRemoteSpec() {
@@ -455,7 +455,7 @@ class Socket {
   }
 
   getSocketConfigFile() {
-    return path.join(session.projectPath, this.name, 'socket.yml')
+    return path.join(session.getProjectPath(), this.name, 'socket.yml')
   }
 
   composeFromSpec(ObjectClass: typeof Event | typeof Handler | typeof Endpoint) {
@@ -508,13 +508,13 @@ class Socket {
 
   getEndpointTrace(endpointName: string, traceId: string | undefined) {
     info('getEndpointTrace()', endpointName)
-    return session.connection.trace.get(this.name, endpointName, traceId)
+    return session.getConnection().trace.get(this.name, endpointName, traceId)
   }
 
   async getEndpointTraces(endpointName: string, lastId: number) {
     info('getEndpointTraces()', endpointName, lastId)
     try {
-      const traces = await session.connection.trace.list(this.name, endpointName)
+      const traces = await session.getConnection().trace.list(this.name, endpointName)
       if (!lastId) {
         return traces
       }
@@ -531,7 +531,7 @@ class Socket {
   getTraces(lastId: any) {
     info('getTraces()')
     const url = [
-      `https://${session.getHost()}/v2/instances/${session.project.instance}/channels/eventlog/poll/`,
+      `https://${session.getHost()}/v2/instances/${session.getProjectInstance()}/channels/eventlog/poll/`,
       '?transport=websocket',
       `&api_key=${session.settings.account.getAuthKey()}`,
       `&room=${`socket:${this.name}`}`
@@ -703,9 +703,9 @@ class Socket {
     return new Promise(async (resolve, reject) => {
       const form = new FormData()
 
-      let endpointPath = `/v2/instances/${session.project.instance}/environments/`
+      let endpointPath = `/v2/instances/${session.getProjectInstance()}/environments/`
       if (method === 'PATCH') {
-        endpointPath = `/v2/instances/${session.project.instance}/environments/${this.name}/`
+        endpointPath = `/v2/instances/${session.getProjectInstance()}/environments/${this.name}/`
       }
 
       debug('endpointPath', endpointPath)
@@ -721,7 +721,7 @@ class Socket {
         },
         path: endpointPath
 
-      }, (err: any, res: { statusCode: number; on: (arg0: string, arg1: (data: any) => void) => void; }) => {
+      }, (err, res) => {
         debug('end env upload')
 
         if (err || res.statusCode === 404) {
@@ -741,7 +741,7 @@ class Socket {
         res.on('data', (data: { toString: () => void; }) => {
           const message = data.toString()
 
-          if (res.statusCode > 299) {
+          if (res.statusCode && res.statusCode > 299) {
             debug(`error while updating environment (${res.statusCode})`)
             return reject(message)
           }
@@ -767,7 +767,7 @@ class Socket {
 
   async updateSocketZip({config = {}, install = false}): Promise<UpdateSocketZipReponse> {
     info('updateSocketZip()')
-    let endpointPath = `/v2/instances/${session.project.instance}/sockets/`
+    let endpointPath = `/v2/instances/${session.getProjectInstance()}/sockets/`
     // const zipChecksum = await md5File(this.getSocketZip())
 
     if (!install) {
@@ -825,10 +825,10 @@ class Socket {
         },
         path: endpointPath
 
-      }, (err: any, res: { on: { (arg0: string, arg1: (data: any) => void): void; (arg0: string, arg1: () => void): void; }; statusCode: number; }) => {
+      }, (err, res) => {
         debug('end upload')
         let responseData = ''
-        let responseCode: number
+        let responseCode: number | undefined
 
         res.on('data', (data: { toString: () => string; }) => {
           responseData += data.toString()
@@ -837,14 +837,16 @@ class Socket {
 
         res.on('end', () => {
           const responseDataObj = JSON.parse(responseData)
-          if (err || responseCode === 404) {
-            debug(`socket ${this.name} was not found`)
-            return reject(err || res)
-          }
+          if (responseCode) {
+            if (err || responseCode === 404) {
+              debug(`socket ${this.name} was not found`)
+              return reject(err || res)
+            }
 
-          if (responseCode > 299) {
-            debug(`error while updating socket (${res.statusCode})`)
-            return reject()
+            if (responseCode > 299) {
+              debug(`error while updating socket (${res.statusCode})`)
+              return reject()
+            }
           }
 
           debug(`socket ${this.name} was found`)
@@ -925,7 +927,7 @@ class Socket {
       return Promise.resolve()
     }
     return axios.request({
-      url: `https://${session.getHost()}/v2/instances/${session.project.instance}/sockets/${this.name}/`,
+      url: `https://${session.getHost()}/v2/instances/${session.getProjectInstance()}/sockets/${this.name}/`,
       method: 'PATCH',
       data: {config},
       headers: {
@@ -1117,7 +1119,7 @@ class Socket {
     info('socketEnvShouldBeUpdated()')
     try {
       const resp = await axios.request({
-        url: `https://${session.getHost()}/v2/instances/${session.project.instance}/environments/${this.name}/`,
+        url: `https://${session.getHost()}/v2/instances/${session.getProjectInstance()}/environments/${this.name}/`,
         method: 'GET',
         timeout: 50000,
         headers: {

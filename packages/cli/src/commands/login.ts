@@ -1,13 +1,23 @@
 import {flags} from '@oclif/command'
 import format from 'chalk'
-import inquirer from 'inquirer'
+import {prompt, Question} from 'inquirer'
 import validator from 'validator'
+import { AccountOwner } from '@syncano/core';
+import { LoginData} from '@syncano/core/types';
 
 import Command from '../base_command'
 import {track} from '../utils/analytics'
 import logger from '../utils/debug'
 
+
 const {debug} = logger('cmd-login')
+
+type LoginType = 'signup'
+
+type EmailAndPassword = {
+  email: string;
+  password: string;
+}
 
 export default class Login extends Command {
   static description = 'Login to your account'
@@ -22,20 +32,20 @@ export default class Login extends Command {
     }),
   }
 
-  loginQuestion = () => ({
+  loginQuestion = (): Question => ({
     name: 'email',
     message: this.p(8)('Your e-mail'),
-    validate: value => validator.isEmail(value) || 'E-mail is required!'
+    validate: (value: string) => validator.isEmail(value) || 'E-mail is required!'
   })
 
-  passwordQuestion = () => ({
+  passwordQuestion = (): Question => ({
     name: 'password',
     message: this.p(8)('Password'),
     type: 'password',
-    validate: value => validator.isLength(value, {min: 5}) || 'Password must contain at least 5 characters.'
+    validate: (value: string) => validator.isLength(value, {min: 5}) || 'Password must contain at least 5 characters.'
   })
 
-  displayWelcomeMessage(user) {
+  displayWelcomeMessage(user: AccountOwner) {
     this.echo()
     this.echo(4)(`Welcome back ${format.cyan(user.email)}. You're already logged in!`)
     this.echo()
@@ -57,14 +67,14 @@ export default class Login extends Command {
   async promptCreation() {
     debug('Login.promptCreation()')
 
-    const confirmQuestion = [{
+    const confirmQuestion: Question[] = [{
       type: 'confirm',
       name: 'confirm',
       message: this.p(8)('This email doesn\'t exists. Do you want to create new account?'),
       default: false
     }]
 
-    const {confirm = false} = await inquirer.prompt(confirmQuestion) || {}
+    const {confirm = false} = await prompt(confirmQuestion) || {}
     if (confirm === false) return this.exit(1)
   }
 
@@ -76,14 +86,14 @@ export default class Login extends Command {
       await this.displayWelcomeMessage(user)
     } catch (err) {
       if (flags && flags.email && flags.password) {
-        await this.loginOrRegister(flags)
+        await this.loginOrRegister(flags as EmailAndPassword)
       } else {
         await this.promptLogin()
       }
     }
   }
 
-  async loginCallback(resp, loginType?) {
+  async loginCallback(resp: LoginData, loginType?: LoginType) {
     this.session.settings.account.set('auth_key', resp.account_key)
     await this.session.load()
 
@@ -98,11 +108,11 @@ export default class Login extends Command {
     this.exit(0)
   }
 
-  async register({email, password}) {
+  async register({email, password}: EmailAndPassword) {
     try {
       const account = await this.session.getAnonymousConnection().account.register({email, password})
       this.displayNewAccountMessage()
-      return this.loginCallback(account, 'signup')
+      return this.loginCallback(account, 'signup' as LoginType)
     } catch (err) {
       this.echo()
       this.error(this.p(4)(err.message))
@@ -111,10 +121,10 @@ export default class Login extends Command {
     }
   }
 
-  async loginOrRegister({email, password}) {
+  async loginOrRegister({email, password}: EmailAndPassword) {
     debug('Registering/Logging in', email)
     try {
-      const account = await this.session.connection.account.login({email, password})
+      const account = await this.session.getConnection().account.login({email, password})
       return this.loginCallback(account)
     } catch (err) {
       if (err.message === 'Invalid email.') {
@@ -133,7 +143,7 @@ export default class Login extends Command {
     debug('promptLogin')
     this.displayLoginMessage()
 
-    const responses = await inquirer.prompt([this.loginQuestion(), this.passwordQuestion()]) as any
+    const responses = await prompt([this.loginQuestion(), this.passwordQuestion()]) as any
     await this.loginOrRegister(responses)
   }
 }

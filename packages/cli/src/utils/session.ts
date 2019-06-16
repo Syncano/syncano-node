@@ -5,7 +5,6 @@ import path from 'path'
 
 import getSettings from '../settings'
 import {Location, SyncanoProject} from '../types'
-
 import logger from './debug'
 import Hosting from './hosting'
 import Init from './init'
@@ -26,23 +25,18 @@ export class Session {
     return process.cwd()
   }
   CLIVersion: string
-  settings: any
-  projectPath: string
-  project: SyncanoProject
-  userId: number
-  userEmail: string
-  userFirstName: string
-  userLastName: string
+  settings: ProjectSettings | null = null
+  projectPath: string | null = null
+  project: SyncanoProject | null = null
+  userId: number | null = null
+  userEmail: string | null = null
+  userFirstName: string | null = null
+  userLastName: string | null = null
   majorVersion: string
-  location: Location
-  connection: Syncano
+  location: Location = 'us1'
+  connection: Syncano | null = null
 
   constructor() {
-    this.settings = null
-    this.projectPath = null
-    this.project = null
-    this.userId = null
-
     // TODO: fix this
     // const pjson = require('../../package.json')
     const pjson = {
@@ -51,18 +45,22 @@ export class Session {
     this.CLIVersion = pjson.version
     this.majorVersion = pjson.version.split('.')[0]
 
-    this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION as Location || 'us1' as Location  // default location
+    this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION as Location || this.location
   }
 
   getHost() {
     return process.env.SYNCANO_HOST || LOCATIONS[this.location]
   }
 
-  async setLocation(location) {
+  async setLocation(location: Location) {
     if (this.location !== location) {
       this.location = location
       await this.createConnection()
     }
+  }
+
+  getUserEmail() {
+    return this.userEmail
   }
 
   getLocation() {
@@ -74,15 +72,18 @@ export class Session {
   }
 
   getSpaceHost() {
-    if (this.getHost() === 'api.syncano.rocks') {
-      return `${this.project.instance}.syncano.link`
-    }
-    if (this.project && this.project.instance) {
-      if (this.location === 'us1') {
-        return `${this.project.instance}.syncano.space`
+    if (this.project) {
+      if (this.getHost() === 'api.syncano.rocks') {
+        return `${this.project.instance}.syncano.link`
       }
-      return `${this.project.instance}.${this.location}.syncano.space`
+      if (this.project && this.project.instance) {
+        if (this.location === 'us1') {
+          return `${this.project.instance}.syncano.space`
+        }
+        return `${this.project.instance}.${this.location}.syncano.space`
+      }
     }
+    throw new Error('Project is not initiated or there is no project!')
   }
 
   getInitInstance() {
@@ -99,15 +100,13 @@ export class Session {
 
   getDistPath() {
     let distPath = '.dist'
-    if (this.projectPath) {
-      distPath = path.join(this.projectPath, '.dist')
-    }
+    distPath = path.join(this.getProjectPath(), '.dist')
     mkdirp.sync(distPath)
     return distPath
   }
 
   getBuildPath() {
-    const buildPath = path.join(this.projectPath, '.build')
+    const buildPath = path.join(this.getProjectPath(), '.build')
     mkdirp.sync(buildPath)
     return buildPath
   }
@@ -118,6 +117,23 @@ export class Session {
         api_host: this.getHost()
       }
     })
+  }
+
+  getConnection() {
+    if (this.connection) return this.connection
+    throw Error('Session is not connected!')
+  }
+
+  getProjectPath() {
+    if (this.projectPath) return this.projectPath
+    throw Error('Project path is unknown!')
+  }
+
+  getProjectInstance() {
+    if (this.project && this.project.instance) {
+      return this.project.instance
+    }
+    throw Error('Unknown projewct instance!')
   }
 
   async createConnection() {
@@ -146,7 +162,7 @@ export class Session {
 
     try {
       debug('get user details')
-      const details = await this.connection.account.get(this.settings.account.getAuthKey())
+      const details = await this.getConnection().account.get(this.settings.account.getAuthKey())
       this.userId = details.id
       this.userEmail = details.email
       this.userFirstName = details.first_name
@@ -157,24 +173,27 @@ export class Session {
   }
 
   async deleteInstance(name: string) {
-    return this.connection.instance.delete(name)
+    return this.getConnection().instance.delete(name)
   }
 
   async createInstance(name = genUniqueName()) {
-    return this.connection.instance.create({name})
+    return this.getConnection().instance.create({name})
   }
 
   async getInstance(instanceName: string) {
     const instanceNameToGet = instanceName || (this.project && this.project.instance)
-    return this.connection.instance.get(instanceNameToGet)
+    if (instanceNameToGet) {
+      return this.getConnection().instance.get(instanceNameToGet)
+    }
+    throw Error('Can\'t get instance!')
   }
 
   async getInstances() {
-    return this.connection.instance.list()
+    return this.getConnection().instance.list()
   }
 
   async checkAuth() {
-    const userDetails = await this.connection.account.get(this.settings.account.getAuthKey())
+    const userDetails = await this.getConnection().account.get(this.settings.account.getAuthKey())
     if (userDetails) {
       return userDetails
     } else {
@@ -226,7 +245,7 @@ export class Session {
     }
   }
 
-  async checkConnection(instanceName?: string) {
+  async checkConnection(instanceName: string) {
     let instance
 
     try {
@@ -235,7 +254,7 @@ export class Session {
       debug(err.message)
       if (err.message === 'Not found.') {
         echo()
-        echo(4)(`Instance ${format.cyan(instanceName || this.project.instance)} was not found on your account!`)
+        echo(4)(`Instance ${format.cyan(instanceName)} was not found on your account!`)
         echo()
 
         if (instanceName) return false
@@ -296,7 +315,7 @@ export class Session {
   }
 
   async deployProject() { // eslint-disable-line class-methods-use-this
-    const hostings = await Hosting.list() as any
+    const hostings = await Hosting.list()
     return Promise.all(hostings.map(hosting => hosting.deploy()))
   }
 }

@@ -15,6 +15,9 @@ import {
 const {debug} = logger('utils-init')
 
 class Init {
+  templateName: string | null = null
+  locationName: string | null = null
+
   static projectTemplates() {
     const allTemplates = builtInProjectTemplates.concat(installedProjectTemplates())
     const installedTemplates = allTemplates.map(templateName => {
@@ -37,31 +40,32 @@ class Init {
       `us1 ${format.grey('- (US Virginia)')}`
     ]
   }
-  templateName: string
-  locationName: string
 
   async createFilesAndFolders(pathToCopyTo = process.cwd()) {
     debug('createFilesAndFolders()')
 
-    try {
-      debug('Template name:', this.templateName)
-      debug('Loction name:', this.locationName)
-      debug('Path to copy to:', pathToCopyTo)
-      await fs.copy(getTemplate(this.templateName), pathToCopyTo)
-      echo(4)(format.dim(`Project has been created from ${format.green(this.templateName)} template.`))
-      echo()
-    } catch (err) {
-      echo(err)
-      throw err
+    if (this.templateName) {
+      try {
+        debug('Template name:', this.templateName)
+        debug('Loction name:', this.locationName)
+        debug('Path to copy to:', pathToCopyTo)
+        await fs.copy(getTemplate(this.templateName), pathToCopyTo)
+        echo(4)(format.dim(`Project has been created from ${format.green(this.templateName)} template.`))
+        echo()
+      } catch (err) {
+        echo(err)
+        throw err
+      }
     }
+    throw Error('No tamplate name!')
   }
 
   checkConfigFiles() {
-    return !fs.existsSync(session.projectPath)
+    return !fs.existsSync(session.getProjectPath())
   }
 
   checkIfInitiated() {
-    return fs.existsSync(session.projectPath) && session.project
+    return fs.existsSync(session.getProjectPath()) && session.project
   }
 
   async addConfigFiles(projectParams = {}, projectPath?: string) {

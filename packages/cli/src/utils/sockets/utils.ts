@@ -57,7 +57,7 @@ const searchForSockets = (socketsPath: string, maxDepth = 3): Record<string, Soc
 const findLocalPath = (socketName: string) => {
   debug('findLocalPath')
   let socketPath = null
-  const projectPath = session.projectPath || process.cwd()
+  const projectPath = session.getProjectPath() || process.cwd()
 
   if (!fs.existsSync(projectPath)) {
     return socketPath
@@ -72,7 +72,7 @@ const findLocalPath = (socketName: string) => {
   }
 
   // Search for syncano folder
-  const socketsPath = path.join(session.projectPath, 'syncano')
+  const socketsPath = path.join(session.getProjectPath(), 'syncano')
   Object.entries(searchForSockets(socketsPath)).forEach(([walkPath, socket]) => {
 
     if (socket.name === socketName) {
@@ -81,7 +81,7 @@ const findLocalPath = (socketName: string) => {
   })
 
   if (!socketPath) {
-    const nodeModPath = path.join(session.projectPath, 'node_modules')
+    const nodeModPath = path.join(session.getProjectPath(), 'node_modules')
     Object.entries(searchForSockets(nodeModPath)).forEach(([file, socket]) => {
       if (socket.name === socketName) {
         socketPath = path.dirname(file)
@@ -110,11 +110,11 @@ const findLocalPath = (socketName: string) => {
 // }
 
 const listLocal = async (): Promise<string[]> => {
-  debug('listLocal', session.projectPath)
+  debug('listLocal', session.getProjectPath())
 
-  const singleSocketPath = path.join(session.projectPath)
-  const localPath = path.join(session.projectPath, 'syncano')
-  const nodeModPath = path.join(session.projectPath, 'node_modules')
+  const singleSocketPath = path.join(session.getProjectPath())
+  const localPath = path.join(session.getProjectPath(), 'syncano')
+  const nodeModPath = path.join(session.getProjectPath(), 'node_modules')
 
   const [singleSocket, localSockets, nodeModSockets] = await Promise.all([
     Object.entries(searchForSockets(singleSocketPath, 1)).map(([, socket]) => socket.name),

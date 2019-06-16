@@ -70,6 +70,7 @@ export interface HostingRecordConfig {
 }
 
 export interface HostingRecord {
+  name: string
   src: string
   config: HostingRecordConfig
 }
@@ -96,6 +97,7 @@ export interface HostingParams {
   src: string
   cname?: string
   browser_router?: boolean
+  removeCNAME?: boolean
 }
 
 export interface UpdateSocketZipReponse {

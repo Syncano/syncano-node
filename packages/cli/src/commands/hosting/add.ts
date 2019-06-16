@@ -1,13 +1,17 @@
 import {flags} from '@oclif/command'
 import format from 'chalk'
 import fs from 'fs'
-import inquirer from 'inquirer'
+import inquirer, { Question } from 'inquirer'
 import path from 'path'
 
 import Command from '../../base_command'
 import Hosting from '../../utils/hosting'
 
 import HostingSync from './sync'
+
+type ParesdHostingArgs = {
+  folder: string
+}
 
 export default class HostingConfig extends Command {
   static description = 'Add hosting'
@@ -28,16 +32,16 @@ export default class HostingConfig extends Command {
 
   socket: any
   hostingName: any
-  folder: string
-  cname: string | boolean
-  fullPath: string
-  browserRouter: boolean
-  sync: boolean
+  folder: string | null = null
+  cname: string | boolean | null = null
+  fullPath: string | null = null
+  browserRouter: boolean | null = null
+  sync: boolean | null = null
 
   async run() {
     await this.session.isAuthenticated()
     await this.session.hasProject()
-    const {args} = this.parse(HostingConfig)
+    const {args}: {args: ParesdHostingArgs} = this.parse(HostingConfig)
     const {flags} = this.parse(HostingConfig)
 
     this.folder = args.folder
@@ -47,7 +51,7 @@ export default class HostingConfig extends Command {
     this.cname = flags['without-cname'] ? false : (flags.cname || null)
     this.fullPath = null
 
-    if (!fs.existsSync(this.folder)) {
+    if (this.folder && !fs.existsSync(this.folder)) {
       this.echo()
       this.echo(4)(this.p('Provided path doesn\'t exist.'))
       this.echo(4)(`Type ${format.green('mkdir <folder_name>')} to create a folder.`)
@@ -64,7 +68,7 @@ export default class HostingConfig extends Command {
     const params = {
       name: this.hostingName,
       browser_router: responses.browser_router || this.browserRouter,
-      src: path.relative(this.session.projectPath, path.join(process.cwd(), this.folder)),
+      src: path.relative(this.session.getProjectPath(), path.join(process.cwd(), this.folder)),
       cname: responses.CNAME || this.cname
     }
 
@@ -84,9 +88,9 @@ export default class HostingConfig extends Command {
     this.exit(0)
   }
 
-  async syncNewHosting(hosting) {
+  async syncNewHosting(hosting: Hosting) {
     if (this.sync === null) {
-      const syncQuestion = [{
+      const syncQuestion: Question[] = [{
         type: 'confirm',
         name: 'confirm',
         message: this.p(2)('Do you want to sync files now?'),
@@ -106,14 +110,14 @@ export default class HostingConfig extends Command {
     }
   }
 
-  getQuestions() {
+  getQuestions(): Question[] {
     const questions = []
     if (!this.hostingName) {
       questions.push({
         name: 'name',
         message: this.p(2)("Set hosting's name"),
         default: 'staging',
-        validate: value => {
+        validate: (value: string) => {
           if (!value) {
             return 'This parameter is required!'
           }
@@ -123,13 +127,13 @@ export default class HostingConfig extends Command {
     }
 
     if (this.cname === null) {
-      questions.push({
+      questions.push(<Question>{
         name: 'CNAME',
         message: this.p(2)('Set CNAME now (your own domain) or leave it empty')
       })
     }
     if (!this.browserRouter) {
-      questions.push({
+      questions.push(<Question>{
         type: 'confirm',
         name: 'browser_router',
         message: this.p(2)('Do you want to use BrowserRouter for this hosting?')

@@ -13,7 +13,7 @@ export default class Info extends Command {
 
     this.echo()
     this.echon(2)(`        ${format.dim('username')}:`)
-    this.echo(` ${format.cyan(this.session.userEmail)}`)
+    this.echo(` ${format.cyan(this.session.getUserEmail() || '')}`)
 
     this.echon(2)(`       ${format.dim('full name')}:`)
     this.echo(` ${format.cyan(this.session.getFullName())}`)

@@ -21,6 +21,6 @@ export default class Logout extends Command {
     this.echo()
 
     this.session.settings.account.logout()
-    this.exit(0)
+    return this.exit(0)
   }
 }

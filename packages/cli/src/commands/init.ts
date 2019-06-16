@@ -1,10 +1,11 @@
 import format from 'chalk'
-import inquirer from 'inquirer'
+import { prompt, Question } from 'inquirer'
 
 import Command, {Init} from '../base_command'
 import {createInstance} from '../commands_helpers/create-instance'
 import {track} from '../utils/analytics'
 
+import {Location} from '../types'
 import Login from './login'
 
 export default class InitCmd extends Command {
@@ -34,7 +35,7 @@ export default class InitCmd extends Command {
 
     const init = new Init()
 
-    const questions = [
+    const questions: Question[] = [
       {
         name: 'Location',
         type: 'list',
@@ -62,11 +63,11 @@ export default class InitCmd extends Command {
       this.echo()
     }
 
-    const promptResponses = await inquirer.prompt(questions) as any
+    const promptResponses = await prompt(questions) as any
     init.templateName = promptResponses.Template.match(/\((.*)\)/)[1]
     init.locationName = promptResponses.Location.match(/[a-z0-9]+/)[0]
 
-    await this.session.setLocation(init.locationName)
+    await this.session.setLocation(init.locationName as Location)
 
     if (!project && instance) {
       this.session.checkConnection(instance) || this.exit(1)

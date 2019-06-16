@@ -169,8 +169,8 @@ export default class SocketHotDeploy extends Command {
 
   runStalker() {
     // Stalking files
-    debug('watching:', this.session.projectPath)
-    this.stalker = watchr.create(this.session.projectPath)
+    debug('watching:', this.session.getProjectPath())
+    this.stalker = watchr.create(this.session.getProjectPath())
     this.stalker.on('change', async (changeType, fileName) => {
       timer.reset()
       const socketToUpdate = this.getSocketToUpdate(fileName)

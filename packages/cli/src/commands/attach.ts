@@ -60,7 +60,7 @@ export default class Attach extends Command {
       instanceName = instance.name
     }
 
-    await init.addConfigFiles({instance: instanceName}, this.session.projectPath)
+    await init.addConfigFiles({instance: instanceName}, this.session.getProjectPath())
     this.echo(4)(`Your project is attached to ${format.green(instanceName)} instance now!`)
     this.echo()
     this.exit(0)

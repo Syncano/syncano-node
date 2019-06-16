@@ -5,28 +5,34 @@ import readdirp from 'readdirp'
 
 import {HostingRecord, ProjectSettingsAttributes} from '../types'
 import logger from '../utils/debug'
-
 import Settings from './settings'
 
 const {debug} = logger('settings-project')
 
+type LocalHosting = {
+  name: string
+  src: string
+}
+
 export default class ProjectSettings extends Settings {
+  attributes: ProjectSettingsAttributes
+
+  constructor(projectPath?: string) {
+    super()
+    this.attributes = {
+      hosting: {},
+    }
+    this.name = 'syncano'
+    this.baseDir = projectPath || null
+    if (projectPath) {
+      this.loaded = this.load()
+    }
+  }
 
   static getAttributesFromYaml(path: string) {
     const socketAttributes = YAML.load(fs.readFileSync(path, 'utf8'))
 
     return socketAttributes
-  }
-  attributes: ProjectSettingsAttributes
-
-  constructor(projectPath: string) {
-    super()
-    this.attributes = {}
-    this.name = 'syncano'
-    this.baseDir = projectPath
-    if (projectPath) {
-      this.loaded = this.load()
-    }
   }
 
   getPlugins() {
@@ -58,7 +64,7 @@ export default class ProjectSettings extends Settings {
   }
 
   // Hosting
-  getHosting(hostingName: string) {
+  getHosting(hostingName: string): HostingRecord | null {
     debug('getHosting()')
     return this.attributes.hosting ? this.attributes.hosting[hostingName] : null
   }
@@ -86,7 +92,7 @@ export default class ProjectSettings extends Settings {
     this.save()
   }
 
-  listHosting() {
+  listHosting(): HostingRecord[] {
     debug('list()')
     const hostings = this.attributes.hosting
     const list = []
@@ -94,7 +100,8 @@ export default class ProjectSettings extends Settings {
       for (const key of Object.keys(hostings)) {
         list.push({
           name: key,
-          src: hostings[key].src
+          src: hostings[key].src,
+          config: hostings[key].config
         })
       }
     }

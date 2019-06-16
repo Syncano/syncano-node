@@ -10,10 +10,10 @@ const {warn, info} = logger('settings')
 
 export default class Settings {
   attributes: any
-  configPath: string | null
-  baseDir: string
-  name: string | null
-  loaded: boolean
+  configPath: string | null = null
+  baseDir: string | null = null
+  name: string | null = null
+  loaded: boolean = false
 
   constructor() {
     this.configPath = null
@@ -23,16 +23,26 @@ export default class Settings {
     this.attributes = {}
   }
 
+  getBaseDir() {
+    if (this.baseDir) return this.baseDir
+    throw new Error ('No base dir!')
+  }
+
+  getConfigPath() {
+    if (this.configPath) return this.configPath
+    throw new Error ('No config path!')
+  }
+
   load() {
-    this.configPath = path.join(this.baseDir, `${this.name}.yml`)
+    this.configPath = path.join(this.getBaseDir(), `${this.name}.yml`)
 
     try {
-      fs.accessSync(this.baseDir)
+      fs.accessSync(this.getBaseDir())
     } catch (err) {
       return false
     }
 
-    info(`loading: ${this.name} - ${this.configPath}`)
+    info(`loading: ${this.name} - ${this.getConfigPath()}`)
 
     try {
       fs.accessSync(this.configPath, fs.constants.R_OK)
@@ -54,7 +64,7 @@ export default class Settings {
   save() {
     info('save()', this.configPath)
     try {
-      fs.writeFileSync(this.configPath, YAML.dump(this.attributes))
+      fs.writeFileSync(this.getConfigPath(), YAML.dump(this.attributes))
     } catch (err) {
       // TODO: handle error here
       // return new ErrorResponse(this).handle(err)

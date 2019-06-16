@@ -1,27 +1,27 @@
-import format from 'chalk'
+import format, { Chalk } from 'chalk'
 import _ from 'lodash'
 import util from 'util'
 
-const MAP = {
-  0: format.cyan.dim, // default value
-  1: format.cyan.dim,
-  2: format.green.dim,
-  3: format.yellow.dim,
-  4: format.magenta.dim,
-  5: format.red.dim
+const MAP: Record<string, Chalk> = {
+  '0': format.cyan.dim, // default value
+  '1': format.cyan.dim,
+  '2': format.green.dim,
+  '3': format.yellow.dim,
+  '4': format.magenta.dim,
+  '5': format.red.dim
 }
 
-function getFormatMethod(code) {
+function getFormatMethod(code: number) {
   const firstDigitOfCode = code.toString()[0]
 
   return MAP[firstDigitOfCode] || MAP[0]
 }
 
-function printCode(code, str?: string) {
-  return getFormatMethod(code)(str || code)
+function printCode(code: number, str?: string) {
+  return getFormatMethod(code)((str || code).toString())
 }
 
-function printSourceCode(contentType, source) {
+function printSourceCode(contentType: string, source: string) {
   if (contentType === 'application/json') {
     const object = JSON.parse(source)
     return util.inspect(object, {depth: null, colors: true})
@@ -46,7 +46,7 @@ function echo(...args: any) {
 function echon(...args: any) {
   if (!Number.isInteger(args[0])) {
     const padding = args[0]
-    return (...nextArgs) => {
+    return (...nextArgs: string[]) => {
       process.stdout.write(`${util.format(_.repeat(' ', padding) + nextArgs.join(' '))}`)
     }
   } else {
@@ -58,7 +58,7 @@ function echon(...args: any) {
   // process.stdout.write(`${util.format(args.join(' '))}`)
 }
 
-function error(...args) {
+function error(...args: string[]) {
   if (args.length === 1 && !Number.isInteger(args[0])) {
     // args.unshift('ERROR:');
     process.stdout.write(util.format(format.red(args.join(' '), '\n')))
@@ -75,7 +75,7 @@ function error(...args) {
   process.stdout.write(util.format(format.red(args.join('\n\n'), '\n')))
 }
 
-function warning(...args) {
+function warning(...args: string[] | number[]) {
   if (args.length === 1 && !Number.isInteger(args[0])) {
     process.stdout.write(util.format(format.yellow(args.join(' '), '\n')))
     return
@@ -83,7 +83,7 @@ function warning(...args) {
 
   if (Number.isInteger(args[0])) {
     const padding = args[0]
-    return (...nextArgs) => {
+    return (...nextArgs: string[]) => {
       process.stdout.write(util.format(_.repeat(' ', padding) + format.yellow(nextArgs.join(' '), '\n')))
     }
   }
