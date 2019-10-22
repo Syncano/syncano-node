@@ -39,7 +39,7 @@ const {data} = new Server(ctx)
 | [pluck](#pluckcolumn)                              | Return array of values for single column                                   |
 | [value](#valuecolumn)                              | Return column value of first object matching query                         |
 | [count](#count)                                    | Return number of objects matching query                                    |
-| [min](#min)                                        | Return minimal value for single column                                     |
+| [min](#mincolumn)                                  | Return minimal value for single column                                     |
 
 ## `create(data)`
 
