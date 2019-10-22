@@ -175,6 +175,32 @@ describe('Data', () => {
     })
   })
 
+  describe('#min()', () => {
+    it('should be a method of the model', () => {
+      should(data.posts)
+        .have.property('count')
+        .which.is.Function()
+    })
+
+    it('should return minimal value for given column', () => {
+      api
+        .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
+        .query({page_size: 1, limit: 1, order_by: 'likes'}) // eslint-disable-line camelcase
+        .reply(200, {objects: [{likes: 12, id: 3}]})
+
+      return data.posts.min('likes').should.become(12)
+    })
+
+    it('should return null when there are no records in given class', () => {
+      api
+        .get(`/v3/instances/${instanceName}/classes/posts/objects/`)
+        .query({page_size: 1, limit: 1, order_by: 'likes'}) // eslint-disable-line camelcase
+        .reply(200, {objects: []})
+
+      return data.posts.min('likes').should.become(null)
+    })
+  })
+
   describe('#first()', () => {
     it('should be a method of the model', () => {
       should(data.users)

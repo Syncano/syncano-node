@@ -70,6 +70,20 @@ export class DataClass<ClassSchema = {
   }
 
   /**
+   * Get the minimum value of a given key.
+   *
+   * @example
+   * data.posts.min('likes')
+   */
+  public async min<T>(column: Fields<T, ClassSchema>): Promise<number | null> {
+    const item = await this.orderBy(column, 'ASC').first()
+    if (item !== null) {
+      return (item as  any)[column]
+    }
+    return null
+   }
+
+  /**
    * Get first element matching query or return null
    *
    * @example
