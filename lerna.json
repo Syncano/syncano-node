@@ -17,7 +17,7 @@
         "allowBranch": "master"
       },
       "exact": true,
-      "ignore": [
+      "ignoreChanges": [
         "@syncano/registry*"
       ]
     }
