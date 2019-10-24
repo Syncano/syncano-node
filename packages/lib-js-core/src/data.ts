@@ -462,9 +462,12 @@ export class DataClass<ClassSchema = {
       url: this.url()
     }
 
-    if (body instanceof FormData) {
+    const formBody = body as unknown as FormData
+    const isFormData = (formBody) && formBody.constructor && formBody.constructor.name === 'FormData'
+
+    if (isFormData) {
       fetchObject.body = body
-      headers = body.getHeaders()
+      headers = (body as unknown as FormData).getHeaders()
     } else if (Array.isArray(body)) {
       return this.batch(body)
         .then(this.replaceCustomTypesWithValue.bind(this))
