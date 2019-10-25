@@ -26,9 +26,9 @@ run('generate', {args, meta})
 
 By default `run` function will execute file from `syncano/<socket_name>/.dist/src`. To execute file from `syncano/<socket_name>/src` set env variables:
 ```bash
-# Leave this empty to skip .dist folder and use uncompiled files from src
-export SYNCANO_TEST_RUN_DIR=
-# If you use typescript then set this to ts
+# @default .dist/src
+export SYNCANO_TEST_RUN_DIR=src
+# @default js
 export SYNCANO_TEST_RUN_EXT=ts
 ```
 

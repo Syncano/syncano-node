@@ -10,10 +10,10 @@ import Validator from '@syncano/validate'
 
 const socketFolder = process.cwd()
 
-const runFolder = process.env.SYNCANO_TEST_RUN_DIR === undefined ? '.dist' : process.env.SYNCANO_TEST_RUN_DIR
-const runExtension = process.env.SYNCANO_TEST_RUN_EXT === undefined ? 'js' : process.env.SYNCANO_TEST_RUN_EXT
+const runFolder = process.env.SYNCANO_TEST_RUN_DIR || '.dist/src'
+const runExtension = process.env.SYNCANO_TEST_RUN_EXT || 'js'
 
-const compiledScriptsFolder = path.join(socketFolder, runFolder, 'src')
+const compiledScriptsFolder = path.join(socketFolder, runFolder)
 const socketDefinition = YAML.load(fs.readFileSync('./socket.yml', 'utf8'))
 
 const generateEndpointMeta = (endpointName, metaUpdate) => {
