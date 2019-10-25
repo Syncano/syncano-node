@@ -7,8 +7,13 @@ import Promise from 'bluebird'
 import proxyquire from 'proxyquire'
 import Validator from '@syncano/validate'
 
+
 const socketFolder = process.cwd()
-const compiledScriptsFolder = path.join(socketFolder, '.dist', 'src')
+
+const runFolder = process.env.SYNCANO_TEST_RUN_DIR || '.dist/src'
+const runExtension = process.env.SYNCANO_TEST_RUN_EXT || 'js'
+
+const compiledScriptsFolder = path.join(socketFolder, runFolder)
 const socketDefinition = YAML.load(fs.readFileSync('./socket.yml', 'utf8'))
 
 const generateEndpointMeta = (endpointName, metaUpdate) => {
@@ -134,14 +139,14 @@ function run (socketEndpoint, ctx = {}, params = {}, callType = 'endpoint') {
     process.exitOrig = process.exit
     process.exit = () => {}
 
-    module.filename = `${compiledScriptsFolder}/${socketEndpoint}.js`
+    module.filename = `${compiledScriptsFolder}/${socketEndpoint}.${runExtension}`
 
     try {
       let runFunc
       if (mocks) {
-        runFunc = proxyquire(path.join(compiledScriptsFolder, `${socketEndpoint}.js`), mocks).default
+        runFunc = proxyquire(path.join(compiledScriptsFolder, `${socketEndpoint}.${runExtension}`), mocks).default
       } else {
-        runFunc = require(path.join(compiledScriptsFolder, `${socketEndpoint}.js`)).default
+        runFunc = require(path.join(compiledScriptsFolder, `${socketEndpoint}.${runExtension}`)).default
       }
       runFunc({args, config, meta: socketMeta, HttpResponse, setResponse})
     } catch (err) {
