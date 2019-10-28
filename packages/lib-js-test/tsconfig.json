@@ -17,6 +17,7 @@
     "noUnusedLocals": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "esModuleInterop": true,
     "lib": [
       "es2015",
       "es2016",
