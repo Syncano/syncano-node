@@ -3,10 +3,9 @@ import faker from 'faker'
 import merge from 'lodash.merge'
 import path from 'path'
 import YAML from 'js-yaml'
-import Promise from 'bluebird'
+import Bluebird from 'bluebird'
 import proxyquire from 'proxyquire'
 import Validator from '@syncano/validate'
-
 
 const socketFolder = process.cwd()
 
@@ -16,7 +15,7 @@ const runExtension = process.env.SYNCANO_TEST_RUN_EXT || 'js'
 const compiledScriptsFolder = path.join(socketFolder, runFolder)
 const socketDefinition = YAML.load(fs.readFileSync('./socket.yml', 'utf8'))
 
-const generateEndpointMeta = (endpointName, metaUpdate) => {
+const generateEndpointMeta = (endpointName: string, metaUpdate: any) => {
   const socketName = socketDefinition.name
 
   const apiHost = process.env.SYNCANO_HOST
@@ -51,7 +50,7 @@ const generateEndpointMeta = (endpointName, metaUpdate) => {
   return meta
 }
 
-const generateEventHandlerMeta = (eventName, metaUpdate) => {
+const generateEventHandlerMeta = (eventName: string, metaUpdate: any) => {
   const socketName = socketDefinition.name
 
   const apiHost = process.env.SYNCANO_HOST
@@ -75,7 +74,7 @@ const generateEventHandlerMeta = (eventName, metaUpdate) => {
   return meta
 }
 
-async function verifyResponse (endpoint, responseType, response) {
+async function verifyResponse (endpoint: string, responseType: string, response: any) {
   const validator = new Validator({
     meta: {
       metadata: socketDefinition.endpoints[endpoint]
@@ -85,20 +84,28 @@ async function verifyResponse (endpoint, responseType, response) {
   return validator.validateResponse(responseType, response)
 }
 
-async function verifyRequest (ctx) {
+async function verifyRequest (ctx: any) {
   const validator = new Validator(ctx)
   return validator.validateRequest(ctx)
 }
 
-function runEventHandler (eventName, ctx = {}, params = {}, callType = 'eventHandler') {
+function runEventHandler (eventName: string, ctx = {}, params = {}, callType: 'endpoint' | 'eventHandler' = 'eventHandler') {
   return run(eventName, ctx, params, callType)
 }
 
-function run (socketEndpoint, ctx = {}, params = {}, callType = 'endpoint') {
+function run (
+  socketEndpoint: string,
+  ctx: any = {},
+  params: {
+    mocks?: any
+    [key: string]: any
+  } = {},
+  callType: 'endpoint' | 'eventHandler' = 'endpoint'
+) {
   const {args = {}, config = {}, meta = {}} = ctx
   const mocks = params.mocks
 
-  let socketMeta
+  let socketMeta: any
   switch (callType) {
     case 'endpoint':
       socketMeta = generateEndpointMeta(socketEndpoint, meta)
@@ -108,27 +115,28 @@ function run (socketEndpoint, ctx = {}, params = {}, callType = 'endpoint') {
       break
   }
 
-  if (run.verifyRequest !== false) {
+  if ((run as any).verifyRequest !== false) {
     verifyRequest({args, config, meta: socketMeta})
   }
 
-  return new Promise((resolve, reject) => {
-    const HttpResponse = function (code, data, mimetype) {
-      let response = null
+  return new Bluebird((resolve, reject) => {
+    const HttpResponse = function (code: number, data:any, mimetype: string) {
+      let response: any = null
       if (mimetype === 'json/application') {
         response = {code, mimetype, data: JSON.parse(data)}
       } else {
         response = {code, data, mimetype}
       }
-      response.is = (responseType) => {
-        if (run.verifyResponse !== false) {
+      response.is = (responseType: any) => {
+        if ((run as any).verifyResponse !== false) {
           return verifyResponse(socketEndpoint, responseType, response)
         }
+        return response
       }
       return response
     }
 
-    const setResponse = (response) => {
+    const setResponse = (response: any) => {
       const processedResponse = response
       if (response.mimetype === 'application/json') {
         processedResponse.data = JSON.parse(response.data)
@@ -136,8 +144,8 @@ function run (socketEndpoint, ctx = {}, params = {}, callType = 'endpoint') {
       resolve(processedResponse)
     }
 
-    process.exitOrig = process.exit
-    process.exit = () => {}
+    (process as any).exitOrig = process.exit
+    process.exit = (() => {}) as any
 
     module.filename = `${compiledScriptsFolder}/${socketEndpoint}.${runExtension}`
 
