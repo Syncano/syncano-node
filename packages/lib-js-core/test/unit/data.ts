@@ -178,7 +178,7 @@ describe('Data', () => {
   describe('#min()', () => {
     it('should be a method of the model', () => {
       should(data.posts)
-        .have.property('count')
+        .have.property('min')
         .which.is.Function()
     })
 
