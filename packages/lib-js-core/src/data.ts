@@ -476,9 +476,12 @@ export class DataClass<ClassSchema = {
       url: this.url()
     }
 
-    if (body instanceof FormData) {
-      fetchObject.body = body
-      headers = body.getHeaders()
+    const formBody = body as unknown as FormData
+    const isFormData = (formBody) && formBody.constructor && formBody.constructor.name === 'FormData'
+
+    if (isFormData) {
+      fetchObject.body = formBody
+      headers = formBody.getHeaders()
     } else if (Array.isArray(body)) {
       return this.batch(body)
         .then(this.replaceCustomTypesWithValue.bind(this))
@@ -535,9 +538,12 @@ export class DataClass<ClassSchema = {
       url: this.url(id as number)
     }
 
-    if (body instanceof FormData) {
-      fetchObject.body = body
-      headers = body.getHeaders()
+    const formBody = body as unknown as FormData
+    const isFormData = (formBody) && formBody.constructor && formBody.constructor.name === 'FormData'
+
+    if (isFormData) {
+      fetchObject.body = formBody
+      headers = formBody.getHeaders()
     } else if (Array.isArray(id)) {
       return this.batch(id, headers)
         .then(this.resolveRelatedModels.bind(this))
