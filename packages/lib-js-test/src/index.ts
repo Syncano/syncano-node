@@ -50,6 +50,7 @@ const generateEndpointMeta = (endpointName: string, metaUpdate: any) => {
   return meta
 }
 
+// TODO: Add typings
 const generateEventHandlerMeta = (eventName: string, metaUpdate: any) => {
   const socketName = socketDefinition.name
 
@@ -74,6 +75,7 @@ const generateEventHandlerMeta = (eventName: string, metaUpdate: any) => {
   return meta
 }
 
+// TODO: Add typings
 async function verifyResponse (endpoint: string, responseType: string, response: any) {
   const validator = new Validator({
     meta: {
@@ -84,6 +86,7 @@ async function verifyResponse (endpoint: string, responseType: string, response:
   return validator.validateResponse(responseType, response)
 }
 
+// TODO: Add typings
 async function verifyRequest (ctx: any) {
   const validator = new Validator(ctx)
   return validator.validateRequest(ctx)
@@ -93,6 +96,7 @@ function runEventHandler (eventName: string, ctx = {}, params = {}, callType: 'e
   return run(eventName, ctx, params, callType)
 }
 
+// TODO: Add typings
 function run (
   socketEndpoint: string,
   ctx: any = {},
@@ -105,6 +109,7 @@ function run (
   const {args = {}, config = {}, meta = {}} = ctx
   const mocks = params.mocks
 
+  // TODO: Add typings
   let socketMeta: any
   switch (callType) {
     case 'endpoint':
@@ -115,19 +120,24 @@ function run (
       break
   }
 
+  // TODO: Add typings
   if ((run as any).verifyRequest !== false) {
     verifyRequest({args, config, meta: socketMeta})
   }
 
   return new Bluebird((resolve, reject) => {
+    // TODO: Add typings
     const HttpResponse = function (code: number, data:any, mimetype: string) {
+      // TODO: Add typings
       let response: any = null
       if (mimetype === 'json/application') {
         response = {code, mimetype, data: JSON.parse(data)}
       } else {
         response = {code, data, mimetype}
       }
+      // TODO: Add typings
       response.is = (responseType: any) => {
+        // TODO: Add typings
         if ((run as any).verifyResponse !== false) {
           return verifyResponse(socketEndpoint, responseType, response)
         }
@@ -136,6 +146,7 @@ function run (
       return response
     }
 
+    // TODO: Add typings
     const setResponse = (response: any) => {
       const processedResponse = response
       if (response.mimetype === 'application/json') {
