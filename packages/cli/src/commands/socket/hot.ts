@@ -9,7 +9,7 @@ import {GlobalSpinner, SimpleSpinner} from '../../commands_helpers/spinner'
 import {currentTime, Timer} from '../../utils/date-utils'
 import logger from '../../utils/debug'
 import {CompileError} from '../../utils/errors'
-import {echo, p} from '../../utils/print-tools'
+import {p} from '../../utils/print-tools'
 
 import SocketDeploy from './deploy'
 import SocketTrace from './trace'
@@ -76,7 +76,6 @@ export default class SocketHotDeploy extends Command {
 
     this.echo()
     this.echo(1)(`🚀 ${format.grey(' Initial sync started...')}`)
-
 
     const deployCmd = await SocketDeploy.run([args.socketName || ''])
     this.socketList = deployCmd.socketList
@@ -157,7 +156,7 @@ export default class SocketHotDeploy extends Command {
       if (this.cmd.bail) {
         this.bail()
       }
-      updateEnds()
+      await updateEnds()
     }
   }
 
@@ -176,7 +175,7 @@ export default class SocketHotDeploy extends Command {
       timer.reset()
       const socketToUpdate = this.getSocketToUpdate(fileName)
       if (socketToUpdate) {
-        this.deploySocket(socketToUpdate)
+        await this.deploySocket(socketToUpdate)
       }
     })
 

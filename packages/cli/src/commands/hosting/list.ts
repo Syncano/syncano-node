@@ -4,7 +4,6 @@ import Command from '../../base_command'
 import Hosting from '../../utils/hosting'
 import {echo, echon} from '../../utils/print-tools'
 
-
 export default class HostingListCmd extends Command {
   static description = 'List hostings'
   static flags = {}

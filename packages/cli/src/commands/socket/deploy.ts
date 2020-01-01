@@ -13,12 +13,11 @@ import logger from '../../utils/debug'
 import {CompileError} from '../../utils/errors'
 import {UpdateStatus} from '../../utils/sockets/sockets'
 
-
 const {debug, info} = logger('cmd-socket-deploy')
 
 type TTask = {
-  title: string;
-  task: (ctx: any, task: any) => Promise<void>;
+  title: string
+  task(ctx: any, task: any): Promise<void>
 }
 
 type TSocketConfig = {
