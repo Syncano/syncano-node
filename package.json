@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@syncano/cli": "^0.14.0",
-    "@types/node": "^12.0.8",
+    "@types/node": "^13.1.2",
     "@types/npm": "^2.0.29",
     "babel-eslint": "^8.0.1",
     "chalk": "^2.4.1",
