@@ -2,9 +2,9 @@ import {QueryBuilder} from './query-builder'
 import {SchemaObject, SyncanoClass} from './types'
 
 export class Class extends QueryBuilder {
-  public url (className?: string) {
+  public url (className?: string, apiVersion?: string) {
     const {instanceName} = this.instance
-    const baseUrl = `${this.getInstanceURL(instanceName)}/classes/`
+    const baseUrl = `${this.getInstanceURL(instanceName, apiVersion)}/classes/`
 
     return className ? `${baseUrl}${className}/` : baseUrl
   }
@@ -43,6 +43,28 @@ export class Class extends QueryBuilder {
     return fetch(this.url(className), {
       method: 'DELETE'
     })
+  }
+
+  /**
+   * Get single Syncano Class details
+   */
+  public async get (className: string): Promise<SyncanoClass> {
+    const fetch = this.fetch.bind(this)
+    const resp = await fetch(this.url(className, 'v3'), {
+      method: 'GET'
+    })
+
+    return resp
+  }
+
+  /**
+   * List Syncano Classes
+   */
+  public async list (): Promise<SyncanoClass[]> {
+    const fetch = this.fetch.bind(this)
+    const resp = await fetch(this.url(undefined, 'v3'), {})
+
+    return resp.objects
   }
 }
 

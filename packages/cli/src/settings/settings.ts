@@ -3,7 +3,6 @@ import YAML from 'js-yaml'
 import path from 'path'
 
 import logger from '../utils/debug'
-import ErrorResponse from '../utils/error-response'
 import {error, p} from '../utils/print-tools'
 
 const {warn, info} = logger('settings')

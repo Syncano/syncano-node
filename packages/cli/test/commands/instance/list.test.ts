@@ -30,7 +30,7 @@ describe('instance:list', () => {
     .stub(session, 'getInstances', sinon.stub().resolves([{name: 'instance1'}, {name: 'instance2'}]))
     .command(['instance:list'])
     .exit(0)
-    .it('when no instances', ctx => {
+    .it('when 2 instances', ctx => {
       expect(ctx.stdout).to.contain('- instance1')
       expect(ctx.stdout).to.contain('- instance2')
     })

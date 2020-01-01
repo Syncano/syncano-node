@@ -1,4 +1,4 @@
-import {BackupClass} from '@syncano/core/backup'
+import {BackupClass} from '@syncano/core'
 
 import Command from '../../base_command'
 import {SimpleSpinner} from '../../commands_helpers/spinner'

@@ -9,7 +9,7 @@ import {echo, error} from './print-tools'
 // TODO: how solve this with typescript?
 // process.noDeprecation = true
 
-process.on('unhandledRejection', (reason, p) => {
+process.on('unhandledRejection', (reason: any) => {
   if (reason.name === 'RequestError' && reason.status === 403) {
     if (reason.errors.detail === 'No such API Key.') {
       const errorMessage =

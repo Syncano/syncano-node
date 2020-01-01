@@ -6,6 +6,7 @@ import _ from 'lodash'
 import md5 from 'md5'
 import path from 'path'
 import prettyBytes from 'pretty-bytes'
+import {Hosting as CoreHosting} from '@syncano/core'
 
 import {HostingParams, HostingRecord} from '../../types'
 import logger from '../debug'
@@ -13,6 +14,7 @@ import { echo, error } from '../print-tools'
 import session from '../session'
 
 import {getFiles } from './utils'
+
 
 const {debug} = logger('utils-hosting')
 
@@ -49,47 +51,6 @@ class HostingFile {
 }
 
 class Hosting {
-  name: string
-  description?: string
-  path: string
-  existRemotely: boolean | null
-  existLocally: boolean | null
-  hostingURL: string
-  editHostingURL: string
-  hostingHost: string
-  config: any
-  remote: any
-  src: string | null = null
-  cname: string | null = null
-  browser_router: string | null = null
-  domains: string[] | null = null
-  auth: any
-  url: string | null = null
-  error: string | null = null
-  isUpToDate: boolean | null = null
-
-  constructor(hostingName: string) {
-    debug('Hosting.constructor', hostingName)
-
-    this.name = hostingName
-    this.path = null
-
-    this.existRemotely = null
-    this.existLocally = null
-
-    this.hostingURL = `/v2/instances/${session.project.instance}/hosting/`
-    this.editHostingURL = `https://${session.getHost()}${this.hostingURL}${this.name}/`
-    this.hostingHost = session.getHost() === 'api.syncano.rocks' ? 'syncano.ninja' : 'syncano.site'
-    this.config = {}
-
-    // Remote state
-    this.remote = {
-      domains: []
-    }
-
-    this.loadLocal()
-  }
-
   static async add(params: HostingParams): Promise<Hosting> {
     debug('Adding hosting')
     const configParams = {
@@ -168,6 +129,46 @@ class Hosting {
     })
   }
 
+  name: string
+  description?: string
+  path: string
+  existRemotely?: boolean | null
+  existLocally?: boolean | null
+  hostingURL: string
+  editHostingURL: string
+  hostingHost: string
+  config: any
+  remote: any
+  src: string | null = null
+  cname: string | null = null
+  browser_router: string | null = null
+  domains: string[] | null = null
+  auth: any
+  url: string | null = null
+  error: string | null = null
+  isUpToDate: boolean | null = null
+
+  constructor(hostingName: string) {
+    debug('Hosting.constructor', hostingName)
+
+    this.name = hostingName
+    this.path = null
+
+    this.existRemotely = null
+    this.existLocally = null
+
+    this.hostingURL = `/v2/instances/${session.project.instance}/hosting/`
+    this.editHostingURL = `https://${session.getHost()}${this.hostingURL}${this.name}/`
+    this.hostingHost = session.getHost() === 'api.syncano.rocks' ? 'syncano.ninja' : 'syncano.site'
+    this.config = {}
+
+    // Remote state
+    this.remote = {
+      domains: []
+    }
+
+    this.loadLocal()
+  }
 
   hasCNAME(cname: string) {
     return this.remote.domains.indexOf(cname) > -1
@@ -267,7 +268,7 @@ class Hosting {
     return this
   }
 
-  async setRemoteState(hosting: Hosting) {
+  async setRemoteState(hosting: CoreHosting) {
     debug('setRemoteState', hosting.name)
     if (hosting && typeof hosting === 'object') {
       this.existRemotely = true
@@ -280,7 +281,6 @@ class Hosting {
       this.isUpToDate = await this.areFilesUpToDate()
     } else {
       this.existRemotely = false
-      this.error = hosting
     }
     return Promise.resolve()
   }

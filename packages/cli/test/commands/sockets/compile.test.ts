@@ -25,7 +25,7 @@ describe('socket:compile', () => {
     .it('create socket', function (ctx) {
       this.timeout(70000)
       process.stdin.once('data', data => {
-        if (data === '\n') {
+        if (data.toString() === '\n') {
           expect(ctx.stdout).to.contain('Your Socket configuration is stored at')
         }
       })

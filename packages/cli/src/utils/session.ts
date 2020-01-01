@@ -3,7 +3,8 @@ import format from 'chalk'
 import mkdirp from 'mkdirp'
 import path from 'path'
 
-import getSettings from '../settings'
+import {getSettings} from '../settings'
+
 import {Location, SyncanoProject} from '../types'
 import logger from './debug'
 import Hosting from './hosting'
@@ -25,7 +26,7 @@ export class Session {
     return process.cwd()
   }
   CLIVersion: string
-  settings: ProjectSettings | null = null
+  settings: any
   projectPath: string | null = null
   project: SyncanoProject | null = null
   userId: number | null = null
@@ -46,6 +47,7 @@ export class Session {
     this.majorVersion = pjson.version.split('.')[0]
 
     this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION as Location || this.location
+    this.settings = getSettings()
   }
 
   getHost() {

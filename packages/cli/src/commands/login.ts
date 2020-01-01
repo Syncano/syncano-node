@@ -3,7 +3,7 @@ import format from 'chalk'
 import {prompt, Question} from 'inquirer'
 import validator from 'validator'
 import { AccountOwner } from '@syncano/core';
-import { LoginData} from '@syncano/core/types';
+import { LoginData } from '@syncano/core';
 
 import Command from '../base_command'
 import {track} from '../utils/analytics'

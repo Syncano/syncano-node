@@ -273,14 +273,7 @@ export interface SyncanoClass {
   updated_at: string
   objects_count: number
   revision: number
-  acl: ACL
   metadata: object
-  links: {
-    self: string
-    objects: string
-    'endpoint-acl': string
-    [x: string]: string
-  }
 }
 
 export interface SchemaObject {

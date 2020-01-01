@@ -77,6 +77,7 @@ export default class SocketHotDeploy extends Command {
     this.echo()
     this.echo(1)(`🚀 ${format.grey(' Initial sync started...')}`)
 
+
     const deployCmd = await SocketDeploy.run([args.socketName || ''])
     this.socketList = deployCmd.socketList
 

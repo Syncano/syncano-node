@@ -44,11 +44,12 @@ export class SocketClass extends QueryBuilder {
 
   private url (socketName?: string) {
     const {instanceName} = this.instance
+    const instanceUrl = this.getInstanceURL(instanceName)
 
     if (socketName) {
-      return `${this.getSyncanoURL()}/instances/${instanceName}/sockets/${socketName}/`
+      return `${instanceUrl}/sockets/${socketName}/`
     }
 
-    return `${this.getSyncanoURL()}/instances/${instanceName}/sockets/`
+    return `${instanceUrl}/sockets/`
   }
 }

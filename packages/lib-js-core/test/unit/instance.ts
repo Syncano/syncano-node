@@ -24,15 +24,17 @@ describe('Instance', () => {
 
   describe('#create', () => {
     it('should create syncano instance', () => {
-      api.post(`/v2/instances/`, {name: 'my-insta'}).reply(200)
+      const response = {name: 'my-insta'}
 
-      return instance.create({name: 'my-insta'}).should.be.fulfilled
+      api.post(`/v2/instances/`, response).reply(200, response)
+
+      return expect(instance.create(response)).resolves.toMatchSnapshot()
     })
   })
 
   describe('#list', () => {
     it('should list syncano instances', () => {
-      const fakeResp = {
+      api.get(`/v3/instances/`).reply(200, {
         objects: [
           {
             name: 'instance1'
@@ -43,13 +45,9 @@ describe('Instance', () => {
         ] as Instance[],
         next: null,
         prev: null
-      }
+      })
 
-      api.get(`/v3/instances/`).reply(200, fakeResp)
-      instance.list().should.be.fulfilled
-
-      api.get(`/v3/instances/`).reply(200, fakeResp)
-      instance.list().should.be.eventually.equal(fakeResp.objects)
+      return expect(instance.list()).resolves.toMatchSnapshot()
     })
   })
 

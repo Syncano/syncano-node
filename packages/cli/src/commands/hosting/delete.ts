@@ -1,6 +1,6 @@
 import {flags} from '@oclif/command'
 import format from 'chalk'
-import inquirer from 'inquirer'
+import inquirer, { Question } from 'inquirer'
 
 import Command from '../../base_command'
 import Hosting from '../../utils/hosting'
@@ -27,7 +27,7 @@ export default class HostingDelete extends Command {
         message: this.p(2)(`Are you sure you want to remove: ${format.red(hostingName)}`),
         default: false
       }
-    ]
+    ] as Question[]
 
     return questions
   }

@@ -15,6 +15,12 @@ type LocalHosting = {
 }
 
 export default class ProjectSettings extends Settings {
+  static getAttributesFromYaml(path: string) {
+    const socketAttributes = YAML.load(fs.readFileSync(path, 'utf8'))
+
+    return socketAttributes
+  }
+
   attributes: ProjectSettingsAttributes
 
   constructor(projectPath?: string) {
@@ -29,12 +35,6 @@ export default class ProjectSettings extends Settings {
     }
   }
 
-  static getAttributesFromYaml(path: string) {
-    const socketAttributes = YAML.load(fs.readFileSync(path, 'utf8'))
-
-    return socketAttributes
-  }
-
   getPlugins() {
     return this.attributes.plugins
   }
@@ -42,7 +42,7 @@ export default class ProjectSettings extends Settings {
   getAllSocketsYmlPath() {
     return new Promise((resolve, reject) => {
       const paths = [] as string[]
-      readdirp({root: this.baseDir, fileFilter: 'socket.yml'}, () => {}, () => {})
+      readdirp(this.baseDir, {fileFilter: 'socket.yml'})
         .on('data', (entry: any) => {
           paths.push(entry.fullPath)
         })

@@ -1,6 +1,6 @@
 import {flags} from '@oclif/command'
 import format from 'chalk'
-import inquirer from 'inquirer'
+import inquirer, { Question } from 'inquirer'
 
 import Command, {Init} from '../base_command'
 import {createInstance} from '../commands_helpers/create-instance'
@@ -34,7 +34,7 @@ export default class Attach extends Command {
         name: 'confirm',
         message: this.p(2)('This project is already attached. Are you sure you want to change instance?'),
         default: false
-      }]
+      } as Question]
 
       const {confirm = false} = await inquirer.prompt(confirmQuestion) || {}
       if (confirm === false) return this.exit(1)

@@ -11,15 +11,10 @@ import {askQuestions} from '../../commands_helpers/socket'
 import {currentTime, Timer} from '../../utils/date-utils'
 import logger from '../../utils/debug'
 import {CompileError} from '../../utils/errors'
+import {UpdateStatus} from '../../utils/sockets/sockets'
+
 
 const {debug, info} = logger('cmd-socket-deploy')
-
-
-type TUpdateStatus = {
-  duration: string;
-  status: string;
-  message: any;
-}
 
 type TTask = {
   title: string;
@@ -27,22 +22,17 @@ type TTask = {
 }
 
 type TSocketConfig = {
-  [s in string]: string
+  [s in string]: any
 }
 
 type TPendingUpdates = {
-  [s in string]: string
+  [s in string]: number
 }
 
-type SocketConfig = {
-
-}
+type SocketConfig = {}
 
 const pendingUpdates: TPendingUpdates = {}
 const timer = new Timer()
-
-
-// { name: string | number; update: (arg0: { config: any; withCompilation: boolean; updateSocketNPMDeps: boolean; updateEnv: boolean; }) => void; }
 
 export default class SocketDeploy extends Command {
   static description = 'Deploy Socket'
@@ -57,12 +47,12 @@ export default class SocketDeploy extends Command {
     description: 'Socket name'
   }]
 
-  static printSummary(socketName: string, updateStatus: TUpdateStatus) {
+  static printSummary(socketName: string, updateStatus: UpdateStatus) {
     debug('printSummary()', socketName, updateStatus)
     const duration = format.dim(updateStatus.duration)
     const socketNameStr = `${format.cyan(socketName)}`
 
-    if (updateStatus.status === 'ok' || updateStatus.status === 'pending' ) {
+    if (updateStatus.status === 'ok' || updateStatus.status === 'pending') {
       const status = format.grey('  socket synced:')
       return `${status} ${currentTime()} ${socketNameStr} ${duration}`
     } else if (updateStatus.status === 'stopped') {
@@ -80,7 +70,7 @@ export default class SocketDeploy extends Command {
     }
   }
 
-  firstRun: boolean = true
+  firstRun = true
   socketList: Socket[] = []
   localSockets: Socket[] = []
 
@@ -127,7 +117,7 @@ export default class SocketDeploy extends Command {
       this.socketList.forEach(socket => {
         deployList.push({
           title: `${format.grey('        waiting:')} ${socket.name}`,
-          task: async (ctx: any, task: { title: string; }) => {
+          task: async (ctx, task) => {
             task.title = `${format.grey(' syncing socket:')} ${socket.name}`
             const deployStatus = await this.deploySocket(socket, configs[socket.name])
 
@@ -162,7 +152,7 @@ export default class SocketDeploy extends Command {
 
       // Ask for missing config options
       await BluebirdPromise.each(this.socketList, async (socketFromList: Socket) => {
-        const config = await askQuestions(socketFromList.getConfigOptionsToAsk())
+        const config = await askQuestions(socketFromList.getConfigOptionsToAsk()) || {}
         configs[socketFromList.name] = config
       })
 
@@ -181,8 +171,7 @@ export default class SocketDeploy extends Command {
     } catch (err) {
       this.bail()
     }
-    // this.exit(0)
-    return this
+    this.exit(0)
   }
 
   async deployProject() {
@@ -191,7 +180,7 @@ export default class SocketDeploy extends Command {
     return timer.getDuration()
   }
 
-  async deploySocket(socket: Socket, config: SocketConfig) {
+  async deploySocket(socket: Socket, config: SocketConfig): Promise<UpdateStatus> {
     debug(`deploySocket: ${socket.name}`)
     const deployTimer = new Timer()
 
@@ -201,7 +190,7 @@ export default class SocketDeploy extends Command {
     pendingUpdates[socket.name] += 1
     if (pendingUpdates[socket.name] > 1) {
       debug(`not updating, update pending: ${pendingUpdates[socket.name]}`)
-      return {status: 'pending'}
+      return {status: 'pending', type: 'wait'}
     }
 
     try {
@@ -216,6 +205,7 @@ export default class SocketDeploy extends Command {
     } catch (err) {
       debug(err)
       const errorStatus = {
+        type: 'fail',
         status: 'error',
         duration: deployTimer.getDuration(),
         message: null
@@ -230,7 +220,7 @@ export default class SocketDeploy extends Command {
       } else {
         errorStatus.message = err.message ? err.message : err
       }
-      return errorStatus
+      return errorStatus as UpdateStatus
     }
   }
 

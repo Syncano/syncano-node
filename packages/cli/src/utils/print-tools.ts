@@ -58,7 +58,7 @@ function echon(...args: any) {
   // process.stdout.write(`${util.format(args.join(' '))}`)
 }
 
-function error(...args: string[]) {
+function error(...args: any) {
   if (args.length === 1 && !Number.isInteger(args[0])) {
     // args.unshift('ERROR:');
     process.stdout.write(util.format(format.red(args.join(' '), '\n')))
@@ -75,7 +75,7 @@ function error(...args: string[]) {
   process.stdout.write(util.format(format.red(args.join('\n\n'), '\n')))
 }
 
-function warning(...args: string[] | number[]) {
+function warning(...args: any) {
   if (args.length === 1 && !Number.isInteger(args[0])) {
     process.stdout.write(util.format(format.yellow(args.join(' '), '\n')))
     return

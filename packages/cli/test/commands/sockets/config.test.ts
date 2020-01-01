@@ -36,7 +36,7 @@ describe('socket:config', () => {
     .exit(0)
     .it('create socket', ctx => {
       process.stdin.once('data', data => {
-        if (data === '\n') {
+        if (data.toString() === '\n') {
           expect(ctx.stdout).to.contain('Your Socket configuration is stored at')
         }
       })

@@ -35,6 +35,13 @@ interface TMetadataObject {
   new (name: string): MetadataObject;
 }
 
+export type UpdateStatus = {
+  status: any
+  type: 'ok' | 'fail' | 'warn' | 'wait' | 'compile error'
+  duration?: string
+  message?: string
+}
+
 class MetadataObject {
   name: string
   metadata: any
@@ -49,7 +56,7 @@ class MetadataObject {
     this.existRemotely = null
     this.existLocally = null
   }
-  getStatus() {
+  getStatus(): UpdateStatus {
     if (this.existLocally && this.existRemotely) {
       return {status: 'synced', type: 'ok'}
     }
@@ -100,7 +107,7 @@ class Event extends MetadataObject {
 }
 
 class Socket {
-  name: string
+  name: string = ''
   metadata: any
   settings: any
   socketPath: string
@@ -738,7 +745,7 @@ class Socket {
           return reject(new Error('environment is to big'))
         }
 
-        res.on('data', (data: { toString: () => void; }) => {
+        res.on('data', (data) => {
           const message = data.toString()
 
           if (res.statusCode && res.statusCode > 299) {
@@ -936,7 +943,8 @@ class Socket {
     })
   }
 
-  async update(params = {config: {}, updateSocketNPMDeps: false, updateEnv: false}) {
+
+  async update(params = {config: {}, updateSocketNPMDeps: false, updateEnv: false, withCompilation: false}): Promise<UpdateStatus> {
     info('update()', this.name)
     debug('update', params)
     const config = {...this.remote.config, ...params.config}
@@ -964,13 +972,13 @@ class Socket {
     debug('resp after update Socket zip:', resp)
 
     if (resp && resp.status === 'stopped') {
-      return {status: 'stopped'}
+      return {status: 'stopped', type: 'ok'}
     }
 
     if (resp && resp.status !== 'ok') return this.waitForStatusInfo()
   }
 
-  waitForStatusInfo() {
+  waitForStatusInfo(): Promise<UpdateStatus> {
     info('waitForStatusInfo()')
 
     return new Promise((resolve, reject) => {
@@ -978,14 +986,14 @@ class Socket {
         try {
           const socket = await this.getRemote()
           if (socket.status === 'ok') {
-            resolve({status: socket.status})
+            resolve({status: socket.status, type: 'ok'})
           }
           if (socket.status !== 'ok' && socket.status !== 'error') {
             setTimeout(getStatus, 400)
           } else {
             this.setRemoteState(socket)
             if (socket.status === 'ok') {
-              resolve({status: socket.status})
+              resolve({status: socket.status, type: 'ok'})
             }
 
             let errorMsg

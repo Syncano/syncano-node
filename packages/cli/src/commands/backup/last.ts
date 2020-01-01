@@ -1,4 +1,4 @@
-import {BackupClass} from '@syncano/core/backup'
+import {BackupClass} from '@syncano/core'
 import format from 'chalk'
 
 import Command from '../../base_command'

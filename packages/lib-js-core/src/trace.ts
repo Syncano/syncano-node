@@ -33,12 +33,12 @@ export class TraceClass extends QueryBuilder {
 
   private url (socketName: string, endpointName: string, traceId?: string) {
     const {instanceName} = this.instance
-    const instanceUrl = `${this.getSyncanoURL()}/instances/${instanceName}`
+    const instanceUrl = this.getInstanceURL(instanceName)
 
     if (traceId) {
       return `${instanceUrl}/endpoints/sockets/${socketName}/${endpointName}/traces/${traceId}`
     }
 
-    return `${this.getSyncanoURL()}/instances/${instanceName}/endpoints/sockets/${socketName}/${endpointName}/traces/`
+    return `${instanceUrl}/endpoints/sockets/${socketName}/${endpointName}/traces/`
   }
 }

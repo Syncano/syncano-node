@@ -1,5 +1,5 @@
 import format from 'chalk'
-import inquirer from 'inquirer'
+import inquirer, { Question } from 'inquirer'
 
 import Command, {Socket} from '../../base_command'
 import {socketNotFound} from '../../commands_helpers/socket'
@@ -18,14 +18,13 @@ export default class SocketUnInstall extends Command {
     await this.session.hasProject()
 
     const {args} = this.parse(SocketUnInstall)
-    const {flags} = this.parse(SocketUnInstall)
 
     const confirmation = [{
       type: 'confirm',
       name: 'confirm',
       message: this.p(2)(`Are you sure you want to remove: ${format.red(args.socketName)}`),
       default: false
-    }]
+    }] as Question[]
 
     const socket = await Socket.get(args.socketName)
 

@@ -31,6 +31,7 @@ export class QueryBuilder {
   protected registryHost: string = ''
   protected instance: any
   protected baseUrl: string
+  protected defaultHost: string
   protected result: any[]
 
   // TODO: Specify instance type
@@ -38,6 +39,7 @@ export class QueryBuilder {
     this.instance = instance
     this.baseUrl = `https://${instance.host}`
     this.result = []
+    this.defaultHost = process.env.SYNCANO_HOST || 'api.syncano.io'
   }
 
   protected async fetch (url: string, options: RequestInit = {}, headers = {}): Promise<any> {
@@ -116,12 +118,16 @@ export class QueryBuilder {
   }
 
   protected getSyncanoURL (apiVersion: string = this.instance.apiVersion) {
+    return `https://${this.defaultHost}/${apiVersion}`
+  }
+
+  protected getSyncanoLocationURL (apiVersion: string = this.instance.apiVersion) {
     const {host} = this.instance
 
     return `https://${host}/${apiVersion}`
   }
 
   protected getInstanceURL (instanceName: string, apiVersion?: string) {
-    return `${this.getSyncanoURL(apiVersion)}/instances/${instanceName}`
+    return `${this.getSyncanoLocationURL(apiVersion)}/instances/${instanceName}`
   }
 }

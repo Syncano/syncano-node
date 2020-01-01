@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Instance #create should create syncano instance 1`] = `
+Object {
+  "name": "my-insta",
+}
+`;
+
+exports[`Instance #list should list syncano instances 1`] = `
+Array [
+  Object {
+    "name": "instance1",
+  },
+  Object {
+    "name": "instance2",
+  },
+]
+`;

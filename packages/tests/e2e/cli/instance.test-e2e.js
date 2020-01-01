@@ -23,7 +23,9 @@ describe('CLI Instance', function () {
       .end(done)
   })
 
-  it('can\'t create an instance if already exist', function (done) {
+  it.skip('can list instance via info command', function (done) {
+    const testInstance = uniqueInstance()
+
     testNixt()
       .run(`${cliLocation} instance:create ${testInstance}`)
       .stdout(/Instance already exist!/)

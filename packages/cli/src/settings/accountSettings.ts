@@ -1,7 +1,9 @@
 import os from 'os'
-import Settings from './settings'
-import logger from '../utils/debug'
+
 import {AccountSettingsAttributes} from '../types'
+import logger from '../utils/debug'
+
+import Settings from './settings'
 
 const { debug } = logger('settings-account')
 
@@ -10,6 +12,7 @@ export default class AccountSettings extends Settings {
   baseDir: string
   loaded: boolean
   attributes: AccountSettingsAttributes
+
   constructor () {
     super()
     this.name = process.env.SYNCANO_ACCOUNT_FILE ? process.env.SYNCANO_ACCOUNT_FILE : 'syncano'

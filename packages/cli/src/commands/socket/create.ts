@@ -1,6 +1,6 @@
 import {flags} from '@oclif/command'
 import format from 'chalk'
-import inquirer from 'inquirer'
+import inquirer, { Question } from 'inquirer'
 import path from 'path'
 
 import Command, {Socket} from '../../base_command'
@@ -34,7 +34,7 @@ export default class SocketCreate extends Command {
       message: this.p(2)('Choose template for your Socket'),
       choices: Socket.getTemplatesChoices().map(choice => this.p(4)(choice)),
       default: 1
-    }]
+    }] as Question[]
 
     this.echo()
     let templateName
