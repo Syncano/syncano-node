@@ -22,6 +22,16 @@ run('generate', {args, meta})
   })
 ```
 
+## Test TypeScript endpoints
+
+By default `run` function will execute file from `syncano/<socket_name>/.dist/src`. To execute file from `syncano/<socket_name>/src` set env variables:
+```bash
+# @default .dist/src
+export SYNCANO_TEST_RUN_DIR=src
+# @default js
+export SYNCANO_TEST_RUN_EXT=ts
+```
+
 ## Learn more
 
 More examples how to create tests and use Syncano Test library you can find in the [Tests section](https://cookbook.syncano.io/) of the Cookbook. 

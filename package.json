@@ -4,10 +4,10 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --concurrency=2",
     "lint": "lerna run lint",
-    "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test  nyc lerna run test:unit",
+    "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test nyc lerna run test:unit",
     "test:e2e": "lerna run test:e2e --stream",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "changelog": "lerna-changelog",
+    "changelog": "npx lerna-changelog",
     "publish": "lerna publish --conventional-commits",
     "deploy": "npm run deploy:cookbook && yarn run deploy:cheatsheet",
     "deploy:cookbook": "node scripts/deploy cookbook",

@@ -70,6 +70,20 @@ export class DataClass<ClassSchema = {
   }
 
   /**
+   * Get the minimum value of a given key.
+   *
+   * @example
+   * data.posts.min('likes')
+   */
+  public async min<T>(column: Fields<T, ClassSchema>): Promise<number | null> {
+    const item = await this.orderBy(column, 'ASC').first()
+    if (item !== null) {
+      return (item as  any)[column]
+    }
+    return null
+   }
+
+  /**
    * Get first element matching query or return null
    *
    * @example
@@ -462,9 +476,12 @@ export class DataClass<ClassSchema = {
       url: this.url()
     }
 
-    if (body instanceof FormData) {
-      fetchObject.body = body
-      headers = body.getHeaders()
+    const formBody = body as unknown as FormData
+    const isFormData = (formBody) && formBody.constructor && formBody.constructor.name === 'FormData'
+
+    if (isFormData) {
+      fetchObject.body = formBody
+      headers = formBody.getHeaders()
     } else if (Array.isArray(body)) {
       return this.batch(body)
         .then(this.replaceCustomTypesWithValue.bind(this))
@@ -521,9 +538,12 @@ export class DataClass<ClassSchema = {
       url: this.url(id as number)
     }
 
-    if (body instanceof FormData) {
-      fetchObject.body = body
-      headers = body.getHeaders()
+    const formBody = body as unknown as FormData
+    const isFormData = (formBody) && formBody.constructor && formBody.constructor.name === 'FormData'
+
+    if (isFormData) {
+      fetchObject.body = formBody
+      headers = formBody.getHeaders()
     } else if (Array.isArray(id)) {
       return this.batch(id, headers)
         .then(this.resolveRelatedModels.bind(this))

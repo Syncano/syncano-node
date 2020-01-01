@@ -16,7 +16,10 @@
       "publish": {
         "allowBranch": "master"
       },
-      "exact": true
+      "exact": true,
+      "ignoreChanges": [
+        "@syncano/registry*"
+      ]
     }
   },
   "changelog": {

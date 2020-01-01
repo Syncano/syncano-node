@@ -39,6 +39,7 @@ const {data} = new Server(ctx)
 | [pluck](#pluckcolumn)                              | Return array of values for single column                                   |
 | [value](#valuecolumn)                              | Return column value of first object matching query                         |
 | [count](#count)                                    | Return number of objects matching query                                    |
+| [min](#mincolumn)                                  | Return minimal value for single column                                     |
 
 ## `create(data)`
 
@@ -422,4 +423,18 @@ data.posts.count()
 
 // Count posts with given status
 data.posts.where('status', 'in', ['draft', 'deleted']).count()
+```
+
+## `min(column)`
+
+| Type   | Name   | Default | Description                                 |
+| ------ | ------ | ------- | ------------------------------------------- |
+| string | column | null    | Column name of which value will be returned |
+
+```js
+// Get the lowest value of likes.
+data.posts.min('likes')
+
+// Get the lowest value of likes for published posts
+data.posts.where('status', 'in', ['published']).count()
 ```
