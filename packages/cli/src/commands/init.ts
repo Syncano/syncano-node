@@ -70,7 +70,7 @@ export default class InitCmd extends Command {
     await this.session.setLocation(init.locationName as Location)
 
     if (!project && instance) {
-      this.session.checkConnection(instance) || this.exit(1)
+      await this.session.checkConnection(instance) || this.exit(1)
       await init.addConfigFiles({instance, location: init.locationName})
       this.echo(4)(`Your project is attached to ${format.green(instance.name)} instance now!`)
 

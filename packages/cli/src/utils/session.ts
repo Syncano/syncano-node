@@ -247,14 +247,15 @@ export class Session {
     }
   }
 
-  async checkConnection(instanceName: string) {
+  async checkConnection(instanceName: string = this.project.instance) {
+    debug('checkConnection')
     let instance
 
     try {
       instance = await this.getInstance(instanceName)
     } catch (err) {
       debug(err.message)
-      if (err.message === 'Not found.') {
+      if (err.message.match(/not found/)) {
         echo()
         echo(4)(`Instance ${format.cyan(instanceName)} was not found on your account!`)
         echo()

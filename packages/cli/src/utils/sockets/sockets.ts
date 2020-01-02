@@ -5,7 +5,7 @@ import child from 'child_process'
 import template from 'es6-template-strings'
 import FindKey from 'find-key'
 import FormData from 'form-data'
-import fs from 'fs'
+import fs from 'fs-extra'
 import glob from 'glob'
 import YAML from 'js-yaml'
 import klawSync from 'klaw-sync'
@@ -532,7 +532,7 @@ class Socket {
         }
       })
       return filteredTraces
-    } catch (err) {}
+    } catch {}
   }
 
   getTraces(lastId: any) {
@@ -650,7 +650,7 @@ class Socket {
         }
       }))
 
-      archive.finalize()
+      await archive.finalize()
 
       output.on('close', () => {
         resolve()
@@ -943,11 +943,17 @@ class Socket {
     })
   }
 
-
-  async update(params = {config: {}, updateSocketNPMDeps: false, updateEnv: false, withCompilation: false}): Promise<UpdateStatus> {
+  async update(params = {config: {}, updateSocketNPMDeps: false, updateEnv: false, withCompilation: false, force: false}): Promise<UpdateStatus> {
     info('update()', this.name)
     debug('update', params)
     const config = {...this.remote.config, ...params.config}
+
+    // force cleanup
+    if (params.force) {
+      debug('removing .dist and .zip')
+      await fs.remove(path.join(this.socketPath, '.dist'))
+      await fs.remove(path.join(this.socketPath, '.zip'))
+    }
 
     // Get options from the env
     if (this.spec.config) {

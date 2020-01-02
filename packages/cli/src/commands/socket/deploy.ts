@@ -38,6 +38,7 @@ export default class SocketDeploy extends Command {
   static aliases = ['deploy']
   static flags = {
     'create-instance': flags.string(),
+    force: flags.boolean(),
     parallel: flags.boolean(),
     bail: flags.boolean(),
   }
@@ -74,11 +75,12 @@ export default class SocketDeploy extends Command {
   localSockets: Socket[] = []
 
   async run() {
-    await this.session.isAuthenticated()
-
     this.firstRun = true
     const {args} = this.parse(SocketDeploy)
     const {flags} = this.parse(SocketDeploy)
+
+    await this.session.isAuthenticated()
+    await this.session.checkConnection() || this.exit(1)
 
     // Create Instance if --create-instance provided
     if (flags['create-instance']) {
@@ -118,7 +120,7 @@ export default class SocketDeploy extends Command {
           title: `${format.grey('        waiting:')} ${socket.name}`,
           task: async (ctx, task) => {
             task.title = `${format.grey(' syncing socket:')} ${socket.name}`
-            const deployStatus = await this.deploySocket(socket, configs[socket.name])
+            const deployStatus = await this.deploySocket(socket, configs[socket.name], {force: flags.force})
 
             if (deployStatus.status === 'error' || deployStatus.status === 'compile error') {
               throw new Error()
@@ -179,7 +181,7 @@ export default class SocketDeploy extends Command {
     return timer.getDuration()
   }
 
-  async deploySocket(socket: Socket, config: SocketConfig): Promise<UpdateStatus> {
+  async deploySocket(socket: Socket, config: SocketConfig, params): Promise<UpdateStatus> {
     debug(`deploySocket: ${socket.name}`)
     const deployTimer = new Timer()
 
@@ -197,7 +199,8 @@ export default class SocketDeploy extends Command {
         config,
         withCompilation: true,
         updateSocketNPMDeps: true,
-        updateEnv: true
+        updateEnv: true,
+        force: params.force
       })
       updateStatus.duration = deployTimer.getDuration()
       return updateStatus
