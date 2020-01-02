@@ -140,7 +140,6 @@ class Hosting {
   src: string | null = null
   cname: string | null = null
   browser_router: string | null = null
-  domains: string[] | null = null
   auth: any
   url: string | null = null
   error: string | null = null
@@ -175,13 +174,9 @@ class Hosting {
   updateHosting() {
     const params = {
       src: this.src,
-      cname: this.cname,
       config: {
         browser_router: this.browser_router || false
       }
-    }
-    if (!this.cname) {
-      delete params.cname
     }
     session.settings.project.updateHosting(this.name, params)
   }
@@ -193,22 +188,19 @@ class Hosting {
     }
 
     if (params.removeCNAME) {
-      this.cname = null
       const cnameToRemoveIndex = domains.indexOf(params.removeCNAME)
       if (cnameToRemoveIndex > -1) {
         domains.splice(cnameToRemoveIndex, 1)
       }
     }
 
-    this.cname = params.cname || null
-    this.domains = domains
     this.config.browser_router = params.browser_router
     this.updateHosting()
 
     const paramsToUpdate = {
       name: this.name,
       config: this.config,
-      domains
+      domains: domains
     }
 
     const response = await axios.request({
@@ -237,7 +229,7 @@ class Hosting {
     // TODO: not optimal
     const paramsToUpdate = {
       name: this.name,
-      domains: this.domains,
+      domains: this.remote.domains,
       config: this.config,
       auth: this.auth || {}
     }
@@ -250,7 +242,6 @@ class Hosting {
         'X-Api-Key': session.settings.account.getAuthKey()
       }
     })
-
     return this.setRemoteState(response.data)
   }
 
