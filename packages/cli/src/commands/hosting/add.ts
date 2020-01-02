@@ -127,17 +127,17 @@ export default class HostingConfig extends Command {
     }
 
     if (this.cname === null) {
-      questions.push(<Question>{
+      questions.push({
         name: 'CNAME',
         message: this.p(2)('Set CNAME now (your own domain) or leave it empty')
-      })
+      } as Question)
     }
     if (!this.browserRouter) {
-      questions.push(<Question>{
+      questions.push({
         type: 'confirm',
         name: 'browser_router',
         message: this.p(2)('Do you want to use BrowserRouter for this hosting?')
-      })
+      } as Question)
     }
 
     return questions

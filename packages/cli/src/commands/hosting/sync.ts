@@ -1,4 +1,5 @@
 import {flags} from '@oclif/command'
+import BluebirdPromise from 'bluebird'
 import format from 'chalk'
 
 import Command from '../../base_command'
@@ -16,7 +17,7 @@ export default class HostingSync extends Command {
   static args = [{
     name: 'hostingName',
     description: 'name of the hosting to sync (all if not provided)',
-    required: true
+    required: false
   }]
 
   static async syncHosting(hosting: Hosting, params= {}) {
@@ -51,14 +52,27 @@ export default class HostingSync extends Command {
 
     const hostingName = args.hostingName
 
-    const hosting = await Hosting.get(hostingName)
+    try {
+      if (hostingName) {
+        const hosting = await Hosting.get(hostingName)
 
-    if (!hosting.existLocally) {
-      error(4)(`There is no "${hostingName}" hosting in the project!`)
-      echo()
+        if (!hosting.existLocally) {
+          error(4)(`There is no "${hostingName}" hosting in the project!`)
+          echo()
+        } else {
+          await HostingSync.syncHosting(hosting, {delete: flags.delete})
+        }
+      } else {
+        const hostings = await Hosting.list()
+        await BluebirdPromise.each(hostings, async (hosting) =>
+          HostingSync.syncHosting(hosting, {delete: flags.delete})
+        )
+      }
+    } catch {
+      error(4)(`Error while syncing!`)
+      this.exit(1)
+    } finally {
       this.exit()
     }
-
-    return HostingSync.syncHosting(hosting, {delete: flags.delete})
   }
 }
