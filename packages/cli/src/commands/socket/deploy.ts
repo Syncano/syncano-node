@@ -80,7 +80,6 @@ export default class SocketDeploy extends Command {
     const {flags} = this.parse(SocketDeploy)
 
     await this.session.isAuthenticated()
-    await this.session.checkConnection() || this.exit(1)
 
     // Create Instance if --create-instance provided
     if (flags['create-instance']) {
@@ -89,6 +88,7 @@ export default class SocketDeploy extends Command {
       await init.addConfigFiles({instance: flags['create-instance']})
     } else {
       // If not, we have to check if we have a project attached to any instance
+      await this.session.checkConnection() || this.exit(1)
       await this.session.hasProject()
     }
 
