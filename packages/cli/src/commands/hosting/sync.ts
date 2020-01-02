@@ -54,7 +54,7 @@ export default class HostingSync extends Command {
     const hosting = await Hosting.get(hostingName)
 
     if (!hosting.existLocally) {
-      error(4)(`There is no "${this.name}" hosting in the project!`)
+      error(4)(`There is no "${hostingName}" hosting in the project!`)
       echo()
       this.exit()
     }

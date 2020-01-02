@@ -20,7 +20,6 @@ const {debug} = logger('utils-hosting')
 
 class HostingFile {
   id: string | null = null
-  instanceName: string | null = null
   path: string | null = null
   checksum: string | number[] | null = null
   size: number | null = null
@@ -31,7 +30,6 @@ class HostingFile {
   loadRemote(fileRemoteData: any) {
     debug('loadRemote')
     this.id = fileRemoteData.id
-    this.instanceName = fileRemoteData.instanceName
     this.path = decodeURIComponent(fileRemoteData.path)
     this.checksum = fileRemoteData.checksum
     this.size = fileRemoteData.size
@@ -300,7 +298,7 @@ class Hosting {
     debug('loadLocal()')
     const localHostingSettings = session.settings.project.getHosting(this.name)
 
-    if (localHostingSettings && session.getProjectPath() && this.src) {
+    if (localHostingSettings && localHostingSettings.src && session.getProjectPath()) {
       if (Object.keys(localHostingSettings).length > 0) {
         this.existLocally = true
         this.src = localHostingSettings.src
@@ -428,7 +426,7 @@ class Hosting {
     debug('syncFiles()')
 
     if (!fs.existsSync(this.path)) {
-      throw new Error(`Local folder ${format.bold(this.path)} doesn't exist!`)
+      throw new Error(`Local folder ${format.bold(this.src)} doesn't exist!`)
     }
 
     const remoteFiles = await this.listRemoteFiles()
@@ -494,11 +492,10 @@ class Hosting {
     const files: HostingFile[] = []
     listLocalFiles.forEach(file => {
       const remoteCopy = _.find(remoteFiles, {path: file.path}) as any
-
       if (remoteCopy) {
+        _.extend(file, remoteCopy)
         file.isUpToDate = file.checksum === remoteCopy.checksum
         file.isSynced = true
-        _.extend(file, remoteCopy)
       }
       files.push(file)
     })
