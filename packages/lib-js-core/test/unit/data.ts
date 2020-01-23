@@ -566,7 +566,7 @@ describe('Data', () => {
             }
           ]
         })
-        .get(`/v2/instances/${instanceName}/users/`)
+        .get(`/v3/instances/${instanceName}/users/`)
         .query({
           query: JSON.stringify({id: {_in: [1]}}),
           page_size: 500

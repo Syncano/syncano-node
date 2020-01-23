@@ -843,7 +843,7 @@ export class DataClass<ClassSchema = {
 
           if (target === 'user') {
             load._url = `${this.getInstanceURL(
-              this.instance.instanceName
+              this.instance.instanceName, 'v3'
             )}/users/`
           }
 
