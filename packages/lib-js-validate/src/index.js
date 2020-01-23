@@ -15,11 +15,14 @@ function normalize (errors) {
 }
 
 export default class Validator {
-  constructor (ctx) {
+  constructor (ctx, config = {
+    cacheCompiledSchema: false
+  }) {
     if (!ctx) {
       throw new Error('You have to provide Syncano context!')
     }
     this.ctx = ctx
+    this.config = config
     this.requestData = ctx.args
     this.endpointDefinition = ctx.meta.metadata
     this.endpointRequestSchema = this.endpointDefinition.inputs
@@ -41,24 +44,30 @@ export default class Validator {
       })
     }
 
-    Validator.validate(socketSchema, schemaToTest)
+    Validator.validate(socketSchema, schemaToTest, this.config)
   }
 
-  static validate (schema, data) {
+  static validate (schema, data, config = {}) {
+    let validate
     const ajv = new Ajv({
       coerceTypes: true,
       $data: true,
       allErrors: true,
       jsonPointers: true,
-      serialize: false,
     })
-    if (typeof global === 'undefined') global = {}
-    if (!global.compiledSchema) {
+    if (config.cacheCompiledSchema) {
+      if (typeof global === 'undefined') global = {}
+      if (!global.compiledSchema) {
+        installKeywords(ajv)
+        installErrors(ajv)
+      }
+      validate = global.compiledSchema || ajv.compile(schema)
+      global.compiledSchema = validate
+    } else {
       installKeywords(ajv)
       installErrors(ajv)
+      validate = ajv.compile(schema)
     }
-    const validate = global.compiledSchema || ajv.compile(schema)
-    global.compiledSchema = validate
     const valid = validate(data)
 
     if (!valid) {
@@ -79,7 +88,7 @@ export default class Validator {
       return true
     }
 
-    return Validator.validate(this.endpointRequestSchema, this.requestData)
+    return Validator.validate(this.endpointRequestSchema, this.requestData, this.config)
   }
 
   async validateResponse (responseType, response) {
@@ -109,7 +118,7 @@ export default class Validator {
       throw new Error(`Wrong mimetype! Desired mimetype is ${desiredMimetype}, got: ${response.mimetype}`)
     }
 
-    Validator.validate(responseSchema, response.data)
+    Validator.validate(responseSchema, response.data, this.config)
     return response
   }
 }
