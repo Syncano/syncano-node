@@ -4,7 +4,7 @@ import installKeywords from 'ajv-keywords'
 import installErrors from 'ajv-errors'
 import {socketSchema} from '@syncano/schema'
 
-function normalise (errors) {
+function normalize (errors) {
   return errors.reduce(
     function (acc, e) {
       acc[e.dataPath.slice(1)] = [e.message.toUpperCase()[0] + e.message.slice(1)]
@@ -49,12 +49,16 @@ export default class Validator {
       coerceTypes: true,
       $data: true,
       allErrors: true,
-      jsonPointers: true
+      jsonPointers: true,
+      serialize: false,
     })
-    installKeywords(ajv)
-    installErrors(ajv)
-
-    const validate = ajv.compile(schema)
+    if (typeof global === 'undefined') global = {}
+    if (!global.compiledSchema) {
+      installKeywords(ajv)
+      installErrors(ajv)
+    }
+    const validate = global.compiledSchema || ajv.compile(schema)
+    global.compiledSchema = validate
     const valid = validate(data)
 
     if (!valid) {
@@ -64,7 +68,7 @@ export default class Validator {
 
       const error = new Error(`\n\n    Validation error:\n${detailsMsg}\n`)
       error.details = validate.errors
-      error.messages = normalise(validate.errors)
+      error.messages = normalize(validate.errors)
       throw error
     }
     return true
