@@ -53,16 +53,16 @@ export default class Validator {
       coerceTypes: true,
       $data: true,
       allErrors: true,
-      jsonPointers: true,
+      jsonPointers: true
     })
     if (config.cacheCompiledSchema) {
-      if (typeof global === 'undefined') global = {}
+      if (typeof global === 'undefined') global = {} // eslint-disable-line no-global-assign
       if (!global.compiledSchema) {
         installKeywords(ajv)
         installErrors(ajv)
       }
       validate = global.compiledSchema || ajv.compile(schema)
-      global.compiledSchema = validate
+      global.compiledSchema = validate // eslint-disable-line no-global-assign
     } else {
       installKeywords(ajv)
       installErrors(ajv)

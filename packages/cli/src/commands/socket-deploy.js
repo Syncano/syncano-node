@@ -4,7 +4,6 @@ import Promise from 'bluebird'
 import Listr from 'listr'
 import VerboseRenderer from 'listr-verbose-renderer'
 
-
 import logger from '../utils/debug'
 import { createInstance } from './helpers/create-instance'
 import { askQuestions } from './helpers/socket'
