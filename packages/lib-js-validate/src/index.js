@@ -55,8 +55,7 @@ export default class Validator {
       allErrors: true,
       jsonPointers: true
     })
-    if (config.cacheCompiledSchema) {
-      if (typeof global === 'undefined') global = {} // eslint-disable-line no-global-assign
+    if (config.cacheCompiledSchema && typeof global !== 'undefined') {
       if (!global.compiledSchema) {
         installKeywords(ajv)
         installErrors(ajv)
