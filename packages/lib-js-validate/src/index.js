@@ -56,12 +56,12 @@ export default class Validator {
       jsonPointers: true
     })
     if (config.cacheCompiledSchema && typeof global !== 'undefined') {
-      if (!global.compiledSchema) {
+      if (!global.syncanoValidatorCompiledSchema) {
         installKeywords(ajv)
         installErrors(ajv)
       }
-      validate = global.compiledSchema || ajv.compile(schema)
-      global.compiledSchema = validate // eslint-disable-line no-global-assign
+      validate = global.syncanoValidatorCompiledSchema || ajv.compile(schema)
+      global.syncanoValidatorCompiledSchema = validate // eslint-disable-line no-global-assign
     } else {
       installKeywords(ajv)
       installErrors(ajv)
