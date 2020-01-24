@@ -4,7 +4,7 @@ import installKeywords from 'ajv-keywords'
 import installErrors from 'ajv-errors'
 import {socketSchema} from '@syncano/schema'
 
-function normalise (errors) {
+function normalize (errors) {
   return errors.reduce(
     function (acc, e) {
       acc[e.dataPath.slice(1)] = [e.message.toUpperCase()[0] + e.message.slice(1)]
@@ -15,11 +15,14 @@ function normalise (errors) {
 }
 
 export default class Validator {
-  constructor (ctx) {
+  constructor (ctx, config = {
+    cacheCompiledSchema: false
+  }) {
     if (!ctx) {
       throw new Error('You have to provide Syncano context!')
     }
     this.ctx = ctx
+    this.config = config
     this.requestData = ctx.args
     this.endpointDefinition = ctx.meta.metadata
     this.endpointRequestSchema = this.endpointDefinition.inputs
@@ -41,20 +44,29 @@ export default class Validator {
       })
     }
 
-    Validator.validate(socketSchema, schemaToTest)
+    Validator.validate(socketSchema, schemaToTest, this.config)
   }
 
-  static validate (schema, data) {
+  static validate (schema, data, config = {}) {
+    let validate
     const ajv = new Ajv({
       coerceTypes: true,
       $data: true,
       allErrors: true,
       jsonPointers: true
     })
-    installKeywords(ajv)
-    installErrors(ajv)
-
-    const validate = ajv.compile(schema)
+    if (config.cacheCompiledSchema && typeof global !== 'undefined') {
+      if (!global.syncanoValidatorCompiledSchema) {
+        installKeywords(ajv)
+        installErrors(ajv)
+      }
+      validate = global.syncanoValidatorCompiledSchema || ajv.compile(schema)
+      global.syncanoValidatorCompiledSchema = validate // eslint-disable-line no-global-assign
+    } else {
+      installKeywords(ajv)
+      installErrors(ajv)
+      validate = ajv.compile(schema)
+    }
     const valid = validate(data)
 
     if (!valid) {
@@ -64,7 +76,7 @@ export default class Validator {
 
       const error = new Error(`\n\n    Validation error:\n${detailsMsg}\n`)
       error.details = validate.errors
-      error.messages = normalise(validate.errors)
+      error.messages = normalize(validate.errors)
       throw error
     }
     return true
@@ -75,7 +87,7 @@ export default class Validator {
       return true
     }
 
-    return Validator.validate(this.endpointRequestSchema, this.requestData)
+    return Validator.validate(this.endpointRequestSchema, this.requestData, this.config)
   }
 
   async validateResponse (responseType, response) {
@@ -105,7 +117,7 @@ export default class Validator {
       throw new Error(`Wrong mimetype! Desired mimetype is ${desiredMimetype}, got: ${response.mimetype}`)
     }
 
-    Validator.validate(responseSchema, response.data)
+    Validator.validate(responseSchema, response.data, this.config)
     return response
   }
 }
