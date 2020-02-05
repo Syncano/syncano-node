@@ -101,14 +101,11 @@ class Hosting {
   updateHosting () {
     const params = {
       src: this.src,
-      cname: this.cname,
       config: {
         browser_router: this.browser_router || false
       }
     }
-    if (!this.cname) {
-      delete params.cname
-    }
+
     session.settings.project.updateHosting(this.name, params)
   }
 
@@ -119,15 +116,12 @@ class Hosting {
     }
 
     if (params.removeCNAME) {
-      this.cname = null
       const cnameToRemoveIndex = domains.indexOf(params.removeCNAME)
       if (cnameToRemoveIndex > -1) {
         domains.splice(cnameToRemoveIndex, 1)
       }
     }
 
-    this.cname = params.cname
-    this.domains = domains
     this.config.browser_router = params.browser_router
     this.updateHosting()
 
@@ -163,8 +157,8 @@ class Hosting {
     // TODO: not optimal
     const paramsToUpdate = {
       name: this.name,
-      domains: this.domains,
-      config: this.config,
+      domains: this.remote.domains,
+      config: this.remote.config,
       auth: this.auth || {}
     }
 
