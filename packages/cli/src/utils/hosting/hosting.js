@@ -158,7 +158,7 @@ class Hosting {
     const paramsToUpdate = {
       name: this.name,
       domains: this.remote.domains,
-      config: this.config,
+      config: this.remote.config,
       auth: this.auth || {}
     }
 
