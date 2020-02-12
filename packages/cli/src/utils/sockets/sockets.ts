@@ -107,7 +107,7 @@ class Event extends MetadataObject {
 }
 
 class Socket {
-  name: string = ''
+  name = ''
   metadata: any
   settings: any
   socketPath: string
@@ -116,17 +116,21 @@ class Socket {
   fromNPM: boolean | null = null
   remote: any
   spec: any
-  localPath: string = ''
-  isProjectRegistryDependency: boolean = false
+  localPath = ''
+  isProjectRegistryDependency = false
 
   constructor(socketName: string, socketPath?: string) {
     debug('Sockets.constructor', socketName)
     this.name = socketName
     this.settings = {loaded: false}
+    debug(`#findLocalPath ${socketName}`)
     this.socketPath = socketPath || utils.findLocalPath(socketName) || ''
+    debug(`/findLocalPath ${socketName}`)
 
     if (this.socketPath) {
+      debug(`#getSocketSettings - ${this.socketPath}`)
       this.settings = session.settings.getSocketSettings(this.socketPath, this.name)
+      debug(`/getSocketSettings - ${this.socketPath}`)
     }
 
     // this.existRemotely = null
@@ -209,18 +213,18 @@ class Socket {
     // Local Socket defined in folders and in project deps
     const localSocketsList = await utils.listLocal()
 
-    return Promise.all(localSocketsList.map((socketName: string) => Socket.get(socketName)))
+    return Promise.all(localSocketsList.map(({socketName, socketPath}) => Socket.get(socketName, socketPath)))
   }
 
   // Creating Socket simple object
-  static getLocal(socketName: string): Socket {
+  static getLocal(socketName: string, socketPath: string): Socket {
     info('getLocal()', socketName)
-    return new Socket(socketName)
+    return new Socket(socketName, socketPath)
   }
 
-  static async get(socketName: string): Promise<Socket> {
+  static async get(socketName: string, socketPath?: string): Promise<Socket> {
     info('get()', socketName)
-    const socket = Socket.getLocal(socketName)
+    const socket = Socket.getLocal(socketName, socketPath)
     await socket.loadRemote()
     return socket
   }

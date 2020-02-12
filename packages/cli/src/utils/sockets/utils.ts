@@ -8,6 +8,7 @@ import logger from '../debug'
 import session from '../session'
 import {builtInSocketTemplates, getTemplateSpec, installedSocketTemplates} from '../templates'
 import SourceMap from 'source-map'
+import {SocketBasicInfo} from '../../types'
 
 const {debug} = logger('utils-sockets-utils')
 
@@ -109,7 +110,37 @@ const findLocalPath = (socketName: string) => {
 //   return localSockets.concat(singleSocket, nodeModSockets)
 // }
 
-const listLocal = async (): Promise<string[]> => {
+const getSocketBasicInfo = async (socketsPath: string, maxDepth = 3) => {
+  debug(`#getSocketBasicInfo - ${socketsPath}`)
+  const sockets = new Set<SocketBasicInfo>()
+
+  if (!fs.existsSync(socketsPath)) {
+    return Array.from(sockets)
+  }
+
+  const options = {
+    follow_symlinks: true,
+    max_depth: maxDepth
+  }
+
+  // TODO: optimize only digging deeper scoped modules
+  await walkdir.async(socketsPath, options, walkPath => {
+    if (walkPath.match(/socket.yml$/) && !path.dirname(walkPath).match(/\/\./)) {
+      const content = fs.readFileSync(walkPath, 'utf8')
+      const socketName = content.match(/^name: ([\w-_]+)/)
+      sockets.add({
+        socketName: socketName[1],
+        socketPath: path.dirname(walkPath)
+      })
+    }
+  })
+
+  debug(`/getSocketBasicInfo - ${socketsPath}: ${JSON.stringify(Array.from(sockets))}`)
+
+  return Array.from(sockets)
+}
+
+const listLocal = async (): Promise<SocketBasicInfo[]> => {
   debug('listLocal', session.getProjectPath())
 
   const singleSocketPath = path.join(session.getProjectPath())
@@ -117,9 +148,9 @@ const listLocal = async (): Promise<string[]> => {
   const nodeModPath = path.join(session.getProjectPath(), 'node_modules')
 
   const [singleSocket, localSockets, nodeModSockets] = await Promise.all([
-    Object.entries(searchForSockets(singleSocketPath, 1)).map(([, socket]) => socket.name),
-    Object.entries(searchForSockets(localPath)).map(([, socket]) => socket.name),
-    Object.entries(searchForSockets(nodeModPath)).map(([, socket]) => socket.name),
+    getSocketBasicInfo(singleSocketPath, 1),
+    getSocketBasicInfo(localPath),
+    getSocketBasicInfo(nodeModPath),
   ])
 
   return localSockets.concat(singleSocket, nodeModSockets)

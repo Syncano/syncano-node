@@ -38,7 +38,7 @@ export class Session {
   connection: Syncano | null = null
 
   constructor() {
-    // TODO: fix this
+    // FIXME:
     // const pjson = require('../../package.json')
     const pjson = {
       version: '0.0.1'
