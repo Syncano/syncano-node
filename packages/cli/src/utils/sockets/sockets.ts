@@ -1,3 +1,4 @@
+import {Socket as RemoteSocket, Trace} from '@syncano/core'
 import Validator from '@syncano/validate'
 import archiver from 'archiver'
 import axios from 'axios'
@@ -17,23 +18,18 @@ import SourceMap from 'source-map'
 import WebSocket from 'ws'
 import yauzl from 'yauzl'
 
-import {UpdateSocketZipReponse} from '../../types'
+import {UpdateSocketZipResponse} from '../../types'
 import logger from '../debug'
 import {CompatibilityError, CompileError, SocketUpdateError} from '../errors'
 import {p} from '../print-tools'
 import session from '../session'
 import {getTemplate} from '../templates'
-import {Trace, Socket as RemoteSocket} from "@syncano/core"
 
 import utils from './utils'
 
 const {debug, info} = logger('utils-sockets')
 
 type TMetadata = {}
-
-interface TMetadataObject {
-  new (name: string): MetadataObject;
-}
 
 export type UpdateStatus = {
   status: any
@@ -71,20 +67,18 @@ class MetadataObject {
   }
 }
 
-type TEndointParams = {
-
-}
+type TEndpointParams = {}
 
 class Endpoint extends MetadataObject {
   static type = 'endpoints'
 
-  call(params: TEndointParams) {
+  call(params: TEndpointParams) {
     return axios.request({
       url: this.getURL(),
       method: 'POST',
       timeout: 3000,
       params,
-      // Do not transform data automaticaly
+      // Do not transform data automatically
       transformResponse: data => data
     })
   }
@@ -107,7 +101,7 @@ class Event extends MetadataObject {
 }
 
 class Socket {
-  name: string = ''
+  name = ''
   metadata: any
   settings: any
   socketPath: string
@@ -116,22 +110,22 @@ class Socket {
   fromNPM: boolean | null = null
   remote: any
   spec: any
-  localPath: string = ''
-  isProjectRegistryDependency: boolean = false
+  localPath = ''
+  isProjectRegistryDependency = false
 
   constructor(socketName: string, socketPath?: string) {
     debug('Sockets.constructor', socketName)
     this.name = socketName
     this.settings = {loaded: false}
+    debug(`#findLocalPath ${socketName}`)
     this.socketPath = socketPath || utils.findLocalPath(socketName) || ''
+    debug(`/findLocalPath ${socketName}`)
 
     if (this.socketPath) {
+      debug(`#getSocketSettings - ${this.socketPath}`)
       this.settings = session.settings.getSocketSettings(this.socketPath, this.name)
+      debug(`/getSocketSettings - ${this.socketPath}`)
     }
-
-    // this.existRemotely = null
-    // this.existLocally = null
-    // this.fromNPM = null
 
     // that looks stupid
     this.remote = {
@@ -175,6 +169,7 @@ class Socket {
     if (socket.existLocally && socket.localPath) {
       Socket.uninstallLocal(socket)
       if (socket.existRemotely) {
+        // tslint:disable-next-line: no-floating-promises
         this.uninstallRemote(socket.name)
       }
       return Promise.resolve()
@@ -197,30 +192,30 @@ class Socket {
     return session.getConnection().socket.delete(socketName)
   }
 
-  // list sockets based on call to Syncano (sockets are installed on Synano)
+  // list sockets based on call to Syncano (sockets are installed on Syncano)
   static listRemote() {
     debug('listRemote()')
     return session.getConnection().socket.list()
   }
 
-  // list all sockets (mix of locally definde and installed on server)
+  // list all sockets (mix of locally defined and installed on server)
   static async list(): Promise<Socket[]> {
     debug('list()')
     // Local Socket defined in folders and in project deps
     const localSocketsList = await utils.listLocal()
 
-    return Promise.all(localSocketsList.map((socketName: string) => Socket.get(socketName)))
+    return Promise.all(localSocketsList.map(({socketName, socketPath}) => Socket.get(socketName, socketPath)))
   }
 
   // Creating Socket simple object
-  static getLocal(socketName: string): Socket {
+  static getLocal(socketName: string, socketPath: string): Socket {
     info('getLocal()', socketName)
-    return new Socket(socketName)
+    return new Socket(socketName, socketPath)
   }
 
-  static async get(socketName: string): Promise<Socket> {
+  static async get(socketName: string, socketPath?: string): Promise<Socket> {
     info('get()', socketName)
-    const socket = Socket.getLocal(socketName)
+    const socket = Socket.getLocal(socketName, socketPath)
     await socket.loadRemote()
     return socket
   }
@@ -238,7 +233,7 @@ class Socket {
 
   isDependency() {
     debug('isDependency')
-    // TODO: better way to dermine that?
+    // TODO: better way to determine that?
     if (this.socketPath && this.socketPath.match(/node_modules/)) {
       return true
     }
@@ -311,6 +306,7 @@ class Socket {
           timeout: 3000
         })
         this.remote.spec = YAML.load(spec.data)
+      // tslint:disable-next-line: no-unused
       } catch (err) {}
     }
   }
@@ -336,6 +332,7 @@ class Socket {
       const remoteSocket = await this.getRemote()
       await this.setRemoteState(remoteSocket)
       await this.getRemoteSpec()
+    // tslint:disable-next-line: no-unused
     } catch (err) {
       this.existRemotely = false
     }
@@ -354,7 +351,7 @@ class Socket {
     }
   }
 
-  isSocketFile(fileFullPath: { includes: (arg0: string) => void; }) {
+  isSocketFile(fileFullPath: { includes(arg0: string): void; }) {
     info('isSocketFile()', fileFullPath)
     return fileFullPath.includes(this.localPath)
   }
@@ -555,24 +552,24 @@ class Socket {
     }
 
     return new Promise((resolve, reject) => {
-      yauzl.open(zipPath, {lazyEntries: true}, (err, zipfile) => {
-        if (err || !zipfile) {
+      yauzl.open(zipPath, {lazyEntries: true}, (err, zipFile) => {
+        if (err || !zipFile) {
           return reject(err)
         }
-        zipfile.readEntry()
-        zipfile.on('end', () => {
+        zipFile.readEntry()
+        zipFile.on('end', () => {
           resolve(files)
         })
-        zipfile.on('entry', entry => {
+        zipFile.on('entry', entry => {
           if (/\/$/.test(entry.fileName)) {
             // Directory file names end with '/'.
             // Note that entires for directories themselves are optional.
             // An entry's fileName implicitly requires its parent directories to exist.
-            zipfile.readEntry()
+            zipFile.readEntry()
           } else {
             // file entry
             files.push(entry.fileName)
-            zipfile.readEntry()
+            zipFile.readEntry()
           }
         })
       })
@@ -584,6 +581,7 @@ class Socket {
     let ignore: string[] | never[] = []
     try {
       ignore = fs.readFileSync(`${this.getCompiledScriptsFolder()}/.syncanoignore`, 'utf8').split('\n')
+    // tslint:disable-next-line: no-unused
     } catch (err) {}
 
     return glob.sync('**', {
@@ -689,7 +687,7 @@ class Socket {
       })
 
       if (filesInZip) {
-        archive.finalize()
+        await archive.finalize()
       } else {
         fs.unlinkSync(this.getSocketEnvZip())
         resolve(false)
@@ -745,7 +743,7 @@ class Socket {
           return reject(new Error('environment is to big'))
         }
 
-        res.on('data', (data) => {
+        res.on('data', data => {
           const message = data.toString()
 
           if (res.statusCode && res.statusCode > 299) {
@@ -772,7 +770,7 @@ class Socket {
     return 'No need to update'
   }
 
-  async updateSocketZip({config = {}, install = false}): Promise<UpdateSocketZipReponse> {
+  async updateSocketZip({config = {}, install = false}): Promise<UpdateSocketZipResponse> {
     info('updateSocketZip()')
     let endpointPath = `/v2/instances/${session.getProjectInstance()}/sockets/`
     // const zipChecksum = await md5File(this.getSocketZip())
@@ -837,7 +835,7 @@ class Socket {
         let responseData = ''
         let responseCode: number | undefined
 
-        res.on('data', (data: { toString: () => string; }) => {
+        res.on('data', (data: { toString(): string; }) => {
           responseData += data.toString()
           responseCode = res.statusCode
         })
@@ -881,11 +879,10 @@ class Socket {
       let args = null
 
       if (params.updateSocketNPMDeps) {
-        args = 'run build -s'
+        args = 'run build --silent --color always'
       } else {
-        args = 'run build:src -s'
+        args = 'run build:src --silent --color always'
       }
-
       process.env.FORCE_COLOR = 'true'
       info('start compilation')
       const out = child.spawn(
@@ -898,9 +895,11 @@ class Socket {
       )
 
       let stderr = ''
-      out.stderr.on('data', chunk => {
-        stderr += chunk
-      })
+      if (out.stderr) {
+        out.stderr.on('data', chunk => {
+          stderr += chunk
+        })
+      }
 
       let stdout = ''
       out.stdout.on('data', chunk => {
@@ -951,8 +950,10 @@ class Socket {
     // force cleanup
     if (params.force) {
       debug('removing .dist and .zip')
-      await fs.remove(path.join(this.socketPath, '.dist'))
-      await fs.remove(path.join(this.socketPath, '.zip'))
+      await Promise.all([
+        fs.remove(path.join(this.socketPath, '.dist')),
+        fs.remove(path.join(this.socketPath, '.zip'))
+      ])
     }
 
     // Get options from the env
@@ -967,8 +968,11 @@ class Socket {
     }
 
     await this.verify()
+
     if (!this.isDependency()) {
+      debug(`#compile ${this.name}`)
       await this.compile({updateSocketNPMDeps: params.updateSocketNPMDeps})
+      debug(`/compile ${this.name}`)
       await this.createZip({partial: this.remote.status !== 'error'})
     }
 
@@ -1010,10 +1014,12 @@ class Socket {
             }
             reject(new SocketUpdateError(errorMsg))
           }
+        // tslint:disable-next-line: no-unused
         } catch (err) {
           reject(new Error('Socket not found!'))
         }
       }
+      // tslint:disable-next-line: no-floating-promises
       getStatus()
     })
   }
@@ -1039,7 +1045,7 @@ class Socket {
   //   this.echo(4)(`Hosting ${hostingName} of ${this.name} has been deleted from config...`)
   // }
 
-  getScriptObject(fileFullPath: { replace: (arg0: string, arg1: string) => void; }) {
+  getScriptObject(fileFullPath: { replace(arg0: string, arg1: string): void; }) {
     const srcFile = fileFullPath
     const compiledFile = fileFullPath.replace(this.getSrcFolder(), this.getCompiledScriptsFolder())
     return {
@@ -1150,6 +1156,7 @@ class Socket {
         return false
       }
       return 'PATCH'
+    // tslint:disable-next-line: no-unused
     } catch (err) {
       return 'POST'
     }

@@ -2,7 +2,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap --concurrency=2",
+    "bootstrap": "CI=true lerna bootstrap --concurrency=2",
     "lint": "lerna run lint",
     "test:unit": "LERNA_TEST_RUN=1 NODE_ENV=test nyc lerna run test:unit",
     "test:e2e": "lerna run test:e2e --stream",

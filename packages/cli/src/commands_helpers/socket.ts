@@ -2,7 +2,7 @@ import format from 'chalk'
 import inquirer from 'inquirer'
 
 import logger from '../utils/debug'
-import {echo, echon, error, warning, p} from '../utils/print-tools'
+import {echo, echon, error, p, warning} from '../utils/print-tools'
 
 const {debug} = logger('cmd-helpers-socket')
 

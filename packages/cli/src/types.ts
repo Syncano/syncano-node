@@ -13,6 +13,11 @@ export interface SyncanoProject {
 export interface SyncanoConnection {
 }
 
+export interface SocketBasicInfo {
+  socketName: string
+  socketPath: string
+}
+
 export interface CLISession {
   CLIVersion: string
   settings: any
@@ -100,7 +105,7 @@ export interface HostingParams {
   removeCNAME?: boolean
 }
 
-export interface UpdateSocketZipReponse {
+export interface UpdateSocketZipResponse {
   status: 'stopped' | 'ok'
 }
 

@@ -1,4 +1,4 @@
-import ora, { Ora } from 'ora'
+import ora, {Ora} from 'ora'
 
 class GlobalSpinner {
   spinnerLabel: string
@@ -6,28 +6,29 @@ class GlobalSpinner {
   queueSize: number
   spinner: Ora
 
-  constructor (spinnerLabel: string) {
+  constructor(spinnerLabel: string) {
     this.spinnerLabel = spinnerLabel
     this.spinner = ora(spinnerLabel)
     this.jobsCounter = 0
     this.queueSize = 0
   }
 
-  label (text: string) {
+  label(text: string) {
     this.spinner.text = text
   }
 
-  resetLabel (text: string) {
+  resetLabel(text: string) {
     this.spinner.text = this.spinnerLabel
   }
 
-  stop () {
+  stop() {
     this.spinner.stop()
     this.jobsCounter -= 1
   }
 
-  start () {
+  start() {
     this.jobsCounter += 1
+
     if (this.jobsCounter === this.queueSize) {
       this.spinner.start()
     }
@@ -37,26 +38,26 @@ class GlobalSpinner {
 class SimpleSpinner {
   spinner: Ora
 
-  constructor (spinnerLabel: string) {
+  constructor(spinnerLabel: string) {
     this.spinner = ora({text: spinnerLabel, stream: process.stdout})
   }
 
-  start () {
+  start() {
     this.spinner.start()
     return this
   }
 
-  stop () {
+  stop() {
     this.spinner.stop()
     return this
   }
 
-  succeed (msg: string) {
+  succeed(msg: string) {
     this.spinner.succeed(msg)
     return this
   }
 
-  fail (msg: string) {
+  fail(msg: string) {
     this.spinner.fail(msg)
     return this
   }
