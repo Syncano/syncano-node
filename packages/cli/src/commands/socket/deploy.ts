@@ -39,6 +39,7 @@ export default class SocketDeploy extends Command {
   static flags = {
     'create-instance': flags.string(),
     force: flags.boolean(),
+    'is-hot': flags.boolean(),
     parallel: flags.boolean(),
     bail: flags.boolean(),
   }
@@ -78,7 +79,7 @@ export default class SocketDeploy extends Command {
     this.firstRun = true
     const {args} = this.parse(SocketDeploy)
     const {flags} = this.parse(SocketDeploy)
-
+    const isHot = flags['is-hot']
     await this.session.isAuthenticated()
 
     // Create Instance if --create-instance provided
@@ -108,7 +109,9 @@ export default class SocketDeploy extends Command {
       }
       this.socketList = [socket]
     } else {
+      debug('#socketList')
       this.socketList = await Socket.list()
+      debug('/#socketList')
     }
 
     const configs: TSocketConfig = {}
@@ -118,14 +121,16 @@ export default class SocketDeploy extends Command {
       this.socketList.forEach(socket => {
         deployList.push({
           title: `${format.grey('        waiting:')} ${socket.name}`,
-          task: async (ctx, task) => {
+          task: async (_ctx, task) => {
             task.title = `${format.grey(' syncing socket:')} ${socket.name}`
             const deployStatus = await this.deploySocket(socket, configs[socket.name], {force: flags.force})
-
-            if (deployStatus.status === 'error' || deployStatus.status === 'compile error') {
+            if (deployStatus.status === 'error') {
               throw new Error()
             } else {
               task.title = SocketDeploy.printSummary(socket.name, deployStatus)
+            }
+            if (deployStatus.status === 'compile error') {
+              throw new Error()
             }
           }
         })
@@ -133,14 +138,14 @@ export default class SocketDeploy extends Command {
 
       const listsOptions = {
         concurrent: flags.parallel || false,
-        renderer: process.env.CI ? VerboseRenderer : 'default',
+        renderer: process.env.CI ? VerboseRenderer : 'default' as const,
         exitOnError: flags.bail || false
       }
 
       const projectTasks = new Listr([
         {
           title: `${format.grey('        project:')} checking... `,
-          task: async (ctx, task) => {
+          task: async (_ctx, task) => {
             const duration = await this.deployProject()
             task.title = `${format.grey('        project:')} ${currentTime()} updated ${format.grey(duration)}`
           }
@@ -167,12 +172,23 @@ export default class SocketDeploy extends Command {
         await socketsTasks.run()
         this.echo()
       }
-      this.echo(2)(format.grey(`       total time: ${deployTimer.getDuration()}`))
-      this.echo()
+
+      if (!isHot) {
+        this.echo(2)(format.grey(`       total time: ${deployTimer.getDuration()}`))
+        this.echo()
+      }
+    // tslint:disable-next-line: no-unused
     } catch (err) {
-      this.bail()
+      if (!isHot) {
+        this.bail()
+      }
     }
-    this.exit(0)
+
+    if (isHot) {
+      return this
+    } else {
+      this.exit(0)
+    }
   }
 
   async deployProject() {
@@ -200,7 +216,7 @@ export default class SocketDeploy extends Command {
         withCompilation: true,
         updateSocketNPMDeps: true,
         updateEnv: true,
-        force: params.force
+        force: params.force,
       })
       updateStatus.duration = deployTimer.getDuration()
       return updateStatus
@@ -222,6 +238,7 @@ export default class SocketDeploy extends Command {
       } else {
         errorStatus.message = err.message ? err.message : err
       }
+
       return errorStatus as UpdateStatus
     }
   }

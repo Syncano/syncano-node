@@ -4,8 +4,8 @@ import mkdirp from 'mkdirp'
 import path from 'path'
 
 import {getSettings} from '../settings'
-
 import {Location, SyncanoProject} from '../types'
+
 import logger from './debug'
 import Hosting from './hosting'
 import Init from './init'

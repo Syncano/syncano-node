@@ -1,8 +1,8 @@
 
 import {flags} from '@oclif/command'
 import format from 'chalk'
+import chokidar, {FSWatcher} from 'chokidar'
 import _ from 'lodash'
-import watchr from 'watchr'
 
 import Command, {Socket} from '../../base_command'
 import {GlobalSpinner, SimpleSpinner} from '../../commands_helpers/spinner'
@@ -21,6 +21,7 @@ const timer = new Timer()
 
 export default class SocketHotDeploy extends Command {
   static description = 'Hot Deploy Socket'
+  static aliases = ['hot']
   static flags = {
     trace: flags.boolean(),
   }
@@ -35,7 +36,7 @@ export default class SocketHotDeploy extends Command {
   firstRun: Record<string, boolean>
   mainSpinner: GlobalSpinner
   cmd: any
-  stalker: any
+  stalker: FSWatcher
 
   printUpdateFailed(socketName: string, err, deployTimer) {
     const duration = deployTimer.getDuration()
@@ -77,21 +78,20 @@ export default class SocketHotDeploy extends Command {
     this.echo()
     this.echo(1)(`🚀 ${format.grey(' Initial sync started...')}`)
 
-    const deployCmd = await SocketDeploy.run([args.socketName || ''])
+    const deployCmd = await SocketDeploy.run([args.socketName || '', '--is-hot'])
     this.socketList = deployCmd.socketList
 
     this.echo(1)(`🔥 ${format.grey(' Hot deploy started')} ${format.dim('(Hit Ctrl-C to stop)')}`)
     this.echo()
 
     info('Starting stalker')
-    this.runStalker()
     this.mainSpinner.queueSize += 1
-    this.mainSpinner.queueSize += this.socketList.length
     this.mainSpinner.start()
+    this.runStalker()
 
     if (flags.trace) {
       const traces = await SocketTrace.run()
-      Promise.all(this.socketList.map(socket => traces.startCollectingTraces(socket)))
+      this.socketList.map(socket => traces.startCollectingTraces(socket))
     }
   }
 
@@ -111,6 +111,7 @@ export default class SocketHotDeploy extends Command {
     const deployTimer = new Timer()
     const msg = p(4)(`${format.magenta('socket deploy:')} ${currentTime()} ${format.cyan(socket.name)}`)
     this.mainSpinner.stop()
+
     const spinner = new SimpleSpinner(msg).start()
 
     // We have to count here number of updates
@@ -130,6 +131,7 @@ export default class SocketHotDeploy extends Command {
       pendingUpdates[socket.name] -= 1
       if (pendingUpdates[socket.name] > 0) {
         pendingUpdates[socket.name] = 0
+
         await this.deploySocket(socket, config)
       }
     }
@@ -152,8 +154,7 @@ export default class SocketHotDeploy extends Command {
         const status = format.red('socket sync error:')
         this.echo(2)(`${status} ${currentTime()} ${format.cyan(socket.name)} ${format.red(err.message)}`)
       }
-
-      if (this.cmd.bail) {
+      if (this.cmd && this.cmd.bail) {
         this.bail()
       }
       await updateEnds()
@@ -169,28 +170,25 @@ export default class SocketHotDeploy extends Command {
 
   runStalker() {
     // Stalking files
-    debug('watching:', this.session.getProjectPath())
-    this.stalker = watchr.create(this.session.getProjectPath())
-    this.stalker.on('change', async (changeType, fileName) => {
+    const paths = this.socketList.map(item => item.socketPath)
+    debug('watching:', paths)
+    this.stalker = chokidar.watch(paths, {
+      persistent: true,
+      disableGlobbing: true,
+      followSymlinks: true,
+      ignoreInitial: true,
+      interval: 300,
+      // Exclude node modules and dot directories like: .git, .dist
+      ignored: [/node_modules/, /(^|[\/\\])\../]
+    })
+
+    this.stalker.on('change', async path => {
       timer.reset()
-      const socketToUpdate = this.getSocketToUpdate(fileName)
+      const socketToUpdate = this.getSocketToUpdate(path)
       if (socketToUpdate) {
         await this.deploySocket(socketToUpdate)
       }
     })
-
-    this.stalker.setConfig({
-      interval: 300,
-      persistent: true,
-      catchupDelay: 300,
-      preferredMethods: ['watch', 'watchFile'],
-      followLinks: true,
-      ignoreHiddenFiles: true, // ignoring .bundles, .dist etc.
-      ignoreCommonPatterns: true
-    })
-
-    // First start of the stalker
-    this.stalker.watch(() => {})
 
     this.localSockets = _.filter(this.socketList, {existLocally: true})
   }
