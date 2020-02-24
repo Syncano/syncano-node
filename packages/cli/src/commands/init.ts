@@ -58,7 +58,7 @@ export default class InitCmd extends Command {
         type: 'input',
         message: this.p(2)('Choose name for your instance'),
         default: genUniqueInstanceName(),
-        when: !instance
+        when: !project
       },
       {
         name: 'location',
@@ -84,7 +84,7 @@ export default class InitCmd extends Command {
       this.echo()
     } else if (!init.hasConfig()) {
       this.echo()
-      this.echo(4)(`Syncano instance ${format.cyan(project.instance)} ${format.grey(`[${project.location}]`)} is attached to this folder`)
+      this.echo(4)(`Syncano instance ${format.cyan(project.instance)} ${project.location ? format.grey(`[${project.location}]`) : ''} is attached to this folder`)
       this.echo(4)("but you don't have any config files - I'll create them for you!")
       this.echo()
     } else {
