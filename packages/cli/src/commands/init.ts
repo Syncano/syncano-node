@@ -58,7 +58,7 @@ export default class InitCmd extends Command {
         type: 'input',
         message: this.p(2)('Choose name for your instance'),
         default: genUniqueInstanceName(),
-        when: !project
+        when: !project && !instance
       },
       {
         name: 'location',
