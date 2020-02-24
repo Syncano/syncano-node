@@ -13,6 +13,7 @@ export class InstanceClass extends QueryBuilder {
   public create (params: {
     name: string,
     description?: string
+    location?: 'eu1' | 'us1'
     metadata?: InstanceMetadata
   }): Promise<Instance> {
     const fetch = this.nonInstanceFetch.bind(this)

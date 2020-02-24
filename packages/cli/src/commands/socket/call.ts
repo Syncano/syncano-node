@@ -6,7 +6,7 @@ import Command, {Socket} from '../../base_command'
 import {echon, printCode, printSourceCode} from '../../utils/print-tools'
 
 export default class SocketEndpointCall extends Command {
-  static description = 'Trace Socket calls'
+  static description = 'Execute endpoint'
   static flags = {
     'body-only': flags.boolean()
   }

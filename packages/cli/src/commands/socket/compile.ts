@@ -10,7 +10,7 @@ const {debug} = logger('cmd-socket-compile')
 
 const pendingUpdates = {}
 export default class SocketCompile extends Command {
-  static description = 'Trace Socket calls'
+  static description = 'Compile Socket sources'
   static flags = {}
   static args = [{
     name: 'socketName',
@@ -54,14 +54,14 @@ export default class SocketCompile extends Command {
       spinner.stop()
     }
 
-    const configs = {}
 
     try {
       let index
       for (index in this.socketList) {
         const socket = this.socketList[index]
+
         if (!socket.isDependency()) {
-          await this.compileSocket(socket, configs[socket.name])
+          await this.compileSocket(socket)
         }
       }
 
@@ -77,7 +77,7 @@ export default class SocketCompile extends Command {
     this.exit(0)
   }
 
-  async compileSocket(socket, config) {
+  async compileSocket(socket: Socket) {
     debug(`compileSocket: ${socket.name}`)
     const deployTimer = new Timer()
     const msg = this.p(4)(`${format.magenta('socket compile:')} ${currentTime()} ${format.cyan(socket.name)}`)

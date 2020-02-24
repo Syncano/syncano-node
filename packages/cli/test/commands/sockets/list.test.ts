@@ -1,8 +1,5 @@
 import {expect, test} from '@oclif/test'
-import {createInstance, deleteInstance, uniqueInstance} from '@syncano/test-tools'
-// import sinon from 'sinon'
-
-// import session from '../../../lib/utils/session'
+import {uniqueInstance} from '@syncano/test-tools'
 
 describe('socket:list', () => {
   let testInstanceName = uniqueInstance()

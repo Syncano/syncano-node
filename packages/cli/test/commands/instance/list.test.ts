@@ -19,7 +19,7 @@ describe('instance:list', () => {
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .stub(session, 'getInstances', sinon.stub().resolves([]))
     .command(['instance:list'])
-    .exit(1)
+    .exit(0)
     .it('when no instances', ctx => {
       expect(ctx.stdout).to.contain('You don\'t have any instances!')
     })

@@ -1,10 +1,11 @@
 import format from 'chalk'
 import fs from 'fs-extra'
-import path from 'path'
+import path, {join} from 'path'
 
 import logger from '../debug'
 import {echo} from '../print-tools'
 import session from '../session'
+import {ProjectSettings} from '../../types'
 import {
   builtInProjectTemplates,
   getTemplate,
@@ -47,17 +48,24 @@ class Init {
     if (this.templateName) {
       try {
         debug('Template name:', this.templateName)
-        debug('Loction name:', this.locationName)
+        debug('Location name:', this.locationName)
         debug('Path to copy to:', pathToCopyTo)
         await fs.copy(getTemplate(this.templateName), pathToCopyTo)
         echo(4)(format.dim(`Project has been created from ${format.green(this.templateName)} template.`))
         echo()
+        return
       } catch (err) {
+        console.log(err)
         echo(err)
         throw err
       }
     }
-    throw Error('No tamplate name!')
+
+    throw Error('No template name!')
+  }
+
+  hasConfig() {
+    return fs.existsSync(join(session.getProjectPath(), 'syncano.yml'))
   }
 
   checkConfigFiles() {
@@ -68,7 +76,7 @@ class Init {
     return fs.existsSync(session.getProjectPath()) && session.project
   }
 
-  async addConfigFiles(projectParams = {}, projectPath?: string) {
+  async addConfigFiles(projectParams: ProjectSettings, projectPath?: string) {
     if (projectPath) {
       session.settings.account.addProject(projectPath, projectParams)
     } else {
@@ -77,9 +85,9 @@ class Init {
     await session.load()
   }
 
-  noConfigFiles() {
+  async noConfigFiles() {
     debug('noConfigFiles()')
-    this.createFilesAndFolders()
+    return this.createFilesAndFolders()
   }
 }
 

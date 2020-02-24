@@ -38,15 +38,36 @@ export default class SocketDeploy extends Command {
   static aliases = ['deploy']
   static flags = {
     'create-instance': flags.string(),
-    force: flags.boolean(),
-    'is-hot': flags.boolean(),
-    parallel: flags.boolean(),
-    bail: flags.boolean(),
+    force: flags.boolean({
+      char: 'f',
+      description: 'Remove socket .dist and .zip directories before deployment.'
+    }),
+    'is-hot': flags.boolean({hidden: true}),
+    parallel: flags.boolean({
+      char: 'p',
+      description: 'Run deployments in parallel.',
+    }),
+    bail: flags.boolean({
+      char: 'b',
+      description: 'Stop deployment when one of sockets fails to compile or deploy.'
+    }),
   }
   static args = [{
     name: 'socketName',
-    description: 'Socket name'
+    description: 'Socket name',
   }]
+  static examples = [
+    `${format.gray('Deploy all Sockets')}
+  $ syncano-cli deploy`,
+    `${format.gray('Deploy multiple Sockets in parallel')}
+  $ syncano-cli deploy --parallel`,
+    `${format.gray('Deploy single Socket')}
+  $ syncano-cli deploy SOCKET_NAME`,
+    `${format.gray('Remove .dist and .zip from Socket before deployment')}
+  $ syncano-cli deploy SOCKET_NAME --force`,
+    `${format.gray('Stop deployment on error')}
+  $ syncano-cli deploy --bail`,
+  ]
 
   static printSummary(socketName: string, updateStatus: UpdateStatus) {
     debug('printSummary()', socketName, updateStatus)

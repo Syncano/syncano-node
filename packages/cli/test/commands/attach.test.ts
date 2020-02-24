@@ -1,5 +1,5 @@
 import {expect, test} from '@oclif/test'
-import {deleteInstance, uniqueInstance, deleteConfigFile} from '@syncano/test-tools'
+import {deleteConfigFile, deleteInstance, uniqueInstance} from '@syncano/test-tools'
 
 describe('attach', () => {
   const testInstanceName = uniqueInstance()
@@ -30,8 +30,8 @@ describe('attach', () => {
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .command([
       'attach',
-      '-c',
-      testInstanceName
+      testInstanceName,
+      '--create'
     ])
     .exit(0)
     .it('create new instance', ctx => {
@@ -47,7 +47,6 @@ describe('attach', () => {
     })
     .command([
       'attach',
-      '-n',
       testInstanceName
     ])
     .exit(0)

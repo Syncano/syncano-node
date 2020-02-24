@@ -22,6 +22,7 @@ describe('socket:compile', () => {
     .do(async () => process.chdir(path.join(testsLocation, testInstanceName)))
     .command(['socket:create', 'test_socket'])
     .exit(0)
+    .timeout(70000)
     .it('create socket', function (ctx) {
       this.timeout(70000)
       process.stdin.once('data', data => {
@@ -40,7 +41,9 @@ describe('socket:compile', () => {
     .finally(async () => deleteInstance(testInstanceName))
     .command(['socket:compile', 'test_socket'])
     .exit(0)
-    .it('compile successful', ctx => {
+    .timeout(70000)
+    .it('compile successful', function (ctx) {
+      this.timeout(70000)
       expect(ctx.stdout).to.contain('socket compiled:')
     })
 })

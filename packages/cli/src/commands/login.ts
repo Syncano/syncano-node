@@ -1,9 +1,8 @@
 import {flags} from '@oclif/command'
+import {AccountOwner, LoginData} from '@syncano/core'
 import format from 'chalk'
 import {prompt, Question} from 'inquirer'
 import validator from 'validator'
-import { AccountOwner } from '@syncano/core';
-import { LoginData } from '@syncano/core';
 
 import Command from '../base_command'
 import {track} from '../utils/analytics'
@@ -84,7 +83,7 @@ export default class Login extends Command {
     try {
       const user = await this.session.checkAuth()
       await this.displayWelcomeMessage(user)
-    } catch (err) {
+    } catch {
       if (flags && flags.email && flags.password) {
         await this.loginOrRegister(flags as EmailAndPassword)
       } else {

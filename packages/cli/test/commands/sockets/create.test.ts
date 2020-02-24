@@ -37,7 +37,7 @@ describe('socket:create', () => {
     .finally(async () => deleteInstance(testInstanceName))
     .command(['socket:list'])
     .exit(0)
-    .it('is it exist', ctx => {
+    .it('is exists', ctx => {
       expect(ctx.stdout).to.contain('socket: test_socket')
     })
 })

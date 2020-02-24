@@ -1,4 +1,5 @@
 import {flags} from '@oclif/command'
+import {BackupClass} from '@syncano/core'
 
 import Command from '../../base_command'
 import {SimpleSpinner} from '../../commands_helpers/spinner'
@@ -6,20 +7,22 @@ import {SimpleSpinner} from '../../commands_helpers/spinner'
 export default class BackupDelete extends Command {
   static description = 'Delete backup'
   static flags = {
-    all: flags.boolean()
+    all: flags.boolean({
+      description: 'Remove all backup'
+    })
   }
   static args = [{
     name: 'id',
     description: 'Backup ID.'
   }]
 
-  Backups: any
+  Backups: BackupClass
 
   async run() {
-    await this.session.isAuthenticated() || this.exit(1)
-    await this.session.hasProject() || this.exit(1)
+    this.session.isAuthenticated() || this.exit(1)
+    this.session.hasProject() || this.exit(1)
 
-    this.Backups = this.session.connection.backups
+    this.Backups = this.session.connection.backup
 
     const {args} = this.parse(BackupDelete)
     const {flags} = this.parse(BackupDelete)

@@ -74,7 +74,7 @@ export default class Settings {
     return this.attributes[key] || null
   }
 
-  set(key: any, value: any, save: boolean) {
+  set(key: any, value: any, save?: boolean) {
     this.attributes[key] = value
     if (save !== false) this.save()
     return this

@@ -20,7 +20,7 @@ const pendingUpdates = {}
 const timer = new Timer()
 
 export default class SocketHotDeploy extends Command {
-  static description = 'Hot Deploy Socket'
+  static description = 'Deploy Sockets and watch for changes'
   static aliases = ['hot']
   static flags = {
     trace: flags.boolean(),
@@ -29,6 +29,14 @@ export default class SocketHotDeploy extends Command {
     name: 'socketName',
     description: 'Socket name'
   }]
+  static examples = [
+    `${format.gray('Deploy Sockets and watch for changes')}
+  $ syncano-cli hot`,
+    `${format.gray('Deploy single Sockets and watch for changes')}
+  $ syncano-cli hot my-socket`,
+    `${format.gray('Monitor Socket calls. Does not work with async Sockets.')}
+  $ syncano-cli hot --trace`,
+  ]
 
   socketList: Socket[]
   localSockets: Socket[]

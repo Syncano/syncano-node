@@ -18,6 +18,6 @@ describe('instance:delete', () => {
     .command(['instance:delete', testInstanceName])
     .exit(0)
     .it('when instance name was provided', ctx => {
-      expect(ctx.stdout).to.contain(`Syncano Instance ${testInstanceName} has been deleted successfuly.`)
+      expect(ctx.stdout).to.contain(`Syncano Instance ${testInstanceName} has been deleted successfully.`)
     })
 })
