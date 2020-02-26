@@ -1,5 +1,5 @@
 import {expect, test} from '@oclif/test'
-import {createInstance, deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {uniqueInstance} from '@syncano/test-tools'
 import sinon from 'sinon'
 
 import Hosting from '../../../src/utils/hosting'

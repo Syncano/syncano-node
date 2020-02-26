@@ -16,7 +16,7 @@ describe('backup:list', () => {
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
     .do(() => createInstance(testInstanceName))
-    .finally(() => deleteInstance(testInstanceName))
+    .finally(async () => deleteInstance(testInstanceName))
     .command(['backup:list'])
     // .exit(1)
     .it('when no backups', ctx => {

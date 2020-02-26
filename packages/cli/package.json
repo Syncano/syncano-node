@@ -91,10 +91,10 @@
     "stack-trace": "0.0.10",
     "strip-ansi": "^5.2.0",
     "tslib": "^1.9.3",
-    "unzip2": "^0.2.5",
     "validator": "^11.0.0",
     "walkdir": "^0.4.0",
     "ws": "^7.0.0",
+    "yargs-parser": "^17.0.0",
     "yauzl": "^2.10.0"
   },
   "devDependencies": {
