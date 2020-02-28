@@ -1066,8 +1066,8 @@
         "signature": "3029d4ba707efd3acd2f75a3087e58ef1008904a46bea0d1733b002e963284fb"
       },
       "./src/commands/socket/hot.ts": {
-        "version": "19e984ef50e474c7ac1a47a57c180f373ddcc6d1c2ab09700e5739b1ab2dadef",
-        "signature": "50abd37fa3a5938229655e8aa7643390eb947677346a2e584e5c79818f2076a5"
+        "version": "e4d6772faec76622a10afe70e0f9220a2403bbd47fa599bbb857ba269c689ed0",
+        "signature": "74e14286fdb4adf446c83ea6a6d7ecefa2936e32713c96a5a80d96aab0c7eed9"
       },
       "./src/commands_helpers/socket-list-responses.ts": {
         "version": "43f76ec34947a81b2eb9a5de126353a1685e0931c212e6d0cb147a877fe843eb",
@@ -1082,7 +1082,7 @@
         "signature": "704d0e29a125794208433e69db25b31fad52ce8afc32d3cffbdbf9c687442aad"
       },
       "./src/commands/socket/config/config.ts": {
-        "version": "724dd1b076df1d8943a76aa26f4b94057e588f775379f96fafedbc511d5a6bfe",
+        "version": "6a03086d48e0e9c2a166df3bdb41312dc3308ed31b99fc57ea7f28855249f1f7",
         "signature": "55902282676dd6f20c82cc8d70c8a356ebe930b633775b74be6145fb7004316c"
       },
       "./src/commands/socket/config/set.ts": {

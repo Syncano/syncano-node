@@ -42,19 +42,27 @@ describe('socket', () => {
   })
 
   test
-    .stdin('\n', 10000)
+    .stdin('\n', 4000)
     .stdout()
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
     .command(['socket:create', 'test_socket'])
     .exit(0)
     .it('can be created', ctx => {
-      process.stdin.once('data', data => {
-        if (data.toString() === '\n') {
-          expect(ctx.stdout).to.contain('Your Socket configuration is stored at')
-        }
-      })
+      expect(ctx.stdout).to.contain('Your Socket configuration is stored at')
     })
+
+  describe('socket:hot', () => {
+    test
+      .stdout()
+      .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
+      .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
+      .command(['socket:hot', '--mocked'])
+      .exit(0)
+      .it('runs in hot mode', ctx => {
+        expect(ctx.stdout).to.contain('socket synced')
+      })
+  })
 
   describe('socket:compile', () => {
     test
@@ -146,7 +154,6 @@ describe('socket', () => {
       .do(ctx => expect(ctx.stdout).to.contain('Hello john doe!'))
       .it('can call test_socket/hello endpoint')
   })
-
 
   describe('socket:list', () => {
     test

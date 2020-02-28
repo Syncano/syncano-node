@@ -24,6 +24,9 @@ export default class SocketHotDeploy extends Command {
   static aliases = ['hot']
   static flags = {
     trace: flags.boolean(),
+    mocked: flags.boolean({
+      hidden: true,
+    }),
   }
   static args = [{
     name: 'socketName',
@@ -74,8 +77,8 @@ export default class SocketHotDeploy extends Command {
   }
 
   async run() {
-    await this.session.isAuthenticated()
-    await this.session.hasProject()
+    this.session.isAuthenticated()
+    this.session.hasProject()
 
     this.firstRun = {}
     const {args} = this.parse(SocketHotDeploy)
@@ -86,11 +89,15 @@ export default class SocketHotDeploy extends Command {
     this.echo()
     this.echo(1)(`🚀 ${format.grey(' Initial sync started...')}`)
 
-    const deployCmd = await SocketDeploy.run([args.socketName || '', '--is-hot'])
+    const deployCmd = await SocketDeploy.run([args.socketName || '', flags.mocked ? undefined : '--is-hot'].filter(Boolean))
     this.socketList = deployCmd.socketList
 
     this.echo(1)(`🔥 ${format.grey(' Hot deploy started')} ${format.dim('(Hit Ctrl-C to stop)')}`)
     this.echo()
+
+    if (flags.mocked) {
+      this.exit(0)
+    }
 
     info('Starting stalker')
     this.mainSpinner.queueSize += 1
