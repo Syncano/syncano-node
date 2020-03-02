@@ -5,7 +5,7 @@ import {MAX_BATCH_SIZE, MAX_COLUMN_IN_VALUES_LOOKUP} from './constants'
 import {NotFoundError} from './errors'
 import {QueryBuilder} from './query-builder'
 import {ClassObject} from './types'
-import {chunkArray} from './utils'
+import {chunkArray, objectToFormData} from './utils'
 const get = require('lodash.get')
 const merge = require('lodash.merge')
 const set = require('lodash.set')
@@ -125,7 +125,7 @@ export class DataClass<ClassSchema = {
   /**
    * Get the first record matching the attributes or create it
    *
-   * @param {Object} attributes Parameteres used to find object
+   * @param {Object} attributes Parameters used to find object
    * @param values Parameters used to create object if not found
    * @example
    * data.tags.firstOrCreate({name: 'dogs'}, {firstUsedBy: 'authorID'})
@@ -487,9 +487,9 @@ export class DataClass<ClassSchema = {
         .then(this.replaceCustomTypesWithValue.bind(this))
         .then(this.mapFields.bind(this))
     } else {
-      fetchObject.body = JSON.stringify(body)
+      fetchObject.body = objectToFormData(body)
+      headers = fetchObject.body.getHeaders()
     }
-
     return this.fetch(fetchObject.url, fetchObject, headers)
       .then(this.resolveRelatedModels.bind(this))
       .then(this.replaceCustomTypesWithValue.bind(this))
@@ -550,7 +550,8 @@ export class DataClass<ClassSchema = {
         .then(this.replaceCustomTypesWithValue.bind(this))
         .then(this.mapFields.bind(this))
     } else {
-      fetchObject.body = JSON.stringify(body)
+      fetchObject.body = objectToFormData(body)
+      headers = fetchObject.body.getHeaders()
     }
 
     debug('simple update')
