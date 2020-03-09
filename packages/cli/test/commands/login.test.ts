@@ -4,6 +4,7 @@ import {deleteConfigFile} from '@syncano/test-tools'
 describe('login', () => {
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command([
       'login',
       '-e badEmail',
@@ -19,6 +20,7 @@ describe('login', () => {
 
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command([
       'login',
       `-e ${process.env.E2E_CLI_EMAIL}`,
@@ -34,6 +36,7 @@ describe('login', () => {
 
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command([
       'login',
       `-e ${process.env.E2E_CLI_EMAIL}`,
@@ -46,6 +49,7 @@ describe('login', () => {
 
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['logout'])
     .exit(0)
     .finally(() => {
