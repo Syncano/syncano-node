@@ -1,4 +1,5 @@
 import {expect, test} from '@oclif/test'
+import {deleteConfigFile} from '@syncano/test-tools'
 
 describe('login', () => {
   test
@@ -9,6 +10,9 @@ describe('login', () => {
       '-p TestPasswrod'
     ])
     .exit(1)
+    .finally(() => {
+      try { deleteConfigFile() } catch {}
+    })
     .it('runs login with bad email', ctx => {
       expect(ctx.stdout).to.contain('Enter a valid email address.')
     })
@@ -21,6 +25,9 @@ describe('login', () => {
       '-p TestPasswrod'
     ])
     .exit(1)
+    .finally(() => {
+      try { deleteConfigFile() } catch {}
+    })
     .it('runs login with invalid password', ctx => {
       expect(ctx.stdout).to.contain('Invalid password.')
     })
@@ -41,6 +48,9 @@ describe('login', () => {
     .stdout()
     .command(['logout'])
     .exit(0)
+    .finally(() => {
+      try { deleteConfigFile() } catch {}
+    })
     .it('logout', ctx => {
       expect(ctx.stdout).to.contain(' ')
     })

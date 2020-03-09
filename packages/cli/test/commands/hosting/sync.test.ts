@@ -1,5 +1,6 @@
 import {expect, test} from '@oclif/test'
 import {
+  deleteConfigFile,
   createProject,
   deleteInstance,
   testsLocation,
@@ -10,6 +11,7 @@ import path from 'path'
 import {projectTestTemplate} from '../../utils'
 
 describe('hosting:sync', () => {
+  afterEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   test
     .stdout()

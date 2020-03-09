@@ -1,7 +1,8 @@
 import {expect, test} from '@oclif/test'
-import {createBackup, createInstance, deleteBackup, deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {createBackup, createInstance, deleteBackup, deleteConfigFile, deleteInstance, uniqueInstance} from '@syncano/test-tools'
 
 describe('backup:last', () => {
+  afterEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   let backupId
 

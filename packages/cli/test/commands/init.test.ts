@@ -7,6 +7,7 @@ describe('init', () => {
   const testInstanceName = uniqueInstance()
   const testDir = path.join(testsLocation, testInstanceName)
   try { fs.mkdirSync(testDir) } catch {}
+  afterEach(() => { try { deleteConfigFile() } catch {} })
 
   test
     .stdout()

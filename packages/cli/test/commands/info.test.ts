@@ -1,9 +1,11 @@
 import {expect, test} from '@oclif/test'
 import sinon from 'sinon'
+import {deleteConfigFile} from '@syncano/test-tools'
 
 import session from '../../src/utils/session'
 
 describe('info', () => {
+  afterEach(() => { try { deleteConfigFile() } catch {} })
   test
     .stdout()
     .command(['info'])

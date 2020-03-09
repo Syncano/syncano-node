@@ -1,6 +1,9 @@
 import {expect, test} from '@oclif/test'
+import {deleteConfigFile} from '@syncano/test-tools'
 
 describe('logout', () => {
+  afterEach(() => { try { deleteConfigFile() } catch {} })
+
   test
     .stdout()
     .env({SYNCANO_AUTH_KEY: ''})

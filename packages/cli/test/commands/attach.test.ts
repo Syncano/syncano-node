@@ -4,6 +4,8 @@ import {deleteConfigFile, deleteInstance, uniqueInstance} from '@syncano/test-to
 describe('attach', () => {
   const testInstanceName = uniqueInstance()
 
+  afterEach(() => { try { deleteConfigFile() } catch {} })
+
   test
     .stdout()
     .command(['attach'])

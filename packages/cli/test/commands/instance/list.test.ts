@@ -1,10 +1,12 @@
 import {expect, test} from '@oclif/test'
-import {createInstance, deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {createInstance, deleteConfigFile, deleteInstance, uniqueInstance} from '@syncano/test-tools'
 import sinon from 'sinon'
 
 import session from '../../../src/utils/session'
 
 describe('instance:list', () => {
+  afterEach(() => { try { deleteConfigFile() } catch {} })
+
   let testInstanceName = uniqueInstance()
   test
     .stdout()
