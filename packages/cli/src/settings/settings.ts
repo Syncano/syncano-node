@@ -56,7 +56,7 @@ export default class Settings {
     } catch (err) {
       error(err, p(10)(`at file: ${this.configPath}`))
       // this.exit(1)
-      return false
+      // return false
     }
 
     return true
