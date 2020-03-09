@@ -280,7 +280,7 @@ jobs:
     steps:
       - restore_cache:
           key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:commands
+      - deploy: npm run test:commands
 
   test_lint:
     name: Linter
