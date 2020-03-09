@@ -11,7 +11,7 @@ import path from 'path'
 import {projectTestTemplate} from '../../utils'
 
 describe('hosting:project:deploy', () => {
-  afterEach(() => { try { deleteConfigFile() } catch {} })
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
 
   test

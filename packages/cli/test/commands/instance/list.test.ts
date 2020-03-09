@@ -5,7 +5,7 @@ import sinon from 'sinon'
 import session from '../../../src/utils/session'
 
 describe('instance:list', () => {
-  afterEach(() => { try { deleteConfigFile() } catch {} })
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
 
   let testInstanceName = uniqueInstance()
   test

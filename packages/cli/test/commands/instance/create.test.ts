@@ -2,7 +2,7 @@ import {expect, test} from '@oclif/test'
 import {deleteConfigFile, deleteInstance, uniqueInstance} from '@syncano/test-tools'
 
 describe('instance:create', () => {
-  afterEach(() => { try { deleteConfigFile() } catch {} })
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   test
     .stdout()

@@ -5,7 +5,7 @@ import sinon from 'sinon'
 import Hosting from '../../../src/utils/hosting'
 
 describe('hosting:delete', () => {
-  afterEach(() => { try { deleteConfigFile() } catch {} })
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   test
     .stdout()

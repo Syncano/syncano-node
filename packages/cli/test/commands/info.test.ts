@@ -5,7 +5,7 @@ import {deleteConfigFile} from '@syncano/test-tools'
 import session from '../../src/utils/session'
 
 describe('info', () => {
-  afterEach(() => { try { deleteConfigFile() } catch {} })
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   test
     .stdout()
     .command(['info'])

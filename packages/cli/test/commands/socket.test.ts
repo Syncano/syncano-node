@@ -11,7 +11,7 @@ import path from 'path'
 import {projectTestTemplate} from '../utils'
 
 describe('socket:list', () => {
-  afterEach(() => { try { deleteConfigFile() } catch {} })
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   test
     .stdout()
     .command(['socket:list'])

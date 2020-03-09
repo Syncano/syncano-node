@@ -2,7 +2,7 @@ import {expect, test} from '@oclif/test'
 import {deleteConfigFile} from '@syncano/test-tools'
 
 describe('logout', () => {
-  afterEach(() => { try { deleteConfigFile() } catch {} })
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
 
   test
     .stdout()
