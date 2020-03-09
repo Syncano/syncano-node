@@ -10,7 +10,7 @@ describe('backup:last', () => {
 
   test
     .stdout()
-    .env({SYNCANO_AUTH_KEY: ''})
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['backup:last'])
     .exit(1)
     .it('when not logged in', ctx => {

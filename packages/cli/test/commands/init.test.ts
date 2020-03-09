@@ -11,6 +11,7 @@ describe('init', () => {
 
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['init'])
     .exit(1)
     .it('runs when not logged in', ctx => {

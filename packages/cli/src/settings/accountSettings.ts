@@ -32,8 +32,8 @@ export default class AccountSettings extends Settings {
 
   getAuthKey () {
     if (process.env.SYNCANO_AUTH_KEY) debug('getAuthKey from process.env')
-    if (this.attributes.auth_key) debug('getAuthKey from syncano.yml')
-    debug('getAuthKey returned null')
+    else if (this.attributes.auth_key) debug('getAuthKey from syncano.yml')
+    else debug('getAuthKey returned null')
     return process.env.SYNCANO_AUTH_KEY || this.attributes.auth_key || null
   }
 

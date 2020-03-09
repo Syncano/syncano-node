@@ -9,6 +9,7 @@ describe('hosting:files', () => {
   let testInstanceName = uniqueInstance()
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['hosting:files'])
     .exit(1)
     .it('when not logged in', ctx => {

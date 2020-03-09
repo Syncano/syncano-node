@@ -8,6 +8,7 @@ describe('info', () => {
   beforeEach(() => { try { deleteConfigFile() } catch {} })
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['info'])
     .exit(1)
     .it('runs info when not logged in', ctx => {

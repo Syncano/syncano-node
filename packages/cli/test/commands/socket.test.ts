@@ -14,6 +14,7 @@ describe('socket:list', () => {
   beforeEach(() => { try { deleteConfigFile() } catch {} })
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['socket:list'])
     .exit(1)
     .it('when not logged in', ctx => {

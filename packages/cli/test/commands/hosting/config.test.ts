@@ -23,6 +23,7 @@ describe('hosting:config', () => {
   }
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['hosting:config'])
     .exit(1)
     .it('when not logged in', ctx => {

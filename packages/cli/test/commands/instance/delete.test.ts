@@ -6,6 +6,7 @@ describe('instance:delete', () => {
   let testInstanceName = uniqueInstance()
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['instance:delete', 'instanceName'])
     .exit(1)
     .it('when not logged in', ctx => {
