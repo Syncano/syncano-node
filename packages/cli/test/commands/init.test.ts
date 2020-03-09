@@ -22,7 +22,6 @@ describe('init', () => {
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .do(() => process.chdir(testDir))
     .finally(async () => {
-      deleteConfigFile()
       await deleteInstance(testInstanceName)
     })
     .command(['init', testInstanceName, '-t', '@syncano/template-project-empty', '-l', 'eu1'])
