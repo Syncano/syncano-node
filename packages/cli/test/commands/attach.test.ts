@@ -44,7 +44,6 @@ describe('attach', () => {
     .stdout()
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .finally(async () => {
-      deleteConfigFile()
       await deleteInstance(testInstanceName)
     })
     .command([
