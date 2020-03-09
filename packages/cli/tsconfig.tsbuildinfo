@@ -465,17 +465,13 @@
         "version": "e91ad231af87f864b3f07cd0e39b1cf6c133988156f087c1c3ccb0a5491c9115",
         "signature": "e91ad231af87f864b3f07cd0e39b1cf6c133988156f087c1c3ccb0a5491c9115"
       },
-      "../lib-js-core/node_modules/@types/node-fetch/externals.d.ts": {
-        "version": "972f1e91dab93b182624a17eeed02f683b8cb3fefbda7b689cc84570029d5f73",
-        "signature": "972f1e91dab93b182624a17eeed02f683b8cb3fefbda7b689cc84570029d5f73"
-      },
       "../lib-js-core/node_modules/@types/node-fetch/index.d.ts": {
-        "version": "27401d471614076257eb419b8cb402dfb856c5160308bd94f60ff5356a53edcf",
-        "signature": "27401d471614076257eb419b8cb402dfb856c5160308bd94f60ff5356a53edcf"
+        "version": "ffff2ac872614b40f5606d17e094129ccf6417699ec1d60b91933c2f4de1fcb2",
+        "signature": "ffff2ac872614b40f5606d17e094129ccf6417699ec1d60b91933c2f4de1fcb2"
       },
       "../lib-js-core/lib/syncano-core.d.ts": {
-        "version": "18b96ba8eb0177d58faa98cf1734b9e73c7ba04736fe82dfa1facec17d5149b9",
-        "signature": "18b96ba8eb0177d58faa98cf1734b9e73c7ba04736fe82dfa1facec17d5149b9"
+        "version": "bdc9355796e2a8f21603b9a016bbdfb502323eb8ebbb0eb10bcae1db2756bd90",
+        "signature": "bdc9355796e2a8f21603b9a016bbdfb502323eb8ebbb0eb10bcae1db2756bd90"
       },
       "./node_modules/@types/mkdirp/index.d.ts": {
         "version": "6396a7a06f3ef0fc31a7c89330e015146b78a2256b030c698b6d404594c37b8f",
@@ -1156,10 +1152,6 @@
       "./node_modules/@types/xml2js/index.d.ts": {
         "version": "b39516514dddbd0abac5263dd2a906fcfa4df44c15742f490dfe222a252b5af3",
         "signature": "b39516514dddbd0abac5263dd2a906fcfa4df44c15742f490dfe222a252b5af3"
-      },
-      "../../node_modules/@types/npm/index.d.ts": {
-        "version": "a72ebe29f5251b488b65109779695e978a5b2052496e50e1ac2e94526eaf9768",
-        "signature": "a72ebe29f5251b488b65109779695e978a5b2052496e50e1ac2e94526eaf9768"
       }
     },
     "options": {
@@ -2162,16 +2154,9 @@
         "./node_modules/@types/node/util.d.ts",
         "./node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../lib-js-core/node_modules/@types/node-fetch/externals.d.ts": [
-        "./node_modules/@types/node/fs.d.ts",
-        "./node_modules/@types/node/ts3.2/fs.d.ts",
-        "./node_modules/@types/node/util.d.ts",
-        "./node_modules/@types/node/ts3.2/util.d.ts"
-      ],
       "../lib-js-core/node_modules/@types/node-fetch/index.d.ts": [
         "./node_modules/@types/node/http.d.ts",
         "./node_modules/@types/node/url.d.ts",
-        "../lib-js-core/node_modules/@types/node-fetch/externals.d.ts",
         "./node_modules/@types/node/ts3.2/index.d.ts",
         "./node_modules/@types/node/fs.d.ts",
         "./node_modules/@types/node/ts3.2/fs.d.ts",
@@ -3793,13 +3778,6 @@
         "./node_modules/@types/node/ts3.2/fs.d.ts",
         "./node_modules/@types/node/util.d.ts",
         "./node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../node_modules/@types/npm/index.d.ts": [
-        "./node_modules/@types/node/ts3.2/index.d.ts",
-        "./node_modules/@types/node/fs.d.ts",
-        "./node_modules/@types/node/ts3.2/fs.d.ts",
-        "./node_modules/@types/node/util.d.ts",
-        "./node_modules/@types/node/ts3.2/util.d.ts"
       ]
     },
     "exportedModulesMap": {
@@ -4769,6 +4747,33 @@
       ],
       "./src/utils/print-tools.ts": [
         "./node_modules/chalk/types/index.d.ts"
+      ],
+      "../lib-js-core/node_modules/form-data/index.d.ts": [
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/http.d.ts",
+        "./node_modules/@types/node/ts3.2/index.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/ts3.2/fs.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../lib-js-core/node_modules/@types/node-fetch/index.d.ts": [
+        "./node_modules/@types/node/http.d.ts",
+        "./node_modules/@types/node/url.d.ts",
+        "./node_modules/@types/node/ts3.2/index.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/ts3.2/fs.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../lib-js-core/lib/syncano-core.d.ts": [
+        "../lib-js-core/lib/syncano-core.d.ts",
+        "../lib-js-core/node_modules/form-data/index.d.ts",
+        "../lib-js-core/node_modules/@types/node-fetch/index.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/ts3.2/fs.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/@types/node/ts3.2/util.d.ts"
       ],
       "./node_modules/@types/mkdirp/index.d.ts": [
         "./node_modules/@types/node/fs.d.ts",
@@ -5895,47 +5900,6 @@
         "./node_modules/@types/node/ts3.2/fs.d.ts",
         "./node_modules/@types/node/util.d.ts",
         "./node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../node_modules/@types/npm/index.d.ts": [
-        "./node_modules/@types/node/ts3.2/index.d.ts",
-        "./node_modules/@types/node/fs.d.ts",
-        "./node_modules/@types/node/ts3.2/fs.d.ts",
-        "./node_modules/@types/node/util.d.ts",
-        "./node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../lib-js-core/node_modules/form-data/index.d.ts": [
-        "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/node/http.d.ts",
-        "./node_modules/@types/node/ts3.2/index.d.ts",
-        "./node_modules/@types/node/fs.d.ts",
-        "./node_modules/@types/node/ts3.2/fs.d.ts",
-        "./node_modules/@types/node/util.d.ts",
-        "./node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../lib-js-core/lib/syncano-core.d.ts": [
-        "../lib-js-core/lib/syncano-core.d.ts",
-        "../lib-js-core/node_modules/form-data/index.d.ts",
-        "../lib-js-core/node_modules/@types/node-fetch/index.d.ts",
-        "./node_modules/@types/node/fs.d.ts",
-        "./node_modules/@types/node/ts3.2/fs.d.ts",
-        "./node_modules/@types/node/util.d.ts",
-        "./node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../lib-js-core/node_modules/@types/node-fetch/externals.d.ts": [
-        "./node_modules/@types/node/fs.d.ts",
-        "./node_modules/@types/node/ts3.2/fs.d.ts",
-        "./node_modules/@types/node/util.d.ts",
-        "./node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../lib-js-core/node_modules/@types/node-fetch/index.d.ts": [
-        "./node_modules/@types/node/http.d.ts",
-        "./node_modules/@types/node/url.d.ts",
-        "../lib-js-core/node_modules/@types/node-fetch/externals.d.ts",
-        "./node_modules/@types/node/ts3.2/index.d.ts",
-        "./node_modules/@types/node/fs.d.ts",
-        "./node_modules/@types/node/ts3.2/fs.d.ts",
-        "./node_modules/@types/node/util.d.ts",
-        "./node_modules/@types/node/ts3.2/util.d.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -6054,6 +6018,7 @@
       "./node_modules/@types/lodash/common/util.d.ts",
       "./node_modules/@types/lodash/index.d.ts",
       "./src/utils/print-tools.ts",
+      "../lib-js-core/node_modules/form-data/index.d.ts",
       "./node_modules/@types/mkdirp/index.d.ts",
       "./node_modules/@types/js-yaml/index.d.ts",
       "./src/settings/settings.ts",
@@ -6172,24 +6137,26 @@
       "./node_modules/@types/source-map-support/index.d.ts",
       "./node_modules/@types/xml2js/lib/processors.d.ts",
       "./node_modules/@types/xml2js/index.d.ts",
-      "../../node_modules/@types/npm/index.d.ts",
-      "../lib-js-core/node_modules/form-data/index.d.ts",
-      "../lib-js-core/node_modules/@types/node-fetch/externals.d.ts",
       "../lib-js-core/node_modules/@types/node-fetch/index.d.ts",
       "../lib-js-core/lib/syncano-core.d.ts",
+      "./src/commands/backup/list.ts",
+      "./src/commands/backup/last.ts",
+      "./src/commands/backup/delete.ts",
+      "./src/commands/backup/create.ts",
+      "./src/commands/login.ts",
+      "./src/utils/session.ts",
+      "./src/utils/sockets/sockets.ts",
+      "./src/utils/hosting/hosting.ts",
       "./src/types.ts",
       "./src/settings/accountSettings.ts",
       "./src/settings/projectSettings.ts",
       "./src/settings/socketSettings.ts",
       "./src/settings/index.ts",
-      "./src/utils/hosting/hosting.ts",
       "./src/utils/hosting/index.ts",
       "./src/utils/plugins/plugins.ts",
       "./src/utils/plugins/index.ts",
       "./src/utils/sockets/utils.ts",
-      "./src/utils/sockets/sockets.ts",
       "./src/utils/sockets/index.ts",
-      "./src/utils/session.ts",
       "./src/utils/init/init.ts",
       "./src/utils/init/index.ts",
       "./src/base_command.ts",
@@ -6198,14 +6165,9 @@
       "./src/commands/info.ts",
       "./src/utils/analytics.ts",
       "./src/commands/init.ts",
-      "./src/commands/login.ts",
       "./src/commands/logout.ts",
       "./src/commands/sysinfo.ts",
-      "./src/commands/backup/create.ts",
-      "./src/commands/backup/delete.ts",
       "./src/commands/backup/index.ts",
-      "./src/commands/backup/last.ts",
-      "./src/commands/backup/list.ts",
       "./src/commands/hosting/sync.ts",
       "./src/commands/hosting/add.ts",
       "./src/commands/hosting/list.ts",
