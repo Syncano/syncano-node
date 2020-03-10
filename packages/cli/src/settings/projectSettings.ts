@@ -5,14 +5,10 @@ import readdirp from 'readdirp'
 
 import {HostingRecord, ProjectSettingsAttributes} from '../types'
 import logger from '../utils/debug'
+
 import Settings from './settings'
 
 const {debug} = logger('settings-project')
-
-type LocalHosting = {
-  name: string
-  src: string
-}
 
 export default class ProjectSettings extends Settings {
   static getAttributesFromYaml(path: string) {
@@ -58,7 +54,7 @@ export default class ProjectSettings extends Settings {
   getSocketTemplates() {
     try {
       return this.attributes.templates.sockets
-    } catch (err) {
+    } catch {
       return []
     }
   }

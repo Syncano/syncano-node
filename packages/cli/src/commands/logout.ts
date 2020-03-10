@@ -3,7 +3,7 @@ import format from 'chalk'
 import Command from '../base_command'
 
 export default class Logout extends Command {
-  static description = 'Login to your account'
+  static description = 'Log out'
   static flags = {}
 
   run() {

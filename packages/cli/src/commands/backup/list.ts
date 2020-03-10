@@ -1,3 +1,4 @@
+import {BackupClass} from '@syncano/core'
 import format from 'chalk'
 
 import Command from '../../base_command'
@@ -7,19 +8,19 @@ export default class BackupsList extends Command {
   static description = 'List backups'
   static flags = {}
 
-  Backups: any
+  Backups: BackupClass
 
   async run() {
-    await this.session.isAuthenticated() || this.exit(1)
-    await this.session.hasProject() || this.exit(1)
+    this.session.isAuthenticated() || this.exit(1)
+    this.session.hasProject() || this.exit(1)
 
-    this.Backups = this.session.connection.backups
+    this.Backups = this.session.connection.backup
 
     this.echo()
     try {
-      const backup = await this.Backups.list()
-      if (backup.length) {
-        backup.forEach(elem => this.printBackups(elem))
+      const backups = await this.Backups.list()
+      if (backups.length) {
+        backups.forEach(elem => this.printBackups(elem))
       } else {
         printNoBackupsInfo()
         this.echo()
@@ -36,9 +37,9 @@ export default class BackupsList extends Command {
     this.echo(4)(`${format.dim('created at')}: ${this.dateParser(createAt)}`)
     this.echo(4)(`${format.dim('updated at')}: ${this.dateParser(updatedAt)}`)
     this.echo(4)(`   ${format.dim('details')}:`)
-    this.echo(8)(`  ${format.dim('class')}: ${details.class.count}`)
-    this.echo(8)(` ${format.dim('socket')}: ${details.socket.count}`)
-    this.echo(8)(`${format.dim('hosting')}: ${details.hosting.count}`)
+    details.class && this.echo(5)(`  ${format.dim('classes')}: ${details.class.count}`)
+    details.socket && this.echo(6)(` ${format.dim('sockets')}: ${details.socket.count}`)
+    details.hosting && this.echo(7)(`${format.dim('hosting')}: ${details.hosting.count}`)
     this.echo()
   }
 

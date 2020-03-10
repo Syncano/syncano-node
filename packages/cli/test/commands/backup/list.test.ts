@@ -1,10 +1,12 @@
 import {expect, test} from '@oclif/test'
-import {createInstance, deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {createInstance, deleteConfigFile, deleteInstance, uniqueInstance} from '@syncano/test-tools'
 
 describe('backup:list', () => {
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['backup:list'])
     .exit(1)
     .it('when not logged in', ctx => {
@@ -16,7 +18,7 @@ describe('backup:list', () => {
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .env({SYNCANO_PROJECT_INSTANCE: testInstanceName})
     .do(() => createInstance(testInstanceName))
-    .finally(() => deleteInstance(testInstanceName))
+    .finally(async () => deleteInstance(testInstanceName))
     .command(['backup:list'])
     // .exit(1)
     .it('when no backups', ctx => {

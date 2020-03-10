@@ -13,53 +13,53 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-{{ checksum "package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies
+          - cache-v1-{{ .Environment.cache }}-dependencies-{{ checksum "package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-cli-{{ checksum "packages/cli/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-cli
+          - cache-v1-{{ .Environment.cache }}-dependencies-cli-{{ checksum "packages/cli/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-cli
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-core
+          - cache-v1-{{ .Environment.cache }}-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-core
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-client
+          - cache-v1-{{ .Environment.cache }}-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-client
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-validate
+          - cache-v1-{{ .Environment.cache }}-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-validate
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-test
+          - cache-v1-{{ .Environment.cache }}-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-test
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-template-project-empty
+          - cache-v1-{{ .Environment.cache }}-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-template-project-empty
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-template-project-hello
+          - cache-v1-{{ .Environment.cache }}-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-template-project-hello
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-template-socket-es6
+          - cache-v1-{{ .Environment.cache }}-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-template-socket-es6
 
       - restore_cache:
           keys:
-          - cache-{{ .Environment.cache }}-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
-          - cache-{{ .Environment.cache }}-dependencies-test-tools
+          - cache-v1-{{ .Environment.cache }}-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
+          - cache-v1-{{ .Environment.cache }}-dependencies-test-tools
 
       - run: npm install
       - run: npm run bootstrap
@@ -73,55 +73,55 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-{{ checksum "package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-{{ checksum "package.json" }}
 
       - save_cache:
           paths:
             - packages/cli/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-cli-{{ checksum "packages/cli/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-cli-{{ checksum "packages/cli/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-core/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-core-{{ checksum "packages/lib-js-core/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-client/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-client-{{ checksum "packages/lib-js-client/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-validate/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-validate-{{ checksum "packages/lib-js-validate/package.json" }}
 
       - save_cache:
           paths:
             - packages/lib-js-test/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-test-{{ checksum "packages/lib-js-test/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-project-empty/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-template-project-empty-{{ checksum "packages/template-project-empty/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-project-hello/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-template-project-hello-{{ checksum "packages/template-project-hello/package.json" }}
 
       - save_cache:
           paths:
             - packages/template-socket-es6/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-template-socket-es6-{{ checksum "packages/template-socket-es6/package.json" }}
 
       - save_cache:
           paths:
             - packages/test-tools/node_modules
-          key: cache-{{ .Environment.cache }}-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
+          key: cache-v1-{{ .Environment.cache }}-dependencies-test-tools-{{ checksum "packages/test-tools/package.json" }}
 
       - save_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo
 
@@ -134,7 +134,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:unit
       - run: npm run report:coverage
 
@@ -147,7 +147,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:validate
 
   test_e2e_core:
@@ -159,7 +159,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:core
 
   test_e2e_client:
@@ -171,7 +171,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:client
 
   test_e2e_hosting:
@@ -183,7 +183,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:hosting
 
   # test_e2e_init:
@@ -195,7 +195,7 @@ jobs:
   #
   #   steps:
   #     - restore_cache:
-  #         key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+  #         key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
   #     - run: npm run test:e2e:cli:init
 
   test_e2e_socket:
@@ -207,7 +207,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:socket
 
   test_e2e_anonymous:
@@ -219,7 +219,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:anonymous
 
   test_e2e_instance:
@@ -231,7 +231,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:instance
 
   test_e2e_deploy:
@@ -243,7 +243,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:deploy
 
   test_e2e_config:
@@ -255,7 +255,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:cli:config
 
   test_e2e_schema:
@@ -267,7 +267,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run test:e2e:schema
 
   test_e2e_commands:
@@ -279,8 +279,9 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: npm run test:commands
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - deploy:
+          command: npm run test:commands
 
   test_lint:
     name: Linter
@@ -291,7 +292,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run lint
 
   deploy_docs:
@@ -303,7 +304,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo 'export SYNCANO_HOST=${PRODUCTION_SYNCANO_HOST}' >> $BASH_ENV
       - run: echo 'export SYNCANO_AUTH_KEY=${PRODUCTION_SYNCANO_AUTH_KEY}' >> $BASH_ENV
       - run: echo 'export SYNCANO_PROJECT_INSTANCE=syncano-docs-${CIRCLE_BRANCH}' >> $BASH_ENV
@@ -324,7 +325,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: npx npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL -s syncano
       - run: npm run changelog
       - run: npx lerna publish --canary --yes
@@ -338,7 +339,7 @@ jobs:
 
     steps:
       - restore_cache:
-          key: cache-{{ .Environment.cache }}-repo-units-{{ .Environment.CIRCLE_SHA1 }}
+          key: cache-v1-{{ .Environment.cache }}-repo-units-{{ .Environment.CIRCLE_SHA1 }}
       - run: npm run report:coverage
 
 workflows:

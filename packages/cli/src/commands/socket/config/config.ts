@@ -24,8 +24,6 @@ export default class SocketConfig extends Command {
     if (!socket.existRemotely) {
       this.echo()
       this.error(this.p(4)('That Socket was not synced!'))
-      this.echo()
-      this.exit(1)
     }
 
     if (!socket.spec.config) {
@@ -46,6 +44,6 @@ export default class SocketConfig extends Command {
     } catch (err) {
       this.error(err.message, {exit: 1})
     }
-      this.exit(0)
+    this.exit(0)
   }
 }

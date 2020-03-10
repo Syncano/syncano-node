@@ -1,11 +1,14 @@
 import {expect, test} from '@oclif/test'
 import sinon from 'sinon'
+import {deleteConfigFile} from '@syncano/test-tools'
 
 import session from '../../src/utils/session'
 
 describe('info', () => {
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['info'])
     .exit(1)
     .it('runs info when not logged in', ctx => {

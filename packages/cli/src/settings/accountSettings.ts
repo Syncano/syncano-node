@@ -1,6 +1,6 @@
 import os from 'os'
 
-import {AccountSettingsAttributes} from '../types'
+import {AccountSettingsAttributes, ProjectSettings, Location} from '../types'
 import logger from '../utils/debug'
 
 import Settings from './settings'
@@ -31,29 +31,32 @@ export default class AccountSettings extends Settings {
   }
 
   getAuthKey () {
+    if (process.env.SYNCANO_AUTH_KEY) debug('getAuthKey from process.env')
+    else if (this.attributes.auth_key) debug('getAuthKey from syncano.yml')
+    else debug('getAuthKey returned null')
     return process.env.SYNCANO_AUTH_KEY || this.attributes.auth_key || null
   }
 
-  addProject (projectName: string, params = {}) {
-    debug('addProject()', projectName)
+  addProject (projectPath: string, params: ProjectSettings) {
+    debug('addProject()', projectPath)
     if (!this.attributes.projects) {
       this.attributes.projects = {}
     }
-    this.attributes.projects[projectName] = params
+    this.attributes.projects[projectPath] = params
     this.save()
   }
 
-  getProject (projectName: string) {
-    debug('getProject()', projectName)
+  getProject (projectPath: string) {
+    debug('getProject()', projectPath)
     const envInstance = process.env.SYNCANO_PROJECT_INSTANCE
     if (envInstance) {
       return {
         instance: envInstance,
-        location: process.env.SYNCANO_PROJECT_INSTANCE_LOCATION
+        location: process.env.SYNCANO_PROJECT_INSTANCE_LOCATION as unknown as Location
       }
     }
     if (this.attributes.projects) {
-      return this.attributes.projects[projectName]
+      return this.attributes.projects[projectPath]
     }
   }
 }

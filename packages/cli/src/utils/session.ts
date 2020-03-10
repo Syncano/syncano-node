@@ -26,7 +26,7 @@ export class Session {
     return process.cwd()
   }
   CLIVersion: string
-  settings: any
+  settings = getSettings()
   projectPath: string | null = null
   project: SyncanoProject | null = null
   userId: number | null = null
@@ -45,9 +45,7 @@ export class Session {
     }
     this.CLIVersion = pjson.version
     this.majorVersion = pjson.version.split('.')[0]
-
     this.location = process.env.SYNCANO_PROJECT_INSTANCE_LOCATION as Location || this.location
-    this.settings = getSettings()
   }
 
   getHost() {
@@ -135,7 +133,7 @@ export class Session {
     if (this.project && this.project.instance) {
       return this.project.instance
     }
-    throw Error('Unknown projewct instance!')
+    throw Error('Unknown project instance!')
   }
 
   async createConnection() {
@@ -169,7 +167,7 @@ export class Session {
       this.userEmail = details.email
       this.userFirstName = details.first_name
       this.userLastName = details.last_name
-    } catch (err) {
+    } catch {
       debug('Error while getting user details!')
     }
   }
@@ -178,8 +176,8 @@ export class Session {
     return this.getConnection().instance.delete(name)
   }
 
-  async createInstance(name = genUniqueName()) {
-    return this.getConnection().instance.create({name})
+  async createInstance(name = genUniqueName(), location?: 'eu1' | 'us1') {
+    return this.getConnection().instance.create({name, location})
   }
 
   async getInstance(instanceName: string) {

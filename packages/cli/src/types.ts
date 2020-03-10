@@ -7,7 +7,7 @@ export type Location = 'eu1' | 'us1'
 
 export interface SyncanoProject {
   instance: string
-  location: Location
+  location?: Location
 }
 
 export interface SyncanoConnection {
@@ -43,7 +43,8 @@ export interface CLISession {
 // }
 
 export interface ProjectSettings {
-  instance?: string
+  instance: string
+  location?: Location
 }
 
 export interface AccountSettingsAttributes {
@@ -66,16 +67,16 @@ export interface SocketSettingsAttributes {
   endpoints: Record<string, EndpointRecordConfig>
 }
 
-export interface ProjectSettings {
-  instance?: string
-}
-
 export interface HostingRecordConfig {
   browser_router: boolean
 }
 
 export interface HostingRecord {
   name: string
+  // FIXME: Should this be here?
+  cname?: string
+  // FIXME: Should this be here?
+  auth?: string
   src: string
   config: HostingRecordConfig
 }

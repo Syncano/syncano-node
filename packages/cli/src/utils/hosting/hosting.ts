@@ -1,3 +1,4 @@
+import {Hosting as CoreHosting} from '@syncano/core'
 import axios from 'axios'
 import format from 'chalk'
 import FormData from 'form-data'
@@ -6,15 +7,13 @@ import _ from 'lodash'
 import md5 from 'md5'
 import path from 'path'
 import prettyBytes from 'pretty-bytes'
-import {Hosting as CoreHosting} from '@syncano/core'
 
 import {HostingParams, HostingRecord} from '../../types'
 import logger from '../debug'
-import { echo, error } from '../print-tools'
+import {echo, error} from '../print-tools'
 import session from '../session'
 
-import {getFiles } from './utils'
-
+import {getFiles} from './utils'
 
 const {debug} = logger('utils-hosting')
 
@@ -52,6 +51,7 @@ class Hosting {
   static async add(params: HostingParams): Promise<Hosting> {
     debug('Adding hosting')
     const configParams = {
+      name: params.name,
       src: params.src,
       config: {
         browser_router: params.browser_router || false
@@ -139,7 +139,7 @@ class Hosting {
   remote: any
   src: string | null = null
   cname: string | null = null
-  browser_router: string | null = null
+  browser_router: boolean | null = null
   auth: any
   url: string | null = null
   error: string | null = null
@@ -173,6 +173,7 @@ class Hosting {
 
   updateHosting() {
     const params = {
+      name: this.name,
       src: this.src,
       config: {
         browser_router: this.browser_router || false

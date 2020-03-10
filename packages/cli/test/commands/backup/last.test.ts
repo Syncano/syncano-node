@@ -1,7 +1,8 @@
 import {expect, test} from '@oclif/test'
-import {createBackup, createInstance, deleteBackup, deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {createBackup, createInstance, deleteBackup, deleteConfigFile, deleteInstance, uniqueInstance} from '@syncano/test-tools'
 
 describe('backup:last', () => {
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   let backupId
 
@@ -9,7 +10,7 @@ describe('backup:last', () => {
 
   test
     .stdout()
-    .env({SYNCANO_AUTH_KEY: ''})
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['backup:last'])
     .exit(1)
     .it('when not logged in', ctx => {

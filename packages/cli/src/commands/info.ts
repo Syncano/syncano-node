@@ -7,7 +7,7 @@ export default class Info extends Command {
   static flags = {}
 
   async run() {
-    if (!await this.session.isAuthenticated()) {
+    if (!this.session.isAuthenticated()) {
       this.exit(1)
     }
 

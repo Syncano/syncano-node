@@ -19,7 +19,7 @@ export default class InstanceCreateCmd extends Command {
     try {
       await this.session.deleteInstance(args.instanceName)
       this.echo()
-      this.echo(4)(`Syncano Instance ${args.instanceName} has been deleted successfuly.`)
+      this.echo(4)(`Syncano Instance ${args.instanceName} has been deleted successfully.`)
       this.echo()
     } catch (err) {
       this.error('Deleting instance failed!', {exit: 1})

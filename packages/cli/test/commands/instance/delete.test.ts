@@ -1,10 +1,12 @@
 import {expect, test} from '@oclif/test'
-import {createInstance, uniqueInstance} from '@syncano/test-tools'
+import {createInstance, deleteConfigFile, uniqueInstance} from '@syncano/test-tools'
 
 describe('instance:delete', () => {
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['instance:delete', 'instanceName'])
     .exit(1)
     .it('when not logged in', ctx => {
@@ -18,6 +20,6 @@ describe('instance:delete', () => {
     .command(['instance:delete', testInstanceName])
     .exit(0)
     .it('when instance name was provided', ctx => {
-      expect(ctx.stdout).to.contain(`Syncano Instance ${testInstanceName} has been deleted successfuly.`)
+      expect(ctx.stdout).to.contain(`Syncano Instance ${testInstanceName} has been deleted successfully.`)
     })
 })

@@ -1,10 +1,11 @@
 import {expect, test} from '@oclif/test'
-import {uniqueInstance} from '@syncano/test-tools'
+import {deleteConfigFile, uniqueInstance} from '@syncano/test-tools'
 import sinon from 'sinon'
 
 import Hosting from '../../../src/utils/hosting'
 
 describe('hosting:config', () => {
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   const hosting = {
     name: 'hosting',
@@ -22,6 +23,7 @@ describe('hosting:config', () => {
   }
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['hosting:config'])
     .exit(1)
     .it('when not logged in', ctx => {

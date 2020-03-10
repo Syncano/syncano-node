@@ -10,25 +10,42 @@ import genUniqueInstanceName from '../utils/unique-instance'
 const {debug} = logger('cmd-attach')
 
 export default class Attach extends Command {
-  static description = 'Info about current project/instance/user etc.'
+  static description = 'Attach Syncano Instance to current directory'
   static flags = {
-    'create-instance': flags.string({
+    create: flags.boolean({
       char: 'c',
-      description: 'create instance',
+      description: 'Create instance if it does not exists',
     }),
-    instance: flags.string({
-      char: 'n',
-      description: 'attach to instance',
-    })
+    location: flags.enum({
+      options: ['eu1', 'us1'],
+      char: 'l',
+      description: 'Location in which instance will be created',
+    }),
   }
+  static args = [
+    {
+      name: 'instance',
+      description: 'Instance name'
+    }
+  ]
+  static examples = [
+    `${format.gray('Select existing Instance from list')}
+  $ syncano-cli attach`,
+    `${format.gray('Attach to given Instance')}
+  $ syncano-cli attach INSTANCE`,
+    `${format.gray('Create given Instance if it does not exists')}
+  $ syncano-cli attach INSTANCE --create`,
+    `${format.gray('Create given Instance if it does not exists and use given location')}
+  $ syncano-cli attach INSTANCE --create --location=eu1`,
+  ]
 
   async run() {
-    await this.session.isAuthenticated() || this.exit(1)
+    this.session.isAuthenticated() || this.exit(1)
 
     const init = new Init()
-    const {flags} = this.parse(Attach)
+    const {flags, args} = this.parse(Attach)
 
-    if (this.session.project && !(flags['create-instance'] || flags.instance)) {
+    if (this.session.project && !(flags.create || args.instance)) {
       const confirmQuestion = [{
         type: 'confirm',
         name: 'confirm',
@@ -40,11 +57,11 @@ export default class Attach extends Command {
       if (confirm === false) return this.exit(1)
     }
 
-    let instanceName = flags.instance || null
+    let instanceName = args.instance || null
     let instance
 
-    if (flags['create-instance']) {
-      instance = await createInstance(flags['create-instance'])
+    if (flags.create && args.instance) {
+      instance = await createInstance(args.instance)
       instanceName = instance.name
     } else if (!instanceName) {
       const questions = await this.getQuestions()
@@ -64,22 +81,29 @@ export default class Attach extends Command {
     this.echo(4)(`Your project is attached to ${format.green(instanceName)} instance now!`)
     this.echo()
     this.exit(0)
-
-    return this.session.load()
   }
 
   async createNewInstance() {
     const randomName = genUniqueInstanceName()
-    const {instanceName} = await inquirer.prompt([
+    const {flags} = this.parse(Attach)
+    const {instanceName, location} = await inquirer.prompt([
       {
         name: 'instanceName',
         type: 'input',
         default: randomName,
         message: this.p(2)('Choose instance name for your project:')
+      },
+      {
+        name: 'location',
+        type: 'list',
+        message: this.p(2)('Choose location for your instance:'),
+        choices: Init.getLocationChoices().map(choice => this.p(4)(choice)),
+        default: 0,
+        when: !flags.location
       }
     ])
 
-    return createInstance(instanceName)
+    return createInstance(instanceName, location || flags.location)
   }
 
   async getQuestions() {
@@ -96,7 +120,7 @@ export default class Attach extends Command {
       pageSize: 16,
       message: this.p(2)('Choose instance for your project:'),
       choices: instancesNames,
-      default: 0
+      default: 0,
     })
 
     return questions

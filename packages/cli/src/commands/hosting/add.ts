@@ -29,6 +29,14 @@ export default class HostingConfig extends Command {
     description: 'path to hosting folder',
     required: true
   }]
+  static examples = [
+    `${format.gray('Create a hosting')}
+  $ syncano-cli hosting:add ./path/to/public`,
+    `${format.gray('Create a hosting with CNAME')}
+  $ syncano-cli hosting:add ./path/to/public --cname my-domain.com`,
+    `${format.gray('Create a hosting with given name')}
+  $ syncano-cli hosting:add ./path/to/public --name staging`,
+  ]
 
   socket: any
   hostingName: any

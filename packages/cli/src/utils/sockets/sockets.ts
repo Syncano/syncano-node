@@ -76,7 +76,7 @@ class Endpoint extends MetadataObject {
     return axios.request({
       url: this.getURL(),
       method: 'POST',
-      timeout: 3000,
+      timeout: 6000,
       params,
       // Do not transform data automatically
       transformResponse: data => data

@@ -1,10 +1,12 @@
 import {expect, test} from '@oclif/test'
-import {deleteInstance, uniqueInstance} from '@syncano/test-tools'
+import {deleteConfigFile, deleteInstance, uniqueInstance} from '@syncano/test-tools'
 
 describe('instance:create', () => {
+  beforeEach(() => { try { deleteConfigFile() } catch {} })
   let testInstanceName = uniqueInstance()
   test
     .stdout()
+    .env({SYNCANO_AUTH_KEY: undefined})
     .command(['instance:create', 'instanceName'])
     .exit(1)
     .it('when not logged in', ctx => {

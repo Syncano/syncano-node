@@ -52,9 +52,11 @@ export default class Settings {
 
     try {
       this.attributes = YAML.load(fs.readFileSync(this.configPath, 'utf8')) || {}
+      info(`load() config from "${this.configPath}"`)
     } catch (err) {
       error(err, p(10)(`at file: ${this.configPath}`))
       // this.exit(1)
+      // return false
     }
 
     return true
@@ -74,7 +76,7 @@ export default class Settings {
     return this.attributes[key] || null
   }
 
-  set(key: any, value: any, save: boolean) {
+  set(key: any, value: any, save?: boolean) {
     this.attributes[key] = value
     if (save !== false) this.save()
     return this
