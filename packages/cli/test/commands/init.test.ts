@@ -9,6 +9,10 @@ describe('init', () => {
   try { fs.mkdirSync(testDir) } catch {}
   beforeEach(() => { try { deleteConfigFile() } catch {} })
 
+  after(async () => {
+    await deleteInstance(testInstanceName)
+  })
+
   test
     .stdout()
     .env({SYNCANO_AUTH_KEY: undefined})
@@ -20,11 +24,8 @@ describe('init', () => {
 
   test
     .stdout()
-    .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .do(() => process.chdir(testDir))
-    .finally(async () => {
-      await deleteInstance(testInstanceName)
-    })
+    .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .command(['init', testInstanceName, '-t', '@syncano/template-project-empty', '-l', 'eu1'])
     .it('creates instance and file structure', ctx => {
       expect(ctx.stdout).to.contain('Project has been created from @syncano/template-project-empty template.')
