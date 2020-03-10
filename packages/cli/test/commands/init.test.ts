@@ -5,10 +5,7 @@ import path from 'path'
 
 describe('init', () => {
   const testInstanceName = uniqueInstance()
-  const testDir = path.join(testsLocation, testInstanceName)
-  try { fs.mkdirSync(testDir) } catch {}
   beforeEach(() => { try { deleteConfigFile() } catch {} })
-
   after(async () => {
     await deleteInstance(testInstanceName)
   })
@@ -24,7 +21,16 @@ describe('init', () => {
 
   test
     .stdout()
-    .do(() => process.chdir(testDir))
+    .do(() => {
+      const testDir = path.join(testsLocation, testInstanceName)
+      try {
+        fs.mkdirSync(testDir)
+      } catch (err) {
+        // tslint:disable-next-line: no-console
+        console.error(err)
+      }
+      process.chdir(testDir)
+    })
     .env({SYNCANO_AUTH_KEY: process.env.E2E_CLI_ACCOUNT_KEY})
     .command(['init', testInstanceName, '-t', '@syncano/template-project-empty', '-l', 'eu1'])
     .it('creates instance and file structure', ctx => {
