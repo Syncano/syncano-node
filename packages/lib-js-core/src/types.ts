@@ -10,6 +10,11 @@ export interface ACL {
   }
 }
 
+export interface File extends Buffer {
+  filename: string
+  contentType: string
+}
+
 export interface User {
   id: number
   username: string

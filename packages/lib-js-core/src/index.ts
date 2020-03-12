@@ -1,5 +1,8 @@
 import {default as Server} from './server'
 export {
+  ACL,
+  BackupDetails,
+  LoginData,
   ClassObject,
   User,
   UserGroup,
@@ -8,6 +11,7 @@ export {
   AccountOwner,
   ChannelResponse,
   ClassObjectLinks,
+  File,
   Hosting,
   HostingFile,
   Instance,
