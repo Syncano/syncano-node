@@ -487,7 +487,7 @@ export class DataClass<ClassSchema = {
         .then(this.replaceCustomTypesWithValue.bind(this))
         .then(this.mapFields.bind(this))
     } else {
-      fetchObject.body = objectToFormData(body)
+      fetchObject.body = objectToFormData(body, {stringifyArrays: true})
       headers = fetchObject.body.getHeaders()
     }
     return this.fetch(fetchObject.url, fetchObject, headers)
@@ -550,7 +550,7 @@ export class DataClass<ClassSchema = {
         .then(this.replaceCustomTypesWithValue.bind(this))
         .then(this.mapFields.bind(this))
     } else {
-      fetchObject.body = objectToFormData(body)
+      fetchObject.body = objectToFormData(body, {stringifyArrays: true})
       headers = fetchObject.body.getHeaders()
     }
 

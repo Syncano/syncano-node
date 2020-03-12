@@ -107,10 +107,16 @@ const isFile = (value: any) =>
 
 export const objectToFormData = (
   obj: any,
-  cfg = {
+  cfg: {
+    indices?: boolean,
+    nullsAsUndefined?: boolean,
+    booleansAsIntegers?: boolean,
+    stringifyArrays?: boolean
+  } = {
     indices: false,
     nullsAsUndefined: false,
-    booleansAsIntegers: false
+    booleansAsIntegers: false,
+    stringifyArrays: false
   },
   fd = new FormData(),
   pre = ''
@@ -141,15 +147,14 @@ export const objectToFormData = (
       filename: obj.filename || 'file'
     })
   } else if (isArray(obj)) {
-    fd.append(pre, JSON.stringify(obj))
-    // if (obj.length) {
-    //   // fd.append(pre, JSON.stringify(obj))
-    //   obj.forEach((value: any, index: any) => {
-    //     const key = `${pre}[${cfg.indices ? index : ''}]`
-
-    //     objectToFormData(value, cfg, fd, key)
-    //   })
-    // }
+    if (cfg.stringifyArrays) {
+      fd.append(pre, JSON.stringify(obj))
+    } else {
+      obj.forEach((value: any, index: number) => {
+        const key = `${pre}[${cfg.indices ? index : ''}]`
+        objectToFormData(value, cfg, fd, key)
+      })
+    }
   } else if (isDate(obj)) {
     fd.append(pre, obj.toISOString())
   } else if (isObject(obj) && !isFile(obj) && !isBlob(obj)) {
