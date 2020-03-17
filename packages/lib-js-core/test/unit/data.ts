@@ -709,11 +709,11 @@ describe('Data', () => {
         .which.is.Function()
     })
 
-    it('should be able to create object', () => {
+    it.only('should be able to create object', async () => {
       const user = {name: 'John'}
 
       api
-        .post(`/v2/instances/${instanceName}/classes/users/objects/`, user)
+        .post(`/v2/instances/${instanceName}/classes/users/objects/`, /John/)
         .query({
           page_size: 500
         })

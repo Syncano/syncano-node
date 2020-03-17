@@ -1,5 +1,6 @@
 import {RequestInit} from 'node-fetch'
 import {QueryBuilder} from './query-builder'
+import {objectToFormData} from './utils'
 
 export class EndpointClass extends QueryBuilder {
   public invalidate (endpoint: string) {
@@ -14,16 +15,18 @@ export class EndpointClass extends QueryBuilder {
    */
   public post (endpoint: string, body = {}, options = {}) {
     const fetch = this.fetch.bind(this)
+    const formObject = objectToFormData(body)
+    const headers = formObject.getHeaders()
 
     return fetch(this.url(endpoint), {
-      body: this.parseBody(body),
+      body: formObject,
       method: 'POST',
       ...options
-    })
+    }, headers)
   }
 
   /**
-   * Send GET request to Syncano Endpoiint
+   * Send GET request to Syncano Endpoint
    *
    * @param endpoint Endpoint path in format `socket-name/endpoint-name`. For example: `user-auth/register`.
    * @param [data={}] Data passed to endpoint.
@@ -34,7 +37,7 @@ export class EndpointClass extends QueryBuilder {
   }
 
   /**
-   * Send DELETE request to Syncano Endpoiint
+   * Send DELETE request to Syncano Endpoint
    *
    * @param endpoint Endpoint path in format `socket-name/endpoint-name`. For example: `user-auth/register`.
    * @param [data={}] Data passed to endpoint.
@@ -45,7 +48,7 @@ export class EndpointClass extends QueryBuilder {
   }
 
   /**
-   * Send PUT request to Syncano Endpoiint
+   * Send PUT request to Syncano Endpoint
    *
    * @param endpoint Endpoint path in format `socket-name/endpoint-name`. For example: `user-auth/register`.
    * @param [data={}] Data passed to endpoint.
@@ -56,7 +59,7 @@ export class EndpointClass extends QueryBuilder {
   }
 
   /**
-   * Send PATCH request to Syncano Endpoiint
+   * Send PATCH request to Syncano Endpoint
    *
    * @param endpoint Endpoint path in format `socket-name/endpoint-name`. For example: `user-auth/register`.
    * @param [data={}] Data passed to endpoint.
@@ -70,11 +73,5 @@ export class EndpointClass extends QueryBuilder {
     const {instanceName} = this.instance
 
     return `${this.getInstanceURL(instanceName, 'v3')}/endpoints/sockets/${endpoint}/`
-  }
-
-  private parseBody (body: any) {
-    const isBodyAnObject = typeof body === 'object'
-
-    return isBodyAnObject ? JSON.stringify({...body}) : body
   }
 }
